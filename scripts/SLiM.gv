@@ -1,0 +1,15 @@
+digraph DAG {
+
+graph [rankdir = LR]
+
+node [shape = circle, style=filled, color=gray, fontcolor=gray10]
+
+node [fillcolor=white, fontname="Helvetica"]
+x1; x2; x3; 
+
+node [fillcolor=gray90]
+y;
+
+edge [color=gray50]
+x1 -> y; x2 -> y; x3 -> y;
+}

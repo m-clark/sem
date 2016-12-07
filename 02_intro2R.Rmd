@@ -1,0 +1,211 @@
+# Introduction to R 
+
+This introduction to R is very brief and only geared toward providing some basics so that one can understand and run the code associated with the content.  It is geared toward an audience that likely has no programming experience whatsoever, but may have had some exposure to traditional statistics packages.  If you have some basic familiarity with R you may skip this chapter, though it might serve as a refresher for some.
+
+
+## Getting Started
+
+
+### Installation
+
+As mentioned previously, to begin with R for your own machine, you just need to go to the [R website](https://www.r-project.org/), download it for your operating system, and install. Then go to [RStudio](https://www.rstudio.com/), download and install it.  From there on you only need RStudio to use R.  
+
+Updates occur every few months, and you should update R whenever a new version is released.
+
+
+### Packages
+
+As soon as you install it, R is already the most powerful statistical environment within which to work. However, its real strength comes from the community, which has added thousands of <span class="emph">packages</span> that provide additional or enhanced functionality.  You will regularly find packages that specifically do something you want, and will need to install them in order to use them.
+
+RStudio provides a **Packages** tab, but it is usually just as or more efficient to use the <span class="func">install.packages</span> function.
+
+<img src="img/packagesTab.png" style="display:block; margin: 0 auto;">
+
+```{r installpackage, eval=F}
+install.packages('mynewfavorite')
+```
+
+
+At this point there are over 7000 packages available through standard sources, and many more through unofficial ones.  To start getting some ideas of what you want to use, you will want to spend time at places like [CRAN Task Views](https://cran.r-project.org/web/views/), [Rdocumentation](http://www.rdocumentation.org/), or with a list [like this one](https://github.com/qinwf/awesome-R).
+
+The main thing to note is that if you want to use a package, you have to load it with the <span class="func">library</span> function.
+
+```{r loadPackage, eval=FALSE}
+library(lazerhawk)
+```
+
+Sometimes, you only need the package for one thing and there is no reason to keep it loaded, in which case you can use the following approach.
+
+```{r packageoneoff, eval=FALSE}
+packagename::packagefunction(args)
+```
+
+I suggest using the <span class="func">library</span> function for newbies.
+
+You'll get the hang of finding, installing, and using packages quite quickly. However, note that the increasing popularity and ease of using R means that packages can vary quite a bit in terms of quality, so you may need to try out a couple packages with seemingly similar functionality to find the best for your situation.
+
+
+### RStudio
+
+RStudio is an <span class="emph">integrated development environment</span> (**IDE**) specifically geared toward R (though it works for other languages too).  At the very least it will make your programming far easier and more efficient, at best you can create publish-ready documents, manage projects, create interactive website regarding your research, use version control, and much more. I have an overview [here](https://m-clark.github.io/docs/introRStudio.html).
+
+See [Emacs Speaks Statistics](http://ess.r-project.org/) for an alternative. The point is, base R is not an efficient way to use R, and you have at least two very powerful options to make your coding experience easier and more efficient.
+
+
+
+## Key things to know about R
+
+
+### R is a programming language, not a 'stats package'
+
+The first thing to note for those new to R is that R is a language that is oriented toward, but not specific to, dealing with statistics.  This means it's highly flexible, but does take some getting used to.  If you go in with a spreadsheet style mindset, you'll have difficulty, as well as miss out on the power it has to offer.
+
+
+### Never ask if R can do what you want.  It can.
+
+The only limitation to R is the user's programming sophistication. The better you get at statistical programming the further you can explore your data and take your research.  This holds for any statistical endeavor whether using R or not.
+
+
+### Main components: script, console, graphics device
+
+With R, the *script* is where you write your R code. While you could do everything at the console, this would be difficult at best and unreproducible.  The *console* is where the results are produced from running the script.  Again you can do one-liner stuff there, such as getting help for a function.  The *graphics device* is where visualizations are produced, and in RStudio you have two, one for static plots, and a **viewer** for potentially interactive ones.
+
+
+### R is easy to use, but difficult to master.
+
+If you only want to use R in an applied fashion, as we will do here, R can be very easy to use.  As an example the following code would read in data and run a regression.
+
+```{r Reasy, eval=F}
+mydata = read.csv(file='location/myfile.csv')
+regModel = lm(y ~ x, data=mydata)
+summary(regModel)
+```
+
+The above code demonstrates that R can be as easy to use as anything else, and in my opinion, it is for any standard analysis.  The nice part is that it can still be *easier* to use with more complex analyses you either won't find elsewhere or will only get with crippled functionality.
+
+
+### Object-oriented
+
+This section may be a little more than newcome to R wants or even needs to know to get started with R. However, most of the newbie's errors will be due not knowing a little about this aspect of R programming, and I've seen some make the same mistakes even after using R for a long time as a result.
+
+
+R is <span class="emph">object-oriented</span>.  For our purposes this means that we create what are called objects and use <span class="emph">functions</span> to manipulate those objects in some fashion. In the above code we created two objects, an object that held the data and an object that held the regression results.  
+
+Objects can be ***anything***, a character string, a list of 1000 data sets, the results of an analysis, ***anything***.
+
+#### Assignment
+
+In order to create an object, we must <span class="emph">assign</span> something to it.  You'll come across two ways to do this.
+
+```{r assign, eval=F}
+myObject = something
+myObject <- something
+```
+
+These result in the same thing, an object called <span class="objclass">myObject</span> that contains 'something' in it. For all appropriate practical use, which you use is a matter of personal preference. The point is that typical practice in R entails that one assigns something to an object and then uses functions on that object to get something more from it.
+
+#### Functions
+
+Functions are objects that take input of various kinds and produce some output (simply called a *value*).  In the above code we used three functions: <span class="func">read.csv</span>, <span class="func">lm</span>, and <span class="func">summary</span>.  Functions (usually) come with named <span class="emph">arguments</span>, that note what types of inputs the function can take.  With <span class="func">read.csv</span>, we merely gave it one argument the file name, but there are actually a couple dozen, each with some default.  Type `?read.csv` at the console to see the helpfile.
+
+#### Classes
+
+All objects have a certain class, which means that some functions will work in certain ways depending on the class.  Consider the following code.
+
+```{r classDemo}
+x = rnorm(100)
+y = x + rnorm(100)
+mod = lm(y ~ x)
+summary(x)
+summary(mod)
+```
+
+In both cases we used the `summary` function, but get different results.  There are two <span class="emph">methods</span> for summary at work here: <span class="">summary.default</span> and <span class="">summary.lm</span>.  Which is used depends on the class of the object given as an argument to the summary function.  Most of the time however, there are unique functions that will only work on one class of object.
+
+```{r classDemo2}
+class(x)
+class(mod)
+```
+
+One of the most common classes of objects used is the <span class="objclass">data.frame</span>.  Data frames are matrices that contain multiple types of vectors that are the variables and observations of interest.  The contents can be numeric, factors (categorical variables), character strings and other types of objects.  
+
+```{r dataframeDemo}
+nams = c('Bob Ross', 'Bob Marley', 'Bob Odenkirk')
+places = c('Dirt', 'Dirt', 'New Mexico')
+yod = c(1995, 1981, 2028)
+
+bobs = data.frame(nams, places, yod)
+bobs
+```
+
+
+### Case sensitive
+
+A great deal of the errors you will get when you start learning R will result from not typing something correctly.  For example, what if we try `summary(X)`?
+
+```{r error, error=TRUE}
+summary(X)
+```
+
+Errors are merely messages or calls for help from R. It can't do what you ask and needs something else in order to perform the task.  In this case, R is telling you it can't find anything called X, which makes sense because the object name is lowercase $x$.  This error message is somewhat straightforward, but error messages for all programming languages typically aren't, and depending on what you're trying to do, it may be fairly vague.  If you get an error, your first thought as you start out with R should be to check the names of things.
+
+### The lavaan package
+
+You'll see more later, but in order to use lavaan for structural equation modeling, you'll need two things primarily: an object that represents the **data**, and an object that represents the **model**. It will look something like the following.
+
+```{r lavaanExample0, eval=FALSE}
+modelCode = "
+  y ~ x1 + x2 + lv            # structural/regression model
+  lv =~ z1 + z2 + z3 + z4     # measurement model with latent variable lv
+"
+
+library(lavaan)
+mymodel = sem(modelCode, data=mydata)
+```
+
+The character string is our model, and it can actually be kept as a separate file (without the assignment) if desired. Using the <span class="pack">lavaan</span> library, we can then use one of its specific functions like <span class="func">cfa</span>, <span class="func">sem</span>, or <span class="func">growth</span> to use the model code object (<span class="objclass">modelCode</span> above) and the data object (<span class="objclass">mydata</span> above).
+
+
+The way to define things in lavaan can be summarized as follows.
+```{r lavanCodeTable, echo=FALSE}
+formulaType = c('latent variable definition', 'regression', '(residual) (co)variance', 'intercept', 'fixed parameter')
+operator = c('=~', '~', '~~', '~ 1', '_*')
+mnemonic = c('is measured by', 'is regressed on', 'is correlated with', 'intercept', 'is fixed at the value of _')
+pander::pander(data.frame(formulaType, operator, mnemonic))
+```
+
+### Getting help
+Use `?` to get the helpfile for a specific function, or `??` to do a search, possibly on a quoted phrase.
+
+Examples:
+
+```{r gethelp, eval=FALSE}
+?lm
+??regression
+??'nonlinear regression'
+```
+
+
+
+## Moving forward
+
+Hopefully you'll get the hang of things as we run the code in later chapters.  You'll essentially only be asked to tweak code that's already provided.  This document (and associated workshop) is not the place to learn R.  However, here are some exercises to make sure we start to get comfortable with it.
+
+### Exercises
+
+Interactive version [here](exercise_introR.html)
+
+1. Create an object that consists of the numbers one through five.
+using `c(1,2,3,4,5)` or `1:5`
+
+2. Create a different object, that is the same as that object, but plus 1 (i.e. the numbers two through six).
+
+3. Without creating an object, use <span class="func">cbind</span> and <span class="func">rbind</span>, feeding your objects as arguments. For example `cbind(obj1, obj2)`.
+
+4. Create a new object using <span class="objclass">data.frame</span> just as you did <span class="func">rbind</span> or <span class="func">cbind</span> in #3.
+
+5. Inspect the class of the object, and use the <span class="func">summary</span> function on it.
+
+### Summary
+
+There's a lot to learn with R, and the more time you spend with R the easier your research process will likely go, and the more you will learn about statistical analysis.

@@ -1,0 +1,52 @@
+title:	this is an example of parallel process 
+	linear growth models for two continuous 
+	outcomes with regressions among the random 
+	effects
+
+montecarlo:
+	names = y11-y14 y21-y24;
+	nobs = 500;
+	nreps = 1;
+	save = ex6.13.dat;
+
+model population:
+
+	i1 s1 | y11@0 y12@1 y13@2 y14@3;
+	
+	[i1*.5 s1*1];
+	i1*1; s1*.2; 
+
+	i2 s2 | y21@0 y22@1 y23@2 y24@3;
+	
+	[i2*.5 s2*1];
+	i2*1; s2*.2; 
+
+	s2 on i1*.6;
+	s1 on i2*.3;
+
+	s1 with s2*.1;
+
+	y11-y24*.5;
+
+model:
+	
+	i1 s1 | y11@0 y12@1 y13@2 y14@3;
+	
+	[i1*.5 s1*1];
+	i1*1; s1*.2; 
+
+	i2 s2 | y21@0 y22@1 y23@2 y24@3;
+	
+	[i2*.5 s2*1];
+	i2*1; s2*.2; 
+
+	s2 on i1*.6;
+	s1 on i2*.3;
+
+	s1 with s2*.1;
+
+	y11-y24*.5;
+
+output:
+	tech9;
+

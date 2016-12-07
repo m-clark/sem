@@ -1,0 +1,22 @@
+digraph DAG {
+  # Intialization of graph attributes
+  graph [overlap = false]
+
+  # Initialization of node attributes
+  node [shape = circle,
+        fontname = Baskerville,
+        fontsize = '5%',
+        color = gray80,
+        type = box,
+        fixedsize = true,
+        width = .35]
+
+  # Node statements
+  X; Y; Z;
+
+  # Initialization of edge attributes
+  edge [color = gray25, rel = yields, arrowhead=none]
+
+  # Edge statements
+  X -> Y; Y -> Z;
+}

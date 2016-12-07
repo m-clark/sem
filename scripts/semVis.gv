@@ -1,0 +1,40 @@
+digraph Factor  {
+   rankdir=TB;
+   dir = none;
+
+   node [fontname=Helvetica, fontsize=10, shape=box, width=.5, fixedsize=true, color=gray80];
+   edge [fontname=Helvetica, fontsize=12];
+   X1;
+   X2;
+   X3;
+   X4;
+   Y1;
+   Y2;
+   Y3;
+   Y4;
+
+   node [shape=plaintext, width =1, rank=same, color=seagreen, fontsize=20, fontcolor=seagreen];
+   ☺;♥;
+   edge [color=gray75]
+   ☺ -> X1 ;
+   ☺ -> X2 ;
+   ☺ -> X3 ;
+   ☺ -> X4 ;
+   ♥ -> Y1 ;
+   ♥ -> Y2 ;
+   ♥ -> Y3 ;
+   ♥ -> Y4 ;
+
+   edge [color='#ff5503']
+   subgraph {
+   rank = same; ☺; ♥;
+   }
+   ☺->♥;
+
+   node [shape=square, width=.75, color='#1e90ff', fontcolor='#1e90ff']
+   subgraph {
+   rank = same; ♠; ♣;
+   }
+   ♣ -> ☺; ♣ -> ♥;
+   ♠ -> ♣;
+}

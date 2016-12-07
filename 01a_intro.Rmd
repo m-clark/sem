@@ -1,0 +1,52 @@
+
+# Introduction 
+
+## Outline
+
+### Graphical Models
+
+The document will start with the familiar, a standard regression model.  It will then be presented as a <span class="emph">graphical model</span>, and extended to include indirect effects (e.g. $\mathcal{A} \rightarrow \mathcal{B} \rightarrow \mathcal{C}$) and multiple outcomes.  At this point we will discuss *directed graphs*, and demonstrate a more theoretically motivated approach (sometimes called *path analysis*), and compare it to a more flexible approach (Bayesian network) that does not require prespecification of paths nor specific directional relations.  At this point, we'll briefly discuss undirected graphs, with an example utilizing 'network analysis', though any exercise will likely be left to the participant's own time.
+
+### Latent Variables
+
+We will then discuss the notion of <span class="emph">latent variables</span> in the context of *underlying causes or constructs* and  **measurement error**.  We will also note that latent variable models are actually even more broadly utilized when one includes other *dimension reduction*, or *data compression*, techniques, several of which fall under the heading of *factor analysis*.  A few common techniques will be demonstrated such as 'factor analysis' and principal components analysis, and an overview will be provided for others. In addition, we will briefly discuss the relation of latent variable models to random effects models (something that will be demonstrated in more detail later), and note other places one might find latent variables (e.g. the EM algorithm, hidden Markov models).
+
+
+### SEM
+
+Next we turn to <span class="emph">structural equation modeling</span>, where previously covered models come together under one modeling approach.  We will spend a good deal of time with measurement models first, comparing them to our previous efforts, and then extend those models to the case of regression with latent variables.  There are many issues to consider when developing such models, and an attempt will be made to cover quite a bit of ground in that regard.  
+
+
+### Others
+
+Other topics are touched upon for reference, and may be added to in the future. For example <span class="emph">latent growth curve</span> models, are an alternative to a standard mixed model. Also, there are situations where the latent variable might be considered categorical, commonly called <span class="emph">mixture models</span> or cluster analysis, but in some specific contexts might go by other names (e.g. latent class analysis).  Finally, an overview of other types of latent variable or structural equation models, such as item response theory, collaborative filtering etc. may also be provided.
+
+
+## Programming Language Choice
+
+<img src="img/Rlogo.svg" style="display:block; margin: 0 auto; width:50%">
+
+We will use **<span class='pack'>R</span>** for a variety of reasons.  One is that all of the techniques mentioned thus far are fully developed within various R packages, often taking just a line or two of code to implement after the data has been prepped.  Furthermore, it is freely available and will work on Windows, Mac and Linux.  R is well-known as a powerful statistical modeling environment, and its flexible programming language allows for efficient data manipulation and exploration.  Furthermore, it has a vast array of visualization capabilities.  In short, it provides everything one might need in a single environment.
+
+
+Among alternatives, MPlus is the most fully developed structural equation modeling package, and has been for years.  However, it is a poor tool for data management, few universities have a campus-wide license for it, and most of its functionality (and all we will need for this our purposes) is implemented within the <span class='pack'>lavaan</span> family of R packages.  Stata has recently provided SEM capabilities, but it is less well-developed (something that might change in time), and it still requires a license, making non-campus usage difficult or costly.  SPSS Amos would perhaps be another alternative for some, but suffers the same licensing issues and is not as flexible as MPlus. Historically it has lagged far behind MPlus in capabilities, and furthermore it is not supported for Unix operating systems such as Mac and Linux.  Other alternatives include Proc Calis in SAS and OpenMX (another R package).  Python implementation seems minimal presently.  Historically, people used EQS and LISREL, but the former is no longer developed and the latter is no longer relatively widely used, as well as being a Windows-only application.
+
+
+## Setup
+
+For those wishing to follow along, for things to go smoothly you'll need to complete the following steps *precisely*.  
+
+If you are not present or are bringing your laptop, you'll need to have both R and RStudio installed on whatever machine you'll be using.  If this will be a new experience for you, [install R first](https://cloud.r-project.org/), then [RStudio](https://www.rstudio.com/products/rstudio/download/).  For either you'll need to choose the version appropriate to your operating system.  As you go through the installation, for both just accept all defaults when prompted until the installation process begins.  Once both are installed, *you will only need to work with RStudio*, and it will at all times be assumed you will be using RStudio during the workshop.
+
+Once those are installed, proceed through the following steps.
+
+1. Download this [zipfile](http://www-personal.umich.edu/~micl/sem/workshop_files.zip), and unzip its contents to an area on your machine that you have write access to. It contains the course contents, data, etc. in a folder that will serve as an RStudio project folder.
+
+2. Open RStudio.  File/Open Project/ then navigate to the folder contents you just unzipped.  Click on the SEM file (should look like a blue icon, but otherwise is the SEM.Rproj file).
+
+3. If the file is not already opened after opening the RStudio project, File/Open File/my_code.R . Run the one line of code there and you're set.
+
+The lab for the workshop has Windows machines, and so the above is enough to proceed. For *nix systems, it's probably easiest to just install the packages as we use them.
+
+
+

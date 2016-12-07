@@ -1,0 +1,44 @@
+# Other
+
+
+These are other topics that may be covered in varying detail in the future. With possible packages noted. They are roughly in order of importance to me/what I think would be good for this document.
+
+
+- IRT
+    - ltm or lavaan
+- Mixture models (here as I have some things that could be used somewhat easily) 
+    - Dirichlet process example, discuss zero-inflated models, and possibly add other content.
+- Collaborative filtering
+    - recommenderlab
+- Multiple group analysis
+    - via lavaan
+    
+    *Hope you have a lot of data.*
+
+    Multigroup (also multi-sample, multiple sample etc.) analysis is, as its name implies, engaging SEM across multiple *intact* groups. I say intact to distinguish the mixture models from before, where the categories are latent.  As an example, we could compare 
+    
+    Measurement invariance
+    
+    - Configural
+    - Weak
+    - Strong
+    - Strict
+    
+    Other:
+    
+    - Longitudinal Stability
+
+- Multilevel SEM
+
+- HMM, Linear Dynamical Systems
+    - HMM, HiddenMarkov depmixS4
+- Others
+
+
+Extensions to current content that might be added in the future:
+
+- To GM chapter: Econometrics related: 2sls, instrumental variables
+- To LV chapter: Reliability, omega, bifactor etc.
+- To SEM chapter: regression with latent variables comparison
+- To Growth chapther: why not to do cross-lagged models.
+- To Appendix: cfa via ML R code.

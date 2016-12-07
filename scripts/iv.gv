@@ -1,0 +1,15 @@
+digraph iv {
+graph [rankdir=LR]
+
+node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.25, height=.25,
+      fontcolor=gray25, fontname=Baskerville, fixedsize=true, fontsize='5%']
+X; Y; Z;
+
+edge [color=gray50, penwidth=.5, arrowsize=.5]
+Z -> X;
+X -> Y;
+
+subgraph {
+   rank = same; X; Z;
+}
+}

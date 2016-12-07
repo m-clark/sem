@@ -1,0 +1,12 @@
+digraph mediation {
+graph [rankdir = LR]
+
+node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.75]
+
+node [fontcolor=gray25, fontname=Helvetica, fixedsize=true, fontsize='5%']
+attention4; read7; read21;
+
+edge [color=gray50]
+
+attention4 -> read7; vocab4 -> read7; read7 -> read21;
+}

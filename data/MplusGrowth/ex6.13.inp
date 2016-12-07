@@ -1,0 +1,10 @@
+TITLE: 	this is an example of a growth model for
+	two parallel processes for continuous 
+	outcomes with regressions among the random
+	effects
+DATA:	FILE IS ex6.13.dat;
+VARIABLE:	NAMES ARE y11 y12 y13 y14 y21 y22 y23 y24;
+MODEL:	i1 s1 | y11@0 y12@1 y13@2 y14@3;
+	i2 s2 | y21@0 y22@1 y23@2 y24@3;
+	s1 ON i2;
+	s2 ON i1;
