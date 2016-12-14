@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=F, message = F, warning=F,
 ```
 
 ```{r echo=FALSE}
-library(tufte); library(tidyverse); library(htmltools)
+library(tufte); library(tidyverse); library(htmltools); library(lazerhawk)
 ```
 
 

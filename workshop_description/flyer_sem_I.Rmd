@@ -1,0 +1,47 @@
+---
+title: |
+  | **SEM I: Graphical Models**
+  | A CSCAR Workshop
+author: |
+  | Consulting for Computing, Statistics, \& Analytics Research
+  | University of Michigan
+date: |
+  | **2017-1-18  2-5pm**
+output:
+  word_document: 
+    reference_docx: style.docx  # this is pretty much ignored entirely
+  pdf_document: 
+  html_document:
+    css: indexCSS.css
+    highlight: tango
+    theme: cosmo
+fontsize: 10pt
+geometry: top=.2in,bottom=.1in
+---
+
+\pagenumbering{gobble}
+
+This workshop will help participants develop skills in understanding graphical models, and specifically from the perspective of structural equation modeling (SEM). After a general overview of concepts, regression approaches with observed variables will be demonstrated (path analysis), as well as mediation models in particular.  Alternative approaches and non-SEM settings will also be discussed. Prerequisites: One should have a firm understanding of basic regression estimation techniques.
+
+## Prerequisites
+### Programming
+This workshop will be conducted using <span class='pack'>R</span> within the RStudio environment, and in particular the <span class='pack'>[*lavaan*](http://lavaan.ugent.be/)</span> package. Nothing beyond very basic skill is assumed. If you can import a data set and perform some basic operations on it, that will be enough.  Introductory tutorials can be found all over the web.  
+
+### Statistical knowledge 
+Statistical knowledge required includes being comfortable with standard linear regression models. 
+
+## Instructor
+Michael Clark is a statistical consultant for CSCAR.
+
+## Audience	
+Researchers in any field interested in such models, particularly those of the social sciences.
+
+
+## Registration 
+
+Call CSCAR to register at (734) 764-7828.  All fees must be paid to hold your seat in the workshop. You are not registered for the workshop until your payment has been received by CSCAR. Please make checks payable to CSCAR-University of Michigan, or give the University of Michigan short code to be billed. Send checks to: CSCAR, 3550 Rackham Bldg., University of Michigan, 915 E. Washington St., Ann Arbor MI 48109-1070.
+
+- **Fees**: \$67 for University of Michigan affiliated faculty, staff and students: \$147 for others
+- **Location**: Modern Languages Building Room 2001A 
+- **Total** Seats Available: 20
+

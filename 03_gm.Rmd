@@ -131,7 +131,6 @@ Most models deal only with <span class="emph">direct effects</span>.  In this ca
 While relatively seldom used, multivariate linear regression[^mvreg] is actually very straightforward in some programming environments such as R. It does not require anything specific to SEM to conduct, but that is the realm we'll stick with.  Using the [McClelland data][McClelland], let's try it for ourselves. First, let's look at the data to get a sense of things.
 
 ```{r mcclellandCors, cache=FALSE, echo=F, fig.align='center'}
-library(dplyr); library(lazerhawk)
 psych::describe(mcclelland)
 numericdat = select(mcclelland, -college, -college_missing, -male, -adopted)
 tags$div(style="width:250px; margin:0 auto;",
@@ -405,13 +404,13 @@ In a recursive model, <span class="emph">implied correlations</span> between two
 Consider the following variables, A, B, and C (in a data frame called <span class="objclass">abc</span>) with a model seen in the below diagram. We are interested in identifying the implied correlation between x and z by decomposing the relationship into its different components and using tracing rules.
 
 ```{r traceCoefsInit, echo=F}
-# because of MASS screwing up other packages; something about semplot is screwy too, so don't cache it either
+# because of MASS screwing up other packages; 
 cormat = lazerhawk::createCorr(c(.2,.3,.7))
 abc = MASS::mvrnorm(100, mu=rep(0,3), Sigma=cormat, empirical=TRUE)
 colnames(abc) = LETTERS[1:3]
 # psych::describe(abc)
 ```
-
+<!-- something about semplot is screwy too, so don't cache it either -->
 
 ```{r traceCoefs, echo=-7, cache=F}
 cor(abc)

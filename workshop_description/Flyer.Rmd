@@ -1,0 +1,53 @@
+---
+title: |
+  | \Huge{\textbf{Structural Equation Modeling}}
+  | \Large{A CSCAR Workshop}
+author: |
+  | Consulting for Computing, Statistics, \& Analytics Research
+  | University of Michigan
+date: |
+  | \textbf{March 22 \& 24 2016 1-5 pm}  
+output:
+  pdf_document: default
+  html_document:
+    css: indexCSS.css
+    highlight: tango
+    theme: cosmo
+fontsize: 10pt
+geometry: top=.2in
+---
+---
+geometry: bottom=.1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\pagenumbering{gobble}
+
+This workshop will help participants develop skills in defining, estimating and testing graphical and latent variable models, and structural equation models in particular. After a general overview of concepts, regression approaches with observed variables will be demonstrated (e.g. *path analysis*).   This will be followed by an overview of *latent variable* modeling techniques ('factor analysis'), including categorical latent variables (*mixture models*).
+
+The second part of the course will focus on *SEM* generally, including model construction, interpretation, and issues in assessing such models.  Specific time may be spent on a popular class of SEM, *latent growth curve* models, and time permitting, an overview of extensions and related techniques will be provided.
+
+## Prequisites
+### Programming
+This workshop will be conducted using <span class='pack'>R</span> within the Rstudio environment, and in particular the <span class='pack'>[*lavaan*](http://lavaan.ugent.be/)</span> package. Prior experience with R would be helpful, but only to the point of basic object creation and use, data import, and running a regression.  An overview will be provided at the beginning of the course.
+
+### Statistical knowledge 
+Statistical knowledge required includes being comfortable with standard linear regression models. 
+
+## Instructor
+Michael Clark is a statistical consultant for CSCAR.
+
+## Audience	
+Researchers in any field interested in such models, particularly those of the social sciences.
+
+
+## Registration 
+
+Call CSCAR to register at (734) 764-7828.  All fees must be paid to hold your seat in the workshop. You are not registered for the workshop until your payment has been received by CSCAR. Please make checks payable to CSCAR-University of Michigan, or give the University of Michigan short code to be billed. Send checks to: CSCAR, 3550 Rackham Bldg., University of Michigan, 915 E. Washington St., Ann Arbor MI 48109-1070.
+
+- **Fees**: $189 for University of Michigan affiliated faculty, staff and students: $420 for others
+- **Location**: Modern Languages Building Room 2001A 
+- **Total** Seats Available: 20
+
