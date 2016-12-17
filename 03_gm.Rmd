@@ -1,4 +1,5 @@
 # Graphical Models
+
 ```{r, include=FALSE}
 knitr::clean_cache()
 ```
@@ -53,7 +54,7 @@ DiagrammeR::DiagrammeR("scripts/condindie.gv", type='grViz', width=500, height=2
 ```
 
 <br>
-In this graph, X is *conditionally independent* of Z given Y- there is no correlation between X and Z once Y is accounted for[^condind].  We will revisit this concept when discussing path analysis and latent variable models.  Graphs can be *directed*, *undirected*, or *mixed*. Directed graphs have arrows, sometimes implying a causal flow (a difficult endeavor to demonstrate explicitly) or noting a time component. Undirected graphs merely denote relations among the nodes, while mixed graphs might contain both directional and symmetric relationships.  Most of the models discussed in this course will be directed or mixed.
+In this graph, X is *conditionally independent* of Z given Y- there is no correlation between X and Z once Y is accounted for[^condind].  We will revisit this concept when discussing path analysis and latent variable models.  Graphs can be *directed*, *undirected*, or *mixed*. Directed graphs have arrows, sometimes implying a causal flow (a difficult endeavor to demonstrate explicitly) or noting a time component. Undirected graphs merely denote relations among the nodes, while mixed graphs might contain both directional and symmetric relationships.  Most of the models discussed in this document will be directed or mixed.
 
 
 ## Directed Graphs
@@ -111,7 +112,7 @@ summary(lmModel)
 summary(semModel, rsq=T)
 ```
 
-As we will see in more detail later, SEM incorporates more complicated regression models, but at this point it has the exact same interpretation as our standard regression because there is no difference between the two models. As we go along, we can see the models as generalizations of those we are already well acquainted with, and so one can use that prior knowledge as a basis for understanding the newer content.
+As we will see in more detail later, SEM incorporates more complicated regression models, but at this point it has the exact same interpretation as our standard regression because there is no difference between the two models. As we go along, we can see the structural equation models as generalizations of those we are already well acquainted with, and so one can use that prior knowledge as a basis for understanding the newer ones.
 
 ### Path Analysis
 
@@ -136,8 +137,8 @@ numericdat = select(mcclelland, -college, -college_missing, -male, -adopted)
 tags$div(style="width:250px; margin:0 auto;",
          corrheat(cor(numericdat, use='pair'), width=350, height=350)) 
 ```
-
-While these are not the most strongly correlated variables to begin with, one plausible model might try to predict math and reading at age 21 with measures taken at prior years. 
+<br>
+While these are only weakly correlated variables to begin with, one plausible model might try to predict math and reading at age 21 with measures taken at prior years. 
 
 ```{r paMultipleTargets, cache=TRUE}
 model = "
@@ -169,7 +170,7 @@ mvregModel  = sem(model, data=mcclelland, missing='listwise', meanstructure = T)
 coef(mvregModel)
 ```
 
-We can see now that the coefficients are now slightly different from the SLiM approach. The `read21~~math21` value represents the residual covariance between math and reading at age 21, i.e. after accounting for the other covariate relationships modeled, it tells us how correlated those skills are. Using <span class='func'>summary</span> will show it to be statistically significant.
+We can see that the coefficients are now slightly different from the SLiM approach. The `read21~~math21` value represents the residual covariance between math and reading at age 21, i.e. after accounting for the other covariate relationships modeled, it tells us how correlated those skills are. Using <span class='func'>summary</span> will show it to be statistically significant.  I additionally ask for standardized output to see the correlation along with the covariance.  It actually is not very strong even if it is statistically significant.
 
 ```{r summaryPaMultipleTargets2, eval=T, cache=TRUE}
 summary(mvregModel, standardized=T)
@@ -206,7 +207,7 @@ mediationModel  = sem(model, data=mcclelland)
 summary(mediationModel, rsquare=TRUE)
 ```
 
-What does this tell us? As before, we interpret the results as we would any other regression model, though conceptually there are two sets of models to consider (though they are estimated simultaneously[^oldMediation]), one for reading at age 7 and one for reading at age 21. And indeed, one can think of path analysis as a series of linked regression models. Here we have positive relationships between attention and vocab on reading at age 7, and a positive effect of reading at age 7 on reading at age 21.  Statistically speaking, our model appears to be viable, as there appear to be statistically significant estimates (or nearly so) for each path. 
+What does this tell us? As before, we interpret the results as we would any other regression model, though conceptually there are two sets of models to consider (though they are estimated simultaneously[^oldMediation]), one for reading at age 7 and one for reading at age 21. And indeed, one can think of path analysis as a series of linked regression models[^linkedreg]. Here we have positive relationships between both attention and vocabulary at age 4 and reading at age 7, and a positive effect of reading at age 7 on reading at age 21.  Statistically speaking, our model appears to be viable, as there appear to be statistically significant estimates for each path. 
 
 However, look at the R^2^ value for reading at age 7.  We now see that there are actually no *practical* effects of the age 4 variables at all, as all we are accounting for is < 4% of the variance, and all that we have really discovered is that prior reading ability affects later reading ability.  
 
@@ -239,12 +240,10 @@ summary(reading, rsquare=TRUE)
 ```
 
 
-A note about terminology: some refer to models with indirect effects as *mediation* models[^kline_indvmed], and that terminology appears commonly in the SEM (and esp. psychology) literature (along with the notion of 'buffering').  Many applied researchers starting out with SEM often confuse the term with *moderation*, which is called an *interaction* in every other modeling context. As you start out, referring to *indirect effects* and *interactions* will likely keep you clear on what you're modeling, and perhaps be clearer to those who may not be as familiar with SEM.  Also, in moderation models, one will often see some variable denoted as 'the moderator', but this is completely arbitrary. In an interaction, it makes just as much sense to say that the A-Y relationship varies as a function of B as it does the B-Y relationship varies as a function of A.  Now I have also heard the phrase 'spotlight analysis' to refer to a categorical by continuous variable action. Please don't new terms without context/description to apply to very old techniques[^psychlit].
-
 
 #### More mediation
 
-Here I would like to demonstrate Imai's powerful approach to mediation models using the <span class="pack">mediation</span> package. It is based on a theoretical framework that allows for notably complex models for mediator, outcome or both, including different types of variables for the mediator and outcome.  While it is simple to conduct, the results suggest there are more things to think about when it comes to mediation.  
+Here I would like to demonstrate a powerful approach to mediation models using Imai's <span class="pack">mediation</span> package. It is based on a theoretical framework that allows for notably complex models for mediator, outcome or both, including different types of variables for the mediator and outcome.  While it is simple to conduct, the results suggest there are more things to think about when it comes to mediation.  
 
 To begin, we will run two separate models, one for the mediator and one for the outcome, using the mediate function to use them to estimate the mediation effect. In this case we'll focus on the indirect effect of attention.
 
@@ -262,9 +261,9 @@ detach(package:mediation); detach(package:MASS)
 ```
 
 
-The first thing to note is that there are multiple effects to consider, we have the average causal mediated effect, the average direct effect, the total effect and the proportion mediated. What is an <span class="emph">average causal mediated effect</span>?  First, think about a standard experimental design in which participants are assigned to control and treatment groups.  Ideally, if we really wanted to know about true effects, we'd see the outcome when an individual was a control and when they were were in the treatment. The true *causal* effect for an individual would be the difference between their scores when in the control and when in the treatment. Thus there are two hypothetical situations of different conditions, or <span class="emph">counterfactuals</span>, of interest- what would be the *potential* outcome of a control case if they treated, and vice versa for those in the treated group.
+The first thing to note is that there are multiple effects to consider, we have the average causal mediated effect, the average direct effect, the total effect and the proportion mediated. What is an <span class="emph">average causal mediated effect</span>?  First, think about a standard experimental design in which participants are assigned to control and treatment groups.  Ideally, if we really wanted to know about true effects, we'd see the outcome when an individual was a control and when they were were in the treatment. The true *causal* effect for an individual would be the difference between their scores when in the control and when in the treatment. Thus there are two hypothetical situations of different conditions, or <span class="emph">counterfactuals</span>, of interest- what would be the *potential* outcome of a control case if they treated, and vice versa for those in the treated group[^potout_vs_counterfact].
 
-This <span class="emph">potential outcomes framework</span> is the essence of the <span class="func">mediate</span> function. In the presence of a mediator variable, we can start by defining the <span class="emph">average direct effect</span> (ζ) as follows, where $Y_i$ is the potential outcome for unit i (e.g. a person), $M_i$ the potential outcome of the mediator, and $T_i$ the treatment status. From the mediate function help file[^imai_links]:
+This <span class="emph">potential outcomes framework</span> is the essence of the <span class="func">mediate</span> function. In the presence of a mediator variable, we can start by defining the <span class="emph">average direct effect</span> (ζ) as follows, where $Y_i$ is the potential outcome for unit $i$ (e.g. a person), $M_i$ the potential outcome of the mediator, and $T_i$ the treatment status. From the mediate function help file[^imai_links]:
 
 > The expected difference in the potential outcome when the treatment is changed but the mediator is held constant at the value that would realize if the treatment equals $t$
 
@@ -277,7 +276,7 @@ The **ACME** meanwhile is:
 $$δ(t) = E[Y(t, M(t_1)) - Y(t, M(t_0))]$$
 
 
-> where $t$, $t_1$, $t_0$ are particular values of the treatment T such that $t_1 != t_0$, M(t) is the potential mediator, and Y(t,m) is the potential outcome variable.
+> where $t$, $t_1$, $t_0$ are particular values of the treatment T such that $t_1 \neq t_0$, M(t) is the potential mediator, and Y(t,m) is the potential outcome variable.
 
 Adding these two gives us the <span class="emph">total effect</span>.  In the case of continuous variables, the values for 'control' and 'treatment' are fixed to specific values of interest, but by default represent a unit difference in the values of the variable. The results of the <span class="func">mediate</span> function are based on a simulation approach, and averaged over those simulations.  You'll note there is also a 'proportion of effect mediated'. This is the size of the ACME to the the total effect.  It too is averaged over the simulations (and thus is not simply the ACME/Total Effect reported values).  It's not clear to me how useful of a notion this is, and as noted by the boundaries, it's actually a ratio as opposed to a true proportion (as calculated), such that under some simulations the value can be negative or greater than 1.
 
@@ -305,9 +304,29 @@ As expected, the results of <span class="pack">lavaan</span> and <span class="pa
 
 One should think very hard about positing an indirect effect, especially if there is no time component or obvious pseudo-causal path.  If the effect isn't immediately obvious, or you are dealing with cross-sectional data, then you should probably just examine the direct effects.  Unlike other standard explorations one might do with models (e.g. look for nonlinear relationships), the underlying causal connection and associated assumptions are more explicit in this context.  Many models I've seen in consulting struck me as arbitrary as far as which covariate served as the mediator, required a fairly convoluted explanation for its justification, or ignored other relevant variables because the reasoning would have to include a plethora of indirect effects if it were to be logically consistent.  Furthermore, I can often ask one or two questions and will discover that researchers are actually interested in interactions (i.e. moderation), rather than indirect effects.
 
-This document will not get into models that have *moderated mediation* and *mediated moderation*. In my experience these are often  associated with models that are difficult to interpret at best, or are otherwise not grounded very strongly in substantive concerns.  However, there are times, e.g. in experimental settings, which surprisingly few SEM are applied to, where perhaps it would be very much appropriate. It is left to the reader to investigate those particular complexities when the time comes.
+This document will not get into models that have *moderated mediation* and *mediated moderation*. In my experience these are often  associated with models that are difficult to interpret at best, or are otherwise not grounded very strongly in substantive concerns[^modmed].  However, there are times, e.g. in experimental settings, which surprisingly few SEM are applied to for reasons unknown, where perhaps it would be very much appropriate. It is left to the reader to investigate those particular complexities when the time comes.
 
 Too often investigators will merely throw in these indirect effects and simply report whether the effect is significant or not. If you hide their results and ask if the indirect effect is positive or negative, I suspect they might not even know.  Even if not used, I think the perspective of the potential outcomes framework can help one think appropriately about the situation, and avoid unnecessary complications. If one wants to *explore* possible indirect paths, there are better [approaches][Bayesian Networks] which are still rooted within the structural causal model framework, which we'll see shortly.  In addition, a mediation model should always be compared to a simpler model with no mediation (e.g. via AIC).
+
+
+
+#### Terminology issues
+
+Some refer to models with indirect effects as <span class="emph">mediation</span> models[^kline_indvmed], and that terminology appears commonly in the SEM (and esp. psychology) literature[^buffer].  Many applied researchers just starting out with SEM often confuse the term with <span class="emph">moderation</span>, which is called an <span class="emph">interaction</span> in every other statistical modeling context. As you begin your SEM journey, referring to <span class="emph">indirect effects</span> and <span class="emph">interactions</span> will likely keep you clear on what you're modeling, and perhaps be clearer to those who may not be as familiar with SEM when you present your work.
+
+In models with moderation, one will often see a specific variable denoted as the *moderator*. However, this is completely arbitrary in the vast majority of situations in which it is used. In a typical model that includes an interaction, it makes just as much sense to say that the $\mathcal{A} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{B}$ as it does the $\mathcal{B} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{A}$.  Some suggest using the term *moderation* when only when there is a potential causal relation, almost always temporal in nature, such that the moderator variable precedes the variable in question. In addition, the moderator and the variable moderated must be *uncorrelated*[^wuzumbo].  While such restrictions would render almost every model I've ever seen that uses the term moderation as an ordinary interaction instead, the idea is that the moderator has a causal effect on the path between the variable in question and its target.  This is why you see silly graphs like the one to the left below, which has no tie to any statistical model and generally confuses people more often than it illuminates (the *correct* graph is to the right).  Again though, the actual model is statistically indistinguishable from a standard model including an interaction, so if you want to understand moderation, you simply need to understand what an interaction is.
+
+<div class='col2'><img src="img/moderation.png" style="display:block; margin: 0 auto; width:75%">
+
+```{r modpic, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='right'}
+tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%", 
+DiagrammeR::DiagrammeR("scripts/moderation.gv", type='grViz', width=400, height=200))
+```
+</div>
+<br>
+Recently I have also heard the phrase 'spotlight analysis' to refer to a categorical by continuous variable interaction. Please don't apply new terms to very old techniques in an attempt to make a model sound more interesting[^psychlit]. The work should speak for itself and be as clearly expressed as possible.
+
+The gist is that if you want to talk about your relations using the terms 'mediation' and 'moderation' you'll want to have specific and explicit causal relations among the variables.  If you are unsure, then the answer is clearly that you don't have that situation.  However, you can still incorporate interactions as usual, and explore potential indirect effects by modeling the correlations, e.g. leaving the indirect path undirected.
 
 
 #### Aside: Instrumental variables
@@ -319,9 +338,9 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/iv.gv', width=500, height=250))
 ```
 
-In the graph, $\mathcal{Y}$ is our target variable, $\mathcal{X}$ is the causal variable of interest, and $\mathcal{Z}$ the instrument. The instrumental variable must not be correlated with disturbance of the target variable $\mathcal{Y}$ (later depicted as $\mathcal{U}$), and only has an indirect relation to $\mathcal{Y}$ through $\mathcal{X}$.  Neither target nor causal variable are allowed to effect the instrument directly or indirectly.  In graph theory, this involves the notion of conditional independence we've mentioned before, where $\mathcal{Z}$ is conditionally independent of Y given X, or in other words, if we remove the $\mathcal{X} \rightarrow \mathcal{Y}$ path, $\mathcal{Z}$ and $\mathcal{Y}$ are independent.  Furthermore $\mathcal{Z}$ is *not* conditionally independent of $\mathcal{X}$ with the removal of that path[^direct].
+In the graph, $\mathcal{Y}$ is our target variable, $\mathcal{X}$ is the causal variable of interest, and $\mathcal{Z}$ the instrument. The instrumental variable must not be correlated with disturbance of the target variable (later depicted as $\mathcal{U}$), and only has an indirect relation to $\mathcal{Y}$ through $\mathcal{X}$.  Neither target nor causal variable are allowed to effect the instrument directly or indirectly.  In graph theory, this involves the notion of conditional independence we've mentioned before, where $\mathcal{Z}$ is conditionally independent of Y given X, or in other words, if we remove the $\mathcal{X} \rightarrow \mathcal{Y}$ path, $\mathcal{Z}$ and $\mathcal{Y}$ are independent.  Furthermore, $\mathcal{Z}$ is *not* conditionally independent of $\mathcal{X}$ with the removal of that path[^direct].
 
-The motivating factor for such a model is that the simple $\mathcal{X} \rightarrow \mathcal{Y}$ path may not provide a means for determining a causal relationship, particularly if $\mathcal{X}$ is correlated with the error. As an example[^CamTriv], if we look at the relationship of earnings on education, the unspecified causes might include things, e.g. some general 'ability', that would be correlated with education attained. With error $\mathcal{U}$ we can show the following diagram that depicts the problem.
+The motivating factor for such a model is that the simple $\mathcal{X} \rightarrow \mathcal{Y}$ path may not provide a means for determining a causal relationship, particularly if $\mathcal{X}$ is correlated with the error. As an example[^CamTriv], if we look at the relationship of earnings with education, the unspecified causes of earnings might include things, e.g. some general 'ability', that would be correlated with the potential causal variable of education attained. With error $\mathcal{U}$ we can show the following diagram that depicts the problem.
 
 ```{r ivxyu, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='center'}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
@@ -349,9 +368,9 @@ The instrument $\mathcal{Z}$ affects $\mathcal{X}$ and thus is correlated with $
 model for $\mathcal{Y}$. If instead $\mathcal{Y}$ depended on both $\mathcal{X}$ and $\mathcal{Z}$ but only $\mathcal{X}$ has a direct path to $\mathcal{Y}$, then $\mathcal{Z}$ is basically absorbed into the error so would be correlated with it. With the direct path from $\mathcal{Z}$ to $\mathcal{Y}$ not allowed, we are left with only its influence on $\mathcal{X}$ .
 
 
-Such models were commonly fit with a technique known two-stage least squares, which is demonstrated here.  I use a subset of the <span class="objclass">CigarettesSW</span> data set and <span class="func">ivreg</span> function from the <span class="pack">AER</span> package for comparison.  The data concerns cigarette consumption for the 48 continental US States from 1985–1995, though only the last year is looked at for our purposes.  Here we examine the effect packs per capita (packs) by price (rprice), using state level income (rincome) as the instrumental variable. See the help file for the <span class="objclass">CigarettesSW</span> for more on this example.
+Such models were commonly fit with a technique known two-stage least squares, which is demonstrated here.  I use a subset of the <span class="objclass">CigarettesSW</span> data set and <span class="func">ivreg</span> function from the <span class="pack">AER</span> package for comparison.  The data concerns cigarette consumption for the 48 continental US States from 1985–1995, though only the last year is used for our purposes.  Here we examine the effect on packs per capita (packs) of price (rprice), using state level income (rincome) as the instrumental variable. See the help file for the <span class="objclass">CigarettesSW</span> for more on this data.
 
-```{r ivreg, echo=-c(1:6, 10:11, 23), cache=TRUE}
+```{r ivreg, echo=-c(1:7, 10:11, 22), cache=TRUE}
 # library(AER) # don't use AER directly since AER loads several plus their deps including MASS
 data("CigarettesSW", package = "AER")
 CigarettesSW$rprice = with(CigarettesSW, price/cpi)
@@ -377,9 +396,9 @@ summary(ivmod)
 ymod = lm(packs ~ rincome, data = Cigarettes)
 ```
 
-We can see that these both produce the same results, though actually doing the piecemeal regression would lead to problematic standard errors.  However, by using the fitted values from the regression of $\mathcal{X}$ on $\mathcal{Z}$, we are now able to essentially get the effect of $\mathcal{X}$ untainted by $\mathcal{U}$.  To see more clearly where the effect comes from, the coefficient of regressing $\mathcal{Y}$ on $\mathcal{Z}$ is `r  round(coef(ymod)[2], 3)`, and dividing that by the coefficient of $\mathcal{X}$ on $\mathcal{Z}$ `r round(coef(mod0)[2], 3)` will provide the ultimate effect of price on the pack of cigarettes that we see above.
+We can see that these both produce the same results, though actually doing the piecemeal regression would lead to problematic standard errors.  However, by using the fitted values from the regression of $\mathcal{X}$ on $\mathcal{Z}$, we are now able to essentially get the effect of $\mathcal{X}$ untainted by $\mathcal{U}$.  To see more clearly where the effect comes from, the coefficient of regressing `packs` on `income` is `r  round(coef(ymod)[2], 3)`, and dividing that by the coefficient of `price` on `income`, `r round(coef(mod0)[2], 3)`, will provide the ultimate effect of price on the pack of cigarettes that we see above.
 
-We can run the path model in lavaan as well. Note the slight difference between what we'd normally code up for a path model. In order to get the same results as instrumental variable regression, we have to explicitly add an estimate of the packs disturbance with price.
+We can run the path model in <span class="pack">lavaan</span> as well. Note the slight difference between what we'd normally code up for a path model. In order to get the same results as instrumental variable regression, we have to explicitly add an estimate of the packs disturbance with price.
 
 ```{r lavaan_ivreg, cache=TRUE}
 library(lavaan)
@@ -389,17 +408,70 @@ mod = '
   packs ~~ rprice
 '
 
-modpath = sem(mod, Ciglog, meanstructure = T, se = 'robust')
-summary(modpath)
+modiv = sem(mod, data=Ciglog, meanstructure = T, se = 'robust')
+summary(modiv)
 ```
 
-While instrumental variable regression is common, this is perhaps not a typical path model seen in SEM. With SEM, a model comparison approach might be taken to compare models of competing complexity.  One issue not discussed is where instruments come from.  Generally data is not collected with acquiring them, so it might be very difficult to use such an analysis.  Furthermore, the structured causal framework that includes SEM would generally be a more flexible approach.
+While instrumental variable regression is common, this is perhaps not a typical path model seen in SEM. With SEM, a model comparison approach might be taken to compare models of competing complexity.  One issue not discussed is where instruments come from.  Generally data is not collected with acquiring them in mind, so it might be very difficult to use such an analysis.  Furthermore, the structured causal framework that includes SEM would generally be a more flexible approach.
 
+
+
+#### Aside: Nonrecursive Models
+
+Recursive models have all unidirectional causal effects and disturbances are not correlated. A model is considered nonrecursive if there is a reciprocal relationship, feedback loop, or correlated disturbance in the model[^nonrecursiveName]. Nonrecursive models are potentially problematic when there is not enough information to estimate the model (unidentified model), which is a common concern with them.
+
+A classic example of a nonrecursive relationship is marital satisfaction: the more satisfied one partner is, the more satisfied the other, and vice versa (at least that's the theory). This can be represented by a simple model (below).
+
+
+```{r nonRecursive, echo=F, fig.align='center', fig.height=2, dev='svg'}
+WifeSatisfaction = rnorm(100)
+HusbandSatisfaction = rnorm(100)
+WifeEdu = rnorm(100)
+HusbandEdu = rnorm(100)
+FamIncome = rnorm(100)
+
+model1 = '
+WifeSatisfaction ~ .25*HusbandSatisfaction
+HusbandSatisfaction ~ .5*WifeSatisfaction
+
+WifeSatisfaction ~~ HusbandSatisfaction
+HusbandSatisfaction ~~ 1*HusbandSatisfaction
+WifeSatisfaction ~~ 1*WifeSatisfaction
+'
+
+library(lavaan)
+m1 = sem(model1, data=data.frame(WifeSatisfaction, HusbandSatisfaction))
+semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=F, 
+                  # whatLabels = 'par', 
+                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
+                  label.color='#ffffff') # simply doesn't plot nonrecursive models correctly
+```
+
+Such models are notoriously difficult to specify in terms of *identification*, which we will talk more about later.  For now, we can simply say the above model would not even be estimated as there are more parameters to estimate (two paths, two variances) than there is information in the data (two variances and one covariance).
+
+To make this model identified, we use <span class="emph">instrumental variables</span> as we did before. In this scenario, instrumental variables directly influence one of the variables in a recursive relationship, but not the other. For example, a wife’s education can influence her satisfaction directly and a husband’s education can influence his satisfaction directly, but a husband’s education cannot directly impact a wife’s satisfaction and vice versa (at least for this demonstration). These instrumental variables can indirectly impact a spouses’ satisfaction.  In the following model family income is also included.  The dashed line represents an unanalyzed correlation.
+
+```{r nonRecursive2, echo=F, fig.align='center', dev='svg'}
+model2 = '
+WifeSatisfaction + HusbandSatisfaction ~ FamIncome
+FamIncome ~ WifeEdu + HusbandEdu
+WifeSatisfaction ~ HusbandSatisfaction + WifeEdu
+HusbandSatisfaction ~ WifeSatisfaction + HusbandEdu
+'
+library(lavaan)
+m2 = sem(model2, data=data.frame(WifeSatisfaction, HusbandSatisfaction, WifeEdu, HusbandEdu, FamIncome))
+semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, nCharNodes=3,
+                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
+                  label.color='#ffffff') # simply doesn't plot res cov
+```
+
+
+Many instances of nonrecursive models might better be represented by a correlation.  One must have a very strong theoretical motivation for such models, which is probably why they aren't seen as often in the SEM literature, though they are actually quite common in some areas such as economics, where theory is assumed to be stronger (by economists).
 
 
 #### Aside: Tracing rule
 
-In a recursive model, <span class="emph">implied correlations</span> between two variables, X1 and X2, can be found using <span class="emph">tracing rules</span>. Implied correlations between variables in a model are equal to the sum of the product of all standardized coefficients for the paths between them. Valid tracings are all routes between X1 and X2 that a) do not enter the same variable twice and b) do not enter a variable through an arrowhead and leave through an arrowhead. The following examples assume the variables have been standardized (variance values equal to 1), if standardization has not occurred the variance of variables passed through should be included in the product of tracings.
+In a recursive model, <span class="emph">implied correlations</span> between two variables, X1 and X2, can be found using <span class="emph">tracing rules</span>. Implied correlations between variables in a model are equal to the sum of the product of all standardized coefficients for the paths between them. Valid tracings are all routes between X1 and X2 that a) do not enter the same variable twice, and b) do not enter a variable through an arrowhead and leave through an arrowhead. The following examples assume the variables have been standardized (variance values equal to 1), if standardization has not occurred the variance of variables passed through should be included in the product of tracings.
 
 Consider the following variables, A, B, and C (in a data frame called <span class="objclass">abc</span>) with a model seen in the below diagram. We are interested in identifying the implied correlation between x and z by decomposing the relationship into its different components and using tracing rules.
 
@@ -442,7 +514,7 @@ In SEM models, it's important to consider how well our model-implied correlation
 
 In many cases of path analysis, the path model is not strongly supported by prior research or intuition, and in other cases, people are willing to use <span class='emph'>modification indices</span> after the fact to change the paths in their model. This is unfortunate, as their model is generally *overfit* to begin with, and more so if altered in such an ad hoc fashion.
 
-A more exploratory approach to graphical models is available however.  <span class="emph">Bayesian Networks</span>, an approach within Pearl's structural causal model framework just mentioned and which led to its development, are an alternative to graphical modeling of the sort we've been doing. Though they can be used to produce exactly the same results that we obtain with path analysis via maximum likelihood estimation, they can also be used for constrained or wholly exploratory endeavors as well, with regularization in place to keep from overfitting.
+A more exploratory approach to graphical models is available however.  <span class="emph">Bayesian Networks</span>, an approach within Pearl's structural causal model framework and which led to its development, are an alternative to graphical modeling of the sort we've been doing. Though they can be used to produce exactly the same results that we obtain with path analysis via maximum likelihood estimation, they can also be used for constrained or wholly exploratory endeavors as well, potentially with regularization in place to help reduce overfitting.
 
 As an example, I use the McClelland data to explore potential paths via the <span class='pack'>bnlearn</span> package.  I make the constraints that variables later in time do not effect variables earlier in time[^time_cause], no variables are directed toward background characteristics like sex, and at least for these purposes I keep math and reading at a particular time from having paths to each other.  I show some of the so-called *blacklist* of constraints here.  Note that we can also require certain paths be in the model via a *whitelist*.
 
@@ -505,7 +577,7 @@ visNetwork(nodes=data.frame(g$nodes, value=100), edges=g$edges, width='75%') %>%
 
 The plot of the model results shows that attention span at age 4 has no useful relationship to the other variables, something we'd already suspected based on previous models, and even could guess at the outset given its low correlations. As it has no connections, I've dropped it from the visualization. Furthermore, the remaining paths make conceptual sense.  The parameters, fitted values, and residuals can be extracted with the <span class='func'>bn.fit</span> function, and other diagnostic plots, cross-validation and prediction on new data are also available.
 
-We won't get into the details of these models except to say that one should have them in their tool box. And if one really is in a more exploratory situation, the tools available would typically come with methods far better suited for it than the SEM approach.  The discovery process with Bayesian networks can also be a lot of fun.  Even if one has strong theory, nature is always more clever than we are, and you might find something interesting.
+We won't get into the details of these models except to say that one should have them in their tool box. And if one really is in a more exploratory situation, they would typically come with methods far better suited for the situation than the SEM tools, none of which I come across consider predictive ability very strongly.  The discovery process with Bayesian networks can also be a lot of fun.  Even if one has strong theory, nature is always more clever than we are, and you might find something interesting.
 
 
 
@@ -513,12 +585,12 @@ We won't get into the details of these models except to say that one should have
 
 So far we have been discussing directed graphs in which the implied causal flow tends toward one direction and there are no feedback loops.  However, sometimes the goal is not so much to estimate the paths as it is to find the structure.  <span class='emph'>Undirected graphs</span> simply specify the relations of nodes with edges, but without any directed arrows regarding the relationship.
 
-While we could have used the <span class="pack">bnlearn</span> package for an undirected graph by adding the argument `undirected = T`, there are a slew of techniques available for what is often called <span class='emph'>network analysis</span>.  Often the focus is on *observations*, rather than variables, and what influences whether one sees a tie or not, with modeling techniques available for predicting ties (e.g. Exponential Random Graph models).  Often these are undirected graphs and that is our focus here, but they do not have to be.
+While we could have used the <span class="pack">bnlearn</span> package for an undirected graph by adding the argument `undirected = T`, there are a slew of techniques available for what is often called <span class='emph'>network analysis</span>.  Often the focus is on *observations*, rather than variables, and what influences whether one sees a tie/edge between nodes, with modeling techniques available for predicting ties (e.g. Exponential Random Graph models).  Often these are undirected graphs, and that is our focus here, but they do not have to be.
 
 
 ### Network analysis
 
-Networks can be seen everywhere.  Personal relationships, machines and devices, various business and academic units...  we can analyze the connections among any number of things. A starting point for a very common form of network analysis is an <span class='emph'>adjacency matrix</span>, which represents connections among items we wish to analyze.  Often it is just binary 0-1 values where 1 represents a connection. Any similarity matrix could potentially be used (e.g. a correlation matrix). Here is a simple example of an adjacency matrix:
+Networks can be seen everywhere.  Personal relationships, machines and devices, various business and academic units...  we can analyze the connections among any number of things. A starting point for a very common form of network analysis is an <span class='emph'>adjacency matrix</span>, which represents connections among items we wish to analyze.  Often it contains just binary 0-1 values where 1 represents a connection between nodes. Any similarity matrix could potentially be used (e.g. a correlation matrix). Here is a simple example of an adjacency matrix:
 
 ```{r exampleAdjacency, echo=FALSE}
 set.seed(1234)
@@ -572,7 +644,7 @@ tags$div(style="width:350px; margin:0 auto;",
 
 <br>
 
-The following depicts a graph of the states based on the variables of Life Expectancy, Median Income, High School Graduation Rate, and Illiteracy.  The colors represent the results of a community detection algorithm, and serves to show the clustering is not merely geographical, though one cluster is clearly geographically oriented ('the South'). 
+The following depicts a graph of the states based on the variables of Life Expectancy, Median Income, High School Graduation Rate, and Illiteracy.  The colors represent the results of a community detection algorithm, and serve to show that the clustering is not merely geographical, though one cluster is clearly geographically oriented ('the South'). 
 
 
 ```{r stateNetwork, echo=FALSE, cache=FALSE, fig.width=8}
@@ -646,13 +718,13 @@ Characteristics of the network as a whole may also be examined, e.g. degree dist
 
 ##### Cohesion
 
-Investigate how network members create communities and cliques. This is similar to cluster analysis used in other situations.  Some nodes may be isolated.
+One may wish to investigate how network members create communities and cliques. This is similar to standard cluster analysis used in other situations.  Some nodes may be isolated.
 
 
 ##### Modeling
 
 - ERGM: exponential random graph models, regression modeling for network data
-- Other link analysis
+- Other 'link' analysis
 
 ##### Comparison
 
@@ -663,69 +735,18 @@ A goal might be to compare multiple networks to see if they differ in significan
 While many networks are 'static', many others change over time. One might be interested in this structural change by itself, or modeling something like link loss.  See the <span class="pack">ndtv</span> package for some nice visualization of such approaches.
 
 
-## Nonrecursive Models
-
-Recursive models have all unidirectional causal effects and disturbances are not correlated. A model is considered nonrecursive if there is a reciprocal relationship, feedback loop, or correlated disturbance in the model[^nonrecursiveName]. Nonrecursive models are potentially problematic when there is not enough information to estimate the model (unidentified model), which is a common concern with them.
-
-A classic example of a nonrecursive relationship is marital satisfaction: the more satisfied one partner is, the more satisfied the other, and vice versa. This can be represented by a simple model (below).
-
-
-```{r nonRecursive, echo=F, fig.align='center', fig.height=2, dev='svg'}
-WifeSatisfaction = rnorm(100)
-HusbandSatisfaction = rnorm(100)
-WifeEdu = rnorm(100)
-HusbandEdu = rnorm(100)
-FamIncome = rnorm(100)
-
-model1 = '
-WifeSatisfaction ~ .25*HusbandSatisfaction
-HusbandSatisfaction ~ .5*WifeSatisfaction
-
-WifeSatisfaction ~~ HusbandSatisfaction
-HusbandSatisfaction ~~ 1*HusbandSatisfaction
-WifeSatisfaction ~~ 1*WifeSatisfaction
-'
-
-library(lavaan)
-m1 = sem(model1, data=data.frame(WifeSatisfaction, HusbandSatisfaction))
-semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=F, 
-                  # whatLabels = 'par', 
-                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
-                  label.color='#ffffff') # simply doesn't plot nonrecursive models correctly
-```
-
-Such models are notoriously difficult to specify in terms of *identification*, which we will talk more about later.  For now, we can simply say the above model would not even be estimated as there are more parameters to estimate (two paths, two variances) than there is information in the data (two variances and one covariance).
-
-To make this model identified, one approach is to use what are called <span class="emph">instrumental variables</span>. Instrumental variables directly influence one of the variables in a recursive relationship, but not the other. For example, a wife’s education can influence her satisfaction directly and a husband’s education can influence his satisfaction directly, but a husband’s education cannot directly impact a wife’s satisfaction and vice versa (at least for this demonstration). These instrumental variables can indirectly impact a spouses’ satisfaction (below).  The dashed line represents an unanalyzed correlation.
-
-```{r nonRecursive2, echo=F, fig.align='center', dev='svg'}
-model2 = '
-WifeSatisfaction + HusbandSatisfaction ~ FamIncome
-FamIncome ~ WifeEdu + HusbandEdu
-WifeSatisfaction ~ HusbandSatisfaction + WifeEdu
-HusbandSatisfaction ~ WifeSatisfaction + HusbandEdu
-'
-library(lavaan)
-m2 = sem(model2, data=data.frame(WifeSatisfaction, HusbandSatisfaction, WifeEdu, HusbandEdu, FamIncome))
-semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T,
-                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
-                  label.color='#ffffff') # simply doesn't plot res cov
-```
-
-
-Many instances of nonrecursive models might better be represented by a correlation.  One must have a very strong theoretical motivation for such models, which is probably why they aren't seen as often in the SEM literature, though they are actually quite common in some areas such as economics, where theory is assumed to be stronger (by economists).
 
 ## Summary
 
-Graphical models are a general way to formulate and visualize statistical models. *All* statistical models can be proposed in this framework.  Structured causal models provide a means to posit causal thinking with graphical models, and structural equation models may be seen as a subset of those.  Path analysis within SEM is a form of theoretically motivated graphical model involving only observed variables.  These models might include indirect effects and multiple outcomes of interest, and can be seen as an extension of more familiar regression models to such settings. However, path analysis is just one of a broad set of graphical modeling tools widely used in many disciplines, any of which might be useful for a particular data situation.
+Graphical models are a general way to formulate and visualize statistical models. *All* statistical models can be developed within this framework.  Structured causal models provide a means to posit causal thinking with graphical models, and structural equation models may be seen as a subset of those.  Path analysis within SEM is a form of theoretically motivated graphical model involving only observed variables.  These models might include indirect effects and multiple outcomes of interest, and can be seen as an extension of more familiar regression models to such settings. However, path analysis is just one of a broad set of graphical modeling tools widely used in many disciplines, any of which might be useful for a particular data situation.
 
 
 ## R packages used
 
-- lavaan
-- mediation
-- bnlearn
-- network
+- <span class="pack">lavaan</span>
+- <span class="pack">mediation</span>
+- <span class="pack">bnlearn</span>
+- <span class="pack">network</span>
 
 
 
@@ -740,11 +761,21 @@ Graphical models are a general way to formulate and visualize statistical models
 
 [^oldMediation]: In the past people would run separate OLS regressions to estimate mediation models, particularly for the most simple, three variable case. One paper that for whatever reason will not stop being cited is Baron & Kenny 1986.  *It was 1986*.  Please do not do mediation models like this.  You will always have more than three variables to consider, and always have access to R or other software that can estimate the model appropriately.  While I think it is very helpful to estimate your models in piecemeal fashion for debugging purposes and to facilitate your understanding, use appropriate tools for the model you wish to estimate.  Some packages, such as <span class='pack'>mediate</span>, may still require separate models, but there is far more going on 'under the hood' even then.  For more recent work in this area, see the efforts of [Pearl](http://bayes.cs.ucla.edu/jp_home.html) and [Imai](http://imai.princeton.edu/research/index.html) especially.
 
-[^mccnodescript]: There is a statement "All results controlled for background covariates of vocabulary at age 4, gender, adoption status, and maternal education level." and a picture of only the three-variable mediation part.  If you are surprised at this lack of information, you may not be familiar with the field of psychological research.
+[^linkedreg]: I've seen some balk at this sort of description, but the fact remains that SEM does not have any more tie to causality than any other statistical tool, other than what applied researchers ascribe to their results.  As mentioned before, SEM does not discover causality or allow one to make causal statements simply by conducting it.  It's just a statistical model.
 
-[^psychlit]:  Unless you want to signal that people who are statistically knowledgeable that should stop paying attention to your work. In general, avoid using the applied literature as a basis for how to conduct or report methods. While excellent examples may be found, many fields have typically ignored their own quantitative methodologists, much less statisticians, for decades.  Psychology is rather notorious in this regard, while I might point to political science as a counter example.
+[^mccnodescript]: There is a statement "All results controlled for background covariates of vocabulary at age 4, gender, adoption status, and maternal education level." and a picture of only the three-variable mediation model.  If you are surprised at this lack of information, you may not be familiar with the field of psychological research.
+
+[^psychlit]:  Unless you want to signal to people who are statistically knowledgeable that they should stop paying attention to your work. In general, it's probably best to avoid using the applied literature as a basis for how to conduct or report methods. While excellent examples may be found, many fields have typically ignored their own quantitative methodologists and statisticians for decades.  Psychology is rather notorious in this regard, while I might point to political science as a counter example, in the sense that the latter has long had one of its most popular journals a methodological one.
 
 [^kline_indvmed]: Kline distinguishes indirect effects vs. mediation. I don't, because I don't believe SEM to have any inherently greater ability to discern causality than any other framework, and it doesn't.  I do like his suggestion that mediation be reserved for effects involving time precedence, and defaulting to 'indirect effects' should keep you out of trouble.  But even then, and as physics dictates, the arrow of time is inconsequential on a macro level. All else being equal, your model will fit as well with time 2 $\rightarrow$ time 1 as time 2 $\leftarrow$ time 1.
+
+[^modmed]: As an example, see if you can think of a situation in which an interaction between two variables on some outcome, which technically represents a *difference* in coefficient values, would only exist indirectly. Also realize that simply positing such a situation for two variables would mean you'd have to rule out several competing models of all possible direct and indirect paths between A, B, and their product term. Just for giggles you might also consider that either A or B might have more than two categories, and so must be represented by multiple dummy coded variables and multiple interaction terms. Have fun!
+
+[^buffer]: Along with the notion of *buffering*, which is a near useless term in my opinion.
+
+[^wuzumbo]: See for example, Wu & Zumbo (2008) Understanding and using mediators and moderators. ([link](http://link.springer.com/article/10.1007/s11205-007-9143-1))
+
+[^potout_vs_counterfact]: The historical reference for this approach is with Rubin and even earlier with Neyman.  Some may make the distinction between potential outcomes, which are *potentially* observable for everyone, and counterfactuals that are inherently unobservable.
 
 [^imai_links]: See the package [vignette](ftp://cran.r-project.org/pub/R/web/packages/mediation/vignettes/mediation.pdf) and Imai's [papers](http://imai.princeton.edu/projects/mechanisms.html) for more detail
 
@@ -752,7 +783,7 @@ Graphical models are a general way to formulate and visualize statistical models
 
 [^medvsdirectModcomp]: I suspect this is likely the case for the majority of modeling scenarios.
 
-[^mcc_conclusion]: I have no bone to pick nor know the authors, but after seeing the models thus far, at this point I have to question the major conclusion of the McClelland et al. paper, which focuses on the effects of attention span on these outcomes, and concludes the indirect effects are notable and that there is a noteworthy direct effect on math at age 21.  To begin, the attention span variable starts with no strong linear correlation with either outcome. They admit no direct effect on reading, but then suggest there is still an indirect effect even though it is practically zero and the bulk of it clearly is the read7 $\rightarrow$ read21 path.  If demographics only predict read21 (again this isn't clear from their paper, but such a model does duplicate the few values they actually report), then the R^2^ for read7 is ~ 1.6%.  Thus I can't think of any way to conclude a direct or indirect effect of attention span at age 4 on reading at 21. The math results are only marginally better, but even there the internal fit indices are poor (e.g. rmsea etc.). Had a model comparison approach been used, AIC would not have chosen the mediation model in either case. <br><br> In general, if the path from a variable to a mediator is essentially zero to begin with, save yourself some trouble- there is no reason to test for indirect effects (zero times any value is still zero).<br><br> 
+[^mcc_conclusion]: I have no bone to pick nor know the authors, but after seeing the models thus far, at this point I have to question the major conclusion of the McClelland et al. paper, which focuses on the effects of attention span on these outcomes, and concludes the indirect effects are notable and that there is a noteworthy direct effect on math at age 21.  To begin, the attention span variable starts with no strong linear correlation with either outcome. They admit no direct effect on reading, but then suggest there is still an indirect effect even though it is practically zero and the bulk of it clearly is the read7 $\rightarrow$ read21 path.  If demographics only predict read21 (again this isn't clear from their paper, but such a model does duplicate the few values they actually report), then the R^2^ for read7 is ~ 1.6%.  Thus I can't think of any way to conclude a direct or indirect effect of attention span at age 4 on reading at 21. The math results are only marginally better, but even there the internal fit indices are poor (e.g. rmsea etc.). Had a model comparison approach been used, AIC would not have chosen the mediation model in either case. <br><br> In general, if the path from a variable to a potential mediator is essentially zero to begin with, save yourself some trouble- there is no reason to test for indirect effects (zero times any value is still zero).
 
 [^time_cause]: Note that if this approach were able to uncover causal relations via statistical means, a blacklist would not be necessary. If you actually tried it here, you'd find adoption status influenced by early adult scholastic abilities.
 
