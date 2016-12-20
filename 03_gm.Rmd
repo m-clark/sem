@@ -583,7 +583,7 @@ We won't get into the details of these models except to say that one should have
 
 ## Undirected Graphs
 
-So far we have been discussing directed graphs in which the implied causal flow tends toward one direction and there are no feedback loops.  However, sometimes the goal is not so much to estimate the paths as it is to find the structure.  <span class='emph'>Undirected graphs</span> simply specify the relations of nodes with edges, but without any directed arrows regarding the relationship.
+So far we have been discussing directed graphs in which the implied causal flow tends toward one direction and there are no feedback loops.  However, sometimes the goal is not so much to estimate the paths as it is to find the structure.  <span class='emph'>Undirected graphs</span> simply specify the relations of nodes with edges, but without any directed arrows regarding the relationship.  Such graphs are sometimes called <span class="emph">Markov Random Fields</span>.
 
 While we could have used the <span class="pack">bnlearn</span> package for an undirected graph by adding the argument `undirected = T`, there are a slew of techniques available for what is often called <span class='emph'>network analysis</span>.  Often the focus is on *observations*, rather than variables, and what influences whether one sees a tie/edge between nodes, with modeling techniques available for predicting ties (e.g. Exponential Random Graph models).  Often these are undirected graphs, and that is our focus here, but they do not have to be.
 
