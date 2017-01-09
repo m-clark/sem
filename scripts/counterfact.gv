@@ -1,0 +1,37 @@
+digraph mediation {
+graph [rankdir = LR]
+
+node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.75]
+
+node [fontcolor=gray25, fontname=Helvetica, fixedsize=true, fontsize='5%']
+Treatment; Mediator; Target;
+
+node [shape=circle, width=.1, fixedsize=F, fontsize=8]
+# '3';
+
+
+edge [color=gray50, fontcolor=gray50]
+
+# subgraph{
+#   rankdir = TB;
+#   edge [dir=none]
+#   3 -> Mediator;
+#   rank = same; {Mediator; 3}; 
+# }
+
+edge [label='.3']
+Treatment -> Mediator;
+
+edge [label='.2']
+Mediator -> Target;
+
+
+
+graph [rankdir = BT]
+  edge [minlen=5, label='.5']
+  Treatment -> Target;
+
+subgraph {
+   rank = same; {Treatment; Target}; 
+}
+}

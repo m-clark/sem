@@ -5,7 +5,7 @@ knitr::clean_cache()
 library(lavaan); library(DiagrammeR); library(bnlearn); library(visNetwork); library(igraph) # only load mediation as needed
 ```
 
-A graphical model can be seen as a mathematical or statistical construct connecting *nodes* (or vertices) via *edges* (or links).  When pertaining to statistical models, the nodes might represent variables of interest in our data set, and edges specify the relationships among them.  Visually they are depicted in the style of the following examples.
+A graphical model can be seen as a mathematical or statistical construct connecting *nodes* (or vertices) via *edges* (or links).  When pertaining to statistical models, the nodes might represent variables of interest in our data set, and edges specify the relationships among them.  Visually they are depicted in the style of the following examples.  `r myresult[2]`
 
 
 <img src="img/graphicalModels.png" style="display:block; margin: 0 auto; width:50%">
@@ -319,6 +319,59 @@ parameterestimates(mediationModel) %>%
 ```
 
 As expected, the results of <span class="pack">lavaan</span> and <span class="pack">mediation</span> packages largely agree with one another.  However, the potential outcomes framework has the *product-of-paths* approach as a special case, and thus generalizes to different models and types of variables for the mediator and outcome.
+
+
+##### Explicit Example
+
+While we have shown how to use the tool and compared the outputs, let's make things more simple and explicit to be sure that we understand what's going on. Consider the following three variable setup with estimated parameters.  We have a treatment variable that is dummy coded with 0 = 'Control group' and 1 = 'Treatment group', a continuous Mediator and Target variable.
+
+```{r cfgraph, echo=FALSE}
+tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%", 
+DiagrammeR::DiagrammeR("scripts/counterfact.gv", type='grViz', width=500, height=250))
+```
+
+In addition, we'll consider just a single individual, whose observed values are 'control', i.e. 0, 3 for the mediator, and 2 for the target.  We define the unique values %\epsilon$ that represent invariant characteristics regardless of changes to interventions or counterfactual hypotheses and set them to the following:
+
+$\epsilon_1 = 0$
+
+$\epsilon_2 = 3 - 0*.3 = 3$
+
+$\epsilon_3 = 2 - 0*.5 - 3*.2 = 1.4$
+
+
+If a person is in the control group, this setup suggests the predicted value for the Target would be 3\*.2 + 1.4 = 2.  Let's now figure out what the value would be if this person was in the treatment.  The Mediator value would  now be 3 + 1\*.3 = 3.3.  This would in turn result in a predicted Target value as follows: 1.4 + 3.3\*.2 + 1\*.5 = 2.56. And we could take this approach for other situations.  We could, for example, ask what the expected value be if the Treatment level is 0, but the Mediator was at whatever value it would have been, had the person received the treatment?  The value is 3.3\*.2 + 1.4 = 2.06, which if we subtract from when they are are fully in the control group gives us the mediated effect 2.06 - 2 = .06.  In this linear model it is equivalent to the product-of-paths approach, .3\*.2.  But now we don't have to be restricted to linear models.
+
+```{r echo=F, eval=F}
+set.seed(123)
+N = 10000
+Treatment = rep(0:1, length.out = N)
+Mediator = 3 + .3*Treatment + rnorm(N, sd=.1)
+Target = 0 + .5*Treatment + .2*Mediator + rnorm(N, sd=.1)
+d = data_frame(Treatment, Mediator, Target)
+
+cf = '
+Mediator ~ Treatment
+Target ~ Mediator + Treatment
+'
+
+
+cfmod = sem(cf, data=d)
+# summary(cfmod)
+# semPlot::semPaths(cfmod, what = 'est', style = 'lisrel', nDigits = 1, layout = 'tree2', rotation = 2)
+
+library(mediation)
+mediator_model = lm(Mediator ~ Treatment, data=d)
+outcome_model = lm(Target ~ Treatment  + Mediator, data=d)
+med_result = mediate(model.m = mediator_model, model.y = outcome_model, treat = 'Treatment', mediator = 'Mediator')
+summary(med_result)
+dmed = data_frame(d0_sim=c(med_result$d0.sims), d1_sim=c(med_result$d0.sims))
+dmed %>% 
+  gather(key=situation, value=effect) %>% 
+  ggplot(aes(x=effect, group=situation)) +
+  geom_density(aes(fill=situation))
+```
+
+
 
 
 #### Cavets about indirect effects
