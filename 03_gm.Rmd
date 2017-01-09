@@ -1,7 +1,8 @@
 # Graphical Models
 
-```{r, include=FALSE}
+```{r setupGM, include=FALSE}
 knitr::clean_cache()
+library(lavaan); library(DiagrammeR); library(bnlearn); library(visNetwork); library(igraph) # only load mediation as needed
 ```
 
 A graphical model can be seen as a mathematical or statistical construct connecting *nodes* (or vertices) via *edges* (or links).  When pertaining to statistical models, the nodes might represent variables of interest in our data set, and edges specify the relationships among them.  Visually they are depicted in the style of the following examples.
@@ -10,8 +11,6 @@ A graphical model can be seen as a mathematical or statistical construct connect
 <img src="img/graphicalModels.png" style="display:block; margin: 0 auto; width:50%">
 
 ```{r graphVizExample, echo=FALSE, eval=FALSE}
-library(DiagrammeR)
-
 DiagrammeR("
 digraph DAG {
   # Intialization of graph attributes
@@ -28,7 +27,10 @@ digraph DAG {
   edge [color = gray25, rel = yields]
 
   # Node statements
-  X; Y; Z; ☺; ♥; ☻; 1; 2; 3;
+  X; Y; Z; ☺;  1; 2; 3;
+
+  node [fontcolor = 'darkred']
+  ♥; ☻;
 
   # Edge statements
   X -> Y; Z -> Y;
@@ -92,14 +94,14 @@ DiagrammeR::grViz("scripts/SLiM.gv")
 
 <img src="img/regasgraph.png" style="display:block; margin: 0 auto; width:50%">
 
-While we start simpler, we can use much of the same sort of thinking with more complex models later.  In what follows, we'll show that whether we use a standard R modeling approach (via the <span class="func">lm</span> function), or an SEM approach (via the <span class="func">sem</span> function in <span class="pack">lavaan</span>), the results are identical (aside from the fact that sem is using maximum likelihood).  First, we'll with the standard <span class="func">lm</span> approach.
+While we start simpler, we can use much of the same sort of thinking with more complex models later.  In what follows, we'll show that whether we use a standard R modeling approach (via the <span class="func">lm</span> function), or an SEM approach (via the <span class="func">sem</span> function in <span class="pack">lavaan</span>), the results are identical (aside from the fact that sem is using maximum likelihood, so the variances will be slightly different).  First, we'll with the standard <span class="func">lm</span> approach.
 
 ```{r lmvslavaan1, cache=TRUE}
 mcclelland = haven::read_dta('data/path_analysis_data.dta')
 lmModel = lm(math21 ~ male + math7 + read7 + momed, data=mcclelland)
 ```
 
-Now we can do the same model using the lavaan package, and while the input form will change a bit, and the output will be presented in a manner consistent with SEM, the estimated parameters are identical. Note that the residual standard error in lm is the square root of the variance estimate in the lavaan output.
+Now we can do the same model using the lavaan package, and while the input form will change a bit, and the output will be presented in a manner consistent with SEM, the estimated parameters are identical. Note that the square of the residual standard error in the <span class="func">lm</span> output is compared to the variance estimate in the lavaan output.
 
 ```{r lmvslavaan2, cache=TRUE}
 library(lavaan)
@@ -116,12 +118,13 @@ As we will see in more detail later, SEM incorporates more complicated regressio
 
 ### Path Analysis
 
-<span class='emph'>Path Analysis</span>, and thus SEM, while new to some, is in fact a very, very old technique, statistically speaking[^pathOld].  It can be seen as a generalization of the SLiM approach that can allow for indirect effects and multiple target variables.  Path analysis also has a long history in the econometrics literature though under different names (e.g. instrumental variable regression, 2-stage least squares etc.), and through the computer science realm through the use of graphical models more generally.  As such, there are many tools at your disposal for examining such models, and I'll iterate that much of the SEM perspective on modeling comes largely from specific disciplines, while other approaches may be better for your situation.
+<span class='emph'>Path Analysis</span>, and thus SEM, while new to some, is in fact a very, very old technique, statistically speaking[^pathOld].  It can be seen as a generalization of the SLiM approach that can allow for indirect effects and multiple target variables.  Path analysis also has a long history in the econometrics literature though under different names (e.g. instrumental variable regression, 2-stage least squares etc.), and through the computer science realm through the use of graphical models more generally.  As such, there are many tools at your disposal for examining such models, and I'll iterate that much of the SEM perspective on modeling comes largely from specific disciplines (especially psychology and education), while other approaches that are very common in other disciplines may be better for your situation.
 
 
 #### Types of relationships
 
 The types of potential relationships examined by path analysis can be seen below.
+
 <img src="img/correlationComponents.png" style="display:block; margin: 0 auto; width:50%; height:50%;">
 
 Most models deal only with <span class="emph">direct effects</span>.  In this case there are no intervening variables we wish to consider.  If such variables do exist, we are then dealing with what is often called a mediation model, and must interpret both <span class="emph">indirect</span> and (potentially) direct effects.  When dealing with multiple outcomes, some may have predictors in common, such that the outcomes' correlation can be explained by those <span class="emph">common causes</span> (this will come up in factor analysis later).  Often there are <span class="emph">unanalyzed correlations</span>. As an example, every time you run a regression, the correlations among predictor variables are left 'unanalyzed'. 
@@ -129,7 +132,7 @@ Most models deal only with <span class="emph">direct effects</span>.  In this ca
 
 #### Multiple Targets
 
-While relatively seldom used, multivariate linear regression[^mvreg] is actually very straightforward in some programming environments such as R. It does not require anything specific to SEM to conduct, but that is the realm we'll stick with.  Using the [McClelland data][McClelland], let's try it for ourselves. First, let's look at the data to get a sense of things.
+While relatively seldom used, multivariate linear regression[^mvreg] is actually very straightforward in some programming environments such as R, and conducting models with multivariate outcomes does not require anything specific to SEM, but that is the realm we'll stick with.  Using the [McClelland data][McClelland], let's try it for ourselves. First, let's look at the data to get a sense of things.
 
 ```{r mcclellandCors, cache=FALSE, echo=F, fig.align='center'}
 psych::describe(mcclelland)
@@ -209,7 +212,7 @@ summary(mediationModel, rsquare=TRUE)
 
 What does this tell us? As before, we interpret the results as we would any other regression model, though conceptually there are two sets of models to consider (though they are estimated simultaneously[^oldMediation]), one for reading at age 7 and one for reading at age 21. And indeed, one can think of path analysis as a series of linked regression models[^linkedreg]. Here we have positive relationships between both attention and vocabulary at age 4 and reading at age 7, and a positive effect of reading at age 7 on reading at age 21.  Statistically speaking, our model appears to be viable, as there appear to be statistically significant estimates for each path. 
 
-However, look at the R^2^ value for reading at age 7.  We now see that there are actually no *practical* effects of the age 4 variables at all, as all we are accounting for is < 4% of the variance, and all that we have really discovered is that prior reading ability affects later reading ability.  
+However, look at the R^2^ value for reading at age 7.  We now see that there is little to no *practical* effect of the age 4 variables at all, as all we are accounting for is < 4% of the variance, and all that we have really discovered is that prior reading ability affects later reading ability.  
 
 We can test the indirect effect itself by labeling the paths in the model code.  In the following code, I label them based on the first letter of the variables involved (e.g. `vr` refers to the vocab to reading path), but note that these are arbitrary names.  I also add the direct effects of the early age variable. While the indirect effect for vocab is statistically significant, as we already know there is not a strong correlation between these two variables, it's is largely driven by the strong relationship between reading at age 7 and reading at age 21, which is probably not all that interesting.  A comparison of AIC values, something we'll talk more about later, would favor a model with only direct effects[^medvsdirectModcomp].
 
@@ -233,7 +236,7 @@ In the original article, I did not find their description or diagrams of the mod
 ```{r mcclellandStudy, eval=FALSE, cache=TRUE}
 modReading = "
   read21 ~ read7 + attention4 + vocab4 + male + adopted + momed
-  read7 ~ attention4 + vocab4 + male + adopted + momed 
+  read7 ~ attention4 + vocab4
 "
 reading  = sem(modReading, data=mcclelland, missing='fiml', mimic = 'Mplus', std.ov=TRUE)
 summary(reading, rsquare=TRUE)
@@ -247,21 +250,39 @@ Here I would like to demonstrate a powerful approach to mediation models using I
 
 To begin, we will run two separate models, one for the mediator and one for the outcome, using the mediate function to use them to estimate the mediation effect. In this case we'll focus on the indirect effect of attention.
 
-```{r imai, cache=F}
+
+```{r imai0, cache=F, echo=F, eval=FALSE}
+# due to time and mediation loading everything under the sun, just run this and
+# save out as RData; show the next one so you don't have comment signs
+library(mediation)
+mediator_model = lm(read7 ~ attention4 + vocab4, data=mcclellandComplete)
+outcome_model = lm(read21 ~ read7 + attention4 + vocab4, data=mcclellandComplete)
+results = mediate(mediator_model, outcome_model, treat="attention4", mediator = 'read7')
+save(results, file='data/imai_results.RData')
+```
+
+
+```{r imai, cache=F, eval=FALSE}
 library(mediation)
 mediator_model = lm(read7 ~ attention4 + vocab4, data=mcclellandComplete)
 outcome_model = lm(read21 ~ read7 + attention4 + vocab4, data=mcclellandComplete)
 results = mediate(mediator_model, outcome_model, treat="attention4", mediator = 'read7')
 summary(results)
 ```
+```{r printImai, echo=FALSE}
+load('data/imai_results.RData')
+mediation::summary.mediate(results)
+```
 
-```{r removeMASS, include=FALSE}
-# sigh
+
+
+```{r removeMASS, include=FALSE, eval=F}
+# sigh; if you do run the previous chunk
 detach(package:mediation); detach(package:MASS)
 ```
 
 
-The first thing to note is that there are multiple effects to consider, we have the average causal mediated effect, the average direct effect, the total effect and the proportion mediated. What is an <span class="emph">average causal mediated effect</span>?  First, think about a standard experimental design in which participants are assigned to control and treatment groups.  Ideally, if we really wanted to know about true effects, we'd see the outcome when an individual was a control and when they were were in the treatment. The true *causal* effect for an individual would be the difference between their scores when in the control and when in the treatment. Thus there are two hypothetical situations of different conditions, or <span class="emph">counterfactuals</span>, of interest- what would be the *potential* outcome of a control case if they treated, and vice versa for those in the treated group[^potout_vs_counterfact].
+The first thing to note is that there are multiple results to consider, we have the average causal mediated effect, the average direct effect, the total effect and the proportion mediated. What is an <span class="emph">average causal mediated effect</span>?  First, think about a standard experimental design in which participants are assigned to control and treatment groups.  Ideally, if we really wanted to know about true effects, we'd see the outcome when an individual was a control and when they were were in the treatment. The true *causal* effect for an individual would be the difference between their scores when in the control and when in the treatment. Thus there are two hypothetical situations of different conditions, or <span class="emph">counterfactuals</span>, of interest- what would be the *potential* outcome of a control case if they treated, and vice versa for those in the treated group[^potout_vs_counterfact].
 
 This <span class="emph">potential outcomes framework</span> is the essence of the <span class="func">mediate</span> function. In the presence of a mediator variable, we can start by defining the <span class="emph">average direct effect</span> (ζ) as follows, where $Y_i$ is the potential outcome for unit $i$ (e.g. a person), $M_i$ the potential outcome of the mediator, and $T_i$ the treatment status. From the mediate function help file[^imai_links]:
 
@@ -401,7 +422,6 @@ We can see that these both produce the same results, though actually doing the p
 We can run the path model in <span class="pack">lavaan</span> as well. Note the slight difference between what we'd normally code up for a path model. In order to get the same results as instrumental variable regression, we have to explicitly add an estimate of the packs disturbance with price.
 
 ```{r lavaan_ivreg, cache=TRUE}
-library(lavaan)
 mod = '
   packs ~ rprice
   rprice ~ rincome
@@ -439,7 +459,6 @@ HusbandSatisfaction ~~ 1*HusbandSatisfaction
 WifeSatisfaction ~~ 1*WifeSatisfaction
 '
 
-library(lavaan)
 m1 = sem(model1, data=data.frame(WifeSatisfaction, HusbandSatisfaction))
 semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=F, 
                   # whatLabels = 'par', 
@@ -458,7 +477,7 @@ FamIncome ~ WifeEdu + HusbandEdu
 WifeSatisfaction ~ HusbandSatisfaction + WifeEdu
 HusbandSatisfaction ~ WifeSatisfaction + HusbandEdu
 '
-library(lavaan)
+
 m2 = sem(model2, data=data.frame(WifeSatisfaction, HusbandSatisfaction, WifeEdu, HusbandEdu, FamIncome))
 semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, nCharNodes=3,
                   sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
@@ -518,7 +537,7 @@ A more exploratory approach to graphical models is available however.  <span cla
 
 As an example, I use the McClelland data to explore potential paths via the <span class='pack'>bnlearn</span> package.  I make the constraints that variables later in time do not effect variables earlier in time[^time_cause], no variables are directed toward background characteristics like sex, and at least for these purposes I keep math and reading at a particular time from having paths to each other.  I show some of the so-called *blacklist* of constraints here.  Note that we can also require certain paths be in the model via a *whitelist*.
 
-```{r blacklist, echo=F, eval=-c(3:10), cache=F}
+```{r blacklist, echo=F, eval=-c(3:10), cache=T}
 mcclellandNoCollege = select(mcclelland, -college, -college_missing) %>% 
   na.omit %>% 
   sapply(as.numeric) %>% 
@@ -540,7 +559,7 @@ blacklist2 = data.frame(from = c(rep(c('read21', 'math21'), each=7), rep(c('read
                              rep(c('adopted',  'male', 'momed'), times=2),
                              c('male',  'momed', 'adopted'), c('momed',  'adopted', 'male')))
 
-library(bnlearn)
+# library(bnlearn)
 modelgs = bn.cv(mcclellandNoCollege, 'gs', algorithm.args = list(blacklist = blacklist, test='mi-g-sh'))
 modeliamb =  bn.cv(mcclellandNoCollege, 'iamb', algorithm.args = list(blacklist = blacklist, test='mi-g-sh'))
 modelinter = bn.cv(mcclellandNoCollege, 'inter.iamb', algorithm.args = list(blacklist = blacklist, test='mi-g-sh'))
@@ -551,7 +570,7 @@ head(blacklist)
 
 Now we can run the model.  In this case we'll use the *Grow-Shrink* algorithm, which is one of the simpler available in the package, though others came to the same conclusion[^mcc_conclusion].
 
-```{r bn, echo =1:2, fig.width=5, fig.height=5, fig.align='center', dev='svg', cache=TRUE}
+```{r bn, echo =1:2, fig.width=5, fig.height=5, fig.align='center', dev='svg', cache=F}
 library(bnlearn)
 model = gs(mcclellandNoCollege, blacklist = blacklist, test='mi-g-sh')  
 # plot(model)
@@ -781,7 +800,7 @@ Graphical models are a general way to formulate and visualize statistical models
 
 [^bootmed]: In general, the recommendation is to use bootstrap estimates for the indirect effect interval estimate anyway.
 
-[^medvsdirectModcomp]: I suspect this is likely the case for the majority of modeling scenarios.
+[^medvsdirectModcomp]: I suspect this is likely the case for the majority of modeling scenarios in social sciences that are often dealing with fairly weak effects, where the additional complexity would typically not result in better predictive value.
 
 [^mcc_conclusion]: I have no bone to pick nor know the authors, but after seeing the models thus far, at this point I have to question the major conclusion of the McClelland et al. paper, which focuses on the effects of attention span on these outcomes, and concludes the indirect effects are notable and that there is a noteworthy direct effect on math at age 21.  To begin, the attention span variable starts with no strong linear correlation with either outcome. They admit no direct effect on reading, but then suggest there is still an indirect effect even though it is practically zero and the bulk of it clearly is the read7 $\rightarrow$ read21 path.  If demographics only predict read21 (again this isn't clear from their paper, but such a model does duplicate the few values they actually report), then the R^2^ for read7 is ~ 1.6%.  Thus I can't think of any way to conclude a direct or indirect effect of attention span at age 4 on reading at 21. The math results are only marginally better, but even there the internal fit indices are poor (e.g. rmsea etc.). Had a model comparison approach been used, AIC would not have chosen the mediation model in either case. <br><br> In general, if the path from a variable to a potential mediator is essentially zero to begin with, save yourself some trouble- there is no reason to test for indirect effects (zero times any value is still zero).
 

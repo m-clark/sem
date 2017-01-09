@@ -24,6 +24,7 @@ output:
     # bookdown::tufte_html_book:
     #   toc: yes
     #   css: [toc.css, ../notebooks.css]
+always_allow_html: yes
 font-import: http://fonts.googleapis.com/css?family=Risque|Roboto|Open+Sans
 font-family: 'Roboto'
 documentclass: book

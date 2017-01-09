@@ -11,9 +11,9 @@ bookdown::gitbook:
     edit:
       link: https://github.com/rstudio/bookdown-demo/edit/master/%s
     highlight: pygments
-bookdown::pdf_book:
-  includes:
-    in_header: preamble.tex
-  latex_engine: xelatex
-  citation_package: natbib
+# bookdown::pdf_book:
+#   includes:
+#     in_header: preamble.tex
+#   latex_engine: xelatex
+#   citation_package: natbib
 bookdown::epub_book: default
