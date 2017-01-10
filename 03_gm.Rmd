@@ -5,7 +5,7 @@ knitr::clean_cache()
 library(lavaan); library(DiagrammeR); library(bnlearn); library(visNetwork); library(igraph) # only load mediation as needed
 ```
 
-A graphical model can be seen as a mathematical or statistical construct connecting *nodes* (or vertices) via *edges* (or links).  When pertaining to statistical models, the nodes might represent variables of interest in our data set, and edges specify the relationships among them.  Visually they are depicted in the style of the following examples.  `r myresult[2]`
+A graphical model can be seen as a mathematical or statistical construct connecting *nodes* (or vertices) via *edges* (or links).  When pertaining to statistical models, the nodes might represent variables of interest in our data set, and edges specify the relationships among them.  Visually they are depicted in the style of the following examples.
 
 
 <img src="img/graphicalModels.png" style="display:block; margin: 0 auto; width:50%">
@@ -330,7 +330,7 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
 DiagrammeR::DiagrammeR("scripts/counterfact.gv", type='grViz', width=500, height=250))
 ```
 
-In addition, we'll consider just a single individual, whose observed values are 'control', i.e. 0, 3 for the mediator, and 2 for the target.  We define the unique values %\epsilon$ that represent invariant characteristics regardless of changes to interventions or counterfactual hypotheses and set them to the following:
+In addition, we'll consider just a single individual, whose observed values are 'control', i.e. 0, 3 for the mediator, and 2 for the target.  We define the unique values $\epsilon_*$ that represent invariant characteristics that exist regardless of changes to interventions or counterfactual hypotheses and set them to the following:
 
 $\epsilon_1 = 0$
 
@@ -371,6 +371,7 @@ dmed %>%
   geom_density(aes(fill=situation))
 ```
 
+One thing to note about the above, despite not having a data set or statistical result, we engaged in attempting to understand causal relations among the variables under theoretical consideration.  Even though we may use the tools of statistical analysis, the key things that separates SEM and common regression approaches is the *explicit* assumption of causal relations and the ability to test some causal claims[^bollenpearl].
 
 
 
@@ -840,6 +841,9 @@ Graphical models are a general way to formulate and visualize statistical models
 [^psychlit]:  Unless you want to signal to people who are statistically knowledgeable that they should stop paying attention to your work. In general, it's probably best to avoid using the applied literature as a basis for how to conduct or report methods. While excellent examples may be found, many fields have typically ignored their own quantitative methodologists and statisticians for decades.  Psychology is rather notorious in this regard, while I might point to political science as a counter example, in the sense that the latter has long had one of its most popular journals a methodological one.
 
 [^kline_indvmed]: Kline distinguishes indirect effects vs. mediation. I don't, because I don't believe SEM to have any inherently greater ability to discern causality than any other framework, and it doesn't.  I do like his suggestion that mediation be reserved for effects involving time precedence, and defaulting to 'indirect effects' should keep you out of trouble.  But even then, and as physics dictates, the arrow of time is inconsequential on a macro level. All else being equal, your model will fit as well with time 2 $\rightarrow$ time 1 as time 2 $\leftarrow$ time 1.
+
+[^bollenpearl]: Bollen & Pearl (2013) list myth #2 about SEM is that SEM and regression are essentially equivalent.  While I agree that we can think of them differently, I don't find their exposition very persuasive.  Their explanation of a structural model is no different than what you see for standard regression in econometrics and more rigorous statistics books. It's not clear to me where they think a 'residual' in regression comes from if not from 'unexplained causes' not included in the model (I actually prefer stating regression models as $y \sim \mathcal{N}(X\beta, \sigma^2)$ so as to make the data generating process explicit, a point mostly ignored in SEM depictions). Changing to 'equals' (=) to 'assignment' (:=) in the equation doesn't work if you consider that most programming languages use = for assignment.  Adding a picture certainly doesn't change things, and as a consultant, I can say that expressing a model graphically first doesn't keep people from positing utterly nonsense models from a causal perspective (and may actually encourage it).  <br><br> The gist is that causality is something the researcher, not the data or the model, brings to the scientific table in an explicit fashion, something Bollen & Pearl even state clearly in their discussion of the first myth (that SEM aims to establish causal relations from correlations).  Practically speaking, an SEM will produce exactly the same output whether you have strong causal claims or not. 
+
 
 [^modmed]: As an example, see if you can think of a situation in which an interaction between two variables on some outcome, which technically represents a *difference* in coefficient values, would only exist indirectly. Also realize that simply positing such a situation for two variables would mean you'd have to rule out several competing models of all possible direct and indirect paths between A, B, and their product term. Just for giggles you might also consider that either A or B might have more than two categories, and so must be represented by multiple dummy coded variables and multiple interaction terms. Have fun!
 

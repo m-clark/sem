@@ -1,6 +1,6 @@
 # Structural Equation Modeling
 
-Structural equation modeling combines the path analytic and latent variable techniques together to allow for regression models among latent and observed variables.  Any model, even the SLiM, can be seen as some form of SEM.  However, the term is typically reserved for the combination of latent and observed variables in a model.
+Structural equation modeling combines the path analytic and latent variable techniques together to allow for regression models among latent and observed variables.  Any model, even the SLiM, can be seen as some form of SEM.  However, the term is typically reserved for the combination of latent and observed variables in a model, often with causal implications[^bpSEM].
 
 ## Measurement model
 
@@ -334,6 +334,8 @@ SEM is a powerful modeling approach that generalizes many other techniques, but 
 - semTools
 - semPlots
 
+
+[^bpSEM]: Bollen & Pearl (2013) put the causal aspect this way: 'SEM is an inference engine that takes in two inputs, qualitative causal assumptions and empirical data, and derives two logical consequences of these inputs: quantitative causal conclusions and statistical measures of fit for the testable implications of the assumptions. Failure to fit the data casts doubt on the strong causal assumptions of zero coefficients or zero covariances and guides the researcher to diagnose, or repair the structural misspecifications. Fitting the data does not "prove" the causal assumptions, but it makes them tentatively more plausible. Any such positive results need to be replicated and to withstand the criticisms of researchers who suggest other models for the same data.'.
 
 [^bayesEstimator]: See the <span class="pack">blavaan</span> package.
 
