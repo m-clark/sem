@@ -11,7 +11,7 @@ output:
     # css: ../latent.css # using latent will mess up line breaks in code (only for notebook)
     theme: sandstone
     font-family: Roboto
-    highlight: pygments
+    highlight: zenburn
     toc: TRUE
     toc_float: TRUE
     code_folding: hide
@@ -25,14 +25,53 @@ library(magrittr); library(dplyr); library(lavaan)
 
 
 # Exercises
+
+In all these exercises click to show the code. Hints do not contain working code, and are there to help you out only.
+
 ## Path Analysis
-### Part 1
+
+### Part 0 Mediation
+
+Consider the following code regarding a 3 variable mediation problem, and draw the corresponding path model.  Which is the covariate, mediator, and outcome? Using the 'product-of-paths' approach, what value should the indirect effect be in the population?  
+
+```{r eval=FALSE}
+set.seed(1212)
+N = 1000
+v = sample(0:1, N, replace = T)
+q = .2*v + rnorm(N)
+r = .7*q + .4*v + rnorm(N)
+```
+
+Run the above code, then use the <span class="pack">mediation</span> package to estimate it. The code below provides a hint. Except for the first line, the code is *conceptual* only, i.e. you have to fill in the right parts.
+
+```{r eval=FALSE}
+d = data.frame(v, q, r)
+mediation_model = lm(mediator ~ covariate, data=d)
+outcome_model   = lm(outcome  ~ covariate + mediator, data=d)
+
+library(mediation)
+mediation_result = mediate(mediation_model, outcome_model,  treat = 'covariate', mediator = 'mediator')
+summary(mediation_result)
+```
+
+```{r eval=FALSE, echo=FALSE}
+d = data.frame(v, q, r)
+mediation_model = lm(q ~ v, data=d)
+outcome_model   = lm(r ~ v + q, data=d)
+
+library(mediation)
+mediation_result = mediate(mediation_model, outcome_model,  treat = 'v', mediator = 'q')
+summary(mediation_result)
+```
+
+
+### Part 1 Path Analysis
 
 This exercise investigates satisfaction in high school seniors using the 1993 Monitoring the Future dataset (`'data/monitorfuture.csv'`). Perform a path analysis on the four measured variables: self-esteem (esteem), overall life satisfaction (overall), locus of control (locus), and loneliness (lonely). Estimate the following model using lavaan (note that the dashed line is an 'unanalyzed' correlation and doesn't need to be explicit in the model).
 
 <br>
 
-```{r paExercise1Old, eval=FALSE, echo=FALSE, results='hide'}
+```{r paExercise1Old, eval=F, echo=FALSE, results='show'}
 mcclelland = haven::read_dta('../data/path_analysis_data.dta')
 library(lavaan)
 modMath = 
@@ -70,11 +109,11 @@ After that, run the model using the <span class="func">sem</span> function in <s
 ```{r pa1Hint2,  eval=FALSE}
 satistifaction_ModelResults = sem(modelcodename, data=modeldataname)
 
-summary(satistifaction_ModelResults, rsquare=T)
+summary(satistifaction_ModelResults, rsquare=T, std=T)
 ```
 
 
-Your results should be consistent with the following graph.
+Your results should be consistent with the following graph (shows standardized results).
 
 ```{r paResults, echo=FALSE, results='hide', eval=-6}
 satistifaction_ModelResults = sem(satistifaction_ModelCode, data=mtf)
@@ -106,9 +145,9 @@ Questions:
 4. What specifically are the R^2^ values for the endogenous variables?
 
 
-### Part 2
+### Part 2 Indirect Effects
 
-Rerun with the following model (click to show).
+Rerun with the model to explicitly test the indirect effects using the product-of-paths approach and labeling the paths in the lavaan model.  Click to see how. 
 
 <br>
 
@@ -125,15 +164,35 @@ satistifaction_ModelCode_Mediation = '
 
 <br>
 
-Regarding this mediation model... 
+Regarding this model... 
 
   - A. Is the indirect effect for loneliness on life satisfaction statistically significant? 
   - B. How about locus of control?
-  - C. Do you think loneliness causes self-esteem (more lonely, less self-esteem), or vice versa, or perhaps they are simply correlated?
+  - C. Do you think loneliness *causes* self-esteem (more lonely, less self-esteem), or vice versa, or perhaps they are simply correlated?
 
 <br><br><br>
 
+### Part 3 Non-SEM Graphical Models
 
+#### Bayesian Networks
+
+The following code creates an adjacency matrix, the corresponding graph (for 10 nodes), and a couple measures for nodes.  Play around with it to see what you come up with.  For example, if you reverse the probabilities for the 0s and 1s, how will the graph change?
+
+```{r, eval=F}
+library(igraph)
+adj = matrix(sample(0:1, 1000, replace=T, prob = c(.75,.25)), 10, 10)
+rownames(adj) = colnames(adj) = LETTERS[1:10]
+diag(adj) = 0
+g = graph_from_adjacency_matrix(adj, mode='undirected')
+plot(g)
+degree(g)
+page.rank(g)
+
+ggplot2::qplot(degree(g), geom='bar')
+```
+
+
+#### Network Analysis
 
 
 ## Factor Analysis
