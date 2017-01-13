@@ -32,7 +32,7 @@ In all these exercises click to show the code. Hints do not contain working code
 
 ### Part 0 Mediation
 
-Consider the following code regarding a 3 variable mediation problem, and draw the corresponding path model.  Which is the covariate, mediator, and outcome? Using the 'product-of-paths' approach, what value should the indirect effect be in the population?  
+Consider the following code regarding a 3 variable mediation problem, and draw the corresponding path model, including the proposed path values.  Which is the covariate, mediator, and outcome? Using the 'product-of-paths' approach, what value should the indirect effect be in the population?  
 
 ```{r eval=FALSE}
 set.seed(1212)
@@ -115,7 +115,7 @@ summary(satistifaction_ModelResults, rsquare=T, std=T)
 
 Your results should be consistent with the following graph (shows standardized results).
 
-```{r paResults, echo=FALSE, results='hide', eval=-6}
+```{r paResults, echo=FALSE, results='hide', eval=F}
 satistifaction_ModelResults = sem(satistifaction_ModelCode, data=mtf)
 summary(satistifaction_ModelResults, rsquare=T)
 
@@ -147,7 +147,7 @@ Questions:
 
 ### Part 2 Indirect Effects
 
-Rerun with the model to explicitly test the indirect effects using the product-of-paths approach and labeling the paths in the lavaan model.  Click to see how. 
+Rerun the model to explicitly test the indirect effects using the product-of-paths approach and labeling the paths in the lavaan model.  Click to see how. 
 
 <br>
 
@@ -172,30 +172,62 @@ Regarding this model...
 
 <br><br><br>
 
+
+
 ### Part 3 Non-SEM Graphical Models
 
 #### Bayesian Networks
 
-The following code creates an adjacency matrix, the corresponding graph (for 10 nodes), and a couple measures for nodes.  Play around with it to see what you come up with.  For example, if you reverse the probabilities for the 0s and 1s, how will the graph change?
+The following provides some data for you to play with.  From the help file
+
+Lauritzen and Spiegelhalter (1988) motivate this example as follows:
+
+"Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea."
+
+The asia data set contains the following yes-no binary variables:
+
+- D dyspnoea
+- T tuberculosis
+- L lung cancer
+- B bronchitis
+- A visit to Asia
+- S smoking
+- X chest X-ray
+- E tuberculosis versus lung cancer/bronchitis
+
+The following will run a model for this data. What variables seem to be related others?
+
+```{r bnlearn, eval=FALSE}
+library(bnlearn)
+data(asia)
+asia = select(asia, -E)
+mod = gs(asia)
+bnlearn:::plot.bn(mod)
+```
+
+
+
+#### Network Analysis
+
+The following code creates an adjacency matrix (1 signifies a connection, 0 none), the corresponding graph (for 10 nodes), and a couple statistical measures for nodes.  Play around with it to see what you come up with.  For example, if you reverse the probabilities for the 0s and 1s in that first line, how will the graph change?
 
 ```{r, eval=F}
 library(igraph)
 adj = matrix(sample(0:1, 1000, replace=T, prob = c(.75,.25)), 10, 10)
 rownames(adj) = colnames(adj) = LETTERS[1:10]
 diag(adj) = 0
-g = graph_from_adjacency_matrix(adj, mode='undirected')
+g = graph_from_adjacency_matrix(adj, mode='directed')
 plot(g)
 degree(g)
-page.rank(g)
+page.rank(g)$vector
 
 ggplot2::qplot(degree(g), geom='bar')
 ```
 
 
-#### Network Analysis
-
-
 ## Factor Analysis
+
+### Part 0 PCA and FA comparison
 
 ### Part 1
 
