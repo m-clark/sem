@@ -1,0 +1,30 @@
+Original: This (2-session) two hour workshop will help participants develop skills in defining, estimating and testing graphical and latent variable models, and structural equation models in particular. After a general overview of concepts, regression approaches with observed variables will be demonstrated (e.g. path analysis).
+
+This will be followed by an overview of latent variable modeling techniques (‘factor analysis’), including categorical latent variables (mixture models).
+The second part of the course will focus on SEM generally, including model construction, interpretation, and issues in assessing such models. Specific time may be spent on a popular class of SEM, latent growth curve models, and time permitting, an overview of extensions and related techniques will be provided.
+
+
+SEM I: Graphical Modeling
+
+This workshop will help participants develop skills in understanding and conducting graphical models, and specifically from the perspective of structural equation modeling. After a general overview of concepts, regression approaches with observed variables will be demonstrated (e.g. path analysis), and mediation models in particular.  Alternative approaches and non-SEM settings will also be discussed. Prerequisites: One should have a firm understanding of basic regression estimation techniques.  R will be the program of choice, but nothing beyond very basic skill is assumed. While this workshop can serve as a standalone session, it is required for SEM III: Structural Equation Modeling.
+
+SEM II: Latent Variables
+
+This workshop will help participants develop skills in understanding and conducting latent variable models, and specifically from the perspective of structural equation modeling. After a conceptual overview, a broad view of matrix factorization techniques will be provided along with specific examples (e.g. PCA, 'factor analysis').  In addition, measurement error issues, reliability, and scale development will be discussed (e.g. 'confirmatory' factor analysis). Prerequisites: One should have a firm understanding of basic regression. R will be the program of choice, but nothing beyond very basic skill is assumed.  While this workshop can serve as a standalone session, it is required for SEM III: Structural Equation Modeling.
+
+
+SEM III: Structural Equation Modeling
+
+This workshop will help participants develop skills in understanding and conducting structural equation models.  After an initial review of path analytic and measurement model techniques with latent variables (covered in SEM I and II), focus will shift to putting both strategies into a single coherent structural equation modeling framework.  As such, SEM I and II or understanding of the content are *required*.  If you have not taken them, you must have gone over the relevant content, available [here](m-clark.github.io/docs/sem).  
+
+
+SEM IV: Growth Curve (and Mixed) Models
+
+This workshop will help participants develop skills in understanding growth curve models and their observed variable counterpart, mixed models.  After an initial review of random effects models, a standard growth curve model will be demonstratedbasics of growth .  Prerequisites are SEM III (which requires SEM I and II).  If you have not taken them, you must have gone over the relevant content, available [here](m-clark.github.io/docs/sem).  You will be expected to be familiar with basic R programming and the lavaan package in particular.
+
+
+SEM V: Latent classes
+
+This workshop will demonstrate mixture models in standard settings.
+
+Prerequisites are SEM III.

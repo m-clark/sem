@@ -130,6 +130,7 @@ See the terminology section in the graphical models chapter for more detail.
 ```{r parallelProcess, eval=FALSE}
 
 # parallel process --------------------------------------------------------
+# See EXAMPLE 6.13 in Mplus User's Guide
 
 # let's simulate data with a negative slope average and positive correlation among intercepts and other process slopes
 set.seed(1234)

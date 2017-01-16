@@ -417,7 +417,7 @@ Numbering your time from zero makes sense in both worlds.  This leads to the nat
 
 ## Other stuff
 
-In the [appendix][# Parallel Process Example] I provide an example of a parallel process in which we posit two growth curves at the same time, with possible correlations among them. This could be accomplished quite easily with a standard mixed model in the Bayesian framework, with a multivariate response, though I'll have to come back to that later.  
+In the [appendix][Parallel Process Example] I provide an example of a parallel process in which we posit two growth curves at the same time, with possible correlations among them. This could be accomplished quite easily with a standard mixed model in the Bayesian framework, with a multivariate response, though I'll have to come back to that later.  
 
 ## Summary
 
