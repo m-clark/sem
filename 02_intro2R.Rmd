@@ -52,6 +52,31 @@ RStudio is an <span class="emph">integrated development environment</span> (**ID
 See [Emacs Speaks Statistics](http://ess.r-project.org/) for an alternative. The point is, base R is not an efficient way to use R, and you have at least two very powerful options to make your coding experience easier and more efficient.
 
 
+### Importing Data
+
+It is as easy to import data into R from other programs and text files as it is any other statistical program.  As a first step, feel free to use the menu-based approach via the Environment tab.
+
+<img src="img/importData.png" style="display:block; margin: 0 auto;">
+
+
+Note that you have easy access to the code that actually does the job.  You should quickly get used to a code-based approach as soon as possible, that way you don't waste time clicking and hunting for files, and instead can quickly run a single line of code.  It is easier to select specific options as well.  Some key packages to note:
+
+- <span class="pack">base</span>: Base R already can read in tab-delimited, comma-separated etc. text files
+- <span class="pack">foreign</span>: Base R comes with the foreign package that can read in files from other statistical packages.  However support for Stata ended with version 12.
+
+Newer packages
+
+- <span class="pack">readr</span>: enhanced versions of Base R read functionality
+- <span class="pack">haven</span>: replacement for foreign that can also read current Stata files
+- <span class="pack">readxl</span>: for Excel specifically
+
+
+There are many other packages that would be of use for special situations and other less common file types and structures.
+
+
+
+
+
 
 ## Key things to know about R
 
@@ -86,7 +111,7 @@ The above code demonstrates that R can be as easy to use as anything else, and i
 
 ### Object-oriented
 
-This section may be a little more than newcome to R wants or even needs to know to get started with R. However, most of the newbie's errors will be due not knowing a little about this aspect of R programming, and I've seen some make the same mistakes even after using R for a long time as a result.
+This section may be a little more than a newcomer to R wants or even needs to know to get started with R. However, most of the newbie's errors will be due not knowing a little about this aspect of R programming, and I've seen some make the same mistakes even after using R for a long time as a result.
 
 
 R is <span class="emph">object-oriented</span>.  For our purposes this means that we create what are called objects and use <span class="emph">functions</span> to manipulate those objects in some fashion. In the above code we created two objects, an object that held the data and an object that held the regression results.  
@@ -102,11 +127,11 @@ myObject = something
 myObject <- something
 ```
 
-These result in the same thing, an object called <span class="objclass">myObject</span> that contains 'something' in it. For all appropriate practical use, which you use is a matter of personal preference. The point is that typical practice in R entails that one assigns something to an object and then uses functions on that object to get something more from it.
+These result in the same thing, an object called <span class="objclass">myObject</span> that contains 'something' in it. For all appropriate practical use, whether you use `=` or `<-`is a matter of personal preference. The point is that typical practice in R entails that one assigns something to an object and then uses functions on that object to get something more from it.
 
 #### Functions
 
-Functions are objects that take input of various kinds and produce some output (simply called a *value*).  In the above code we used three functions: <span class="func">read.csv</span>, <span class="func">lm</span>, and <span class="func">summary</span>.  Functions (usually) come with named <span class="emph">arguments</span>, that note what types of inputs the function can take.  With <span class="func">read.csv</span>, we merely gave it one argument the file name, but there are actually a couple dozen, each with some default.  Type `?read.csv` at the console to see the helpfile.
+Functions are objects that take input of various kinds and produce some output (simply called a *value*).  In the above code we used three functions: <span class="func">read.csv</span>, <span class="func">lm</span>, and <span class="func">summary</span>.  Functions (usually) come with named <span class="emph">arguments</span>, that note what types of inputs the function can take.  With <span class="func">read.csv</span>, we merely gave it one argument, the file name, but there are actually a couple dozen, each with some default.  Type `?read.csv` at the console to see the help file.
 
 #### Classes
 
@@ -151,7 +176,7 @@ Errors are merely messages or calls for help from R. It can't do what you ask an
 
 ### The lavaan package
 
-You'll see more later, but in order to use lavaan for structural equation modeling, you'll need two things primarily: an object that represents the **data**, and an object that represents the **model**. It will look something like the following.
+You'll see more later, but in order to use <span class="pack">lavaan</span> for structural equation modeling, you'll need two things primarily: an object that represents the **data**, and an object that represents the **model**. It will look something like the following.
 
 ```{r lavaanExample0, eval=FALSE}
 modelCode = "
@@ -175,7 +200,7 @@ pander::pander(data.frame(formulaType, operator, mnemonic))
 ```
 
 ### Getting help
-Use `?` to get the helpfile for a specific function, or `??` to do a search, possibly on a quoted phrase.
+Use `?` to get the help file for a specific function, or `??` to do a search, possibly on a quoted phrase.
 
 Examples:
 

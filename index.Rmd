@@ -9,7 +9,7 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
     bookdown::gitbook:
-      css: [latent.css]
+      css: [sem.css]
       highlight: pygments
       number_sections: false
       config:
@@ -31,14 +31,17 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: m-clark/Workshops
-description: "Latent variable modeling."
+url: https://m-clark.github.io/sem/
+github-repo:  https://github.com/m-clark/sem
+description: "Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models (directed and undirected, including path analysis, bayesian networks, and network analysis), mediation, moderation, latent variable models (including principal components analysis and ‘factor analysis’), measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc. "
+cover-image: img/bob.jpg
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=F, message = F, warning=F, 
                       R.options=list(width=120), fig.align='center')
 ```
+
 
 ```{r echo=FALSE}
 library(tufte); library(tidyverse); library(htmltools); library(lazerhawk)
@@ -52,6 +55,10 @@ knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib
 
 
 #
+
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
+knitr::include_graphics('img/bob.jpg', dpi = NA)
+```
 
 <!-- Empty pound will allow for one to create a single title page -->
 

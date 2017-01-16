@@ -8,7 +8,7 @@ author: |
 date: '`r Sys.Date()`'
 output:
   html_notebook:
-    # css: ../latent.css # using latent will mess up line breaks in code (only for notebook)
+    # css: ../sem.css # using latent will mess up line breaks in code (only for notebook)
     theme: sandstone
     font-family: Roboto
     highlight: zenburn
@@ -19,7 +19,7 @@ output:
  
 ```{r setupExercises, include=FALSE}
 knitr::opts_chunk$set(cache = F, message = F, warning = F, R.options=list(width=120), comment=NA)
-library(magrittr); library(dplyr); library(lavaan)
+library(magrittr); library(dplyr); library(lavaan); library(semPlot)
 ```
 
 
@@ -175,6 +175,8 @@ Regarding this model...
 
 
 ### Part 3 Non-SEM Graphical Models
+
+You will need the <span class="pack">bnlearn</span> and <span class="pack">igraph</span> packages to run the following.
 
 #### Bayesian Networks
 

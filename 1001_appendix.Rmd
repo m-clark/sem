@@ -110,14 +110,16 @@ SEM as it is known has been widely used in psychology and education for decades,
 
 **Exploratory vs. Confirmatory**: This distinction is problematic.  Science and data analysis is inherently exploratory, and most who use SEM do some model exploration as they would with any other model.  Some SEM models have more constraints than others, but that does not require a separate name or way of thinking about the model.
 
-**Mediation** and moderation:  These mean different things, both straightforward, and which is utilized in a model should be based on theoretical notions.
+**Mediation** and **moderation**:  These mean different things, both straightforward, and which is utilized in a model should be based on theoretical notions.
 
 - Mediation: an indirect effect, e.g. A->B->C, A has an indirect effect on C. A can have a direct effect on C too. 
 - Moderation: an interaction (the same ones utilized in a standard regression modeling)
 
+See the terminology section in the graphical models chapter for more detail.
+
 **Fit**: Model fit is something very difficult to ascertain in SEM, and notoriously problematic in this setting, where all proposed cutoffs for a good fit are ultimately arbitrary.  Even if one had most fit indices suggesting a 'good' fit, there's little indication the model has predictive capability.
 
-**Endo/Exogenous**: Endogenous variables are determined by other variables, exogenous variables have no analyzed causes.
+**Endo/Exogenous**: Endogenous variables are determined by other variables, i.e. have an arrow pointing at their node. Exogenous variables have no analyzed causes.
 
 **Disturbance**: residual variance. Includes measurement error and unknown causes.
 
@@ -258,7 +260,7 @@ summary(mainRes)
 
 > Consider what effects, that might conceivably have practical bearings, we conceive the object of our conception to have. Then, our conception of these effects is the whole of our conception of the object. 
 
-I figure I should note my stance on soi-disant *causal modeling* so that whatever I might say in this document is taken with the appropriate context. What follows is more or less a philosophical stance, perhaps a naïve and definitely not very well developed one at that despite my philosophy background from long ago, but one that I think is a safer perspective than others commonly held regarding causes and statistics.  Mostly this is just me jotting down some things I'm thinking about while working on this document, and perhaps I'll be able to spend more time with it later.
+I figure I should note my stance on soi-disant *causal modeling* so that whatever I might say in this document is taken with the appropriate context. What follows is more or less a philosophical stance, perhaps a naïve and not very well developed one at that, despite my philosophy background from long ago, but one that I think is a safer perspective than others commonly held regarding causes and statistics.  Mostly this is just me jotting down some things I'm thinking about while working on this document, and perhaps I'll be able to spend more time with it later.
 
 To begin, no statistical model *by itself* will ever provide evidence of causal effects. This is a fact that cannot be disputed.  Statistical models of the sort we are usually interested in are inherently probabilistic, atheoretical in and of themselves, and wholly dependent on the data collected. No amount of fancy analysis or double-blind randomization will change the fact that in the end you have a probabilistic result, and one that is highly dependent on many assumptions both statistical and theoretical, as well as nuances of the data.  The data itself might suggest several statistical models that are essentially if not exactly equally adequate.  If you are using SEM or other approach to *discover* causal effects you will thus be unsuccessful, and as such, you should not be using the technique if that is the primary reason for doing so.
 
@@ -284,11 +286,19 @@ If you can predict something with 99% accuracy, how much are you concerned about
 
 Another related point, *chance* definitely does not cause anything. There are mechanisms you do not know about contributing to the variability in the subject matter under study, but nothing from your results are *due to chance*.  Statistical models will always have uncertainty regarding them, and how much or how little there is depends on many things.  But just because we don't know what's going on, we cannot put the unknown as due to some magical notion akin to coincidence.
 
+
 ### Other
 
 - There are people, who have been taken seriously in other contexts, actively devoting time, money and energy to determine a. that our current existence is a simulation, and b. to find a way to 'break out of it' (I suspect this has to do with them taking their experience at Burning Man too seriously).  However useless an endeavor this may be, if it was a simulation, where would any theory about causality reside then?
 
 - An interesting point noted by Pearl is that causal assumptions are not encoded via the paths/edges, which only note possible causal relations, but in the missing ones.  This reminds me of a chapter of the *Tao Te Ching*, that talks about the effectiveness of nothingness.  An example being that it is not the walls or physical aspects of a house, but the rooms, i.e. spaces, that make it an effective home.
+
+- If one adheres strictly to the *strong* causal assumptions for SEM, it is difficult for me to see where any discovery or exploration comes in.  In that perspective, one uses statistical tools to merely uncover the parameter values that are assumed to be non-zero.  I don't even see why one would even reference statistical significance, interval estimates etc., as the causal aspects are assumed to be true.  I'm not sure how the sampling variability, which could potentially result in conflicting causal understanding, is incorporated. <br>
+If you go to the *weak* causal assumption, where the parameter can take on a potentially infinite range of values, we now have something that is more practical and amenable to statistical analysis as traditionally engaged.  However, I don't know what definition of causality it is consistent with.  An example would be that for some model, one of the causal assumptions is that X causes Y, and that relationship may be weak or strong, positive or negative, possibly even indistinguishable from zero, but we won't know until we look at the data.  In other words, the effect could be A, its opposite, or not A.  This is in fact how SEM is practiced the vast majority of the time.  However, that doesn't sound like any causal claim is being made at all to me, and instead merely posits some correlation to be explored.  I'm fine with that, but I'd take issue that some causal assumption is given more credibility by the statistical result, which could have been anything and still have been consistent with the 'prior knowledge'.
+
+- As noted previously, the strong causal claims in SEM come from where we set paths equal to zero.  However, a far more realistic assumption is that every effect is non-zero, however trivially small.  Such models would be unidentifiable in SEM though.
+
+
 
 ### Some references
 
@@ -302,7 +312,7 @@ Philosophical, such as Aristotle, Hume, non-Western as well.
 
 ## Resources
 
-This list serves only as a starting point, though may be added to over time.
+This list serves only as a starting point, geared toward those that would be taking the course, though may be added to over time.
 
 
 ### Graphical Models
