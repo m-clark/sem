@@ -98,15 +98,15 @@ With R, the *script* is where you write your R code. While you could do everythi
 
 ### R is easy to use, but difficult to master.
 
-If you only want to use R in an applied fashion, as we will do here, R can be very easy to use.  As an example the following code would read in data and run a regression.
+If you only want to use R in an applied fashion, as we will do here, R can be very easy to use.  As an example the following code would read in data and run a standard linear regression with the <span class="func">lm</span> (i.e. linear model) function.
 
 ```{r Reasy, eval=F}
-mydata = read.csv(file='location/myfile.csv')
-regModel = lm(y ~ x, data=mydata)
-summary(regModel)
+mydata = read.csv(file='location/myfile.csv')   # some file with an 'x' and 'y' variable
+regModel = lm(y ~ x, data=mydata)               # standard regression
+summary(regModel)                               # summary of results
 ```
 
-The above code demonstrates that R can be as easy to use as anything else, and in my opinion, it is for any standard analysis.  The nice part is that it can still be *easier* to use with more complex analyses you either won't find elsewhere or will only get with crippled functionality.
+The above code demonstrates that R can be as easy to use as anything else, and in my opinion, it is for any standard analysis.  In addition, the formula syntax is utilized the vast majority of modeling packages (including <span class="pack">lavaan</span>), as is the <span class="func">summary</span> function for printing model results.  The nice part is that R can still be *easier* to use with more complex analyses you either won't find elsewhere or will only get with crippled functionality.
 
 
 ### Object-oriented
