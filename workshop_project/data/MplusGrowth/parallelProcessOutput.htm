@@ -1,0 +1,215 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+   <title>Mplus User's Guide Examples</title>
+</head>
+<body alink="#FF0000" link="#0000EE" bgcolor="#FFFFFF" text="#000000" vlink="#551A8B">
+<pre>Mplus VERSION 7.3
+MUTHEN &amp; MUTHEN
+09/22/2014   5:48 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: 	this is an example of a growth model for
+  	two parallel processes for continuous
+  	outcomes with regressions among the random
+  	effects
+  DATA:	FILE IS ex6.13.dat;
+  VARIABLE:	NAMES ARE y11 y12 y13 y14 y21 y22 y23 y24;
+  MODEL:	i1 s1 | y11@0 y12@1 y13@2 y14@3;
+  	i2 s2 | y21@0 y22@1 y23@2 y24@3;
+  	s1 ON i2;
+  	s2 ON i1;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+this is an example of a growth model for
+two parallel processes for continuous
+outcomes with regressions among the random
+effects
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         500
+
+Number of dependent variables                                    8
+Number of independent variables                                  0
+Number of continuous latent variables                            4
+
+Observed dependent variables
+
+  Continuous
+   Y11         Y12         Y13         Y14         Y21         Y22
+   Y23         Y24
+
+Continuous latent variables
+   I1          S1          I2          S2
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+
+Input data file(s)
+  ex6.13.dat
+
+Input data format  FREE
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       20
+
+Loglikelihood
+
+          H0 Value                       -5990.576
+          H1 Value                       -5974.993
+
+Information Criteria
+
+          Akaike (AIC)                   12021.152
+          Bayesian (BIC)                 12105.445
+          Sample-Size Adjusted BIC       12041.963
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                             31.167
+          Degrees of Freedom                    24
+          P-Value                           0.1490
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.024
+          90 Percent C.I.                    0.000  0.046
+          Probability RMSEA &lt;= .05           0.976
+
+CFI/TLI
+
+          CFI                                0.998
+          TLI                                0.997
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           3333.622
+          Degrees of Freedom                    28
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.017
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ I1       |
+    Y11                1.000      0.000    999.000    999.000
+    Y12                1.000      0.000    999.000    999.000
+    Y13                1.000      0.000    999.000    999.000
+    Y14                1.000      0.000    999.000    999.000
+
+ S1       |
+    Y11                0.000      0.000    999.000    999.000
+    Y12                1.000      0.000    999.000    999.000
+    Y13                2.000      0.000    999.000    999.000
+    Y14                3.000      0.000    999.000    999.000
+
+ I2       |
+    Y21                1.000      0.000    999.000    999.000
+    Y22                1.000      0.000    999.000    999.000
+    Y23                1.000      0.000    999.000    999.000
+    Y24                1.000      0.000    999.000    999.000
+
+ S2       |
+    Y21                0.000      0.000    999.000    999.000
+    Y22                1.000      0.000    999.000    999.000
+    Y23                2.000      0.000    999.000    999.000
+    Y24                3.000      0.000    999.000    999.000
+
+ S1       ON
+    I2                 0.329      0.025     13.197      0.000
+
+ S2       ON
+    I1                 0.602      0.029     20.653      0.000
+
+ I2       WITH
+    I1                 0.025      0.057      0.443      0.658
+
+ S2       WITH
+    S1                 0.081      0.019      4.360      0.000
+
+ Means
+    I1                 0.531      0.052     10.261      0.000
+    I2                 0.496      0.052      9.577      0.000
+
+ Intercepts
+    Y11                0.000      0.000    999.000    999.000
+    Y12                0.000      0.000    999.000    999.000
+    Y13                0.000      0.000    999.000    999.000
+    Y14                0.000      0.000    999.000    999.000
+    Y21                0.000      0.000    999.000    999.000
+    Y22                0.000      0.000    999.000    999.000
+    Y23                0.000      0.000    999.000    999.000
+    Y24                0.000      0.000    999.000    999.000
+    S1                 0.994      0.029     33.940      0.000
+    S2                 1.011      0.032     31.327      0.000
+
+ Variances
+    I1                 0.988      0.083     11.964      0.000
+    I2                 1.018      0.084     12.119      0.000
+
+ Residual Variances
+    Y11                0.497      0.055      9.049      0.000
+    Y12                0.527      0.042     12.659      0.000
+    Y13                0.547      0.049     11.271      0.000
+    Y14                0.493      0.081      6.066      0.000
+    Y21                0.453      0.057      7.981      0.000
+    Y22                0.489      0.040     12.085      0.000
+    Y23                0.449      0.043     10.483      0.000
+    Y24                0.466      0.076      6.156      0.000
+    S1                 0.218      0.022      9.893      0.000
+    S2                 0.179      0.026      6.913      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.876E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+     Beginning Time:  17:48:46
+        Ending Time:  17:48:46
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN &amp; MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2014 Muthen &amp; Muthen
+</pre>
+<p><a href="http://www.statmodel.com/ugexcerpts.shtml">Back to examples</a>
+
+
+</p></body></html>

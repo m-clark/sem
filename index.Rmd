@@ -2,7 +2,6 @@
 title: <span style="font-size:150%; font-variant:small-caps; font-style:italic; color:#1e90ff">Graphical and Latent Variable Modeling</span>
 author:  |
   <div class="title"><span style="font-size:125%; font-variant:small-caps; ">Michael Clark</span><br>
-  <span style="font-size:75%; margin: 0 auto;">Statistician Lead</span> <br>
   <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br>
   <img src="img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div>
 date: "`r Sys.Date()`"
@@ -32,8 +31,8 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 url: https://m-clark.github.io/sem/
-github-repo:  https://github.com/m-clark/sem
-description: "Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models (directed and undirected, including path analysis, bayesian networks, and network analysis), mediation, moderation, latent variable models (including principal components analysis and ‘factor analysis’), measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc. "
+github-repo:  https://github.com/m-clark/sem/
+description: "Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and 'factor analysis', measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc."
 cover-image: img/bob.jpg
 ---
 

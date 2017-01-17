@@ -7,6 +7,7 @@
 
 The document will start with the familiar, a standard regression model.  It will then be presented as a <span class="emph">graphical model</span>, and extended to include indirect effects (e.g. $\mathcal{A} \rightarrow \mathcal{B} \rightarrow \mathcal{C}$) and multiple outcomes.  At this point we will discuss *directed graphs*, and demonstrate a more theoretically motivated approach (sometimes called *path analysis*), and compare it to a more flexible approach (Bayesian network) that does not require prespecification of paths nor specific directional relations.  At this point, we'll briefly discuss undirected graphs, with an example utilizing 'network analysis', though any exercise will likely be left to the participant's own time.
 
+
 ### Latent Variables
 
 We will then discuss the notion of <span class="emph">latent variables</span> in the context of *underlying causes or constructs* and  **measurement error**.  We will also note that latent variable models are actually even more broadly utilized when one includes other *dimension reduction*, or *data compression*, techniques, several of which fall under the heading of *factor analysis*.  A few common techniques will be demonstrated such as 'factor analysis' and principal components analysis, and an overview will be provided for others. In addition, we will briefly discuss the relation of latent variable models to random effects models (something that will be demonstrated in more detail later), and note other places one might find latent variables (e.g. the EM algorithm, hidden Markov models).
@@ -40,13 +41,13 @@ If you are not present or are bringing your laptop, you'll need to have both R a
 
 Once those are installed, proceed through the following steps.
 
-1. Download this [zipfile](http://www-personal.umich.edu/~micl/sem/workshop_files.zip), and unzip its contents to an area on your machine that you have write access to. It contains the course contents, data, etc. in a folder that will serve as an RStudio project folder.
+1. Download this [zipfile](http://m-clark.github.io/docs/sem/workshop_project.zip), and unzip its contents to an area on your machine that you have write access to. It contains the course contents, data, etc. in a folder that will serve as an RStudio project folder.
 
 2. Open RStudio.  File/Open Project/ then navigate to the folder contents you just unzipped.  Click on the SEM file (should look like a blue icon, but otherwise is the SEM.Rproj file).
 
-3. If the file is not already opened after opening the RStudio project, File/Open File/my_code.R . Run the one line of code there and you're set.
+3. Open the R script inside. Run the one line of code there and you're set.
 
-The lab for the workshop has Windows machines, and so the above is enough to proceed. For *nix systems, it's probably easiest to just install the packages as we use them.
+The lab for the workshop has Windows machines, and so the above is enough to proceed. For *nix systems, it should be mostly the same.
 
 
 
