@@ -32,7 +32,7 @@ library(tidyverse)
 
 ## Data Etc.
 
-[m-clark.github.io/docs/sem/sem_workshop.zip](m-clark.github.io/docs/sem/sem_workshop.zip)
+[m-clark.github.io/docs/sem/workshop_project.zip](m-clark.github.io/docs/sem/workshop_project.zip)
 
 Steps:
 
@@ -41,17 +41,17 @@ Steps:
 - Open RStudio
 - File/Open Project...
 - Click on SEM.Rproj
-- File/Open/readMe.md
+- File/Open/install_script.R
 
 ## Exercises
 
-For exercises, open the exercises_nb.nb.html 
+For exercises, open the exercises.nb.html 
 
 ***with your browser!***
 
 Or go to: 
 
-[m-clark.github.io/docs/sem/exercises/exercises_nb.nb.html](http://m-clark.github.io/docs/sem/exercises/exercises_nb.nb.html)
+[m-clark.github.io/docs/sem/exercises.nb.html](http://m-clark.github.io/docs/sem/exercises.nb.html)
 
 
 
@@ -72,7 +72,7 @@ Note connection to others
 Be clear on limitations
 
 
-#   {data-background="../../img/rstudio.png"}
+#   {data-background="../img/rstudio.png"}
 
 
 ##  {.col2}
@@ -86,7 +86,7 @@ Primary components
 
 <br><br><br><br>
 
-<img src="../../img/rstudio.png" style="display:block; margin: 0 auto; width:225%">
+<img src="../img/rstudio.png" style="display:block; margin: 0 auto; width:225%">
 
 ## Scripts/Docs
 
@@ -411,12 +411,12 @@ Multi-sample
 
 ## Reasons NOT to do SEM  {data-transition=fade}
 
-<p class='fragment emph' style='text-align:center; font-size:150%'>Because it sounds cool</p>
+<p class='fragment emph' style='text-align:center; font-size:150%'>Just because it sounds cool or interesting</p>
 
 
 ## Reasons NOT to do SEM {data-transition=fade}
 
-<p class='fragment emph' style='text-align:center; font-size:150%'>Because you see it in a paper</p>
+<p class='fragment emph' style='text-align:center; font-size:150%'>Just because you see it in a paper</p>
 
 
 ## Reasons NOT to do SEM {data-transition=fade}

@@ -199,7 +199,9 @@ mnemonic = c('is measured by', 'is regressed on', 'is correlated with', 'interce
 pander::pander(data.frame(formulaType, operator, mnemonic))
 ```
 
+
 ### Getting help
+
 Use `?` to get the help file for a specific function, or `??` to do a search, possibly on a quoted phrase.
 
 Examples:
@@ -216,6 +218,7 @@ Examples:
 
 Hopefully you'll get the hang of things as we run the code in later chapters.  You'll essentially only be asked to tweak code that's already provided.  This document (and associated workshop) is not the place to learn R.  However, here are some exercises to make sure we start to get comfortable with it.
 
+
 ### Exercises
 
 Interactive version [here](exercise_introR.html)
@@ -225,7 +228,7 @@ using `c(1,2,3,4,5)` or `1:5`
 
 2. Create a different object, that is the same as that object, but plus 1 (i.e. the numbers two through six).
 
-3. Without creating an object, use <span class="func">cbind</span> and <span class="func">rbind</span>, feeding your objects as arguments. For example `cbind(obj1, obj2)`.
+3. Without creating an object, use <span class="func">cbind</span> and <span class="func">rbind</span>, feeding the objects you just created as arguments. For example `cbind(obj1, obj2)`.
 
 4. Create a new object using <span class="objclass">data.frame</span> just as you did <span class="func">rbind</span> or <span class="func">cbind</span> in #3.
 
