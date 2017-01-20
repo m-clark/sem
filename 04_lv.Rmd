@@ -10,11 +10,12 @@ Not everything we want to measure comes with an obvious yardstick.  If one wants
 
 Any of these might be useful as an *indicator* of their current state of happiness, but of course none of them would tell us whether they truly are happy or not. At best, they can be considered imperfect measures. If we consider those and other indicators collectively, perhaps we can get an underlying measure of something we might call happiness, contentment, or some other arbitrary but descriptive name.
 
-Despite how they are typically used within psychology, education and related fields, the use of <span class="emph">latent variable</span> models are actually seen all over, and in ways that may have little to do with what we will be mostly focusing on here[^factcor].  Broadly speaking, <span class='emph'>factor analysis</span> can be seen as a dimension reduction technique, or as an approach to  modeling measurement error and understanding underlying constructs.  We will give some description of the former while focusing on the latter.
+Despite how they are typically used within psychology, education and related fields, the use of <span class="emph">latent variable</span> models is actually seen all over, and in ways that may have little to do with what we will be mostly focusing on here[^factcor].  Broadly speaking, <span class='emph'>factor analysis</span> can be seen as a dimension reduction technique, or as an approach to  modeling measurement error and understanding underlying constructs.  We will give some description of the former while focusing on the latter.
 
 
 ## Dimension Reduction/Compression
 
+Before getting into what we'll call measurement models in the SEM context, we can first take a look at matri
 Many times we simply have the goal of taking a whole lot of variables, reducing them to much fewer, but while retaining as much information about the originals as possible.  For example, this is an extremely common goal in areas of image and audio compression.  Statistical techniques amenable to these approaches are commonly referred to as <span class='emph'>matrix factorization</span>.
 
 ### Principal Components Analysis
