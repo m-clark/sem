@@ -1,0 +1,358 @@
+digraph Factor  {
+  rankdir=RL;
+  size="8,6";
+  node [fontname="Helvetica" fontsize=10, shape=box, width=1.75, fixedsize=true];
+  edge [fontname="Helvetica" fontsize=12];
+V1  [label = "VisualPerception"];
+V2  [label = "Cubes"];
+V3  [label = "PaperFormBoard"];
+V4  [label = "Flags"];
+V5  [label = "GeneralInformation"];
+V6  [label = "PargraphComprehension"];
+V7  [label = "SentenceCompletion"];
+V8  [label = "WordClassification"];
+V9  [label = "WordMeaning"];
+V10  [label = "Addition"];
+V11  [label = "Code"];
+V12  [label = "CountingDots"];
+V13  [label = "StraightCurvedCapitals"];
+V14  [label = "WordRecognition"];
+V15  [label = "NumberRecognition"];
+V16  [label = "FigureRecognition"];
+V17  [label = "ObjectNumber"];
+V18  [label = "NumberFigure"];
+V19  [label = "FigureWord"];
+V20  [label = "Deduction"];
+V21  [label = "NumericalPuzzles"];
+V22  [label = "ProblemReasoning"];
+V23  [label = "SeriesCompletion"];
+V24  [label = "ArithmeticProblems"];
+node [shape=ellipse, width ="1"];
+RC1-> V5 [ label = 0.8 ];
+RC1-> V6 [ label = 0.8 ];
+RC1-> V7 [ label = 0.8 ];
+RC1-> V8 [ label = 0.6 ];
+RC1-> V9 [ label = 0.8 ];
+RC1-> V22 [ label = 0.4 ];
+RC3-> V1 [ label = 0.7 ];
+RC3-> V2 [ label = 0.6 ];
+RC3-> V3 [ label = 0.7 ];
+RC3-> V4 [ label = 0.6 ];
+RC3-> V20 [ label = 0.4 ];
+RC3-> V23 [ label = 0.5 ];
+RC2-> V10 [ label = 0.8 ];
+RC2-> V11 [ label = 0.6 ];
+RC2-> V12 [ label = 0.8 ];
+RC2-> V13 [ label = 0.6 ];
+RC2-> V21 [ label = 0.5 ];
+RC2-> V24 [ label = 0.5 ];
+RC4-> V14 [ label = 0.7 ];
+RC4-> V15 [ label = 0.7 ];
+RC4-> V16 [ label = 0.6 ];
+RC4-> V17 [ label = 0.7 ];
+RC4-> V18 [ label = 0.5 ];
+RC4-> V19 [ label = 0.4 ];
+{ rank=same;
+V1;V2;V3;V4;V5;V6;V7;V8;V9;V10;V11;V12;V13;V14;V15;V16;V17;V18;V19;V20;V21;V22;V23;V24;}{ rank=same;
+RC1;RC3;RC2;RC4;}}<div style="width:500px; height:500px; margin-left:auto;  margin-right:auto">
+  <div id="htmlwidget-53743b74594c61941126" style="width:500px;height:500px;" class="grViz html-widget"></div>
+  <script type="application/json" data-for="htmlwidget-53743b74594c61941126">{"x":{"diagram":"digraph Factor  {\n  rankdir=RL;\n  size=\"8,6\";\n  node [fontname=\"Helvetica\" fontsize=14 shape=box, width=2];\n  edge [fontname=\"Helvetica\" fontsize=10];\nV1  [label = \"VisualPerception\"];\nV2  [label = \"Cubes\"];\nV3  [label = \"PaperFormBoard\"];\nV4  [label = \"Flags\"];\nV5  [label = \"GeneralInformation\"];\nV6  [label = \"PargraphComprehension\"];\nV7  [label = \"SentenceCompletion\"];\nV8  [label = \"WordClassification\"];\nV9  [label = \"WordMeaning\"];\nV10  [label = \"Addition\"];\nV11  [label = \"Code\"];\nV12  [label = \"CountingDots\"];\nV13  [label = \"StraightCurvedCapitals\"];\nV14  [label = \"WordRecognition\"];\nV15  [label = \"NumberRecognition\"];\nV16  [label = \"FigureRecognition\"];\nV17  [label = \"ObjectNumber\"];\nV18  [label = \"NumberFigure\"];\nV19  [label = \"FigureWord\"];\nV20  [label = \"Deduction\"];\nV21  [label = \"NumericalPuzzles\"];\nV22  [label = \"ProblemReasoning\"];\nV23  [label = \"SeriesCompletion\"];\nV24  [label = \"ArithmeticProblems\"];\nnode [shape=ellipse, width =\"1\"];\nRC1-> V5 [ label = 0.8 ];\nRC1-> V6 [ label = 0.8 ];\nRC1-> V7 [ label = 0.8 ];\nRC1-> V8 [ label = 0.6 ];\nRC1-> V9 [ label = 0.8 ];\nRC1-> V22 [ label = 0.4 ];\nRC3-> V1 [ label = 0.7 ];\nRC3-> V2 [ label = 0.6 ];\nRC3-> V3 [ label = 0.7 ];\nRC3-> V4 [ label = 0.6 ];\nRC3-> V20 [ label = 0.4 ];\nRC3-> V23 [ label = 0.5 ];\nRC2-> V10 [ label = 0.8 ];\nRC2-> V11 [ label = 0.6 ];\nRC2-> V12 [ label = 0.8 ];\nRC2-> V13 [ label = 0.6 ];\nRC2-> V21 [ label = 0.5 ];\nRC2-> V24 [ label = 0.5 ];\nRC4-> V14 [ label = 0.7 ];\nRC4-> V15 [ label = 0.7 ];\nRC4-> V16 [ label = 0.6 ];\nRC4-> V17 [ label = 0.7 ];\nRC4-> V18 [ label = 0.5 ];\nRC4-> V19 [ label = 0.4 ];\n{ rank=same;\nV1;V2;V3;V4;V5;V6;V7;V8;V9;V10;V11;V12;V13;V14;V15;V16;V17;V18;V19;V20;V21;V22;V23;V24;}{ rank=same;\nRC1;RC3;RC2;RC4;}}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+lavaan (0.5-22) converged normally after  19 iterations
+
+                                                  Used       Total
+  Number of observations                          7183        8985
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                0.000
+  Degrees of freedom                                 0
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate
+  depressed =~
+    FeltDown          1.000
+    BeenHappy        -0.732
+    DeprssdLstMnth    0.719
+  Std.Err  z-value  P(>|z|)
+
+
+    0.020  -37.329    0.000
+    0.019   37.992    0.000
+   Std.lv  Std.all
+
+    0.541    0.813
+   -0.396   -0.609
+    0.388    0.655
+
+Variances:
+                   Estimate
+   .FeltDown          0.150
+   .BeenHappy         0.266
+   .DeprssdLstMnth    0.201
+    depressed         0.292
+  Std.Err  z-value  P(>|z|)
+    0.007   20.853    0.000
+    0.006   46.489    0.000
+    0.005   41.606    0.000
+    0.010   30.221    0.000
+   Std.lv  Std.all
+    0.150    0.339
+    0.266    0.629
+    0.201    0.571
+    1.000    1.000
+
+   vars    n  mean   sd median trimmed  mad   min  max range  skew kurtosis   se
+X1    1 1000  0.05 1.44   0.05    0.05 1.42 -5.13 4.51  9.63  0.00     0.01 0.05
+X2    2 1000  0.00 1.08  -0.01    0.00 1.04 -3.34 3.25  6.59  0.00    -0.06 0.03
+X3    3 1000 -0.01 1.04   0.00   -0.01 1.01 -4.40 3.56  7.96 -0.07     0.27 0.03
+X4    4 1000  0.00 1.14  -0.03   -0.01 1.13 -3.85 3.98  7.83  0.10     0.16 0.04
+X5    5 1000  0.04 1.43   0.10    0.05 1.39 -4.43 5.21  9.63 -0.02     0.07 0.05
+X6    6 1000 -0.02 1.22  -0.01   -0.02 1.27 -3.35 4.68  8.03  0.04    -0.10 0.04
+X7    7 1000  0.02 1.06   0.01    0.01 1.05 -2.94 3.33  6.28  0.11    -0.09 0.03
+X8    8 1000  0.00 1.14  -0.01    0.01 1.12 -3.27 3.47  6.73 -0.05     0.07 0.04
+      [,1]   [,2]  [,3]  [,4]   [,5]  [,6]  [,7]  [,8]
+[1,] 1.000  0.291 0.233 0.352  0.104 0.078 0.049 0.050
+[2,] 0.291  1.000 0.145 0.228 -0.008 0.031 0.054 0.072
+[3,] 0.233  0.145 1.000 0.171  0.006 0.066 0.026 0.079
+[4,] 0.352  0.228 0.171 1.000  0.014 0.057 0.054 0.079
+[5,] 0.104 -0.008 0.006 0.014  1.000 0.417 0.259 0.300
+[6,] 0.078  0.031 0.066 0.057  0.417 1.000 0.201 0.273
+[7,] 0.049  0.054 0.026 0.054  0.259 0.201 1.000 0.142
+[8,] 0.050  0.072 0.079 0.079  0.300 0.273 0.142 1.000
+$raw
+$raw$loadings
+     f1    f2 Variances
+1 1.000 0.000     1.097
+2 0.465 0.000     0.955
+3 0.353 0.000     0.951
+4 0.588 0.000     0.948
+5 0.000 1.000     1.064
+6 0.000 0.744     0.942
+7 0.000 0.381     0.976
+8 0.000 0.507     1.038
+
+$raw$cov.fact
+      [,1]  [,2]
+[1,] 0.983 0.170
+[2,] 0.170 0.973
+
+
+$standardized
+$standardized$loadings
+     X1    X2 Variances   Rsq
+1 0.687 0.000     0.528 0.472
+2 0.426 0.000     0.818 0.182
+3 0.338 0.000     0.886 0.114
+4 0.514 0.000     0.736 0.264
+5 0.000 0.691     0.522 0.478
+6 0.000 0.603     0.636 0.364
+7 0.000 0.356     0.874 0.126
+8 0.000 0.441     0.806 0.194
+
+$standardized$cor.fact
+      [,1]  [,2]
+[1,] 1.000 0.174
+[2,] 0.174 1.000
+
+
+$fit
+         ll      AIC      BIC
+1 -12330.93 24711.86 24834.56
+
+lavaan (0.5-22) converged normally after  30 iterations
+
+  Number of observations                          1000
+
+  Number of missing patterns                         1
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               25.437
+  Degrees of freedom                                19
+  P-value (Chi-square)                           0.147
+
+Model test baseline model:
+
+  Minimum Function Test Statistic              746.093
+  Degrees of freedom                                28
+  P-value                                        0.000
+
+User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    0.991
+  Tucker-Lewis Index (TLI)                       0.987
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -12330.931
+  Loglikelihood unrestricted model (H1)     -12318.212
+
+  Number of free parameters                         25
+  Akaike (AIC)                               24711.862
+  Bayesian (BIC)                             24834.555
+  Sample-size adjusted Bayesian (BIC)        24755.154
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.018
+  90 Percent Confidence Interval          0.000  0.035
+  P-value RMSEA <= 0.05                          1.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.019
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(>|z|)
+  F1 =~
+    X1                1.000
+    X2                0.465    0.058    7.955    0.000
+    X3                0.353    0.050    7.041    0.000
+    X4                0.588    0.070    8.387    0.000
+  F2 =~
+    X5                1.000
+    X6                0.744    0.074   10.075    0.000
+    X7                0.381    0.047    8.160    0.000
+    X8                0.507    0.055    9.144    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)
+  F1 ~~
+    F2                0.170    0.050    3.367    0.001
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)
+   .X1                0.054    0.046    1.173    0.241
+   .X2               -0.004    0.034   -0.104    0.917
+   .X3               -0.012    0.033   -0.372    0.710
+   .X4                0.004    0.036    0.113    0.910
+   .X5                0.044    0.045    0.964    0.335
+   .X6               -0.019    0.038   -0.504    0.614
+   .X7                0.019    0.033    0.555    0.579
+   .X8                0.002    0.036    0.042    0.967
+    F1                0.000
+    F2                0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)
+   .X1                1.097    0.120    9.119    0.000
+   .X2                0.955    0.051   18.876    0.000
+   .X3                0.951    0.046   20.471    0.000
+   .X4                0.948    0.058   16.263    0.000
+   .X5                1.064    0.102   10.404    0.000
+   .X6                0.942    0.066   14.236    0.000
+   .X7                0.976    0.047   20.607    0.000
+   .X8                1.038    0.054   19.281    0.000
+    F1                0.983    0.135    7.264    0.000
+    F2                0.973    0.119    8.156    0.000
+
+lavaan (0.5-22) converged normally after  30 iterations
+
+  Number of observations                          1000
+
+  Number of missing patterns                         1
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               25.437
+  Degrees of freedom                                19
+  P-value (Chi-square)                           0.147
+
+Model test baseline model:
+
+  Minimum Function Test Statistic              746.093
+  Degrees of freedom                                28
+  P-value                                        0.000
+
+User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    0.991
+  Tucker-Lewis Index (TLI)                       0.987
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -12330.931
+  Loglikelihood unrestricted model (H1)     -12318.212
+
+  Number of free parameters                         25
+  Akaike (AIC)                               24711.862
+  Bayesian (BIC)                             24834.555
+  Sample-size adjusted Bayesian (BIC)        24755.154
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.018
+  90 Percent Confidence Interval          0.000  0.035
+  P-value RMSEA <= 0.05                          1.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.019
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(>|z|)
+  F1 =~
+    X1                1.000
+    X2                0.465    0.058    7.955    0.000
+    X3                0.353    0.050    7.041    0.000
+    X4                0.588    0.070    8.387    0.000
+  F2 =~
+    X5                1.000
+    X6                0.744    0.074   10.075    0.000
+    X7                0.381    0.047    8.160    0.000
+    X8                0.507    0.055    9.144    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)
+  F1 ~~
+    F2                0.170    0.050    3.367    0.001
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(>|z|)
+   .X1                0.054    0.046    1.173    0.241
+   .X2               -0.004    0.034   -0.104    0.917
+   .X3               -0.012    0.033   -0.372    0.710
+   .X4                0.004    0.036    0.113    0.910
+   .X5                0.044    0.045    0.964    0.335
+   .X6               -0.019    0.038   -0.504    0.614
+   .X7                0.019    0.033    0.555    0.579
+   .X8                0.002    0.036    0.042    0.967
+    F1                0.000
+    F2                0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)
+   .X1                1.097    0.120    9.119    0.000
+   .X2                0.955    0.051   18.876    0.000
+   .X3                0.951    0.046   20.471    0.000
+   .X4                0.948    0.058   16.263    0.000
+   .X5                1.064    0.102   10.404    0.000
+   .X6                0.942    0.066   14.236    0.000
+   .X7                0.976    0.047   20.607    0.000
+   .X8                1.038    0.054   19.281    0.000
+    F1                0.983    0.135    7.264    0.000
+    F2                0.973    0.119    8.156    0.000
+
+lavaan (0.5-22) converged normally after  30 iterations
+
+  Number of observations                          1000
+
+  Number of missing patterns                         1
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               25.437
+  Degrees of freedom                                19
+  P-value (Chi-square)                           0.147
