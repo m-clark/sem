@@ -19,9 +19,9 @@ Before getting into what we'll call <span class="emph">measurement models</span>
 
 ### Principal Components Analysis
 
-Probably the most commonly used factor-analytic technique is <span class='emph'>principal components analysis</span> (PCA).  It seeks to extract *components* from a set of variables, with each component containing as much of the original variance as possible.  Equivalently, it can be seen as producing projections on a lower dimensional subspace that have a minimum distance from the original data.  Components can be seen as a linear combination of the original variables.
+Probably the most commonly used factor-analytic technique is <span class='emph'>principal components analysis</span> (PCA).  It seeks to extract *components* from a set of variables, with each component containing as much of the original variance as possible.  Equivalently, it can be seen as producing projections on a lower dimensional subspace that have a minimum distance from the original data.  Components are linear combination of the original variables.
 
-PCA works on a covariance/correlation matrix, and it will return as many components as there are variables that go into it. Each subsequent component accounts for less variance than the previous component, and summing all components results in 100% of the total variance in the original data accounted for.  With appropriate steps, the components can completely reproduce the original data/correlation matrix.  However, as the goal is dimension reduction, we only want to retain some of these components, and so the reproduced matrix will not be exact.  This however gives us some sense of a goal to shoot for, and the same idea is also employed in factor analysis/SEM, where we also work with the covariance matrix and prefer models that can closely reproduce the original correlations seen with the observed data.
+PCA works on a covariance/correlation matrix, and it will return as many components as there are variables that go into the analysis. Each subsequent component accounts for less variance than the previous component, and summing all components results in 100% of the total variance in the original data accounted for.  With appropriate steps, the components can completely reproduce the original data/correlation matrix.  However, as the goal is dimension reduction, we only want to retain some of these components, and so the reproduced matrix will not be exact.  This however gives us some sense of a goal to shoot for, and the same idea is also employed in factor analysis/SEM, where we also work with the covariance matrix and prefer models that can closely reproduce the original correlations seen with the observed data.
 
 ```{r pcabyhand, echo=FALSE, eval=FALSE}
 covmat = cov(Harman.5)
@@ -80,7 +80,9 @@ tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
 
 </div>
 
-Let's see an example. The following regards a very small data set[^pcafacormat] 5 socioeconomic indicators for 12 cenus tracts in Los Angelese (a classic example from Harman, 1967). We'll use the  <span class='pack'>psych</span> package, and to use the <span class="func">principal</span> function, we provide the data (available via the psych package), specify the number of components/factors we want to retain, and other options (in this case, a *rotated* solution might be a little more interpretable[^rotation]).  We will use the <span class="pack">psych</span> package here as it gives us a little more output than standard PCA packages and functions, and one that is more consistent with the factor analysis technique we'll spend time with later.  While we will use lavaan for factor analysis to be consistent with the SEM approach, the psych package is a great tool for standard factor analysis, assessing reliability and other fun stuff.
+Let's see an example. The following regards a very small data set[^pcafacormat] 5 socioeconomic indicators for 12 cenus tracts in Los Angelese (a classic example from Harman, 1967). We'll use the  <span class='pack'>psych</span> package, and to use the <span class="func">principal</span> function, we provide the data (available via the package), specify the number of components/factors we want to retain, and other options (in this case, a *rotated* solution might be a little more interpretable[^rotation], but is typically not employed in PCA).  The <span class="pack">psych</span> package gives us more options and a little more output than standard PCA packages and functions, and one that is more consistent with the factor analysis technique we'll spend time with later.  While we will also use <span class="pack">lavaan</span> for factor analysis to be consistent with the SEM approach, the <span class="pack">psych</span> package is a great tool for standard factor analysis, assessing scale reliability, and other fun stuff.
+
+For the PCA, we'll retain three components and use no rotation, and we'll also focus on a standardized solution `covar = F`.  Not duing so would result in components favoring variables with more variance.  As such standardization is almost always conducted as a pre-processing step, though here it is an option to specify.
 
 ```{r pca, echo=2:4}
 set.seed(1234)
@@ -89,7 +91,7 @@ pc = principal(Harman.5, nfactors=3,  rotate='none', covar = F)
 pc
 ```
 
-First focus on the last portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(Harman.5), 2))`).  The `Cumulative Var` tells us that all 4 components make up over half the variance. The others are the same thing just based on the three components rather than all `r ncol(Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
+First focus on the last portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(Harman.5), 2))`).  The `Cumulative Var` tells us that all `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
 
 <span class='emph'>Loadings</span> in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger loadings are indicated by blue, and we can see the different variables associated with different components. 
 
@@ -115,12 +117,12 @@ Some explanation of the other parts of the output:
 
 We can get a quick graphical model display as follows:
 
-```{r pcaViz, fig.height=5, echo=1, eval=5, cache=FALSE, comment=NA, dev='svg'}
-fa.diagram(pc, cex=.5)
-sink(file='scripts/pcload.gv')
-fa.graph(pc, cut=.2)
-unlink('scripts/pcload.gv')
-tags$div(style="width:500px; height:500px; margin-left:auto;  margin-right:auto",
+```{r pcaViz, fig.height=5, echo=F, eval=5, cache=FALSE, comment=NA, dev='svg'}
+# fa.diagram(pc, cex=.5)
+# sink(file='scripts/pcload.gv')
+# fa.graph(pc, cut=.2)
+# unlink('scripts/pcload.gv')
+tags$div(style="width:50%; margin:0 auto; fontsize:50%",
          DiagrammeR::DiagrammeR('scripts/pcload.gv', type='grViz', width='500px', height='500px')
 )
 ```
@@ -131,7 +133,7 @@ PCA may not be the best choice in this scenario, nor likely is this the most int
 
 Now let's examine what is sometimes called *common* factor analysis and also sometimes *exploratory* factor analysis in the social sciences, but just factor analysis (FA) everywhere else.  While we can use both PCA and FA for similar reasons and even have similar interpretations, there are some underlying subtleties between the two that provide unique distinctions.  Let's revisit PCA, where we can depict it conceptually as an approach where we attempt to approximate the correlation matrix in terms of the product of components, represented by our loading matrix $C$ where each component is a weighted linear sum of the variables[^revref].
 
-$$ R \approx CC'$$
+$$R \approx CC'$$
 and
 
 $$C_i = \sum_{j=1}^pw_{ij}x_j$$
@@ -142,8 +144,8 @@ pc_all = principal(Harman.5, nfactors=5,  rotate='none', covar = F)
 all.equal(tcrossprod(loadings(pc_all)), cor(Harman.5))
 ```
 
-```{r visPCA}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+```{r visPCA, echo=F}
+tags$div(style="width:600px; margin:0 auto;",
 DiagrammeR("
 digraph DAG2 {
   # Intialization of graph attributes
@@ -181,10 +183,10 @@ Not so with factor analysis. Now the causal flow is in the other direction, orig
 
 $$x_j \approx \sum_{j=1}^pw_{ij}F_j$$
 
-In addition, we also take into account the uniquenesses $\Psi$, or that part which the factors do not explain.
+Each observed variable $x$ is a function of the latent variables that it is associated with.  In addition, we also take into account the uniquenesses $\Psi$, or that part which the factors do not explain.
 
-```{r visFA}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+```{r visFA, echo=F}
+tags$div(style="width:1200px; margin-left:auto;  margin-right:auto",
 DiagrammeR("
 digraph DAG2 {
   # Intialization of graph attributes
@@ -230,7 +232,7 @@ graph [ rankdir = BT]
 )
 ```
 
-$$ R \approx FF' + \Psi$$
+$$R \approx FF' + \Psi$$
 
 What this amounts to conceptually are a few key ideas.
 
@@ -456,7 +458,7 @@ Latent variable approaches are a necessary tool to have in your statistical tool
 
 [^rotation]: I don't think it necessary to get into rotation here, though will likely add a bit in the future. If you're doing PCA, you're likely not really concerned about interpretation of loadings, as you are going to use the components for other means.  It might help with standard factor analysis, but this workshop will spend time on more focused approaches where one would have some idea of the underlying structure rather than looking to uncover the structure.  Rotation doesn't change anything about the fundamental model result, so one just uses whatever leads to the clearest interpretation.
 
-[^revref]: This part of the document borrows notably from the Revelle reference
+[^revref]: This part of the document borrows notably from the Revelle reference.
 
 [^backward]: For your own sake, if you develop a questionnaire, make higher numeric values  correspond to meaning 'more of' something, rather than in this backward fashion.
 

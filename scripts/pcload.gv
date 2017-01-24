@@ -1,7 +1,7 @@
 digraph Factor  {
   rankdir=RL;
   size="8,6";
-  node [fontname="Helvetica" fontsize=12 shape=box, width=1, color=gray50, fontcolor='gray50'];
+  node [fontname="Helvetica" fontsize=10 fixedsize=TRUE, shape=box, width=1, color=gray50, fontcolor='gray50'];
   edge [fontname="Helvetica" fontsize=8 color=gray75];
 V1  [label = "population"];
 V2  [label = "schooling"];
