@@ -43,7 +43,7 @@ Visually, we can display PCA as a graphical model. Here is one with four compone
 
 ```{r pcaGM, echo=FALSE, cache=FALSE}
 library(DiagrammeR); library(htmltools)
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+tags$div(style="width:%; margin-left:auto;  margin-right:auto",
   DiagrammeR("
   digraph DAG {
     # Intialization of graph attributes
@@ -122,22 +122,26 @@ We can get a quick graphical model display as follows:
 # sink(file='scripts/pcload.gv')
 # fa.graph(pc, cut=.2)
 # unlink('scripts/pcload.gv')
-tags$div(style="width:50%; margin:0 auto; fontsize:50%",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
          DiagrammeR::DiagrammeR('scripts/pcload.gv', type='grViz', width='500px', height='500px')
 )
 ```
+
+<br>
 
 PCA may not be the best choice in this scenario, nor likely is this the most interpretable solution. One issue with PCA is that this graphical model assumes the observed variables are measured without error.  In addition, the principal components do not correlate with one another by default, but it seems likely that we would want to allow the latent variables to do so in many situations, perhaps including this one (a different rotation would allow this).  However, if our goal is merely to reduce the 24 items to a few that account for the most variance, this would be a standard technique.
 
 ### Factor Analysis
 
-Now let's examine what is sometimes called *common* factor analysis and also sometimes *exploratory* factor analysis in the social sciences, but just factor analysis (FA) everywhere else.  While we can use both PCA and FA for similar reasons and even have similar interpretations, there are some underlying subtleties between the two that provide unique distinctions.  Let's revisit PCA, where we can depict it conceptually as an approach where we attempt to approximate the correlation matrix in terms of the product of components, represented by our loading matrix $C$ where each component is a weighted linear sum of the variables[^revref].
+Now let's examine what is sometimes called *common* factor analysis and also sometimes *exploratory* factor analysis in the social sciences, but just factor analysis (FA) everywhere else.  While we can use both PCA and FA for similar reasons and even have similar interpretations, there are some underlying subtleties between the two that provide unique distinctions.  Noting these distinctions with some detail will require some matrix notation, but for other readers not so keen on such presentation they may note the images and concluding points.
 
-$$R \approx CC'$$
+First let's revisit PCA, where we can depict it conceptually as an approach where we attempt to approximate the correlation matrix in terms of the product of components, represented by our loading matrix $L$[^revref].
+
+$$R \approx LL'$$
 and
 
-$$C_i = \sum_{j=1}^pw_{ij}x_j$$
-In other words, each component $C_i$ is a weighted combination of the observed variables $x$, and we use those components to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following R code demontrates this.
+$$C = XW$$
+In other words, each component score $C$ is a weighted (with weight/loading matrix $W$) combination of the $p$ observed variables $X$, the weights of which are determined by the loadings, but yet do not say anything about the correlations between the variables.  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following R code demontrates this.
 
 ```{r pca_preproduce_cormat}
 pc_all = principal(Harman.5, nfactors=5,  rotate='none', covar = F)
@@ -145,7 +149,7 @@ all.equal(tcrossprod(loadings(pc_all)), cor(Harman.5))
 ```
 
 ```{r visPCA, echo=F}
-tags$div(style="width:600px; margin:0 auto;",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
 DiagrammeR("
 digraph DAG2 {
   # Intialization of graph attributes
@@ -181,12 +185,12 @@ If we return to our causal thinking from before, the causal flow originates with
 
 Not so with factor analysis. Now the causal flow is in the other direction, originating with the latent variables. 
 
-$$x_j \approx \sum_{j=1}^pw_{ij}F_j$$
+$$X \approx FW$$
 
 Each observed variable $x$ is a function of the latent variables that it is associated with.  In addition, we also take into account the uniquenesses $\Psi$, or that part which the factors do not explain.
 
 ```{r visFA, echo=F}
-tags$div(style="width:1200px; margin-left:auto;  margin-right:auto",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
 DiagrammeR("
 digraph DAG2 {
   # Intialization of graph attributes
@@ -232,9 +236,17 @@ graph [ rankdir = BT]
 )
 ```
 
-$$R \approx FF' + \Psi$$
+$$R \approx LL' + \Psi$$
+If we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'd note that the uniquenesses are all zero, but this is not the case with factor analysis.
 
-What this amounts to conceptually are a few key ideas.
+```{r fa_preproduce_cormat}
+fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F)
+all.equal(tcrossprod(loadings(fa_all)), cor(Harman.5))           # doesn't reproduce cormat
+all.equal(tcrossprod(loadings(fa_all)) + diag(fa_all$uniquenesses), cor(Harman.5))  # add uniquenesses
+```
+
+
+What this amounts to conceptually are a few key ideas:
 
 - Factor analysis focuses on covariance. PCA focuses on variance.
 - Factors are the cause of the observed variables
@@ -349,6 +361,18 @@ If you'd like to peel back the curtain and see maximum likelihood estimation bas
 
 ## Constructs and Measurement models
 
+### Some specific factor models in SEM
+
+#### Hierarchical/Second-Order
+
+In hierarchical models we posit that latent variables can also serve as indicators of other latent variables.  As an example, one latent variable might represent verbal cognition, another mathematical strength, a third scientific acumen, and they might be indicators for a general 'scholastic ability' latent variable.  Graphically they can be depicted as follows:
+
+
+#### Bifactor
+
+A bifactor model might seem similar to the hierarchical model at first blush.  I'll even use the previous example and let you see if you can come up with why these are different models specifically.
+
+
 ### Scale development
 
 A good use of factor analysis regards scale development.  If we come up with 10 items that reflect some underlying construct, factor analysis can provide a sense of how well the scale is put together.  Recall that in path analysis, residual variance, sometimes called disturbance[^klinedisturbed], reflects both omitted causes as well as measurement error.  In this context, $1-R^2_{item}$ provides a sense of how unreliable the item is.  A perfectly reliable item would be perfectly explained by the construct it is a measure of.  Strong loadings indicate a strong relationship between the item and the underlying construct.
@@ -381,7 +405,7 @@ In many occasions, people reduce the number of variables in a model by using a m
 
 #### vs. Composites
 
-<span class="emph">Composites</span> scores are what we'd have if we turned the arrows around, and allowed different weights for the different variables, which may not be similar too similar in nature or necessarily correlated (e.g. think of how one might construct a measure of socioeconomic status).  Unlike a simple mean, these would have different weights associated with the items.  PCA is one way one could create such a composite.  Sometimes people just make up weights to use based on what they think they *should* be  (especially in the sporting world). This is silly in my opinion, as I can't think of any reasonable justification for such an approach over the many available.
+<span class="emph">Composites</span> scores are what we'd have if we turned the arrows around, and allowed different weights for the different variables, which may not be similar too similar in nature or necessarily correlated (e.g. think of how one might construct a measure of socioeconomic status).  Unlike a simple mean, these would have different weights associated with the items.  As we noted previously, PCA is one way one could create such a composite.  Sometimes people just make up weights to use based on what they think they *should* be  (especially in the sporting world). This is silly in my opinion, as I can't think of any reasonable justification for such an approach over the many available that would better represent the data.
 
 <img src="img/composite.png" style="display:block; margin: 0 auto;"></img>
 
