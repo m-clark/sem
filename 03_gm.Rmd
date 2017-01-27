@@ -323,7 +323,7 @@ As expected, the results of <span class="pack">lavaan</span> and <span class="pa
 
 ##### Explicit Example
 
-While we have shown how to use the tool and compared the outputs, let's make things more simple and explicit to be sure that we understand what's going on. Consider the following three variable setup with estimated parameters.  We have a treatment variable that is dummy coded with 0 = 'Control group' and 1 = 'Treatment group', a continuous Mediator and Target variable.
+While we have shown how to use the tool and compared the outputs, let's make things more simple and explicit to be sure that we understand what's going on. The following closely follows [Pearl](http://ftp.cs.ucla.edu/pub/stat_ser/r370.pdf) (section 4.4)[^docalculus].  Consider the following three variable setup with estimated parameters.  We have a treatment variable that is dummy coded with 0 = 'Control group' and 1 = 'Treatment group', a continuous Mediator and Target variable.
 
 ```{r cfgraph, echo=FALSE}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%", 
@@ -858,6 +858,9 @@ Graphical models are a general way to formulate and visualize statistical models
 [^imai_links]: See the package [vignette](ftp://cran.r-project.org/pub/R/web/packages/mediation/vignettes/mediation.pdf) and Imai's [papers](http://imai.princeton.edu/projects/mechanisms.html) for more detail
 
 [^bootmed]: In general, the recommendation is to use bootstrap estimates for the indirect effect interval estimate anyway.
+
+
+[^docalculus]: Pearl devised a *do operator*, e.g. $p(y|\textrm{do}(\mathcal{X}))$, where given some model, we can assess results as if '$\mathcal{X}$ had been $x_0$', i.e. holding $\mathcal{X}$ at some value. The gist is that taking the appropriate modeling steps will allow us to investigate questions such as 'if X had been something else', i.e. a counterfactual.
 
 [^medvsdirectModcomp]: I suspect this is likely the case for the majority of modeling scenarios in social sciences that are often dealing with fairly weak effects, where the additional complexity would typically not result in better predictive value.
 
