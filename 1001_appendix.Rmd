@@ -79,6 +79,30 @@ The NLSY97 is designed to document the transition from school to work and into a
 Wheaton, B., Muthen B., Alwin, D., & Summers, G., 1977, "Assessing reliability and stability in panel models", in D. R. Heise (Ed.), _Sociological Methodology 1977_ (pp. 84-136), San Francisco: Jossey-Bass, Inc. 
 
 
+
+### Harman 5
+
+
+#### Description
+
+"data...were taken (not entirely arbitrarily) from a study of the Los Angeles Standard Metropolitan Statistical Area. The twelve individuals are used in the examples are census tracts." 
+
+Included are:
+
+- Total population
+- Median school years
+- Total employment
+- Miscellaneous professional services
+- Median house value
+
+
+#### Reference 
+
+Harman, H. *Modern Factor Analysis*. [Google Books link](https://books.google.com/books?id=e-vMN68C3M4C&printsec=frontcover&dq=modern+factor+analysis+harman&hl=en&sa=X&ved=0ahUKEwiDpvyXjOXRAhVD9YMKHZgACxQQ6AEIHDAA#v=snippet&q=employment&f=false)
+
+
+
+
 ### Old Faithful
 
 #### From the R helpfile

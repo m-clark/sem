@@ -39,11 +39,11 @@ scale(Harman.5, scale=F) %*% evector
 
 Visually, we can display PCA as a graphical model. Here is one with four components/variables. The size of the components represents the amount of variance each accounts for.
 
-<div style='text-align:center'>
+
 
 ```{r pcaGM, echo=FALSE, cache=FALSE}
 library(DiagrammeR); library(htmltools)
-tags$div(style="width:%; margin-left:auto;  margin-right:auto",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
   DiagrammeR("
   digraph DAG {
     # Intialization of graph attributes
@@ -58,31 +58,34 @@ tags$div(style="width:%; margin-left:auto;  margin-right:auto",
   
   
     # Node statements
-    PC3 [width=.75, color=gray70];
-    PC4 [width=.5, color=gray70]; 
-    PC1 [width=1.5, color=salmon2, fontcolor=salmon2]; 
-    PC2 [width=1.25, color=gray70];    # reordered to deal with unusual ordering otherwise
+    PC3 [label=<PC<sub>3</sub>> width=.75, color=gray70];
+    PC4 [label=<PC<sub>4</sub>> width=.5, color=gray70]; 
+    PC1 [label=<PC<sub>1</sub>> width=1.5, color=salmon2, fontcolor=salmon2]; 
+    PC2 [label=<PC<sub>2</sub>> width=1.25, color=gray70];    # reordered to deal with unusual ordering otherwise
+
     node [width=1, shape=square, color=gray10]
-    I3; I4; I1; I2; 
+    X3 [label=<X<sub>3</sub>>]; 
+    X4 [label=<X<sub>4</sub>>]; 
+    X1 [label=<X<sub>1</sub>>]; 
+    X2 [label=<X<sub>2</sub>>]; 
   
-    # Initialization of edge attributes
+    # Xnitialization of edge attributes
     edge [color = gray50, rel = yields]
   
     # Edge statements
     edge [arrowhead=none, penwidth=2]
-    PC1 -> I1[color=salmon]; PC1 -> I2[color=salmon]; PC1 -> I3[color=salmon]; PC1 -> I4[color=salmon];
-    {PC2 PC3 PC4} -> {I1 I2 I3 I4};
+    PC1 -> {X1 X2 X3 X4}[color=salmon];
+    {PC2 PC3 PC4} -> {X1 X2 X3 X4};
 
     }
-  ", type='grViz', width='250', height='250')
+  ", type='grViz', width='100%', height='50%')
 )
 ```
 
-</div>
 
-Let's see an example. The following regards a very small data set[^pcafacormat] 5 socioeconomic indicators for 12 cenus tracts in Los Angelese (a classic example from Harman, 1967). We'll use the  <span class='pack'>psych</span> package, and to use the <span class="func">principal</span> function, we provide the data (available via the package), specify the number of components/factors we want to retain, and other options (in this case, a *rotated* solution might be a little more interpretable[^rotation], but is typically not employed in PCA).  The <span class="pack">psych</span> package gives us more options and a little more output than standard PCA packages and functions, and one that is more consistent with the factor analysis technique we'll spend time with later.  While we will also use <span class="pack">lavaan</span> for factor analysis to be consistent with the SEM approach, the <span class="pack">psych</span> package is a great tool for standard factor analysis, assessing scale reliability, and other fun stuff.
+Let's see an example. The following regards a very small data set[^pcafacormat] 5 socioeconomic indicators for 12 census tracts in Los Angeles (a classic example from [Harman, 1967][Harman 5]). We'll use the  <span class='pack'>psych</span> package, and the <span class="func">principal</span> function within it.  To use the function we provide the data (available via the package), specify the number of components/factors we want to retain, and other options (in this case, a *rotated* solution might be a little more interpretable[^rotation], but is typically not employed in PCA, so we specify 'none').  The <span class="pack">psych</span> package gives us more options and a little more output than standard PCA packages and functions, and one that is more consistent with the factor analysis technique we'll spend time with later.  While we will also use <span class="pack">lavaan</span> for factor analysis to be consistent with the SEM approach, the <span class="pack">psych</span> package is a great tool for standard factor analysis, assessing scale reliability, and other fun stuff.
 
-For the PCA, we'll retain three components and use no rotation, and we'll also focus on a standardized solution `covar = F`.  Not duing so would result in components favoring variables with more variance.  As such standardization is almost always conducted as a pre-processing step, though here it is an option to specify.
+For the PCA, we'll retain three components and use no rotation, and we'll also focus on a standardized solution.  Not doing so would result in components favoring variables with more variance relative to others.  As such standardization is almost always conducted as a pre-processing step for PCA, though here it is an option to specify as part of the function (`covar=F`).
 
 ```{r pca, echo=2:4}
 set.seed(1234)
@@ -91,31 +94,38 @@ pc = principal(Harman.5, nfactors=3,  rotate='none', covar = F)
 pc
 ```
 
-First focus on the last portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(Harman.5), 2))`).  The `Cumulative Var` tells us that all `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
+First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(Harman.5), 2))`).  The `Cumulative Var` tells us that all `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
 
-<span class='emph'>Loadings</span> in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger loadings are indicated by blue, and we can see the different variables associated with different components. 
+<span class='emph'>Loadings</span>, also referred to as the <span class="emph">pattern matrix</span>, in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. As an example, we can reproduce the loadings by correlating the observed variables with the estimated component scores, something we'll talk more about later.
 
-Interpretation is the fun but commonly difficult part. As an example, PC1 looks to be mostly our socioeconomic status of the tract.  Any tract with a high score on that component will have high values on all variables.  It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. The underlying cause of the result could for example merely be due to population itself.
+```{r pcaLoadingsReproduced}
+cor(Harman.5, pc$scores) %>% round(2)
+```
 
-```{r pcaLoadings, echo=F, eval=-1, cache=FALSE}
+It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger loadings are indicated by blue, and we can see the different variables associated with different components. 
+
+```{r pcaLoadingsVis, echo=F, eval=-1, cache=FALSE}
 d3heatmap::d3heatmap(pc$loadings)
 
 library(htmltools)
-tags$div(style="width:500px; margin-left:auto;  margin-right:auto",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
          d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
                               colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50), width=500)
          )
 ```
 
+Interpretation is the fun but commonly difficult part. As an example, PC1 looks to be mostly our socioeconomic status of the tract.  Any tract with a high score on that component will have high values on all variables.  It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. The underlying cause of the result could for example merely be due to population itself.
+
+
 Some explanation of the other parts of the output:
 
-- `h2`: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings (a.k.a. <span class="emph">communality</span>). For example, population is almost completely explained by the three components
+- `h2`: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings, a.k.a. <span class="emph">communality</span>. For example, population is almost completely explained by the three components
 - `u2`: 1 - h2
 - `com`: A measure of complexity. A value of 1 might be seen for something that loaded on only one component, and zero otherwise (a.k.a. perfect simple structure).
 
 
 
-We can get a quick graphical model display as follows:
+We can get a quick graphical model displayed as follows[^nobiplot]:
 
 ```{r pcaViz, fig.height=5, echo=F, eval=5, cache=FALSE, comment=NA, dev='svg'}
 # fa.diagram(pc, cex=.5)
@@ -123,7 +133,7 @@ We can get a quick graphical model display as follows:
 # fa.graph(pc, cut=.2)
 # unlink('scripts/pcload.gv')
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
-         DiagrammeR::DiagrammeR('scripts/pcload.gv', type='grViz', width='500px', height='500px')
+         DiagrammeR::DiagrammeR('scripts/pcload.gv', type='grViz', width='100%', height='25%')
 )
 ```
 
@@ -131,9 +141,11 @@ tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
 
 PCA may not be the best choice in this scenario, nor likely is this the most interpretable solution. One issue with PCA is that this graphical model assumes the observed variables are measured without error.  In addition, the principal components do not correlate with one another by default, but it seems likely that we would want to allow the latent variables to do so in many situations, perhaps including this one (a different rotation would allow this).  However, if our goal is merely to reduce the 24 items to a few that account for the most variance, this would be a standard technique.
 
+
+
 ### Factor Analysis
 
-Now let's examine what is sometimes called *common* factor analysis and also sometimes *exploratory* factor analysis in the social sciences, but just factor analysis (FA) everywhere else.  While we can use both PCA and FA for similar reasons and even have similar interpretations, there are some underlying subtleties between the two that provide unique distinctions.  Noting these distinctions with some detail will require some matrix notation, but for other readers not so keen on such presentation they may note the images and concluding points.
+Now let's examine what is sometimes called *common* factor analysis, and also sometimes *exploratory* factor analysis in the social sciences, and even 'classical' or 'traditional', but typically just factor analysis (FA) everywhere else.  While we can use both PCA and FA for similar reasons (dimension reduction) and even have similar interpretations (in terms of loadings), there are some underlying subtleties between the two that provide unique distinctions[^factpca].  Noting these distinctions with some detail will require some matrix notation, but for readers not so keen on such presentation they may note the images and concluding points.
 
 First let's revisit PCA, where we can depict it conceptually as an approach where we attempt to approximate the correlation matrix in terms of the product of components, represented by our loading matrix $L$[^revref].
 
@@ -141,7 +153,7 @@ $$R \approx LL'$$
 and
 
 $$C = XW$$
-In other words, each component score $C$ is a weighted (with weight/loading matrix $W$) combination of the $p$ observed variables $X$, the weights of which are determined by the loadings, but yet do not say anything about the correlations between the variables.  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following R code demontrates this.
+In other words, each component score $C$ is a weighted (with weight/loading matrix $W$) combination of the $p$ observed variables $X$, the weights of which are determined by the loadings, but yet do not say anything about the correlations between the variables.  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following demonstrates this.
 
 ```{r pca_preproduce_cormat}
 pc_all = principal(Harman.5, nfactors=5,  rotate='none', covar = F)
@@ -149,7 +161,7 @@ all.equal(tcrossprod(loadings(pc_all)), cor(Harman.5))
 ```
 
 ```{r visPCA, echo=F}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",  
 DiagrammeR("
 digraph DAG2 {
   # Intialization of graph attributes
@@ -167,111 +179,164 @@ digraph DAG2 {
   Component [width=1.5, height=1, shape=circle, color=gray80];
 
   node [width=1, shape=square, color=gray10]
-  I1; I2; I3; I4; 
+    X1 [label=<X<sub>1</sub>>]; 
+    X2 [label=<X<sub>2</sub>>]; 
+    X3 [label=<X<sub>3</sub>>]; 
+    X4 [label=<X<sub>4</sub>>]; 
 
-  # Initialization of edge attributes
+  # Xnitialization of edge attributes
   edge [color = gray50, rel = yields]
 
   # Edge statements
-  I1 -> Component [style=dashed]; I2 -> Component; I3 -> Component; I4 -> Component;
+  X1 -> Component [style=dashed]; X2 -> Component; X3 -> Component; X4 -> Component;
 
   }
-", type='grViz', width='250', height='250')
+", type='grViz', width='100%', height='50%')
 )
 ```
 
 
-If we return to our causal thinking from before, the causal flow originates with the observed variables to the components.
+If we return to our causal thinking from before, the causal flow originates with the observed variables to the components. Perhaps now it is clearer as to the interpretation of the loadings we had before, as correlations with components. In fact the loadings are used to create the estimated component scores in the first place.
 
-Not so with factor analysis. Now the causal flow is in the other direction, originating with the latent variables. 
+Things are different with factor analysis. Now the causal flow is in the other direction, originating with the latent variables. 
 
 $$X \approx FW$$
 
 Each observed variable $x$ is a function of the latent variables that it is associated with.  In addition, we also take into account the uniquenesses $\Psi$, or that part which the factors do not explain.
 
-```{r visFA, echo=F}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+```{r visFA, echo=F, dev='svg'}
+#### The tag width of 0% will start the graph in the middle. 50% will start 
+#### halfway from middle to the left margin and go halfway past center. 100% 
+#### will start at left margin and go all the way to the right of div.
+#### Diagrammer is the width of the tag box, so 100% width should keep
+#### it centered in the div
+tags$div(style="width:50%; margin:0 auto; text-align='center'",
 DiagrammeR("
 digraph DAG2 {
-  # Intialization of graph attributes
-  graph [overlap = true rankdir=TB]
+ # Intialization of graph attributes
+ graph [overlap = false rankdir=TB]
+ 
+ # Initialization of node attributes
+ node [shape = circle,
+ fontname = Helvetica,
+ color = gray80,
+ type = box,
+ fixedsize = true]
+ 
+ # Node statements
+ node [width=1.5, height=1, shape=circle, color=gray80];
+ Factor;
+ 
+ node [width=1, shape=square, color=gray10]
+ subgraph {
+    rank=same;
+    X1 [label=<X<sub>1</sub>>]; 
+    X2 [label=<X<sub>2</sub>>]; 
+    X3 [label=<X<sub>3</sub>>]; 
+    X4 [label=<X<sub>4</sub>>]; 
+ }
+ # Xnitialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ Factor -> X1 [style=dashed] ;
+ Factor -> {X2 X3 X4};
 
-  # Initialization of node attributes
-  node [shape = circle,
-        fontname = Helvetica,
-        color = gray80,
-        type = box,
-        fixedsize = true]
+ subgraph {
+    rank=same;
+    node [width=.5, height=.5, shape=circle, color=gray80]
+    U1 [label=<U<sub>1</sub>>]; 
+    U2 [label=<U<sub>2</sub>>]; 
+    U3 [label=<U<sub>3</sub>>]; 
+    U4 [label=<U<sub>4</sub>>]; 
+ }
+
+  edge [dir=back]  ##### TRICK IS HERE
+  X1 -> U1;
+  X2 -> U2;
+  X3 -> U3;
+  X4 -> U4;
 
 
-  # Node statements
-  Factor [width=1.5, height=1, shape=circle, color=gray80];
-
-  node [width=1, shape=square, color=gray10]
-  I1; I2; I3; I4; 
-
-  # Initialization of edge attributes
-  edge [color = gray50, rel = yields]
-
-  # Edge statements
-  Factor -> I1 [style=dashed] ;
-  Factor -> {I2 I3 I4};
-
-
-subgraph{
-graph [ rankdir = BT]
-{rank=same;
- node [width=.5, height=.5, shape=circle, color=gray80]
-  U1 U2 U3 U4;
-  U1 -> I1;
-  U2 -> I2;
-  U3 -> I3;
-  U4 -> I4;
-}
-}
-
-
-}
-", type='grViz', width='250', height='250')
+ 
+ }
+ ", type='grViz', width='100%', height='25%')
 )
 ```
 
+And to reproduce the correlation matrix:
+
 $$R \approx LL' + \Psi$$
-If we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'd note that the uniquenesses are all zero, but this is not the case with factor analysis.
+So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'd note that the uniquenesses are all zero, but this is not the case with factor analysis.
 
 ```{r fa_preproduce_cormat}
 fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F)
 all.equal(tcrossprod(loadings(fa_all)), cor(Harman.5))           # doesn't reproduce cormat
-all.equal(tcrossprod(loadings(fa_all)) + diag(fa_all$uniquenesses), cor(Harman.5))  # add uniquenesses
+
+# add uniquenesses
+all.equal(tcrossprod(loadings(fa_all)) + diag(fa_all$uniquenesses), cor(Harman.5))  
 ```
 
 
 What this amounts to conceptually are a few key ideas:
 
 - Factor analysis focuses on covariance. PCA focuses on variance.
-- Factors are the cause of the observed variables
-- Factor analysis does not assume perfect measurement of observed variables
+- Factors are the cause of the observed variables, variables are the cause of components.
+- Factor analysis does not assume perfect measurement of observed variables.
 
-### Other Matrix Factorization Techniques
 
-Before leaving PCA and common factor analysis for factor analysis of the sort we'll mostly be concerned with, I'll mention other matrix factorization techniques that might be of use depending on your data situation.
 
-- **SVD**: singular value decomposition. Works on a raw data matrix rather than covariance matrix, and is still a very viable technique that may perform better in a lot of situations relative to fancier latent variable models, and other more recently developed techniques.  Variations on SVD are behind some recommender systems of the sort you come across at Amazon, Netflix etc.
+Let's now do the factor analysis for the same Harman 5 data.
+
+```{r faHarman}
+fac = fa(Harman.5, nfactors=3,  rotate='none')
+fac
+```
+
+We have a notably different interpretation with this approach. To begin, our first two factors account for roughly the same amount of variance.  Secondly, none reflect all the variables simultaneously.  For example, the first might reflect the wealth of census tracts, while the second size.  The third latent variable has a murky interpretation at best, but is mostly reflective of education.  However, for identifiability reasons, a topic we will address more later, technically 3 factors is too many for five variables without imposing constraints on some of the parameters.
+
+#### Correlated constructs
+
+Another thing to keep in mind with factor analysis is that the default setting[^spssfa] allows correlated latent variables, unlike with PCA, which instead produces orthogonal components by default. This leads to an issue interpreting the loadings as 'mere correlations' of observed variables to the latent variable. If we had only one factor, or forced the factors to have zero correlation as is the case with PCA, we could still interpret the loadings as such. But now, even if an observed variable has a loading of 0 for Factor 1, it still may be correlated with that factor because it has a strong loading for Factor 2 and Factor 2 is correlated with Factor 1.  As such, with factor analysis (or PCA with non-orthogonal rotations) we distinguish the following definitions that will carry over to the SEM setting:
+
+- <span class="emph">pattern coefficients</span>: these are the standard loadings you see
+- <span class="emph">structure coefficients</span>: the correlation of an observed variable with a factor that reflects *any* association, causal or otherwise.
+
+As noted these are identical if there is only one factor or the factors are orthogonal. To demonstrate the difference, let's rerun the analysis with 2 factors and allow them to correlate. By default the <span class="func">fa</span> function uses a oblimin rotation that will do this. Then we can examine the structure coefficients versus the loadings. Note that when you run this you will get a warning, which amounts to telling you 12 observations isn't enough. I also add a little bit, `[]`, to get rid of the psych package's unfortunate default printing of these matrices, which includes information beyond the matrices themselves.
+
+```{r faHarman2}
+fac2 = fa(Harman.5, nfactors=2)
+fac2$loadings[] %>% round(2)
+fac2$Structure[] %>% round(2)
+```
+
+### Other Techniques
+
+Before leaving PCA and common factor analysis for factor analysis of the sort we'll mostly be concerned with in SEM, I'll mention other matrix factorization techniques that might be of use depending on your data situation.  In general, the use of latent variables is wide, and a number of techniques may be more suitable for certain data situations or modeling goals.  Just having PCA and Factor Analysis at your disposal may be too limiting.  However, many of the techniques are similar to others.  For example, many have ties to PCA in various ways.
+
+- **SVD**: singular value decomposition. Works on a raw data matrix rather than covariance matrix, and is still a very viable technique that may perform better in a lot of situations relative to fancier latent variable models, and other more recently developed techniques.  Variations on SVD are behind some recommender systems of the sort you come across at Amazon, Netflix etc. There is a notable [tie between SVD and PCA](https://math.stackexchange.com/questions/3869/what-is-the-intuitive-relationship-between-svd-and-pca) such that SVD is actually used for PCA for computational reasons.
 - **ICA**: Independent components analysis. Extracts non-normal, independent components. The primary goal is to create independent latent variables.
 - **Generalized PCA**: PCA techniques for different types of data, e.g. binary data situations.
 - **PC Regression**: combining PCA with regression in one model.
 - **NMF**: non-negative matrix factorization. Applied to positive valued matrices, produces positive valued factors. Useful, for example, when dealing with counts.
-- **LSI**: Latent Semantic Indexing, an early form of topic modeling.
+- **LSI**: Latent Semantic Indexing, an early form of topic modeling. It has an equivalence to NMF.
+- **LDA**: Latent Dirichlet Allocation, the typical approach for topic modeling, generalizes LSI/NMF. Essentially can be seen as discrete PCA, i.e. a special case of exponential/generalized PCA.
+- **Canonical correlation**: an early approach to correlating two sets of variables by constructing composite variables of the corresponding sets. Standard regression, MANOVA/discriminant function analysis, and the simple Pearson correlation are all special cases. Superseded by SEM.
 - Many others.
+
+
+
+### Summary
+
+So to summarize, we have two techniques, very similar on the surface, but with key differences between them.  Both allow us to reduce the data to fewer dimensions than we start with.  However, both do so in different ways and with different goals in mind.  Depending on the specifics of your situation you might prefer either for dimension reduction or construct exploration.
 
 
 
 ## Factor Analysis in SEM
 
-<span class='emph'>Factor analysis</span> is a general technique for uncovering latent variables within data. While initially one might think it similar to PCA[^factpca], one difference from PCA is that the goal is not to recover maximum variance with each factor.    In addition, we will move beyond factor analysis as a dimension reduction technique (and fully 'exploratory' technique, see below), and instead present it as an approach with a potentially strong theoretical underpinning, and one that can help us assess measurement error, ultimately even leading to regression models utilizing the latent variables themselves.
+As we have seen, <span class='emph'>factor analysis</span> is a general technique for uncovering latent variables within data. While initially one might think it similar to PCA, we saw a key difference in the underlying causal interpretation, which will be more explicit in the SEM setting. Now we will move beyond factor analysis as a dimension reduction technique (and fully 'exploratory' technique, see below), and instead present it as an approach with a potentially strong theoretical underpinning, and one that can help us assess measurement error, ultimately even leading to regression models utilizing the latent variables themselves.
 
-
-So let us turn to what are typically called <span class="emph">measurement models</span> within SEM. The underlying model can be thought of as a case in which the observed variables, in some disciplines referred to as *indicators* (or *manifest* variables) of the latent construct , are caused by the latent variable. The degree to which the observed variables correlate with one another depends in part on how much of the underlying (presumed) latent variable they reliably measure[^factphil].  
+So let us turn to what are typically called <span class="emph">measurement models</span> within SEM. The underlying model can be thought of as a case in which the observed variables, in some disciplines referred to as *indicators* (or *manifest* variables) of the latent construct, are caused by the latent variable. The degree to which the observed variables correlate with one another depends in part on how much of the underlying (presumed) latent variable they reliably measure[^factphil].  
 
 For each indicator we can think of a regression model as follows, where $\beta_0$ is the intercept and $\lambda$ the regression coefficient that expresses the effect of the latent variable $F$ on the observed variable $X$ (I do not note the error).
 
@@ -286,7 +351,8 @@ X_3 &= \beta_{03} + \lambda_{13} F_1
 \end{aligned}$$
 
 
-It is important to understand this regression model, because many who engage in factor analysis seemingly do not, and often think of it the other way around, where the observed variables cause the latent.  In factor analysis, the $\lambda$ coefficients are called <span class="emph">loadings</span> (as they were in PCA), but are interpreted as any other regression coefficient- a one unit change in the latent variable results in a $\lambda$ change in the observed variable. Most factor models assume that, controlling for the latent variable, the observed variables are independent (recall our previous discussion on conditional independence in graphical models), though this is sometimes relaxed.  If only one factor is associated with an item and does not correlate with any other factors, then we have a simple regression setting where the standardized coefficient is equal to the correlation between the latent variable and the observed.
+It is important to understand this regression model, because many who engage in factor analysis seemingly do not, and often think of it the other way around, where the observed variables cause the latent.  In factor analysis in the SEM settings, these $\lambda$ coefficients are typically called <span class="emph">loadings</span> as they were before, but are interpreted as any other regression coefficient- a one unit change in the latent variable results in a $\lambda$ change in the observed variable. Most factor models assume that, controlling for the latent variable, the observed variables are independent (recall our previous discussion on conditional independence in graphical models), though this is sometimes relaxed.  If only one factor is associated with an item and does not correlate with any other factors, then we have a simple regression setting where the standardized coefficient is equal to the correlation between the latent variable and the observed.
+
 
 #### Exploratory vs. Confirmatory
 
@@ -473,14 +539,19 @@ Latent variable approaches are a necessary tool to have in your statistical tool
 
 [^factcor]: Some even use use a factor analytic approach to estimating correlations among parameters in models (e.g. I've seen this with gaussian processes and multinomial regression).
 
-
 [^pcafacormat]: Principal components, standard factor analysis and SEM can work on covariance/correlation matrices even without the raw data, this will be perhaps demonstrated in a later version of this doc.
+
+[^nobiplot]: Many often use what are called <span class="emph">biplots</span> for visualization of PCA, but I find the path diagram more readily understandable.
+
+[^spssfa]: Unfortunately for users of SPSS, the default setting for 'factor analysis' in the menus is actually PCA, and this has lead to erroneous reporting of results for decades where people thought they had conducted factor analysis but in fact had not.  I'll bite my tongue and just say that this is one of many ridiculous defaults that SPSS has.
 
 [^factphil]: There are actually deep philosophical underpinnings to this approach, going at least as far back as the notion of the Platonic forms, and continuing on through philosophical debates about what mental aspects can be measured scientifically. However, even when it became a more quantitative discipline, the philosophy was not far behind. See, for example, [The Vectors of Mind](https://archive.org/details/vectorsofmindmul010122mbp) by L.L. Thurstone, one of the pioneers of measurement theory (1935).  As a philosophy major from back in the day, latent variable modeling has always had great appeal to me.
 
 [^factpca]: One version of factor analysis is nearly identical to PCA in terms of mechanics, save for what are on the diagonals of the correlation matrix (1s for PCA vs. 'communalities' for FA).
 
 [^rotation]: I don't think it necessary to get into rotation here, though will likely add a bit in the future. If you're doing PCA, you're likely not really concerned about interpretation of loadings, as you are going to use the components for other means.  It might help with standard factor analysis, but this workshop will spend time on more focused approaches where one would have some idea of the underlying structure rather than looking to uncover the structure.  Rotation doesn't change anything about the fundamental model result, so one just uses whatever leads to the clearest interpretation.
+
+[^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the crossproduct of the loading matrix.
 
 [^revref]: This part of the document borrows notably from the Revelle reference.
 

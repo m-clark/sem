@@ -9,6 +9,12 @@ V3  [label = "employment"];
 V4  [label = "professional"];
 V5  [label = "housevalue"];
 node [shape=ellipse, width ="1.5", height='1.5', color=darkred, fill=red, fontcolor='gray50'];
+
+PC1 [label=<PC<sub>1</sub>>]; 
+PC2 [label=<PC<sub>2</sub>>]; 
+PC3 [label=<PC<sub>3</sub>>]; 
+
+    
 edge [fontname="Helvetica" fontsize=8 color='#8B000094'];
 PC1-> V1 [ label = 0.58 ];
 edge [fontname="Helvetica" fontsize=8 color="#8B0000C4"];
