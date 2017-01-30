@@ -235,7 +235,7 @@ digraph DAG2 {
     X3 [label=<X<sub>3</sub>>]; 
     X4 [label=<X<sub>4</sub>>]; 
  }
- # Xnitialization of edge attributes
+ # Initialization of edge attributes
  edge [color = gray50, rel = yields]
  
  # Edge statements
@@ -293,7 +293,18 @@ fac = fa(Harman.5, nfactors=3,  rotate='none')
 fac
 ```
 
+Once again, we'll depict the loadings visually.
+
+```{r Vis_faHarman, echo=FALSE}
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+         d3heatmap::d3heatmap(fac$loadings, dendrogram='none',
+                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50), width=500)
+         )
+```
+
+
 We have a notably different interpretation with this approach. To begin, our first two factors account for roughly the same amount of variance.  Secondly, none reflect all the variables simultaneously.  For example, the first might reflect the wealth of census tracts, while the second size.  The third latent variable has a murky interpretation at best, but is mostly reflective of education.  However, for identifiability reasons, a topic we will address more later, technically 3 factors is too many for five variables without imposing constraints on some of the parameters.
+
 
 #### Correlated constructs
 
@@ -309,6 +320,46 @@ fac2 = fa(Harman.5, nfactors=2)
 fac2$loadings[] %>% round(2)
 fac2$Structure[] %>% round(2)
 ```
+
+
+#### The number of factors
+
+A key question, even in the context of SEM, is the number of latent variables to posit for a particular set of variables. In SEM this is usually guided by theory, but in common factor analysis, all items load on whatever number of factors we choose.  In *both* cases some solutions will work better than others for the data at hand, and different models should be compared.  The same techniques used in other modeling situations, e.g. comparing AIC, are often available.  Furthermore, one should inspect the residuals of the the observed vs. reproduced correlation matrix to further understand where a particular model fails, even if it seems to be a decent fit otherwise.
+
+As an example, comparing the BIC of a two factor model vs. a one factor model would show that the two factor model is preferable (lower BIC), and aside from a couple of the variances, the residuals are quite low.
+
+```{r FA_model_comparison, echo=1:5}
+fac1 = fa(Harman.5, nfactors=1,  rotate='none', fm='ml')
+fac2 = fa(Harman.5, nfactors=2,  rotate='none', fm='ml')
+
+fac1$BIC
+fac2$BIC
+
+tags$div(style="width:50%; margin:0 auto",
+         lazerhawk::corrheat(fac2$residual, psychOptions=list(), ordering='absolute', width='100%', 
+                             xaxis_font_size=10, yaxis_font_size=10)
+         )
+```
+
+<br>
+
+The main thing you need to know is that every time you use a scree plot to determine the number of factors to retain, both a kitten *and* a puppy will die in some gruesome fashion.
+
+
+#### Estimation in Factor Analysis
+
+There are several methods available to estimate a factor analysis.  
+
+- **Principal Axis**: essentially PCA with communalities on the diagonal of the correlation matrix.
+- **Minimum residuals**: attempts to minimize the residuals of the off-diagonal elements of the correlation matrix, i.e. minimized the difference in the observed versus model implied correlation matrix. This is the default in the <span class="pack">psych</span> package.
+- **Maximum likelihood**: the most widely used approach, assumes a normal distribution for the data generating process, but can be extended to others.  [Click here](https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/cfa_ml.R) for some by-hand R code with comparison to <span class="pack">lavaan</span> output.
+- **Bayesian**: the basic method extends the maximum likelihood approach as with other analyses by adding priors to the estimation process, i.e. posterior $\propto$ likelihood + prior.  A different tact would estimate the factor scores as additional parameters (along with the loadings) etc.
+
+
+#### Nonparametric Factor Analysis
+
+One of the hard problems in factor analysis is determining the number of factors to retain, a similar issue seen in cluster analysis. Although relatively rarely used if even heard of among many practitioners of factor analysis, Bayesian nonparametric approaches get around this by letting the number of clusters/factors grow with the data.  Sticking with factor analysis, an underlying Dirichlet process is assumed, and depending on the prior, new factors will be added with more or less ease.   Such approaches would also be applicable to a streaming data context.
+
 
 ### Other Techniques
 
@@ -332,13 +383,13 @@ So to summarize, we have two techniques, very similar on the surface, but with k
 
 
 
-## Factor Analysis in SEM
+## Constructs and Measurement Models
 
 As we have seen, <span class='emph'>factor analysis</span> is a general technique for uncovering latent variables within data. While initially one might think it similar to PCA, we saw a key difference in the underlying causal interpretation, which will be more explicit in the SEM setting. Now we will move beyond factor analysis as a dimension reduction technique (and fully 'exploratory' technique, see below), and instead present it as an approach with a potentially strong theoretical underpinning, and one that can help us assess measurement error, ultimately even leading to regression models utilizing the latent variables themselves.
 
 So let us turn to what are typically called <span class="emph">measurement models</span> within SEM. The underlying model can be thought of as a case in which the observed variables, in some disciplines referred to as *indicators* (or *manifest* variables) of the latent construct, are caused by the latent variable. The degree to which the observed variables correlate with one another depends in part on how much of the underlying (presumed) latent variable they reliably measure[^factphil].  
 
-For each indicator we can think of a regression model as follows, where $\beta_0$ is the intercept and $\lambda$ the regression coefficient that expresses the effect of the latent variable $F$ on the observed variable $X$ (I do not note the error).
+For each indicator we can think of a regression model as follows, where $\beta_0$ is the intercept and $\lambda$ the regression coefficient that expresses the effect of the latent variable $F$ on the observed variable $X$ (I do not note the error term).
 
 $$X = \beta_0 + \lambda F$$
 
@@ -351,14 +402,15 @@ X_3 &= \beta_{03} + \lambda_{13} F_1
 \end{aligned}$$
 
 
-It is important to understand this regression model, because many who engage in factor analysis seemingly do not, and often think of it the other way around, where the observed variables cause the latent.  In factor analysis in the SEM settings, these $\lambda$ coefficients are typically called <span class="emph">loadings</span> as they were before, but are interpreted as any other regression coefficient- a one unit change in the latent variable results in a $\lambda$ change in the observed variable. Most factor models assume that, controlling for the latent variable, the observed variables are independent (recall our previous discussion on conditional independence in graphical models), though this is sometimes relaxed.  If only one factor is associated with an item and does not correlate with any other factors, then we have a simple regression setting where the standardized coefficient is equal to the correlation between the latent variable and the observed.
+It is important to understand this regression model, because many who engage in factor analysis seemingly do not, and often think of it the other way around, where the observed variables cause the latent.  In factor analysis in the SEM settings, these $\lambda$ coefficients are typically called <span class="emph">loadings</span> as they were before, but are in fact interpreted as any other regression coefficient- a one unit change in the latent variable results in a $\lambda$ change in the observed variable. Most factor models assume that, controlling for the latent variable, the observed variables are independent (recall our previous discussion on conditional independence in graphical models), though this is sometimes relaxed.  If only one factor is associated with an item and does not correlate with any other factors, then we have a simple regression setting where the standardized coefficient is equal to the correlation between the latent variable and the observed.
 
 
 #### Exploratory vs. Confirmatory
 
-An unfortunate and unhelpful distinction in some disciplines (esp. psychology) is that of <span class="emph">exploratory</span> vs. <span class="emph">confirmatory</span> factor analysis (and even exploratory SEM).  In any regression analysis, there is a non-zero correlation between *any* variable and some target variable. We don't include everything for theoretical (and even practical) reasons, which is akin to fixing its coefficient to zero, and here it is no different.  Furthermore, most modeling endeavors could be considered exploratory, regardless of how the model is specified.  As such, this distinction doesn't tell us anything about the model, and is thus unnecessary in my opinion.
+An unfortunate and unhelpful distinction in some disciplines (esp. psychology) is that of <span class="emph">exploratory</span> vs. <span class="emph">confirmatory</span> factor analysis (and even exploratory SEM).  In any regression analysis, there is a non-zero correlation between *any* variable and some target variable. We don't include everything for theoretical (and even practical) reasons, which is akin to fixing a path coefficient to zero, and here it is no different.  Furthermore, most modeling endeavors could be considered exploratory, regardless of how the model is specified.  As such, this distinction doesn't tell us anything about the model, and is thus unnecessary in my opinion.
 
-As an example, in the above equations $X_3$ is not modeled by $F_2$, which is the same as fixing the  $\lambda_{23}$ coefficient for $F2$ to 0. However, that doesn't tell me whether the model is exploratory or not, and yet that is all the distinction refers to, namely, whether we let all factors load with all indicators or not.  An analysis doesn't suddenly have more theoretical weight, validity, causal efficacy, etc. due to the paths specified.
+As an example, in the above equations $X_3$ is not modeled by $F_2$, which is the same as fixing the  $\lambda_{23}$ coefficient for $F_2$ to 0. However, that doesn't tell me whether the model is exploratory or not, and yet that is all the distinction refers to in a practical sense, namely, whether we let all indicators load on all factors or not.  An analysis doesn't *necessarily* have more theoretical weight, validity, causal efficacy, etc. due to the paths specified, though as we noted before, not having paths does convey causal interpretation.
+
 
 #### Example
 
@@ -393,14 +445,69 @@ summary(famod, standardized=T)
 
 In a standard measurement model such as this we must *scale the factor* by fixing one of the indicator's loadings to one.  This is done for identification purposes, so that we can estimate the latent variable variance.  Which variable is selected for scaling is arbitrary, but doing so means that the sum of the latent variable variance and the residual variance of the variable whose loading is fixed to one equals the variance of that observed variable[^residualModel].    
 
-```{r plotFARaw, echo=F}
+```{r plotFARaw_sempaths, echo=F, eval=F}
 semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F, 
                   whatLabels = 'par', groups=c('latent', 'man'),  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
                   sizeMan=5, sizeLat=10, edge.label.cex=1.5, borders=F, #edge.color='#1e90ff',
                   label.color='#ffffff', edge.width=2.5) 
 ```
 
-```{r }
+```{r plotFARaw, echo=F, eval=T}
+tags$div(style="width:50%; margin:auto auto;",
+DiagrammeR("
+digraph {
+ # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
+
+ # Intialization of graph attributes
+ graph [overlap=false rankdir=TB]
+ 
+ # Node statements
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ U0 [width=.25 height=.25 style='' label=''];
+ Depression [fontsize=10, width=1.25, height=1];
+ 
+ node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style='']
+ subgraph {
+    rank=same;
+    node [label='Felt\n\nDown' fontcolor=gray50 fontsize=6]    
+    FD; 
+    node [label='Been\n\nHappy' fontcolor=gray50 fontsize=6]    
+    BH; 
+    node [label='Depressed\n\nLast Month' fontcolor=gray50 fontsize=6]    
+    DLM; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ edge [label='   .29', fontcolor=gray25, fontsize=6]
+ U0 -> Depression;
+ edge [style=dashed label='   1.0' fontcolor=gray25 fontsize=10 minlen=2]
+ Depression -> FD 
+ edge [style='' label='   -.73' fontcolor=gray25 fontsize=10 minlen=2];
+ Depression -> BH ;
+ edge [label='   .72' fontcolor=gray25 fontsize=10 minlen=2]
+ Depression -> DLM ;
+
+ subgraph {
+    rank=same;
+    node [width=.25, height=.25, shape=circle, color=gray80]
+    U1 [label='']; 
+    U2 [label='']; 
+    U3 [label='']; 
+ }
+
+  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] 
+  FD -> U1 [label='   .15'];
+  BH -> U2 [label='   .27'];
+  DLM -> U3 [label='   .20'];
+ }
+ ", type='grViz', width='100%')
+)
+```
+
+
+```{r showVarCalculation}
 var(depressed$FeltDown, na.rm=T)  # .29 + .15
 ```
 
@@ -414,7 +521,7 @@ An alternative way to scale the latent variable is to simply fix its variance to
 
 With both standardized (using the <span class="func">summary</span> function, set `standardized=T`), these loadings represent correlations between the observed and latent variables.  This is the default output in the factor analysis we'd get from non-SEM software (i.e. 'exploratory' FA).  If one is just doing a factor-analytic model, these loadings are typically reported. Standardized coefficients in a CFA are computed by taking the unstandardized coefficient (loading) and multiplying it by the model implied standard deviation of the indicator then dividing by the latent variable’s standard deviation. Otherwise, one can simply use standardized variables in the analysis, or supply only the correlation matrix.
 
-```{r plotFAStd, echo=F}
+```{r plotFAStd_semplot, echo=F, eval=F}
 semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F, 
                   whatLabels = 'std', groups=c('latent', 'man'),  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
                   sizeMan=5, sizeLat=10, edge.label.cex=1.5, borders=F, #edge.color='#1e90ff',
@@ -422,21 +529,218 @@ semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F,
                   label.color='#ffffff', edge.width=2.5) 
 ```
 
-If you'd like to peel back the curtain and see maximum likelihood estimation based on the raw (covariance) and standardized (correlation) scales, with a comparison to lavaan output, [click here](https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/cfa_ml.R).
+```{r plotFAStd, echo=F, eval=T}
+tags$div(style="width:50%; margin:auto auto;",
+DiagrammeR("
+digraph {
+ # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
+
+ # Intialization of graph attributes
+ graph [overlap=false rankdir=TB]
+ 
+ # Node statements
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ U0 [width=.25 height=.25 style='' label=''];
+ Depression [fontsize=10, width=1.25, height=1];
+ 
+ node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style='']
+ subgraph {
+    rank=same;
+    node [label='Felt\n\nDown' fontcolor=gray50 fontsize=6]    
+    FD; 
+    node [label='Been\n\nHappy' fontcolor=gray50 fontsize=6]    
+    BH; 
+    node [label='Depressed\n\nLast Month' fontcolor=gray50 fontsize=6]    
+    DLM; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ edge [label='   1.0', fontcolor=gray25, fontsize=6]
+ U0 -> Depression;
+ edge [style=dashed label='   .81' fontcolor=gray25 fontsize=10 minlen=2]
+ Depression -> FD 
+ edge [style='' label='   -.61' fontcolor=gray25 fontsize=10 minlen=2];
+ Depression -> BH ;
+ edge [label='   .65' fontcolor=gray25 fontsize=10 minlen=2]
+ Depression -> DLM ;
+
+ subgraph {
+    rank=same;
+    node [width=.25, height=.25, shape=circle, color=gray80]
+    U1 [label='']; 
+    U2 [label='']; 
+    U3 [label='']; 
+ }
+
+  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] 
+  FD -> U1 [label='   .34'];
+  BH -> U2 [label='   .63'];
+  DLM -> U3 [label='   .57'];
+ }
+ ", type='grViz', width='100%')
+)
+```
 
 
-## Constructs and Measurement models
 
+## Other issues in Factor Analysis
 ### Some specific factor models in SEM
 
 #### Hierarchical/Second-Order
 
 In hierarchical models we posit that latent variables can also serve as indicators of other latent variables.  As an example, one latent variable might represent verbal cognition, another mathematical strength, a third scientific acumen, and they might be indicators for a general 'scholastic ability' latent variable.  Graphically they can be depicted as follows:
 
+```{r secondorder, echo=F}
+tags$div(style="width:75%; margin:0 auto; text-align='center'",
+DiagrammeR("
+digraph DAG2 {
+ # Intialization of graph attributes
+ graph [overlap = false rankdir=TB]
+ 
+ # Initialization of node attributes
+ node [shape = circle,
+ fontname = Helvetica,
+ color = gray80,
+ type = box,
+ fixedsize = true]
+ 
+ # Node statements
+ node [width=1.5, height=1, shape=circle, fontcolor=gray25];
+  F1 [label=<Factor<sub>1</sub>>, color='#ff5503']; 
+  F2 [label=<Factor<sub>2</sub>>, color=salmon]; 
+  F3 [label=<Factor<sub>3</sub>>, color=limegreen]; 
+  Fg [label=<Factor<sub>g</sub>>, color=dodgerblue]; 
+ 
+ node [width=1, shape=square, color=gray10]
+ subgraph {
+    rank=same;
+    X1 [label=<X<sub>1</sub>>, color='#ff5503']; 
+    X2 [label=<X<sub>2</sub>>, color='#ff5503']; 
+    X3 [label=<X<sub>3</sub>>, color='#ff5503']; 
+    X4 [label=<X<sub>4</sub>>, color='#ff5503']; 
+ }
+ node [width=1, shape=square, color=salmon]
+ subgraph {
+    rank=same;
+    X5 [label=<X<sub>5</sub>>]; 
+    X6 [label=<X<sub>6</sub>>]; 
+    X7 [label=<X<sub>7</sub>>]; 
+    X8 [label=<X<sub>8</sub>>]; 
+ }
+ node [width=1, shape=square, color=limegreen]
+ subgraph {
+    rank=same;
+    X9 [label=<X<sub>9</sub>>]; 
+    X10 [label=<X<sub>10</sub>>]; 
+    X11 [label=<X<sub>11</sub>>]; 
+    X12 [label=<X<sub>12</sub>>]; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ F1 -> X1 [style=dashed] ;
+ F1 -> {X2 X3 X4};
+
+ F2 -> X5 [style=dashed] ;
+ F2 -> {X6 X7 X8};
+
+ F3 -> X9 [style=dashed] ;
+ F3 -> {X10 X11 X12};
+
+ Fg -> F1 [style=dashed] ;
+ Fg -> {F2 F3};
+
+ 
+ }
+ ", type='grViz', width='100%', height='45%')
+)
+```
+
 
 #### Bifactor
 
 A bifactor model might seem similar to the hierarchical model at first blush.  I'll even use the previous example and let you see if you can come up with why these are different models specifically.
+
+
+```{r bifactor, echo=F}
+tags$div(style="width:75%; margin:0 auto; text-align='center'",
+DiagrammeR("
+digraph DAG2 {
+ # Intialization of graph attributes
+ graph [overlap = false rankdir=BT]
+ 
+ # Initialization of node attributes
+ node [shape = circle,
+ fontname = Helvetica,
+ color = gray80,
+ type = box,
+ fixedsize = true]
+ 
+ # Node statements
+ node [width=1.5, height=1, shape=circle, fontcolor=gray25];
+ subgraph{rank=same;
+  F1 [label=<Factor<sub>1</sub>>, color='#ff5503']; 
+  F2 [label=<Factor<sub>2</sub>>, color=salmon]; 
+  F3 [label=<Factor<sub>3</sub>>, color=limegreen]; 
+  }
+  Fg [label=<Factor<sub>g</sub>>, color=dodgerblue]; 
+ 
+ node [width=1, shape=square, color=gray10]
+ subgraph {
+    rank=same;
+    X1 [label=<X<sub>1</sub>>, color='#ff5503']; 
+    X2 [label=<X<sub>2</sub>>, color='#ff5503']; 
+    X3 [label=<X<sub>3</sub>>, color='#ff5503']; 
+    X4 [label=<X<sub>4</sub>>, color='#ff5503']; 
+ }
+ node [width=1, shape=square, color=salmon]
+ subgraph {
+    rank=same;
+    X5 [label=<X<sub>5</sub>>]; 
+    X6 [label=<X<sub>6</sub>>]; 
+    X7 [label=<X<sub>7</sub>>]; 
+    X8 [label=<X<sub>8</sub>>]; 
+ }
+ node [width=1, shape=square, color=limegreen]
+ subgraph {
+    rank=same;
+    X9 [label=<X<sub>9</sub>>]; 
+    X10 [label=<X<sub>10</sub>>]; 
+    X11 [label=<X<sub>11</sub>>]; 
+    X12 [label=<X<sub>12</sub>>]; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ F1 -> X1 [style=dashed] ;
+ F1 -> {X2 X3 X4};
+
+ F2 -> X5 [style=dashed] ;
+ F2 -> {X6 X7 X8};
+
+ F3 -> X9 [style=dashed] ;
+ F3 -> {X10 X11 X12};
+
+ edge[dir=both, style=curved]
+ F1 -> F2;
+ F2 -> F3;
+ F3 -> F1;
+
+ edge [dir=back; minlen=2.3]
+ {X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12} -> Fg;
+
+ 
+ }
+ ", type='grViz', width='100%', height='45%')
+)
+```
+
+
+The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which...
 
 
 ### Scale development
@@ -447,9 +751,141 @@ The following diagram shows how the variance breaks down (from Kline).
 
 <img src="img/uniquevcommon.png" style="display:block; margin: 0 auto; width:50%">
 
+
+#### Reliability
+
+Please repeat the following 10 times, possibly while in the lotus position.
+
+> Reliability is not a constant. There is no single concept of reliability.
+
+As a motivating example, say we derive a scale for 'stick-to-it-tiveness' and did so based on a largely white, young adult, somewhat educated, middle class sample of Americans[^psychstudents].  Let's say the reliability for the scale was off the charts based on whatever statistic you want to use, and you are most pleased.  Now answer the following...
+
+How reliable do you think the scale is on a sample of: 
+
+- native Chinese speakers?
+
+- a sample of Londoners?
+
+- a sample of older adults from the Texas panhandle?
+
+- a sample of women only?
+
+- a sample of second generation Hispanic Americans?
+
+- a sample of teenagers?
+
+- the same population 15 years later?
+
+- the same exact people a second time?
+
+Asking it in this context makes it almost seem absurd to even think the scale would be equally effective for all these groups.  While some scales are applicable across a wide spectrum of individuals, assuming it is the case is at best a problematic stance.  Yet common practice for utilizing scales is to simply cite the original study, possibly conducted *decades* ago, note that it found the scale 'reliable', possibly without even defining reliability or producing any statistic, and going on with using the scale.  Furthermore, many adhere to sometimes very low, and utterly arbitrary, statistical cutoffs, largely on a single type of statistic that may not even be appropriate given the construct(s) under study.
+
+Let's be more explicit with our example.  The scale, which actually measures two aspects of stick-to-it-tiveness is developed on mostly freshman psychology students at a private school, and the Cronbach's alpha for it is .7.  To begin, even if we deem this an acceptable result, there is no a priori reason to think it will generalize to even a more equitable population of college students at the same school, much less adults out of this age range or any number of other specific populations we could think of.  In addition, there is a notable portion of the variance of the items that isn't related to the construct, and one wonders whether that is in fact a good result. And finally, our statistic of choice is actually a bit problematic if there is no general factor beyond the two aspects.
+
+```{r schmiability, echo=F, eval=F}
+set.seed(12345)
+cormat1 = lazerhawk::createCorr(rep(.5, 6))
+cormat2 = lazerhawk::createCorr(rep(.25, 6))
+cormat3 = lazerhawk::createCorr(rep(.75, 6))
+mat0 = Matrix::bdiag(cormat1, cormat2, cormat3)
+mat0[5:8,1:4] = .2
+mat0[9:12,1:4] = .2
+mat0[9:12,5:8] = .2
+mat0 = as.matrix(mat0)
+mat0[upper.tri(mat0)] = t(mat0)[upper.tri(mat0)]
+lazerhawk::corrheat(mat0)
+test = MASS::mvrnorm(100, mu=rep(0,12), Sigma=mat0)
+alpha(test)
+omega(test)
+```
+
+
+##### Classical Test Theory
+
+The underlying idea behind many measures of reliability is the following simple equation:
+
+$$O = T + E$$
+
+In words, the observed score equals the true score plus measurement error.  One of the key consequences of measurement error is attenuation of correlation.  If $\mathcal{X^*}$ and $\mathcal{Y^*}$ are the true scores, and $X$ and $Y$ are the ones we actually observe and contain measurement error, $\mathrm{cor}_{\mathcal{X^*Y^*}}$ will always be greater than $\mathrm{cor}_{XY}$, and using less reliable measures can only hurt any analysis that seeks to find correlations among the data (i.e. *every* analysis).  Examining a scale's reliability is an attempt to understand the measurement error involved.  Even if you aren't working with multi-item scales, the problem doesn't go away, and you should think hard about how accurately your variables represent what they intend to.
+
+##### Measures of Reliability
+
+There are many, many measures of reliability. Here are a couple.
+
+- **Parallel Measures/Split-half**: Many reliability measures rely on the notion of parallel tests, such that reliability can be seen the correlation between two parallel forms of a test. More explicitly, consider a single test with items randomly split into two sets. The correlation between those two tests can be seen as a measure of reliability.
+- **Guttman's $\lambda_6$**: is based on the R^2^ of each item regressed on the others, and this squared multiple correlation can be seen as a lower bound on the communality.  The $\lambda_6$ can be seen as a lower bound on split-half reliability.
+- **Cronbach's $\alpha$**: the most widely used/abused measure of reliability. Equivalent to the earlier measure by Guttman ($\lambda_3$), and it is a generalization of measure for dichotomous items developed in 1937 ($\mathrm{KR}_{20}$).  Issues: underestimates reliability and overestimates factor saturation.  Not so useful for multidimensional scales.
+- **$\omega$**: from McDonald, a measure of 'factor saturation'.  $\omega_{\mathrm{t}}$, or omega total, provides a proportion of variance that is not unique in the factor-analytic sense. $\omega_{\mathrm{h}}$, or omega-hierarchical, is the measure associated with the 'general' factor in the bifactor model noted above. It assumes enough items for a potential hierarchical structure to be tested in the first place.
+- **Composite Reliability**: described in Kline, reference Raykov (2004), see $\omega$
+- **Average Variance Extracted**: For single factor indicator settings, this is the average squared (standardized) loading. It's simple
+
+Both Guttman's and Cronbach's are a function of the number of items and average correlation of items, and will increase if either of those increase. Neither should be seen as indicating a single factor structure (they assume it). My own opinion is that the most sensical notion of reliability is a function of some underlying model that can actually be tested, i.e. a latent variable model. Furthermore, a good item is infused with the construct it purports to measure.  McDonald's $\omega_t$ gets at that notion explicitly.  Practically speaking, if loadings are equal and the one is dealing with a unidimensional construct $\alpha=\omega_t=\omega_h$.  Otherwise, i.e. the usual case, one should consider which measure might be best.
+
+
+```{r computingOmega, eval=F, echo=F}
+# computing omega total
+sum(tcrossprod(fac$loadings))/var(rowSums(scale(Harman.5)))
+omega(Harman.5,  plot=F)$omega.tot
+
+ot0 = fa(Harman.5, 1, rotate='none')
+ot1 = omega(Harman.5, nfactors=1, plot=F, rotate='none')
+ot0$loadings
+ot1$schmid$orthog
+
+oh = sum(ot0$loadings)^2/var(rowSums(scale(Harman.5)))  # omega hierarchical, not applicable
+m = cor(Harman.5)
+nvar = ncol(Harman.5)
+Vt <- sum(m)
+Vitem <- sum(diag(m))
+gload <- ot1$schmid$sl[, 1]
+gsq <- (sum(gload))^2
+uniq <- sum(ot1$schmid$sl[, "u2"])
+om.tot <- (Vt - uniq)/Vt
+om.limit <- gsq/(Vt - uniq)
+Alpha <- ((Vt - Vitem)/Vt) * (nvar/(nvar - 1))
+sum.smc <- sum(smc(m, covar = F))
+lambda.6 <- (Vt + sum.smc - sum(diag(m)))/Vt
+
+# attempt to compare to Kline topic box 13.1 p313
+# see http://www.talkstats.com/showthread.php/57556-Composite-reliability-vs-Cronbach-s-alpha/page2?s=f8eee3bcfa5141965cbef077a0f09a1b From the EQS manual "Cronbach’s alpha (1951) is well-known. Developed for EQS, rho is based on the latent variable model being run. This could be any type of model with additive error variances. When this is a factor model, this gives Bentler’s (1968, eq.12) or, equivalently, Heise and Bohrnsted’s (1970, eq. 32) omega for an equally-weighted composite. With the /RELIABILITY command, it is based on a one-factor model (Raykov, 1997ab), and then rho is the same as McDonald’s (1999, eq. 6.20b) coefficient omega. Note that McDonald’s omega is a special case of Heise and Bohrnsted’s omega."
+
+AVE = mean(ot0$loadings^2)
+lavmod = cfa('ses =~ population + schooling + employment + professional + housevalue', data=scale(Harman.5), estimator='GLS')
+summary(lavmod, std=T)
+ssl = sum(parTable(lavmod)[1:5, 'est'])^2
+phi = partable(lavmod)[nrow(partable(lavmod)),'est']
+theta = sum(parTable(lavmod)[6:10, 'est'])
+composite = (ssl*phi)/(ssl*phi + theta)
+c(Alpha=Alpha, G.6=lambda.6, OmegaH=oh, OmegahHAsym=om.limit, OmegaT=om.tot, 
+  CompositeRel=composite, AVE=AVE)
+ot1
+
+
+fit = cfa('visual  =~ x1 + x2 + x3', data=scale(HolzingerSwineford1939[,c('x1', 'x2', 'x3')]))
+fit_fa = fa(HolzingerSwineford1939[,c('x1', 'x2', 'x3')], fm='ml')
+summary(fit, std=T)
+fit_fa
+ssl = sum(parTable(fit)[1:3, 'est'])^2
+phi = partable(fit)[nrow(partable(fit)),'est']
+theta = sum(parTable(fit)[4:6, 'est'])
+composite = (ssl*phi)/(ssl*phi + theta)
+composite
+alpha(HolzingerSwineford1939[,c('x1', 'x2', 'x3')])
+```
+
+
+#### Scale development as software development
+
+Scale development is hard and a scale can always be improved, *always*.  There is practically no chance that the first time one comes up with variables to measure a construct that the indicators will be perfect.  For example, in a scale that measures some internal construct, such as some aspect of personality, things like item wording, difficulty, context etc. all factor into how the variables will be perceived by the individual, whose own context and background will also affect how items are answered.  After analysis, items might be dropped, altered, or new items added.  The same goes for non-human constructs, like a democracy scale for countries or a diversity index for species.  For example, even economic indicators are not going to have the same reliability from country to country, as the raw data may be harder to come by or not even applicable.
+
+Given this, it would be best to think of scale development the same as we do software development. In software development, bugs are discovered, applications to other or new versions of operating systems are constructed and so forth.  The development cycle is continuous and ongoing, or else the app dies as people move on to better products. 
+
+With scales, items are discovered to be problematic, applications to new segments of the population are to be developed etc. As such, it would be nice if scales were developed more regularly and came with version numbers, same as software, and not so broadly applied to very different populations.  At least this way, perhaps people wouldn't treat the scales so precious as to not be amenable to any change, and expect more from the development process[^mmpi].
+
+
 ### Factor Scores
 
-In factor analysis, we can obtain estimated factor scores for each observation, possibly to be used in additional analyses or examined in their own right.  One common way is to simply use the loadings as one would regression weights/coefficients (actually scaled versions of them), and create a 'predicted' factor score as the linear combination of the indicator variables, just as we would in regression.
+In factor analysis, we can obtain estimated factor scores for each observation, possibly to be used in additional analyses or examined in their own right.  One common way is to simply use the loadings as one would regression weights/coefficients (actually scaled versions of them), and create a 'predicted' factor score as the linear combination of the indicator variables, just as we would in regression.  There is no correct way to do this in standard approaches, as an infinite number of factor scores could be related to the same factor analysis results, a problem known as <span class="emph">factor indeterminancy</span>.  However, this doesn't mean that they aren't useful, especially if we are employing factor analysis primarily as a data compression technique, where the scores might be used in other analyses (e.g. regression).  A common reason to do so is that we might have some SEM model in mind, but too small a sample.
 
 ```{r fscores, eval=FALSE, echo=FALSE}
 psychfa = psych::fa(depressed[,-1], 1, scores=T, use='complete')
@@ -465,13 +901,17 @@ cor(cbind(na.omit(scores1), scores2, scores3))
 ```
 
 
+Recent work suggests that different types of factor scores are better used in different roles, e.g. if the factor is to be used as a predictor, the regression/Thurstone method works best. If it is to be used as a dependent variable, then Bartlett factor scores will be unbiased.  If using them as *both*, then adjustments will have to be made to avoid bias.  See [Hypothesis Testing Using Factor Score Regression](http://journals.sagepub.com/doi/abs/10.1177/0013164415607618) for details (one of the authors is affiliated with lavaan). Results are compared to SEM.
+
+
 #### vs. Means/Sums
 
-In many occasions, people reduce the number of variables in a model by using a mean or sum score. These actually can be seen to  reflect an underlying factor analysis where all loadings are fixed to be equal and the residual variance of the observed variables is fixed to zero, i.e. perfect measurement.  If you really think the items reflect a particular construct, you'd probably be better off using a score that comes from a model that doesn't assume perfect measurement.
+On many occasions, people reduce the number of variables in a model by using a mean or sum score. These actually can be seen to  reflect an underlying factor analysis where all loadings are fixed to be equal and the residual variance of the observed variables is fixed to zero, i.e. perfect measurement.  If you really think the items reflect a particular construct, you'd probably be better off using a score that comes from a model that doesn't assume perfect measurement.  I did some simulations, the results of which are [here](https://m-clark.github.io/docs/lv_sim.html).
+
 
 #### vs. Composites
 
-<span class="emph">Composites</span> scores are what we'd have if we turned the arrows around, and allowed different weights for the different variables, which may not be similar too similar in nature or necessarily correlated (e.g. think of how one might construct a measure of socioeconomic status).  Unlike a simple mean, these would have different weights associated with the items.  As we noted previously, PCA is one way one could create such a composite.  Sometimes people just make up weights to use based on what they think they *should* be  (especially in the sporting world). This is silly in my opinion, as I can't think of any reasonable justification for such an approach over the many available that would better represent the data.
+<span class="emph">Composites</span> scores are what we'd have if we turned the arrows around, and allowed different weights for the different variables, which may not be similar too similar in nature or necessarily correlated (e.g. think of how one might construct a measure of socioeconomic status).  Unlike a simple mean, these would have different weights associated with the items, which might make them preferred in that comparison.  As we noted previously, PCA is one way one could create such a composite.  Sometimes people just make up weights to use based on what they think they *should* be  (especially in the sporting world). This is silly in my opinion, as I can't think of any reasonable justification for such an approach over the many available that would better represent the data.
 
 <img src="img/composite.png" style="display:block; margin: 0 auto;"></img>
 
@@ -509,6 +949,22 @@ digraph DAG2 {
 ```
 
 
+
+## Terminology
+
+- **Factor Analysis**: The non-PCA factor analytic technique known by various names, but not conducted as SEM, and usually estimated by maximum likelihood.
+- **Latent Variables**, **Factors**, **Constructs** etc.:  Terms I use interchangeably.
+- **Item**, **Indicator**, **Observed**, **Manifest**, **Variable**:   Terms I use interchangeably.
+- **Loadings**: measures of the relationship between an indicator and the latent variable. For clarity, it's probably better to use *pattern* or *structure* coefficient.
+- **Pattern coefficient**: What is usually displayed in FA results. The path coefficient from a latent variable to some observed variable. In some cases it is a simple correlation coefficient.
+- **Structure coefficient**: The correlation between an observed an latent variable.
+- **Communality**: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings.
+- **Uniqueness**: 1 - communality. The unexplained variance of a variable.
+- **Exploratory Factor Analysis**: all factor analysis if done well. By default places no constraints on the loadings of observed variables.
+- **Confirmatory Factor Analysis**: factor analysis done in the SEM context. May in fact not confirm anything.  Typically places (perhaps unrealistic) constraints on the model such that some loadings/paths are set to zero.
+
+
+
 ## Some Other Uses of Latent Variables
 
 - **EM algorithm**: A very common technique to estimate model parameters for a variety of model situations, it incorporates a latent variable approach where parameters of interest are treated as a latent variable (e.g. probability of belonging to some cluster).
@@ -531,8 +987,8 @@ Latent variable approaches are a necessary tool to have in your statistical tool
 
 ## R packages used
 
-- psych
-- lavaan
+- <span class="package">psych</span>
+- <span class="package">lavaan</span>
 
 
 
@@ -555,8 +1011,13 @@ Latent variable approaches are a necessary tool to have in your statistical tool
 
 [^revref]: This part of the document borrows notably from the Revelle reference.
 
-[^backward]: For your own sake, if you develop a questionnaire, make higher numeric values  correspond to meaning 'more of' something, rather than in this backward fashion.
+[^backward]: For your own sake, if you develop a questionnaire, make higher numeric values  correspond to meaning 'more of' something, rather than in this backward fashion.  You're basically begging for a less reliable measure otherwise.
 
 [^residualModel]: Note that this is actually done for all disturbance/residual terms, as there is an underlying latent variable there which represents measurement error and the effect of unexplained causes.  The path of that latent variable is fixed to 1, and its variance is the residual variance in the SEM output.
 
 [^klinedisturbed]: Kline distinguishes between the residuals in standard regression and disturbance in SEM (p. 131 4th ed.), but the distinction there appears to conflate the estimated variance as a parameter/construct and the actual residuals ($y - \hat{y}$) you'd get after model estimation.  A standard regression as typically estimated is no different than the same model in the graphical modeling context.  Calling path analysis a causal model makes it no more causal than any other regression model, and the remaining variance is the effect of many things not in the model, and they are causal, regardless of estimation technique.  I think we care more deeply about it in the SEM context, and perhaps that necessitates another name, and anything would be better than 'error'.  
+
+
+[^psychstudents]: Note that this is similar to the vast majority of psychological research, which is typically conducted on what isn't even a random sample of college attendees.
+
+[^mmpi]: The Minnesota Multiphasic Personality Inventory, or MMPI, was left unchanged for *45 years* before a second version, the MMPI-2, came  along in 1989.  Since then one more has been released, the MMPI-2-RF. That's like going from version 1 to 2 to 2.5 in 65 years (plus the almost 10 since the last version).  Other versions have been constructed for adolescents (soon to be updated for the first time since 1992), and other languages.  This slow development has occurred despite known issues for certain segments of the population, to which it continues to be applied.  

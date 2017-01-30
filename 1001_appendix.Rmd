@@ -355,7 +355,7 @@ This list serves only as a starting point, geared toward those that would be tak
 ### Measurement Models
 
 [Personality Project](http://personality-project.org/index.html): William Revelle's website and text on psychometric theory.
-
+Zinbarg et al. [Cronbach's α, Revelle's β, & McDonald's ω_H_: Their realations with each other and two alternative conceptualizations of reliability](http://avzy.personality-project.org/revelle/publications/zinbarg.revelle.pmet.05.pdf).
 
 ### SEM
 

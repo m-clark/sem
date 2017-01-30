@@ -37,8 +37,6 @@ These are other topics that may be covered in varying detail in the future. With
 
 Extensions to current content that might be added in the future:
 
-- To GM chapter: Econometrics related: 2sls, instrumental variables
-- To LV chapter: Reliability, omega, bifactor etc.
 - To SEM chapter: regression with latent variables comparison
-- To Growth chapther: why not to do cross-lagged models.
+- To Growth chapter: why not to do cross-lagged models.
 - To Appendix: cfa via ML R code.
