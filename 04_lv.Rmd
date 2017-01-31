@@ -39,8 +39,6 @@ scale(Harman.5, scale=F) %*% evector
 
 Visually, we can display PCA as a graphical model. Here is one with four components/variables. The size of the components represents the amount of variance each accounts for.
 
-
-
 ```{r pcaGM, echo=FALSE, cache=FALSE}
 library(DiagrammeR); library(htmltools)
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
@@ -153,7 +151,7 @@ $$R \approx LL'$$
 and
 
 $$C = XW$$
-In other words, each component score $C$ is a weighted (with weight/loading matrix $W$) combination of the $p$ observed variables $X$, the weights of which are determined by the loadings, but yet do not say anything about the correlations between the variables.  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following demonstrates this.
+In other words, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $p$ observed variables $X$, the weights (with weight/loading matrix $W$) of which are determined by the loadings, but yet do not say anything about the correlations between the variables.  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following demonstrates this.
 
 ```{r pca_preproduce_cormat}
 pc_all = principal(Harman.5, nfactors=5,  rotate='none', covar = F)
@@ -196,7 +194,7 @@ digraph DAG2 {
 ```
 
 
-If we return to our causal thinking from before, the causal flow originates with the observed variables to the components. Perhaps now it is clearer as to the interpretation of the loadings we had before, as correlations with components. In fact the loadings are used to create the estimated component scores in the first place.
+If we return to our causal thinking from before, the causal flow originates with the observed variables to the components. Perhaps now it is clearer as to the interpretation of the loadings we had before, as correlations with components. In fact, we see now that the loadings are used to create the estimated component scores in the first place.
 
 Things are different with factor analysis. Now the causal flow is in the other direction, originating with the latent variables. 
 
@@ -267,7 +265,7 @@ digraph DAG2 {
 And to reproduce the correlation matrix:
 
 $$R \approx LL' + \Psi$$
-So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'd note that the uniquenesses are all zero, but this is not the case with factor analysis.
+So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'll note that the uniquenesses are all zero, but this is not the case with factor analysis.
 
 ```{r fa_preproduce_cormat}
 fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F)
@@ -358,14 +356,14 @@ There are several methods available to estimate a factor analysis.
 
 #### Nonparametric Factor Analysis
 
-One of the hard problems in factor analysis is determining the number of factors to retain, a similar issue seen in cluster analysis. Although relatively rarely used if even heard of among many practitioners of factor analysis, Bayesian nonparametric approaches get around this by letting the number of clusters/factors grow with the data.  Sticking with factor analysis, an underlying Dirichlet process is assumed, and depending on the prior, new factors will be added with more or less ease.   Such approaches would also be applicable to a streaming data context.
+As noted previously, one of the hard problems in factor analysis is determining the number of factors to retain, a similar issue seen in cluster analysis. Although relatively rarely used, if even heard of, among many practitioners of factor analysis, Bayesian nonparametric approaches get around this by letting the number of clusters/factors grow with the data.  Sticking with factor analysis, an underlying Dirichlet or other process is assumed, and depending on the prior, new factors will be added with more or less ease.  Such approaches would also be applicable to a streaming data context.  
 
 
 ### Other Techniques
 
-Before leaving PCA and common factor analysis for factor analysis of the sort we'll mostly be concerned with in SEM, I'll mention other matrix factorization techniques that might be of use depending on your data situation.  In general, the use of latent variables is wide, and a number of techniques may be more suitable for certain data situations or modeling goals.  Just having PCA and Factor Analysis at your disposal may be too limiting.  However, many of the techniques are similar to others.  For example, many have ties to PCA in various ways.
+Before leaving PCA and common factor analysis for factor analysis of the sort we'll mostly be concerned with in SEM, I'll mention other matrix factorization techniques that might be of use depending on your data situation, or merely of interest otherwise.  In general, the use of latent variables is wide, and a number of techniques may be more suitable for certain data situations or modeling goals.  Just having PCA and Factor Analysis at your disposal may be too limiting.  However, many of the techniques are similar to others.  For example, many have ties to PCA in various ways, as noted below.
 
-- **SVD**: singular value decomposition. Works on a raw data matrix rather than covariance matrix, and is still a very viable technique that may perform better in a lot of situations relative to fancier latent variable models, and other more recently developed techniques.  Variations on SVD are behind some recommender systems of the sort you come across at Amazon, Netflix etc. There is a notable [tie between SVD and PCA](https://math.stackexchange.com/questions/3869/what-is-the-intuitive-relationship-between-svd-and-pca) such that SVD is actually used for PCA for computational reasons.
+- **SVD**: singular value decomposition. Works on a raw data matrix rather than covariance matrix, and is still a very viable technique that may perform better in a lot of situations relative to fancier latent variable models, and other more recently developed techniques.  Variations on SVD are/were behind some recommender systems of the sort you come across at Amazon, Netflix etc. There is a notable [tie between SVD and PCA](https://math.stackexchange.com/questions/3869/what-is-the-intuitive-relationship-between-svd-and-pca) such that SVD is actually used for PCA for computational reasons in many scenarios.
 - **ICA**: Independent components analysis. Extracts non-normal, independent components. The primary goal is to create independent latent variables.
 - **Generalized PCA**: PCA techniques for different types of data, e.g. binary data situations.
 - **PC Regression**: combining PCA with regression in one model.
@@ -373,7 +371,7 @@ Before leaving PCA and common factor analysis for factor analysis of the sort we
 - **LSI**: Latent Semantic Indexing, an early form of topic modeling. It has an equivalence to NMF.
 - **LDA**: Latent Dirichlet Allocation, the typical approach for topic modeling, generalizes LSI/NMF. Essentially can be seen as discrete PCA, i.e. a special case of exponential/generalized PCA.
 - **Canonical correlation**: an early approach to correlating two sets of variables by constructing composite variables of the corresponding sets. Standard regression, MANOVA/discriminant function analysis, and the simple Pearson correlation are all special cases. Superseded by SEM.
-- Many others.
+- Many others.  Check the ['other uses'][Some Other Uses] section.
 
 
 
@@ -976,6 +974,10 @@ digraph DAG2 {
 - **Topic Model**: In the analysis of text, one can discover latent 'topics' based on the frequency of words.
 
 - **Collaborative Filtering**: For example, in recommender systems for movies or music, the latent variable might represent genre or demographic subsets.
+
+- **Gaussian Processes**: A common covariance structure in GPs uses a factor analysis distance.  I have [Stan code](https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/gp%20Examples/gpStan_squaredExponentialFactorAnalysis.stan) demonstrating it.
+
+- **Multinomial Model** In some more complicated multinomial regression models, a factor analytic structure is used to understand the correlations of coefficients, e.g. across category labels.
 
 
 
