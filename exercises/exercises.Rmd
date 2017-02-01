@@ -186,7 +186,7 @@ Lauritzen and Spiegelhalter (1988) motivate this example as follows:
 
 "Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea."
 
-The asia data set contains the following yes-no binary variables:
+The <span class="objclass">asia</span> data set contains the following yes-no binary variables:
 
 - D dyspnoea
 - T tuberculosis
@@ -231,6 +231,56 @@ ggplot2::qplot(degree(g), geom='bar')
 
 ### Part 0 PCA and FA comparison
 
+An long-running personality theory posits 5 primary latent personality traits: Agreeableness, Conscientiousness, Extroversion, Neuroticism, and Opennness. 25 personality self report items taken from the International Personality Item Pool (ipip.ori.org). The data from 2800 subjects are included here.
+
+```{r echo=FALSE, eval=FALSE}
+library(psych); library(tidyverse)
+keys.list <-  list(agree=c("-A1","A2","A3","A4","A5"),
+                   conscientious=c("C1","C2","C3","-C4","-C5"),
+                   extraversion=c("-E1","-E2","E3","E4","E5"),
+                   neuroticism=c("N1","N2","N3","N4","N5"),
+                   openness = c("O1","-O2","O3","O4","-O5")) 
+whichneg = c(sapply(keys.list, grepl, pattern='-'))
+data(bfi)
+bfi_trim = bfi %>% 
+  select(-gender, -age, -education) %>% 
+  mutate_if(whichneg, function(x) -x)
+save(bfi_trim, file='../data/bfi.RData')
+```
+
+Judging from the following correlation matrix (blue= positive correlation, red=negative, bold=stronger, faded=weaker), can you already see some structure appearing? How many factors do you see? How are they correlated with one another?
+
+```{r, echo=FALSE, eval=TRUE}
+load('data/bfi.R')
+bfi_trim %>% cor(use='pair') %>% lazerhawk::corrheat(psychOptions = list(fm='ml', rotate='promax'))
+```
+
+
+1. Load the data, `load('data/bfi.RData')`, and run a factor analysis for five factors and interpret the results. The following provides a hint. You can use fa.diagram for a quick and dirty graphical depiction.
+
+```{r bfi_5, eval=F}
+load('data/bfi.RData')
+library(psych)
+bfi_5 = fa(bfi_trim, 5, rotate='promax')
+fa.diagram(bfi_5, cut=.2, digits = 2)
+```
+
+
+2. Some think there are six factors, maybe you think there are fewer/more.  Run a different factor analysis (i.e. with the `nfactors` argument set to some other number) and compare BIC to see if one is better than the other (lower BIC is preferable).
+
+```{r compareFA, eval=FALSE}
+bfi_2 = fa(bfi_trim, 2)
+bfi_2$BIC
+bfi_5$BIC
+```
+
+Compare models for 1:7 in one line of code. Run the following.
+
+```{r whyR, eval=FALSE}
+sapply(1:7, function(nf) fa(bfi_trim, nfactors = nf)$BIC)
+```
+
+
 ### Part 1
 
 Data: National Longitudinal Survey of Youth (1997, NLSY97), which investigates the transition from youth to adulthood. For this example, a series of questions asked to the participants in 2006 pertaining to the government’s role in promoting well-being will be investigated. Questions regarded the government's responsibility for following issues: provide jobs for everyone, keep prices under control, provide health care, provide for elderly, help industry, provide for unemployed, reduce income differences, provide college financial aid, provide decent housing, protect environment.  They have four values 1:4, which range from 'definitely should be' to 'definitely should not be'.
@@ -238,12 +288,14 @@ Data: National Longitudinal Survey of Youth (1997, NLSY97), which investigates t
 
 1. Run a factor analysis using the `'data/nlsy97_governmentNumeric.csv'` dataset.  Your first model will have all items (sans ID) loading on a single factor, with a name of your choosing.  With <span class="pack">lavaan</span>, use the <span class="func">cfa</span> function.  Recall that you give it the model code (as a <span class="objclass">string</span>) and a `data = ` argument like `cfa(mod, data=mydata)`.
 
-Try it on your own or click to see the general format.
+The following provides a hint.  Keep an eye out for typos for the variable names, that will be your biggest issue.
 
 ```{r fa1Starter, eval=FALSE}
 govtInvolvement = read.csv('data/nlsy97_governmentNumeric.csv')
-govtInvolvement_ModelCode = 'Your Model Here'
-govtInvolvement_Results = cfa(govtInvolvement_ModelCode)
+
+library(lavaan)
+govtInvolvement_ModelCode = 'LV =~ X1 + X2 + X3'
+govtInvolvement_Results = cfa(govtInvolvement_ModelCode, data=govtInvolvement)
 summary(govtInvolvement_Results, standardized=T, fit=T)
 ```
 
@@ -265,7 +317,7 @@ Click to show example (after you've tried yourself).
 
 ```{r fa2, eval=FALSE, bootstrap.show.code=F}
 library(lavaan)
-govtInvolvement = read.csv('../data/nlsy97_governmentNumeric.csv')
+govtInvolvement = read.csv('data/nlsy97_governmentNumeric.csv')
 
 govtInvolvement_ModelCode1 = "
   moregovt =~ ProvideJobs + Prices + HealthCare + Elderly + Industry + Unemployed + IncInequal + College + Housing + Environment
@@ -281,7 +333,11 @@ model2 = cfa(govtInvolvement_ModelCode2, data=govtInvolvement)
 summary(model2, fit=T, standardized=T)
 
 # Compare the two († means the better result)
-semTools::compareFit(model1, model2, nested=F)
+library(semTools)
+summary(compareFit(model1, model2))
+
+# alternative
+# anova(model1, model2)
 ```
 
 
