@@ -251,12 +251,15 @@ save(bfi_trim, file='../data/bfi.RData')
 Judging from the following correlation matrix (blue= positive correlation, red=negative, bold=stronger, faded=weaker), can you already see some structure appearing? How many factors do you see? How are they correlated with one another?
 
 ```{r, echo=FALSE, eval=TRUE}
-load('data/bfi.R')
-bfi_trim %>% cor(use='pair') %>% lazerhawk::corrheat(psychOptions = list(fm='ml', rotate='promax'))
+load('../data/bfi.RData')
+bfi_trim %>% 
+  cor(use='pair') %>% 
+  lazerhawk::corrheat(psychOptions = list(fm='ml', rotate='promax'), width='100%') %>% 
+  tags$div(style="width:75%; margin:auto auto;")
 ```
 
 
-1. Load the data, `load('data/bfi.RData')`, and run a factor analysis for five factors and interpret the results. The following provides a hint. You can use fa.diagram for a quick and dirty graphical depiction.
+1. Load the data, `load('data/bfi.RData')`, and run a factor analysis for five factors and interpret the results. you can use <span class="func">fa.diagram</span> for a quick and dirty graphical depiction. 
 
 ```{r bfi_5, eval=F}
 load('data/bfi.RData')
@@ -274,11 +277,15 @@ bfi_2$BIC
 bfi_5$BIC
 ```
 
-Compare models for 1:7 in one line of code. Run the following.
+Compare models for 1-7 factors in one line of code. Run the following.
 
 ```{r whyR, eval=FALSE}
 sapply(1:7, function(nf) fa(bfi_trim, nfactors = nf)$BIC)
 ```
+
+
+3. Do a PCA using the <span class="func">principal</span> function, also using retaining 5 components.  It will assume an independent structure for the factors and focus on extracting variance instead of explaining covariance.  Judging by the results do you think it's more or less interpretable?
+
 
 
 ### Part 1
