@@ -383,7 +383,7 @@ So to summarize, we have two techniques, very similar on the surface, but with k
 
 ## Constructs and Measurement Models
 
-As we have seen, <span class='emph'>factor analysis</span> is a general technique for uncovering latent variables within data. While initially one might think it similar to PCA, we saw a key difference in the underlying causal interpretation, which will be more explicit in the SEM setting. Now we will move beyond factor analysis as a dimension reduction technique (and fully 'exploratory' technique, see below), and instead present it as an approach with a potentially strong theoretical underpinning, and one that can help us assess measurement error, ultimately even leading to regression models utilizing the latent variables themselves.
+As we have seen, <span class='emph'>factor analysis</span> is a general technique for uncovering latent variables within data. While initially one might think it similar to PCA, we saw a key difference in the underlying causal interpretation, which is more explicit in the SEM setting. Now we will move beyond factor analysis as a dimension reduction technique (and fully 'exploratory' technique, see below), and instead present it as an approach with a potentially strong theoretical underpinning, and one that can help us assess measurement error, ultimately even leading to regression models utilizing the latent variables themselves.
 
 So let us turn to what are typically called <span class="emph">measurement models</span> within SEM. The underlying model can be thought of as a case in which the observed variables, in some disciplines referred to as *indicators* (or *manifest* variables) of the latent construct, are caused by the latent variable. The degree to which the observed variables correlate with one another depends in part on how much of the underlying (presumed) latent variable they reliably measure[^factphil].  
 
@@ -402,17 +402,19 @@ X_3 &= \beta_{03} + \lambda_{13} F_1
 
 It is important to understand this regression model, because many who engage in factor analysis seemingly do not, and often think of it the other way around, where the observed variables cause the latent.  In factor analysis in the SEM settings, these $\lambda$ coefficients are typically called <span class="emph">loadings</span> as they were before, but are in fact interpreted as any other regression coefficient- a one unit change in the latent variable results in a $\lambda$ change in the observed variable. Most factor models assume that, controlling for the latent variable, the observed variables are independent (recall our previous discussion on conditional independence in graphical models), though this is sometimes relaxed.  If only one factor is associated with an item and does not correlate with any other factors, then we have a simple regression setting where the standardized coefficient is equal to the correlation between the latent variable and the observed.
 
+In addition, as we would in regression we will have residual variance, i.e. what the latent variable does not account for in the observed variables.  This is the SEM counterpart to the uniquenesses we discussed in the standard setting, and is the same as to the the disturbances from our SEM models with fully observed variables.  As there, we can think of a latent variable representing all other causes that are not the construct(s) we are positing in the model.  This is why they are also depicted as circles graphically.
+
 
 #### Exploratory vs. Confirmatory
 
-An unfortunate and unhelpful distinction in some disciplines (esp. psychology) is that of <span class="emph">exploratory</span> vs. <span class="emph">confirmatory</span> factor analysis (and even exploratory SEM).  In any regression analysis, there is a non-zero correlation between *any* variable and some target variable. We don't include everything for theoretical (and even practical) reasons, which is akin to fixing a path coefficient to zero, and here it is no different.  Furthermore, most modeling endeavors could be considered exploratory, regardless of how the model is specified.  As such, this distinction doesn't tell us anything about the model, and is thus unnecessary in my opinion.
+An unfortunate and unhelpful distinction in some disciplines is that of <span class="emph">exploratory</span> vs. <span class="emph">confirmatory</span> factor analysis (and even exploratory SEM).  In any regression analysis, there is a non-zero correlation between *any* variable and some target variable. We don't include everything for theoretical (and even practical) reasons, which is akin to fixing a path coefficient to zero, and here it is no different.  Furthermore, most modeling endeavors could be considered exploratory, regardless of how the model is specified.  As such, this distinction doesn't tell us anything about the model, and is thus unnecessary in my opinion.
 
-As an example, in the above equations $X_3$ is not modeled by $F_2$, which is the same as fixing the  $\lambda_{23}$ coefficient for $F_2$ to 0. However, that doesn't tell me whether the model is exploratory or not, and yet that is all the distinction refers to in a practical sense, namely, whether we let all indicators load on all factors or not.  An analysis doesn't *necessarily* have more theoretical weight, validity, causal efficacy, etc. due to the paths specified, though as we noted before, not having paths does convey causal interpretation.
+As an example, in the above equations $X_3$ is not modeled by $F_2$, which is the same as fixing the  $\lambda_{23}$ coefficient for $F_2$ to $0$. However, that doesn't tell me whether the model is exploratory or not, and yet that is all the distinction refers to in a practical sense, namely, whether we let all indicators load on all factors or not.  An analysis doesn't *necessarily* have more theoretical weight, validity, causal efficacy, etc. due to the paths specified, though as we noted before, not having paths does convey causal interpretation.
 
 
 #### Example
 
-Let's see a factor analysis in action.  The motivating example for this section comes from the National Longitudinal Survey of Youth (1997, NLSY97), which investigates the transition from youth to adulthood. For this example, we will investigate a series of questions asked to the participants in 2006 pertaining to the government’s role in promoting well-being. Questions regarded the government's responsibility for the following: providing jobs for everyone, keeping prices under control, providing health care, providing for elderly, helping industry, providing for unemployed, reducing income differences, providing college financial aid, providing decent housing, protecting the environment.  Each item has four values 1:4, which range from 'definitely should be' to 'definitely should not be'[^backward]. We'll save this for the exercise.
+Let's now see a factor analysis from the SEM approach.  The motivating example for this section comes from the National Longitudinal Survey of Youth (1997, NLSY97), which investigates the transition from youth to adulthood. For this example, we will investigate a series of questions asked to the participants in 2006 pertaining to the government’s role in promoting well-being. Questions regarded the government's responsibility for the following: providing jobs for everyone, keeping prices under control, providing health care, providing for elderly, helping industry, providing for unemployed, reducing income differences, providing college financial aid, providing decent housing, protecting the environment.  Each item has four values 1:4, which range from 'definitely should be' to 'definitely should not be'[^backward]. We'll save this for the exercise.
 
 There are also three items regarding their emotional well-being (depression)- how often the person felt down or blue, how often they've been a happy person, and how often they've been depressed in the last month. These are also four point scales and range from 'all of the time' to 'none of the time'. We'll use this here.
 
@@ -555,9 +557,9 @@ digraph {
  edge [color = gray50, rel = yields]
  
  # Edge statements
- edge [label='   1.0', fontcolor=gray25, fontsize=6]
+ edge [style=dashed label='   1.0', fontcolor=gray25, fontsize=6]
  U0 -> Depression;
- edge [style=dashed label='   .81' fontcolor=gray25 fontsize=10 minlen=2]
+ edge [label='   .81' fontcolor=gray25 fontsize=10 minlen=2]
  Depression -> FD 
  edge [style='' label='   -.61' fontcolor=gray25 fontsize=10 minlen=2];
  Depression -> BH ;
@@ -581,6 +583,113 @@ digraph {
 )
 ```
 
+
+
+#### Multiple factors in SEM
+
+When we move to multiple factors, not much changes relative to what we saw in the non-SEM setting and with the one factor case in the SEM.  We still specify specific paths, and we are now interested in the correlation between the two latent variables.
+
+The following data example regards a random sample of items from a test of cognitive ability.  Specifically we are looking at both verbal and spatial reasoning, and we assume them to be correlated.  Note that by default, most if not all SEM programs assume you want the latent variables to be correlated.  In general it would be useful to compare the fit of a model with and without the correlation regardless of what theory dictates.
+
+```{r multifactor, echo=-7, eval=T}
+cog_ability = psych::iqitems
+
+modelCode = "
+  verbal =~ reason.4 + reason.16 + reason.17 + reason.19
+  spatial =~ rotate.3 + rotate.4 + rotate.6 + rotate.8
+
+  # not necessary
+  # verbal ~~ spatial
+
+  # if you don't want them correlated
+  # verbal ~~ 0*spatial
+"
+
+famod = cfa(modelCode, data=cog_ability)
+summary(famod, standardized=T, rsq=T, nd=2)
+pars = parameterEstimates(famod, standardized=T)
+```
+
+To begin, we do see that the factors are notably correlated at roughly `r round(pars[nrow(pars),'std.all'],2)`, but in general these aren't the most spectacular results, as some items are not loading too highly on their respective construct, and some R-squares reinforce that notion. Remember also our distinction between pattern and structure coefficients though. Just because we don't have paths from some items to the other factor doesn't mean they aren't correlated with that factor.
+
+```{r plotMultiFactor, echo=F, eval=T}
+tags$div(style="width:75%; margin:auto auto;",
+DiagrammeR("
+digraph {
+ # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
+
+ # Intialization of graph attributes
+ graph [overlap=false rankdir=TB]
+ 
+ # Node statements
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ 
+ subgraph {
+ rank = same;
+ Verbal [fontsize=10, width=1.25, height=1, fillcolor=palegreen];
+ Spatial [fontsize=10, width=1.25, height=1, fillcolor=salmon];
+ }
+
+ node [width=1, height=1, fixedsize=true, shape=square, style='']
+ subgraph {
+    rank=same;
+    node [fontcolor=gray50 fontsize=10]
+    node [color=palegreen]
+    V4 V16 V17 V19; 
+    node [color=salmon]
+    S3 S4 S6 S8; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ 
+ edge [label='   .49' fontcolor=gray25 fontsize=10 minlen=2 dir=both]
+ Verbal -> Spatial;
+
+ edge [label='   .56' fontcolor=gray25 fontsize=10 minlen=2 dir=forward]
+ Verbal -> V4; 
+ edge [label='   .63' fontcolor=gray25 fontsize=10 minlen=2]
+ Verbal -> V16;
+ edge [label='   .43' fontcolor=gray25 fontsize=10 minlen=2]
+ Verbal -> V17;
+ edge [label='   .57' fontcolor=gray25 fontsize=10 minlen=2]
+ Verbal -> V19;
+ edge [label='   .43' fontcolor=gray25 fontsize=10 minlen=2]
+ Spatial -> S3; 
+ edge [label='   .23' fontcolor=gray25 fontsize=10 minlen=2]
+ Spatial -> S4;
+ edge [style='' label='   .55' fontcolor=gray25 fontsize=10 minlen=2];
+ Spatial -> S6;
+ edge [label='   .70' fontcolor=gray25 fontsize=10 minlen=2]
+ Spatial -> S8;
+
+ subgraph {
+    rank=same;
+    node [width=.25, height=.25, shape=circle, color=gray80]
+    U1 [label='']; 
+    U2 [label='']; 
+    U3 [label='']; 
+    U4 [label='']; 
+    U5 [label='']; 
+    U6 [label='']; 
+    U7 [label='']; 
+    U8 [label='']; 
+ }
+
+  edge [dir=back fontsize=8 fontcolor=gray25 minlen=.5] 
+  V4  -> U1 [label='   .69'];
+  V16 -> U2 [label='   .60'];
+  V17 -> U3 [label='   .82'];
+  V19 -> U4 [label='   .67'];
+  S3 -> U5 [label='   .81'];
+  S4 -> U6 [label='   .95'];
+  S6 -> U7 [label='   .69'];
+  S8 -> U8 [label='   .51'];
+ }
+ ", type='grViz', width='100%')
+)
+```
 
 
 ## Other issues in Factor Analysis
@@ -741,6 +850,11 @@ digraph DAG2 {
 The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which...
 
 
+#### Measurement invariance
+
+to be added in the future
+
+
 ### Scale development
 
 A good use of factor analysis regards scale development.  If we come up with 10 items that reflect some underlying construct, factor analysis can provide a sense of how well the scale is put together.  Recall that in path analysis, residual variance, sometimes called disturbance[^klinedisturbed], reflects both omitted causes as well as measurement error.  In this context, $1-R^2_{item}$ provides a sense of how unreliable the item is.  A perfectly reliable item would be perfectly explained by the construct it is a measure of.  Strong loadings indicate a strong relationship between the item and the underlying construct.
@@ -886,7 +1000,7 @@ With scales, items are discovered to be problematic, applications to new segment
 
 ### Factor Scores
 
-In factor analysis, we can obtain estimated factor scores for each observation, possibly to be used in additional analyses or examined in their own right.  One common way is to simply use the loadings as one would regression weights/coefficients (actually scaled versions of them), and create a 'predicted' factor score as the linear combination of the indicator variables, just as we would in regression.  There is no correct way to do this in standard approaches, as an infinite number of factor scores could be related to the same factor analysis results, a problem known as <span class="emph">factor indeterminancy</span>.  However, this doesn't mean that they aren't useful, especially if we are employing factor analysis primarily as a data compression technique, where the scores might be used in other analyses (e.g. regression).  A common reason to do so is that we might have some SEM model in mind, but too small a sample.
+In factor analysis, we can obtain estimated factor scores for each observation, possibly to be used in additional analyses or examined in their own right.  One common way is to simply use the loadings as one would regression weights/coefficients (actually scaled versions of them), and create a 'predicted' factor score as the linear combination of the indicator variables, just as we would to produce predicted values in regression.  There is no correct way to do this in standard approaches, as an infinite number of factor scores could be related to the same factor analysis results, a problem known as <span class="emph">factor indeterminancy</span>.  However, this doesn't mean that they aren't useful, especially if we are employing factor analysis primarily as a data compression technique, where the scores might be used in other analyses (e.g. regression).  A common reason to do so is that we might have some SEM model in mind, but too small a sample.
 
 ```{r fscores, eval=FALSE, echo=FALSE}
 psychfa = psych::fa(depressed[,-1], 1, scores=T, use='complete')
@@ -907,7 +1021,7 @@ Recent work suggests that different types of factor scores are better used in di
 
 #### vs. Means/Sums
 
-On many occasions, people reduce the number of variables in a model by using a mean or sum score. These actually can be seen to  reflect an underlying factor analysis where all loadings are fixed to be equal and the residual variance of the observed variables is fixed to zero, i.e. perfect measurement.  If you really think the items reflect a particular construct, you'd probably be better off using a score that comes from a model that doesn't assume perfect measurement.  I did some simulations, the results of which are [here](https://m-clark.github.io/docs/lv_sim.html).
+On many occasions, people reduce the number of variables in a model by using a mean or sum score. These actually can be seen to  reflect an underlying factor analysis where all loadings are fixed to be equal and the residual variance of the observed variables is fixed to zero, i.e. perfect measurement.  If you really think the items reflect a particular construct, you'd probably be better off using a score that comes from a model that doesn't assume perfect measurement.  I did some simulations that provide more to think about regarding this point, the results of which are [here](https://m-clark.github.io/docs/lv_sim.html).
 
 
 #### vs. Composites
