@@ -25,14 +25,11 @@ library(tidyverse)
 
 # Starting Out
 
-## Document
+## What you need
 
-[m-clark.github.io/docs/sem](https://m-clark.github.io/docs/sem)
+Document: [m-clark.github.io/docs/sem](https://m-clark.github.io/docs/sem)
 
-
-## Data Etc.
-
-[m-clark.github.io/docs/sem/workshop_project.zip](m-clark.github.io/docs/sem/workshop_project.zip)
+Data Etc.: [m-clark.github.io/docs/sem/workshop_project.zip](https://m-clark.github.io/docs/sem/workshop_project.zip)
 
 Steps:
 
@@ -313,11 +310,12 @@ library(htmltools)
 
 ## Uses of latent variables
 
+<p class='fragment emph'>Understanding Correlation</p>
+
 <p class='fragment emph'>Data Compression</p>
 
 <p class='fragment emph'>Measurement of Latent Constructs</p>
 
-<p class='fragment emph'>Other</p>
 
 
 ## Data compression

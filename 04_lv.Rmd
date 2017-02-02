@@ -371,7 +371,7 @@ Before leaving PCA and common factor analysis for factor analysis of the sort we
 - **LSI**: Latent Semantic Indexing, an early form of topic modeling. It has an equivalence to NMF.
 - **LDA**: Latent Dirichlet Allocation, the typical approach for topic modeling, generalizes LSI/NMF. Essentially can be seen as discrete PCA, i.e. a special case of exponential/generalized PCA.
 - **Canonical correlation**: an early approach to correlating two sets of variables by constructing composite variables of the corresponding sets. Standard regression, MANOVA/discriminant function analysis, and the simple Pearson correlation are all special cases. Superseded by SEM.
-- Many others.  Check the ['other uses'][Some Other Uses] section.
+- Many others.  Check the ['other uses'][Some Other Uses of Latent Variables] section.
 
 
 
@@ -387,22 +387,22 @@ As we have seen, <span class='emph'>factor analysis</span> is a general techniqu
 
 So let us turn to what are typically called <span class="emph">measurement models</span> within SEM. The underlying model can be thought of as a case in which the observed variables, in some disciplines referred to as *indicators* (or *manifest* variables) of the latent construct, are caused by the latent variable. The degree to which the observed variables correlate with one another depends in part on how much of the underlying (presumed) latent variable they reliably measure[^factphil].  
 
-For each indicator we can think of a regression model as follows, where $\beta_0$ is the intercept and $\lambda$ the regression coefficient that expresses the effect of the latent variable $F$ on the observed variable $X$ (I do not note the error term).
+For each indicator we can think of a regression model as follows, where $\beta_0$ is the intercept and $\lambda$ the regression coefficient that expresses the effect of the latent variable $F$ on the observed variable $X$.
 
-$$X = \beta_0 + \lambda F$$
+$$X = \beta_0 + \lambda F + \epsilon$$
 
 We will almost always have multiple indicators, and often multiple latent variables.  Some indicators may be associated with multiple factors.
 
 $$\begin{aligned}
-X_1 &= \beta_{01} + \lambda_{11} F_1 + \lambda_{21} F_2 \\
-X_2 &= \beta_{02} + \lambda_{12} F_1 + \lambda_{22} F_2 \\
-X_3 &= \beta_{03} + \lambda_{13} F_1
+X_1 &= \beta_{01} + \lambda_{11} F_1 + \lambda_{21} F_2  + \epsilon\\
+X_2 &= \beta_{02} + \lambda_{12} F_1 + \lambda_{22} F_2  + \epsilon\\
+X_3 &= \beta_{03} + \lambda_{13} F_1 + \epsilon
 \end{aligned}$$
 
 
 It is important to understand this regression model, because many who engage in factor analysis seemingly do not, and often think of it the other way around, where the observed variables cause the latent.  In factor analysis in the SEM settings, these $\lambda$ coefficients are typically called <span class="emph">loadings</span> as they were before, but are in fact interpreted as any other regression coefficient- a one unit change in the latent variable results in a $\lambda$ change in the observed variable. Most factor models assume that, controlling for the latent variable, the observed variables are independent (recall our previous discussion on conditional independence in graphical models), though this is sometimes relaxed.  If only one factor is associated with an item and does not correlate with any other factors, then we have a simple regression setting where the standardized coefficient is equal to the correlation between the latent variable and the observed.
 
-In addition, as we would in regression we will have residual variance, i.e. what the latent variable does not account for in the observed variables.  This is the SEM counterpart to the uniquenesses we discussed in the standard setting, and is the same as to the the disturbances from our SEM models with fully observed variables.  As there, we can think of a latent variable representing all other causes that are not the construct(s) we are positing in the model.  This is why they are also depicted as circles graphically.
+In addition, as we would in regression we will have residual variance, $\epsilon$ above, i.e. what the latent variable does not account for in the observed variables.  This is the SEM counterpart to the uniquenesses we discussed in the standard setting, and is the same as to the the disturbances from our SEM models with fully observed variables.  As there, we can think of a latent variable representing all other causes that are not the construct(s) we are positing in the model.  This is why they are also sometimes depicted as circles graphically, with an arrow pointing at the observed variable.
 
 
 #### Exploratory vs. Confirmatory
@@ -613,7 +613,7 @@ pars = parameterEstimates(famod, standardized=T)
 To begin, we do see that the factors are notably correlated at roughly `r round(pars[nrow(pars),'std.all'],2)`, but in general these aren't the most spectacular results, as some items are not loading too highly on their respective construct, and some R-squares reinforce that notion. Remember also our distinction between pattern and structure coefficients though. Just because we don't have paths from some items to the other factor doesn't mean they aren't correlated with that factor.
 
 ```{r plotMultiFactor, echo=F, eval=T}
-tags$div(style="width:75%; margin:auto auto;",
+tags$div(style="width:100%; margin:auto auto;",
 DiagrammeR("
 digraph {
  # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
@@ -697,7 +697,7 @@ digraph {
 
 #### Hierarchical/Second-Order
 
-In hierarchical models we posit that latent variables can also serve as indicators of other latent variables.  As an example, one latent variable might represent verbal cognition, another mathematical strength, a third scientific acumen, and they might be indicators for a general 'scholastic ability' latent variable.  Graphically they can be depicted as follows:
+In <span class="emph">hierarchical</span> models we posit that latent variables can also serve as indicators of other latent variables.  As an example, one latent variable might represent verbal cognition, another mathematical strength, a third scientific acumen, and they might be indicators for a general 'scholastic ability' latent variable.  Graphically they can be depicted as follows:
 
 ```{r secondorder, echo=F}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
@@ -748,17 +748,17 @@ digraph DAG2 {
  edge [color = gray50, rel = yields]
  
  # Edge statements
- F1 -> X1 [style=dashed] ;
- F1 -> {X2 X3 X4};
+ F1 -> X1 [style=dashed color='#ff5503'] ;
+ F1 -> {X2 X3 X4} [color='#ff5503'] ;
 
- F2 -> X5 [style=dashed] ;
- F2 -> {X6 X7 X8};
+ F2 -> X5 [style=dashed  color=salmon] ;
+ F2 -> {X6 X7 X8} [color=salmon];
 
- F3 -> X9 [style=dashed] ;
- F3 -> {X10 X11 X12};
+ F3 -> X9 [style=dashed color=limegreen] ;
+ F3 -> {X10 X11 X12}[color=limegreen];
 
- Fg -> F1 [style=dashed] ;
- Fg -> {F2 F3};
+ Fg -> F1 [style=dashed color=dodgerblue] ;
+ Fg -> {F2 F3} [color=dodgerblue];
 
  
  }
@@ -766,10 +766,29 @@ digraph DAG2 {
 )
 ```
 
+The above is equivalent to a three factor model with correlated factors.  This is demonstrated with the following.
+
+```{r secondorderEquiv, echo=-(6:7), eval=-5}
+HS.model = ' visual  =~ x1 + x2 + x3 
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9 '
+HS.model2 = ' visual  =~ x1 + x2 + x3 
+               textual =~ x4 + x5 + x6
+               speed   =~ x7 + x8 + x9 
+               g =~ visual + textual + speed '
+fit1 = cfa(HS.model, data = HolzingerSwineford1939)
+fit2 = cfa(HS.model2, data = HolzingerSwineford1939)
+summary(semTools::compareFit(fit1, fit2))
+x = semTools::compareFit(fit1, fit2) 
+x@fit %>% select(chisq, df, pvalue, cfi, tli, aic, bic, rmsea, srmr) %>% data.frame(model=x@name, .) %>%  pander::pander(justify='left')
+```
+
+However, theoretically we may have a specific latent cause in mind and want to express it in this hierarchical manner.  In other cases, model complexity necessitates the hierarchical approach.
+
 
 #### Bifactor
 
-A bifactor model might seem similar to the hierarchical model at first blush.  I'll even use the previous example and let you see if you can come up with why these are different models specifically.
+A <span class="emph">bifactor</span> model might seem similar to the hierarchical model at first blush.  I'll use the previous 3-factor model example, and see if you can come up with why these are different models specifically.
 
 
 ```{r bifactor, echo=F}
@@ -823,22 +842,23 @@ digraph DAG2 {
  edge [color = gray50, rel = yields]
  
  # Edge statements
- F1 -> X1 [style=dashed] ;
- F1 -> {X2 X3 X4};
+ F1 -> X1 [style=dashed color='#ff5503'] ;
+ F1 -> {X2 X3 X4} [color='#ff5503'] ;
 
- F2 -> X5 [style=dashed] ;
- F2 -> {X6 X7 X8};
+ F2 -> X5 [style=dashed  color=salmon] ;
+ F2 -> {X6 X7 X8} [color=salmon];
 
- F3 -> X9 [style=dashed] ;
- F3 -> {X10 X11 X12};
+ F3 -> X9 [style=dashed color=limegreen] ;
+ F3 -> {X10 X11 X12}[color=limegreen];
 
  edge[dir=both, style=curved]
  F1 -> F2;
  F2 -> F3;
  F3 -> F1;
 
- edge [dir=back; minlen=2.3]
- {X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12} -> Fg;
+ edge [dir=back; minlen=2.3 color=dodgerblue]
+ X1 -> Fg [style=dashed]; 
+ {X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12} -> Fg;
 
  
  }
@@ -847,12 +867,27 @@ digraph DAG2 {
 ```
 
 
-The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which...
+The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which, see the [scale development][Scale development] section below.
 
 
 #### Measurement invariance
 
-to be added in the future
+Measurement invariance refers generally to consistency of a construct under different settings.  Unfortunately there is not one single way we can define 'invariance', and testing for more strict settings would posit implausible models (my opinion). One can think of it as taking a multi-group approach in which the factor analysis is conducted separately for each group, e.g. male vs. female, but where we constrain various parameters to be equal (or not).  A starting point is simply to determine whether the same factor structure holds, e.g. a one factor model in each setting.  This is
+
+There are numerous issues with the approach. One problem is that this necessitates more data than most seem to have that want to do this.  Further, it potentially assumes an interaction with the group variable for *every* parameter that might be estimated.  This is implausible in my opinion, and we rarely do this elsewhere in standard model settings.  Conversely, I can't think of a viable theoretical reason to assume every parameter would be the same across groups.  So one is left with some sort mix and match approach or similar to guess what may or may not vary.  Yet one more issue is statistical.  Let's say we want to test loading equivalence across groups.  You find a global test would suggest that they are not equal. However, inspection of the interval estimates for each loading might suggest considerable overlap.  And finally, I've never seen any sort of regularization applied to testing all these parameters, which could be several dozen loadings/correlations even in the simplest of settings.
+
+If you want to go this route, it's no change for the <span class="pack">lavaan</span> approach, you simply add the argument `group=x` to get results for multiple groups.  In the <span class="pack">semTools</span> package, the <span class="func">measurementInvariance</span> function works in the exact same way, but returns the statistical test for each of four versions of invariance.  
+
+```{r invariance, eval=F}
+cfa(HW.model, data=HolzingerSwineford1939, group="school") %>% summary(ci=T)
+semTools::measurementInvariance(HW.model, data=HolzingerSwineford1939, group="school")
+```
+
+
+Some also refer to 'stability' or measurement invariance over time in the longitudinal setting.  This in fact important to test, but difficult when there is drop out. For example, is it that the construct changes or simply you aren't able to capture the same individuals (even with some sort of imputation approach)?  Furthermore, if there is a large separation in time, it may be possible to get similar results but the constructs are in fact different, a form of the naming fallacy problem discussed previously.
+
+The <span class="pack">semTools</span> package also has a <span class="func">longInvariance</span> for the longitudinal setting.
+
 
 
 ### Scale development
@@ -927,7 +962,7 @@ There are many, many measures of reliability. Here are a couple.
 - **Parallel Measures/Split-half**: Many reliability measures rely on the notion of parallel tests, such that reliability can be seen the correlation between two parallel forms of a test. More explicitly, consider a single test with items randomly split into two sets. The correlation between those two tests can be seen as a measure of reliability.
 - **Guttman's $\lambda_6$**: is based on the R^2^ of each item regressed on the others, and this squared multiple correlation can be seen as a lower bound on the communality.  The $\lambda_6$ can be seen as a lower bound on split-half reliability.
 - **Greatest lower bound\***: Multiple versions. One is the greatest split half reliability (essentially Guttman's $\lambda_4$). Another is conceptually 1 - error/total variance, similar to $\omega_{\mathrm{t}}$ but will actually not necessarily be as 'great' as $\omega_{\mathrm{t}}$.
-- **$\Beta$**: based on the average correlation among worst split that produces the least inter-item correlations.  Somewhat improves on $\alpha$ as a measure of factor saturation but others do better in that regard.
+- **$\beta$**: based on the average correlation among worst split that produces the least inter-item correlations.  Somewhat improves on $\alpha$ as a measure of factor saturation but others do better in that regard.
 - **Cronbach's $\alpha$**: the most widely used/abused measure of reliability. Equivalent to the earlier measure by Guttman ($\lambda_3$), and it is a generalization of measure for dichotomous items developed in 1937 ($\mathrm{KR}_{20}$).  Issues: underestimates reliability and overestimates factor saturation.  Not so useful for multidimensional scales.
 - **$\omega$\***: from McDonald, a measure of 'factor saturation'.  $\omega_{\mathrm{t}}$, or omega total, provides a proportion of variance that is not unique in the factor-analytic sense. $\omega_{\mathrm{h}}$, or omega-hierarchical, is the measure associated with the 'general' factor in the bifactor model noted above. It assumes enough items for a potential hierarchical structure to be tested in the first place.
 - **Composite Reliability\***: described in Kline, reference Raykov (2004), see $\omega$
