@@ -443,7 +443,7 @@ summary(famod, standardized=T)
 
 ##### Raw results
 
-In a standard measurement model such as this we must *scale the factor* by fixing one of the indicator's loadings to one.  This is done for identification purposes, so that we can estimate the latent variable variance.  Which variable is selected for scaling is arbitrary, but doing so means that the sum of the latent variable variance and the residual variance of the variable whose loading is fixed to one equals the variance of that observed variable[^residualModel].    
+In a standard measurement model such as this we must *scale the factor* by fixing one of the indicator's loadings to one.  This is done for identification purposes, so that we can estimate the latent variable variance, which is otherwise arbitrary (as is the mean, though we usually, but not always, are not concerned about).  Which variable is selected for scaling is arbitrary, but doing so means that the sum of the latent variable variance and the residual variance of the variable whose loading is fixed to one equals the variance of that observed variable[^residualModel].    
 
 ```{r plotFARaw_sempaths, echo=F, eval=F}
 semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F, 
@@ -966,10 +966,31 @@ There are many, many measures of reliability. Here are a couple.
 - **Cronbach's $\alpha$**: the most widely used/abused measure of reliability. Equivalent to the earlier measure by Guttman ($\lambda_3$), and it is a generalization of measure for dichotomous items developed in 1937 ($\mathrm{KR}_{20}$).  Issues: underestimates reliability and overestimates factor saturation.  Not so useful for multidimensional scales.
 - **$\omega$\***: from McDonald, a measure of 'factor saturation'.  $\omega_{\mathrm{t}}$, or omega total, provides a proportion of variance that is not unique in the factor-analytic sense. $\omega_{\mathrm{h}}$, or omega-hierarchical, is the measure associated with the 'general' factor in the bifactor model noted above. It assumes enough items for a potential hierarchical structure to be tested in the first place.
 - **Composite Reliability\***: described in Kline, reference Raykov (2004), see $\omega$
-- **Average Variance Extracted\***: For single factor indicator settings, this is the average squared (standardized) loading. It's simple and
+- **Average Variance Extracted**\*: For single factor indicator settings, this is the average squared (standardized) loading. It's simple and has a straightforward interpretation as R^2^ does in regression. 
 
 
-Both Guttman's and Cronbach's are a function of the number of items and average correlation of items, and will increase if either of those increase all else being equal. Neither should be seen as indicating a single factor structure (they assume it). My own opinion is that the most sensical notion of reliability is a function of some underlying model that can actually be tested, i.e. a latent variable model. Furthermore, a good item is infused with the construct it purports to measure.  McDonald's $\omega_t$ gets at that notion explicitly.  Practically speaking, if loadings are equal and the one is dealing with a unidimensional construct $\alpha=\omega_t=\omega_h$.  Otherwise, i.e. the usual case, one should consider which measure might be best.  The ones with a \* are more explicitly driven by an underlying factor model.
+Both Guttman's and Cronbach's measures are a function of the number of items and average correlation of items, and will increase if either of those increase all else being equal. Neither should be seen as indicating a single factor structure (they assume it). My own opinion is that the most sensical notion of reliability is a function of some underlying model that can actually be tested, i.e. a latent variable model. Furthermore, a good item is infused with the construct it purports to measure.  McDonald's $\omega_t$ gets at that notion explicitly.  Practically speaking, if loadings are equal and the one is dealing with a unidimensional construct $\alpha=\omega_t=\omega_h$.  Otherwise, i.e. the usual case, one should consider which measure might be best.  The ones with a \* are more explicitly driven by an underlying factor model.
+
+Some suggest **AVE** can be used as a measure of <span class="emph">convergent</span> validity (if it's above some arbitrary value) or <span class="emph">discriminant</span> validity (if it's square root is higher than the factor's correlation with some other latent variable).  I find this interpretation somewhat problematic.  Convergent and discriminant validity have typically always been explicitly defined by a construct's correlations with *other* constructs/measures that are similar/different, not individual items, which are theoretically just a random sample of all available items that measure all facets of the construct.  If your items, say for a newly proposed depression scale, correlate with one another, that's all well and good, but it doesn't mean your scale as a whole automatically measures what you think it does, and would have the proper correlations with other measures, e.g. positive with another established depression measure or anxiety measure, and negative with one measuring self-esteem.  You actually have to collect these other measures to establish it.  As another example, a poor **AVE**, i.e. one that would not suggest even construct validity (say ave = .1, sqrt = .32), could signify discriminant validity if using the proposed yardstick (>.30 correlation with another factor).  It also works in the opposite direction, your very high AVE may be higher than something else the construct strongly correlates with, *but shouldn't*.
+
+However, the **AVE** is clearly related to the notion of <span class="emph">construct</span> validity in general, i.e. whether the items measure what they purport to measure, and would be a useful first step in that regard.  If one collects other measures they might then test for convergent and discriminant validity, further establishing construct validity.
+
+
+In the <span class="pack">psych</span> package you can use functions <span class="func">splitHalf</span>, <span class="func">alpha</span>, and <span class="func">omega</span> to get these and other measures, though some are only of historical interest.  If you are going to report 
+With <span class="pack">semTools</span>, use the <span class="func">reliability</span> function on a <span class="objClass">lavaan</span> class object.  See example below. Because of the amount of output, I only show the results for the last line.
+
+
+```{r reliabilityExample, eval=7:8, echo=1:5}
+omega(cog_ability, nfactors=4)
+alpha(scale(Harman.5))
+
+library(semTools)
+reliability(famod) # omega1 is the omega total, omega 3 is omega hierarchical
+
+library(semTools)
+reliability(famod) %>% round(2) %>% format(nsmall=2) %>% DT::datatable(options=list(dom='t', sort=F), width='50%')
+```
+
 
 
 ```{r computingOmega, eval=F, echo=F}
@@ -1026,7 +1047,7 @@ alpha(HolzingerSwineford1939[,c('x1', 'x2', 'x3')])
 
 #### Scale development as software development
 
-Scale development is hard and a scale can always be improved, *always*.  There is practically no chance that the first time one comes up with variables to measure a construct that the indicators will be perfect.  For example, in a scale that measures some internal construct, such as some aspect of personality, things like item wording, difficulty, context etc. all factor into how the variables will be perceived by the individual, whose own context and background will also affect how items are answered.  After analysis, items might be dropped, altered, or new items added.  The same goes for non-human constructs, like a democracy scale for countries or a diversity index for species.  For example, even economic indicators are not going to have the same reliability from country to country, as the raw data may be harder to come by or not even applicable.
+Scale development is hard and a scale can always be improved, *always*.  There is practically no chance that the first time one comes up with variables to measure a construct that those indicators will be perfect.  For example, in a scale that measures some internal construct, such as some aspect of personality, things like item wording, difficulty, context etc. all factor into how the variables will be perceived by the individual, whose own context and background will also affect how items are answered.  After analysis, items might be dropped, altered, or new items added.  The same goes for non-human constructs, like a democracy scale for countries or a diversity index for species.  For example, even economic indicators are not going to have the same reliability from country to country, as the raw data may be harder to come by or not even applicable.
 
 Given this, it would be best to think of scale development the same as we do software development. In software development, bugs are discovered, applications to other or new versions of operating systems are constructed and so forth.  The development cycle is continuous and ongoing, or else the app dies as people move on to better products. 
 
