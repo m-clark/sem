@@ -1119,6 +1119,7 @@ digraph DAG2 {
 )
 ```
 
+Some also note latent variables with *causal* indicators, such that the variable is latent, not a composite, but that the arrows go *from* the indicators as they do with the composite.  However, these are not identified by default, and would still require effect indicators to be so (the so-called MIMIC model of multiple indicators and multiple causes).  As such, thinking of them this way requires theory adjustment to even do, but there is no inherent reason to think of a variable with a causal effect on a latent variable as we do 'effect' indicators, i.e. the normal indicators that are caused *by* the latent variable, in the first place.  Any particular latent variable might be caused any number of observed or other latent variables.  That's just standard SEM though, and doesn't require a different name or manner of thinking, nor will it have fundamental identification problems.  That's just my opinion though. 
 
 
 ## Terminology

@@ -21,9 +21,9 @@ Before even beginning a road to SEM, do you have enough data?
 
 > <span class="" style="font-variant:small-caps">SEM is a large sample technique</span>
 
-You will even in simple models likely be estimating a couple dozen parameters.  If you were running a standard regression, how much data would you feel comfortable with if you were using a model with 20+ predictors? In SEM it can be even more difficult, where latent variables with less than ideal loadings on few items might require a couple hundred observations for just a single measurement model. In addition, as noted previously, less reliable measures will only hurt your ability to detect the relationships among variables.  If you are conducting multigroup analysis, you must consider an SEM from the standpoint of the sample size for the smallest group.
+You will even with simple models likely be estimating a couple dozen parameters, and it's assumed that there are noisy measures and generally small effects when present.  As a comparison, if you were running a standard regression in similar scenarios, how much data would you feel comfortable with if you were using a model with 20+ predictors? In SEM it can be even more difficult, where latent variables with less than ideal loadings on few items might require a couple hundred observations for just a single measurement model. In addition, as noted previously, less reliable measures will only hurt your ability to detect the relationships among variables.  If you are conducting multigroup analysis, you must consider an SEM from the standpoint of the sample size for the smallest group.
 
-Because of the inherent complexity of SEM, many run simpler models that are implausible, and actually misspecified, due to the fact that key variables, even ones that were collected and available in the data, are left out[^notv].  Sometimes models are so complex they are left out because it would be difficult to even know what all should be pointing to what.  In other cases I've seen almost a hundred parameters estimated with maybe only 200 observations[^notbayes]. The gist is that SEM is not always the right tool, even if conceptually it may be considered for a model.  As flexible as it is, it is also quite restrictive in other respects, and may simply be impractical to model key aspects of the data.
+Because of the inherent complexity of SEM, many run SEM models that are overly simple, and actually misspecified, due to the fact that key variables, even ones that were collected and available in the data, are left out[^notv].  Sometimes models are so complex they are left out because it would be difficult to even know what all should be pointing to what.  In other cases I've seen almost a hundred parameters estimated with maybe only 200 observations[^notbayes]. The gist is that SEM is not always the right tool, even if conceptually it may be considered for a model.  As flexible as it is, it is also quite restrictive in other respects, and may simply be impractical to model key aspects of the data.
 
 
 ### Steps to Take
@@ -39,7 +39,7 @@ Now you are ready for the SEM, though by this stage you should already be pretty
 
 In summary:
 
-- Have a sense of complexity (vs. sample size) and other possible techniques
+- Have a sense of complexity (vs. sample size) and consider other modeling techniques
 - Develop a good understanding of *all* observed variables
 - Inspect correlations
 - Examine measurement models
@@ -227,7 +227,7 @@ digraph {
 
 <br>
 
-The standardized results of the structural model are visualized below, and model results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically.  Higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive vs. negative weights, and the closer to zero the more faded they are.
+The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically.  Higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive vs. negative weights, and the closer to zero the more faded they are.
 
 ```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
 semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
@@ -278,12 +278,12 @@ digraph {
  
  ## latent to latent
 
- edge [label='' fontcolor=gray25 minlen=1] # set min to 1 made it centered
- SES -> Alien67 [label='-.56' fontcolor='#8B00008F' color='#8B00008F', alpha=.5];   # the alpha attribute is utterly ignored for the edge so use alpha func; still will be ignored for fontcolor
- SES -> Alien71 [label='-.21' fontcolor='#8B000036' color='#8B000036'];
+ edge [label='' fontcolor=gray25 minlen=1 ] # set min to 1 made it centered
+ SES -> Alien67 [label='-.56' fontcolor='#8B00008F' color='#8B00008F', alpha=.5,  penwidth=4];   # the alpha attribute is utterly ignored for the edge so use alpha func; still will be ignored for fontcolor
+ SES -> Alien71 [label='-.21' fontcolor='#8B000036' color='#8B000036' penwidth=4];
 
- edge [label='' fontcolor=gray25 dir=forward]
- Alien67 -> Alien71 [label='.57' fontcolor='#00640091' color='#00640091' minlen=6];
+ edge [label='' fontcolor=gray25 dir=forward ]
+ Alien67 -> Alien71 [label='.57' fontcolor='#00640091' color='#00640091' minlen=6 penwidth=4];
 
 
  ## variances
