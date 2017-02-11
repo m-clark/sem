@@ -1,0 +1,56 @@
+---
+title: "R Exercises"
+author: |
+  | Consulting for Statistics, Computing and Analytics Research
+
+date: '`r Sys.Date()`'
+output:
+  html_notebook:
+    theme: sandstone
+    font-family: Roboto
+    highlight: zenburn
+    code_folding: hide
+---
+ 
+```{r setupExercises, include=FALSE}
+knitr::opts_chunk$set(eval=F, cache = F, message = F, warning = F, R.options=list(width=120), comment=NA)
+```
+
+
+1. Create an object that consists of the numbers one through five using `c(1,2,3,4,5)` or `1:5`
+
+```{r}
+x = c(1,2,3,4,5)
+x = 1:5
+```
+
+
+2. Create a different object, that is the same as that object, but plus 1 (i.e. the numbers two through six).
+
+```{r}
+z = x + 1
+```
+
+
+3. Without creating an object, use <span class="func">cbind</span> and <span class="func">rbind</span>, feeding the objects you just created as arguments. For example `cbind(obj1, obj2)`.
+
+```{r}
+new_data = cbind(x, z)
+new_data = rbind(x, z)
+```
+
+
+4. Create a new object using <span class="objclass">data.frame</span> just as you did <span class="func">rbind</span> or <span class="func">cbind</span> in #3.
+
+```{r}
+new_data = data.frame(x, z)
+```
+
+
+5. Inspect the class of the object, and use the <span class="func">summary</span> function on it.
+
+```{r}
+class(new_data)
+summary(new_data)
+```
+
