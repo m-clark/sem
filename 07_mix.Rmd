@@ -148,7 +148,8 @@ Some other terminology includes:
 <span class="emph">Latent Trait Analysis</span> refers to dealing with continuous latent variables in the context of multivariate categorical data. Again, most people outside of SEM would simply call this a mixture model, but it also serves as the setting for Item-Response Theory models where we, for example, find latent 'ability' among binary test items that are correct vs. not.
 
 
-## R packages used
+## R Packages Used
+
 - <span class="pack">flexmix</span>
 
 

@@ -81,20 +81,22 @@ Let's take a look at the data thus far. Note how I'm using subject as a row inde
 ```{r inspectSimData, echo=FALSE}
 library(DT)
 data.frame(Subject=subject, time=time, randomEffects[subject,]) %>% 
-  datatable() %>% formatRound(~Int+Slope, 4)
+  datatable(options=list(dom='t'), rownames=F, width='50%') %>% formatRound(~Int+Slope, 4)
 ```
 
 Now, to get a target variable, we simply add the random effects for the intercept to the overall intercept, and likewise for the slopes. We'll throw in some noise at the end with standard deviation equal to $\sigma$.
 
 ```{r createSimTarget}
 sigma = .5
-y1 = (intercept + randomEffects$Int[subject]) + (slope + randomEffects$Slope[subject])*time + rnorm(n*timepoints, mean=0, sd=sigma)
+y1 = (intercept + randomEffects$Int[subject]) + # random intercepts
+  (slope + randomEffects$Slope[subject])*time + # random slopes 
+  rnorm(n*timepoints, mean=0, sd=sigma)
 
 d = data.frame(subject, time, y1)
 ```
 
 ```{r inspectSimData2, echo=FALSE}
-datatable(d) %>% formatRound(~y1, 4)
+datatable(d, options=list(dom='t'), rownames=F, width='50%') %>% formatRound(~y1, 4)
 ```
 
 
@@ -179,7 +181,7 @@ VarCorr(mixedModel)
 ```
 
 
-The differences provide some insight.  LGC by default assumes heterogeneous variance for each time point. Mixed models by default assume the same $\sigma^2$ for each time point, but can allow them to be estimated separately in most modeling packages.
+The differences provide some insight.  LGC by default assumes heterogeneous variance for each time point. Mixed models by default assume the same variance for each time point, but can allow them to be estimated separately in most modeling packages.
 
 As an example, if we fix the variances to be equal, the models are now identical. 
 
@@ -218,7 +220,7 @@ ranefLatent %>%   round(2) %>% head
 ranefLatent %>% cor %>% round(2)
 ```
 
-Both approaches allow those residuals to covary, though it gets tedious in SEM syntax, while it is a natural extension in the mixed model framework. Here is the syntax for letting each time point covary with the next, at least, what it might be. It's unclear if lavaan actually will do this, and the syntax here roughly follows MPlus' manual, except that we can't define new variables in lavaan as there.  As such, the hope is that the `a` parameter should equal `resvar*corr` as in the MPlus syntax, but there's not a clear way to fix it to be.  It seems consistent here and with larger sample sizes.
+Both approaches allow those residuals to covary, though it gets tedious in SEM syntax, while it is a natural extension in the mixed model framework. Here is the syntax for letting each time point covary with the next, at least, what it might be. It's unclear if <span class="pack">lavaan</span> actually will do this, and the syntax here roughly follows Mplus' manual, except that we can't define new variables in <span class="pack">lavaan</span> as there.  As such, the hope is that the `a` parameter should equal `resvar*corr` as in the Mplus syntax, but there's not a clear way to fix it to be.  It seems consistent here and with larger sample sizes.
 
 ```{r, echo=1}
 model = "
@@ -287,7 +289,7 @@ In no other SEM situation are you likely to fix so many parameters or think abou
 
 ### Residual correlations
 
-Typical models that would be investigated via the LGC have correlated residuals as depicted above.
+Typical models that would be investigated with LGC have correlated residuals as depicted above.
 
 ### Nonlinear time effect
 
@@ -303,7 +305,7 @@ It may be difficult to assess nonlinear relationships unless one has many time p
 
 Adding a latent categorical variable would allow for different trajectories across the latent groups.  Most clients that I've seen typically did not have enough data to support it, as one essentially can be estimating a whole growth model for each group. Some might restrict certain parameters for certain groups, but given that the classes are a latent construct to be discovered, there would not be a theoretical justification to do so, and it would only complicate interpretation at best.  Researchers rarely if ever predict test data, nor provide evidence that the clusters hold up with alternate data.  In addition, it seems that typical interpretation of the classes takes on an ordered structure (e.g. low, medium, and high), which means they just have a coarsely measured continuous latent variable.  In other cases, the groups actually reflect intact groups represented by covariates they have not included in the data (or perhaps are an interaction of those).  Had they started under the assumption of a continuous latent variable, it might have made things easier to interpret and estimate.
 
-As of this writing, MPlus is perhaps the only SEM software used for these <span class="emph">Growth Mixture Models</span>, and it requires yet another syntax style, and, depending on the model you run, some of the most confusing output you'll ever see in SEM.  Alternatives in R include <span class="pack">flexmix</span> (demonstrated in the Mixture Models Module) for standard mixture modeling (including mixed effects models), as well as the R package <span class="pack">OpenMx</span>.
+As of this writing, Mplus is perhaps the only SEM software used for these <span class="emph">Growth Mixture Models</span>, and it requires yet another syntax style, and, depending on the model you run, some of the most confusing output you'll ever see in SEM.  Alternatives in R include <span class="pack">flexmix</span> (demonstrated in the Mixture Models Module) for standard mixture modeling (including mixed effects models), as well as the R package <span class="pack">OpenMx</span>.
 
 
 ### Other covariates
@@ -382,17 +384,16 @@ fit <- growth(model.syntax, data=Demo.growth)
 summary(fit)
 ```
 
-Now imagine having just a few of those kinds of variables. In the mixed model framework one would add them in as any covariate in a regression model, and each covariate would be associated with a single fixed effect. In the LGC framework, one has to regress each time point for the target variable on its corresponding predictor time point.  It might take a few paragraphs to explain the coefficients for just a handful of covariates.
+Now imagine having just a few of those kinds of variables as would be common in most longitudinal settings. In the mixed model framework one would add them in as any covariate in a regression model, and each covariate would be associated with a single fixed effect. In the LGC framework, one has to regress each time point for the target variable on its corresponding predictor time point.  It might take a few paragraphs to explain the coefficients for just a handful of covariates. If you fix them to a single value, you would duplicate the mixed model, but the syntax requires even more tedium.
 
 
 
 ## Some Differences between Mixed Models and Growth Curves
 
 
-
 ### Random slopes
 
-One difference seen in comparing LGC models vs. mixed models is that in the former, random slopes are always assumed, whereas in the latter, one would typically see if it's worth adding random slopes in the first place, or simply not assume them.
+One difference seen in comparing LGC models vs. mixed models is that in the former, random slopes are always assumed, whereas in the latter, one would typically see if it's worth adding random slopes in the first place, or simply not assume them.  There is currently a fad of 'maximal' mixed models in some disciplines, that would require testing every possible random effect.  All I can say is good luck with that.
 
 ### Wide vs. long
 
@@ -400,7 +401,7 @@ The SEM framework is inherently multivariate, and your data will need to be in w
 
 ### Sample size
 
-As we have noted before, SEM is inherently a large sample technique.  The growth curve model does not require as much for standard approaches, but may require a lot more depending on the model one tries to estimate.  In my own simulations, haven't seen too much difference compared to mixed models even for notably small sample sizes, but those were for very simple models.
+As we have noted before, SEM is inherently a large sample technique.  The growth curve model does not require as much for standard approaches, but may require a lot more depending on the model one tries to estimate.  In [my own simulations](https://m-clark.github.io/docs/mixedModels/growth_vs_mixed_sim.html), I haven't seen too much difference compared to mixed models even for notably small sample sizes, but those were for very simple models.
 
 ### Number of time points
 
@@ -421,7 +422,13 @@ In the [appendix][Parallel Process Example] I provide an example of a parallel p
 
 ## Summary
 
-Growth curve modeling is an alternate way to do what is very commonly accomplished through mixed models, and allow for more complex models than typically seen for standard mixed models.  One's default should probably be to use the more common, and probably more flexible (in most situations), mixed modeling tools, where there are packages in R that could handle nonlinear effects, mediation and multivariate outcomes for mixed models. I have other documents regarding mixed models on my [website](https://m-clark.github.io/documents) and code at [GitHub](https://github.com/m-clark/Miscellaneous-R-Code). However, the latent variable approach may provide what you need, and at the very least gives you a fresh take on the standard mixed model perspective.
+Growth curve modeling is an alternative way to do what is very commonly accomplished through mixed models, and allow for more complex models than typically seen for standard mixed models.  One's default should probably be to use the more common, and probably more flexible (in most situations), mixed modeling tools, where there are packages in R that could handle nonlinear effects, mediation and multivariate outcomes for mixed models. I have other documents regarding mixed models on my [website](https://m-clark.github.io/documents) and code at [GitHub](https://github.com/m-clark/Miscellaneous-R-Code). However, the latent variable approach may provide what you need, and at the very least gives you a fresh take on the standard mixed model perspective.
+
+## R Packages Used
+
+- <span class="pack">lavaan</span>
+- <span class="pack">lme4</span>
+- <span class="pack">nlme</span>
 
 
 [^reml]: One can set REML=F so as to use standard maximum likelihood and make the results directly comparable to <span class="pack">lavaan</span>.

@@ -5,12 +5,12 @@
 
 ### Graphical Models
 
-The document will start with the familiar, a standard regression model.  It will then be presented as a <span class="emph">graphical model</span>, and extended to include indirect effects (e.g. $\mathcal{A} \rightarrow \mathcal{B} \rightarrow \mathcal{C}$) and multiple outcomes.  At this point we will discuss *directed graphs*, and demonstrate a more theoretically motivated approach (sometimes called *path analysis*), and compare it to a more flexible approach (Bayesian network) that does not require prespecification of paths nor specific directional relations.  At this point, we'll briefly discuss undirected graphs, with an example utilizing 'network analysis', though any exercise will likely be left to the participant's own time.
+The document will start with the familiar, a standard regression model.  It will then be presented as a <span class="emph">graphical model</span>, and extended to include indirect effects (e.g. $\mathcal{A} \rightarrow \mathcal{B} \rightarrow \mathcal{C}$) and multiple outcomes.  At this point we will discuss *directed graphs*, and demonstrate a more theoretically motivated approach (sometimes called *path analysis*), and compare it to more flexible approaches that do not require prespecification of paths nor specific directional relations.  We'll briefly discuss undirected graphs, with an example utilizing 'network analysis'.
 
 
 ### Latent Variables
 
-We will then discuss the notion of <span class="emph">latent variables</span> in the context of *underlying causes or constructs* and  **measurement error**.  We will also note that latent variable models are actually even more broadly utilized when one includes other *dimension reduction*, or *data compression*, techniques, several of which fall under the heading of *factor analysis*.  A few common techniques will be demonstrated such as 'factor analysis' and principal components analysis, and an overview will be provided for others. In addition, we will briefly discuss the relation of latent variable models to random effects models (something that will be demonstrated in more detail later), and note other places one might find latent variables (e.g. the EM algorithm, hidden Markov models).
+We will then discuss the notion of <span class="emph">latent variables</span> in the context of *underlying causes or constructs* and  **measurement error**.  We will begin by noting that latent variable models are actually even more broadly utilized when one includes other *dimension reduction*, or *data compression*, techniques, several of which fall under the heading of *factor analysis*.  A few common techniques will be demonstrated such as 'factor analysis' and principal components analysis, and an overview will be provided for others. In addition, we will note other places one might find latent variable models.
 
 
 ### SEM
@@ -27,10 +27,10 @@ Other topics are touched upon for reference, and may be added to in the future. 
 
 <img src="img/Rlogo.svg" style="display:block; margin: 0 auto; width:50%">
 
-We will use **<span class='pack'>R</span>** for a variety of reasons.  One is that all of the techniques mentioned thus far are fully developed within various R packages, often taking just a line or two of code to implement after the data has been prepped.  Furthermore, it is freely available and will work on Windows, Mac and Linux.  R is well-known as a powerful statistical modeling environment, and its flexible programming language allows for efficient data manipulation and exploration.  Furthermore, it has a vast array of visualization capabilities.  In short, it provides everything one might need in a single environment.
+We will use **<span class='pack'>R</span>** for a variety of reasons.  One is that all of the techniques mentioned thus far are fully developed within various R packages, often taking just a line or two of code to implement after the data has been prepped.  Furthermore, it is freely available and will work on Windows, Mac and Linux.  R is well-known as a powerful statistical modeling environment, and its flexible programming language allows for efficient data manipulation and exploration.  Furthermore, it has a vast array of visualization capabilities.  In short, it provides everything one might need in a single environment for standard SEM, and nothing comes close in [SEM-specific offerings][Other Modeling Tools].
 
 
-Among alternatives, MPlus is the most fully developed structural equation modeling package, and has been for years.  However, it is a poor tool for data management, few universities have a campus-wide license for it, and most of its functionality (and all we will need for this our purposes) is implemented within the <span class='pack'>lavaan</span> family of R packages.  Stata has recently provided SEM capabilities, but it is less well-developed (something that might change in time), and it still requires a license, making non-campus usage difficult or costly.  SPSS Amos would perhaps be another alternative for some, but suffers the same licensing issues and is not as flexible as MPlus. Historically it has lagged far behind MPlus in capabilities, and furthermore it is not supported for Unix operating systems such as Mac and Linux.  Other alternatives include Proc Calis in SAS and OpenMX (another R package).  Python implementation seems minimal presently.  Historically, people used EQS and LISREL, but the former is no longer developed and the latter is no longer relatively widely used, as well as being a Windows-only application.
+Among alternatives, Mplus is the most fully developed structural equation modeling package, and has been for years.  However, it is a poor tool for data management, few universities have a campus-wide license for it, and most of its functionality (and all we will need for this our purposes) is implemented within the <span class='pack'>lavaan</span> family of R packages.  Stata has relatively recently provided SEM capabilities, but it is less well-developed (something that might change in time), and it still requires a license, making non-campus usage difficult or costly.  Other alternatives exist, but are not as commonly used as lavaan, Mplus, and Stata, at least in my experience across two universities and dozens of academic disciplines.  For more on what's out there, see the [appendix][R].
 
 
 ## Setup
@@ -45,7 +45,7 @@ Once those are installed, proceed through the following steps.
 
 2. Open RStudio.  File/Open Project/ then navigate to the folder contents you just unzipped.  Click on the SEM file (should look like a blue icon, but otherwise is the SEM.Rproj file).
 
-3. Open the R script inside. Run the one line of code there and you're set.
+3. Open the R script, `install_script.R` inside. Run the one line of code there and you're set.
 
 The lab for the workshop has Windows machines, and so the above is enough to proceed. For *nix systems, it should be mostly the same.
 

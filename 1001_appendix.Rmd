@@ -1,7 +1,6 @@
-
 # Appendix
 
-## Data set descriptions
+## Data Set Descriptions
 
 ### McClelland 
 
@@ -17,7 +16,7 @@ McClelland, Acock, Piccinin, Rheac, Stallings. (2013). Relations between prescho
 
 The following models duplicate the paper results. Additional non-mediation models are provided for comparison.
 
-```{r, eval=FALSE}
+```{r mcclellandDuplicaet, eval=FALSE}
 modReading = "
   read21 ~ rr*read7 + ar21*attention4 + vocab4 + male + adopted + momed
   read7 ~ ar7*attention4
@@ -176,6 +175,7 @@ This just puts the terminology sections of the previous chapters together in one
 - **Structure coefficient**: The correlation between an observed an latent variable.
 - **Communality**: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings.
 - **Uniqueness**: 1 - communality. The unexplained variance of a variable. See disturbance.
+- **Identification**: Refers to whether a unique solution can possibly be estimated for a given model. Models may be under-, over- or just-identified.  It is a function of the model specification rather than the data.
 - **Fit**: Model fit is something very difficult to ascertain in SEM, and notoriously problematic in this setting, where all proposed cutoffs for a good fit are ultimately arbitrary.  Even if one had most fit indices suggesting a 'good' fit, there's little indication the model has predictive capability.
 - **Endo/Exogenous**: Endogenous variables are determined by other variables, i.e. have an arrow pointing at their node. Exogenous variables have no analyzed causes.
 - **Disturbance**: residual variance. Includes measurement error and unknown causes.
@@ -218,7 +218,7 @@ Aside from noting whether the latent variable is categorical or not, these aren'
 
 
 
-## Lavaan Output
+## Lavaan Output Explained
 
 Here I provided the most detailed output from an SEM with lavaan with each component explained.
 
@@ -309,8 +309,51 @@ This bit of information that starts the parameter estimates section of output re
 
 The rest regards the parameter estimates, i.e. the paths, variances, covariances, and possibly 'intercepts' if examination of mean structure is desired (e.g. as in growth curve models), and these may regard both latent and observed variables.  We will also get any user-defined parameter estimates.  See any of the previous sections for more detail.
 
+## Code Examples
 
-## Parallel Process Example
+### Factor Analysis via Maximum Likelihood
+
+On GitHub I have some [R code](https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/cfa_ml.R) I've put together that will estimate a factor analysis via maximum likelihood, i.e. a 'by-hand' approach fully within R. It will simulate some data for two correlated factors with four indicators each, and produce raw (function shown below) and standardized loadings, the log-likelihood, AIC, and BIC.  It will also compare these results to <span class="pack">lavaan</span> output for the same data, as well as provide the corresponding Mplus code.
+
+
+```{r cfaML}
+# measurement model, covariance approach
+cfa.cov = function (parms, data) {
+  # Arguments- parms: initial values (named); data: raw data
+  # Extract paramters by name
+  
+  require(psych) # for tr
+  
+  l1 = c(1, parms[grep('l1', names(parms))])      # loadings for factor 1
+  l2 = c(1, parms[grep('l2', names(parms))])      # loadings for factor 2
+  cov0 = parms[grep('cov', names(parms))]         # factor covariance, variances
+  
+  # Covariance matrix
+  S = cov(data)*((nrow(data)-1)/nrow(data))       # ML covariance div by N rather than N-1, the multiplier adjusts
+  
+  # loading estimates
+  lambda = cbind(c(l1, rep(0, length(l2))),
+                 c(rep(0, length(l1)), l2))
+  
+  # disturbances
+  dist.init = parms[grep('dist', names(parms))]    
+  disturbs = diag(dist.init)
+  
+  # factor correlation
+  phi.init = matrix(c(cov0[1], cov0[2], cov0[2], cov0[3]), 2, 2)  #factor cov/correlation matrix
+  
+  # other calculations and log likelihood
+  sigtheta = lambda%*%phi.init%*%t(lambda) + disturbs
+  pq = dim(data)[2]  #in Bollen p + q (but for the purposes of this just p) = tr(data)
+  #out = -(log(det(sigtheta)) + tr(S%*%solve(sigtheta)) - log(det(S)) - pq)  #a reduced version; Bollen 1989 p.107
+  ll = ((-nrow(data)*pq/2)*log(2*pi)) - (nrow(data)/2)*(log(det(sigtheta)) + tr(S%*%solve(sigtheta)))  #should be same as Mplus H0 loglike
+  ll
+}
+```
+
+
+
+### Parallel Process Example
 
 ```{r parallelProcess, eval=FALSE}
 
@@ -506,23 +549,79 @@ Mplus is more or less the gold standard for SEM programming, and there is no SEM
 
 - Mplus can potentially do practically everything one would want to in the SEM setting
 - Help forum: among the best you'll come across in that the Muthens themselves are willing to answer practically any question quickly
+- Relatively cheap to upgrade/maintain
+- User manual has many, many working examples
 
 #### Cons
 
-- Cost: very expensive up front, but notably less so to renew
+- Cost: very expensive for initial purchase
 - License: Most universities will not have a campus-wide license
-- Data processing: This is not what Mplus is for, so don't.
-- Exploration: the lack of a proper programming language environment makes it difficult to do model exploration. It would be easier to use the Mplusautomation in R than do this with Mplus. Even the Mplus website suggests this.
-- User manual: None of the output, which for some models is notably complicated, is explained, and the simulated data examples are not very useful and are overly optimistic relative to what researchers will actually face. Too much space is devoted to identical models with only minor differences.
-- Closed source: not only that, it's practically one programmer doing all the work.
+- Data processing: This is not what Mplus is for, so don't
+- Exploration: the lack of a proper programming language environment makes it difficult to do model exploration. It would be easier to use the Mplusautomation in R than do this with Mplus (even the Mplus website suggests this)
+- User manual: None of the output is explained, which for some models is notably complicated. The simulated data examples are not very contextually helpful, and are overly optimistic relative to what researchers will actually face. Too much space is devoted to conceptually identical models with only minor syntax differences, which without explanation of the output differences, is not very helpful to users.
+- Closed source: not only that, it's only one programmer doing everything.
 
 #### Other
 
-It's not clear to me where the future of Mplus lies.  Bengt Muthén, the driving force behind Mplus has been emeritus faculty for some time now, and version 7 has been out without a full release longer than any other version of Mplus. 'Minor' corrections are typically taking several months.  
+It's not clear to me where the future of Mplus lies.  Bengt Muthén, the driving force behind Mplus has been emeritus faculty for some time now, and version 7 has been out without a full release longer than any previous version of Mplus. 'Minor' corrections are typically taking several months.  Meanwhile, many things that users commonly find confusing or could be made automatic are left unchanged.
 
 ### R
 
 R does everything, SEM or otherwise. It even helps you use Mplus more efficiently. There's no reason not to use it for SEM.  Between the SEM-specific tools, and other packages that can fill in the remaining functionality, it can do any model Mplus can, and many of them better and more efficiently.
+
+What follows is a list of R packages for SEM on CRAN, put together by a simple search on 'structural equation model' at metacran. It is obviously not exhaustive, nor do I include packages that might do equivalent models (e.g. <span class="pack">lme4</span> can do latent growth curve models as mixed models, <span class="pack">flexmix</span> for mixture models), nor are github-only packages noted.  What should be clear is that R has well surpassed Mplus in what it can offer in the SEM world.
+
+<div style="font-size=6">
+- autoSEM
+- bnpa*
+- ctsem
+- CorReg
+- dlsem
+- dpa
+- EffectLiteR
+- faoutlier
+- fSRM
+- gesca
+- gimme
+- gof
+- gSEM
+- influence.SEM 
+- lavaan family: lavaan, blavaan, survey.lavaan, lavaan.shiny
+- lsl
+- lvnet
+- metaSEM
+- MIIVsem
+- Mplusautomation
+- nlsem
+- OpenMx
+- onyx
+- piecewiseSEM
+- plotSEMM
+- psych*
+- RAMpath*
+- RMediation 
+- regsem*
+- rsem
+- sem
+- semdiag
+- semds
+- semGOF
+- SEMID
+- semTools*
+- semPlot*
+- semPLS
+- semtree
+- sesem
+- simsem
+- sirt
+- sparseSEM
+- stablespec
+- strum
+- umx
+</div>
+
+\* Known connection to lavaan models. There may be many others.
+
 
 #### Pros
 
@@ -531,7 +630,8 @@ R does everything, SEM or otherwise. It even helps you use Mplus more efficientl
 - Help forum: possibly several outlets for different packages.
 
 #### Cons
-I would say learning curve, but no one know SEM syntax until they do it, and it will always be different from the syntax typically employed by a statistical program.  If your data is already processed and ready to go, it is no more difficult to run an SEM in R than Stata, and it will be *easier* than Mplus, Amos, etc.
+
+I would say learning curve, but no one knows SEM syntax until they do it, and it will always be different from the syntax typically employed by a statistical program or programming language.  If your data is already processed and ready to go, it is no more difficult to run an SEM in R than Stata, and it will be *easier* than Mplus, Amos, etc.
 
 
 ### Stata
@@ -554,13 +654,20 @@ Stata was very late to the SEM game, and it's not going to do as much as Mplus, 
 
 ### Other
 
-#### Other SEM
+#### Other SEM-specific software
 
-Lisrel, EQS etc. are no longer viable these days.  SAS has some functionality but it's rarely used relative to the other options.  SPSS Amos... if you have access to Amos you almost definitely have access to something better and just as easy to use.
+Lisrel, EQS, Amos, which were popular in the past, are no longer viable these days, either largely no longer developed or restricted to a single operating system, and yet they still want you to shell out hundreds of dollars to use them.  SAS has some functionality but it's rarely used for SEM relative to the other options.  Other statistical programs have functionality, but they are relatively little used for standard models, and much less for SEM.
 
 #### Other Modeling Tools
 
-Within R one can do mixture/latent class models, growth mixture models, multilevel models, etc.  There is a package that provides functionality for every model depicted in the Mplus manual, and they will almost always provide more tools and output for understanding and exploring those models.  OpenMx, while relatively very difficult compared to other packages, can be used to do any SEM one can think of.
+Within R one can do mixture/latent class models, growth mixture models, multilevel models, etc., and they will almost always provide more tools and output for understanding and exploring those models.  
+
+Similarly, Stata has a lot more to offer for many other non-SEM tools relative to SEM-specific software.  
+
+If you aren't doing SEM, there is zero reason to use software that was designed specifically for it.  The old adage of 'just because you can doesn't mean you should' applies. The programming time alone would be reason not to, but a great deal of additional functionality would be lost too.
+
+Python, which is the most popular data science tool outside of R, has minimal SEM capabilities presently, but I will update if I come across anything.
+
 
 #### Bayesian
 
