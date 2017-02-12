@@ -104,7 +104,7 @@ Harman, H. *Modern Factor Analysis*. [Google Books link](https://books.google.co
 
 #### Description
 
-25 personality self report items regarding five factors- Agreeableness, Conscientiousness, Extraversion, Neuroticism, and Opennness - taken from the International Personality Item Pool (ipip.ori.org) were included as part of the Synthetic Aperture Personality Assessment (SAPA) web based personality assessment project. The data from 2800 subjects are included here as a demonstration set for scale construction, factor analysis, and Item Response Theory analysis. Three additional demographic variables (sex, education, and age) are also included.
+25 personality self report items regarding five factors- Agreeableness, Conscientiousness, Extroversion, Neuroticism, and Openness - taken from the International Personality Item Pool (ipip.ori.org) were included as part of the Synthetic Aperture Personality Assessment (SAPA) web based personality assessment project. The data from 2800 subjects are included here as a demonstration set for scale construction, factor analysis, and Item Response Theory analysis. Three additional demographic variables (sex, education, and age) are also included.
 
 - **A1**: Am indifferent to the feelings of others. (q_146)
 - **A2**: Inquire about others' well-being. (q_1162)
@@ -165,28 +165,150 @@ Harman, H. H. (1976) Modern Factor Analysis, Third Edition Revised, University o
 
 ## Terminology in SEM
 
-SEM as it is known has been widely used in psychology and education for decades, while other disciplines have developed and advanced techniques that are related, but would not typically call them SEM.  The following will be expanded over time.
+This just puts the terminology sections of the previous chapters together in one place.
 
-**Latent variable**: an unobserved or hidden variable.  It's specific interpretation will depend on the modeling context.
 
-**Factor Analysis**: in the SEM literature, this refers to a latent variable (measurement) model to assess the underlying construct behind the correlations among a set of observed variables.  Elsewhere it may refer to a very broad family of matrix factorization techniques that would include things like principal components analysis, non-negative matrix factorization, etc.
+- **Latent variable**: an unobserved or hidden variable.  It's specific interpretation will depend on the modeling context. aka factor, construct, etc.
+- **Factor Analysis**: in the SEM literature, this refers to a latent variable (measurement) model to assess the underlying construct behind the correlations among a set of observed variables.  Elsewhere it may refer to a very broad family of matrix factorization techniques that would include things like principal components analysis, non-negative matrix factorization, etc.
+- **Item**, **Indicator**, **Observed**, **Manifest**, **Variable**:   Terms I use interchangeably within the context of factor analysis.
+- **Loadings**: measures of the relationship between an indicator and the latent variable. For clarity, it's probably better to use *pattern* or *structure* coefficient.
+- **Pattern coefficient**: What is usually displayed in FA results. The path coefficient from a latent variable to some observed variable. In some cases it is a simple correlation coefficient.
+- **Structure coefficient**: The correlation between an observed an latent variable.
+- **Communality**: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings.
+- **Uniqueness**: 1 - communality. The unexplained variance of a variable. See disturbance.
+- **Fit**: Model fit is something very difficult to ascertain in SEM, and notoriously problematic in this setting, where all proposed cutoffs for a good fit are ultimately arbitrary.  Even if one had most fit indices suggesting a 'good' fit, there's little indication the model has predictive capability.
+- **Endo/Exogenous**: Endogenous variables are determined by other variables, i.e. have an arrow pointing at their node. Exogenous variables have no analyzed causes.
+- **Disturbance**: residual variance. Includes measurement error and unknown causes.
+- **Mixture Models**: models using categorical latent variables.
+- **Growth Curve Models**: models for longitudinal data setting.
+- **Growth Mixture Models**: combines growth curves and mixture models.  Sometimes called latent trajectory
+- **Multiple group models**: I'll let you guess.  Usually involves tests of measurement invariance, or the ability for measurement models to hold up in different settings.
+- **Single indicator models**: In some circumstances, and with the appropriate constraints, a latent variable can have a single indicator.
+- **Non-/Recursive models**:  have all unidirectional causal effects and disturbances are not correlated. A model is considered nonrecursive if there is a reciprocal relationship, feedback loop, or correlated disturbance in the model
+- **Modification Indices**: A good way to further overfit the data without adding any explanatory power, since most will regard correlating residuals.
 
-**Exploratory vs. Confirmatory**: This distinction is problematic.  Science and data analysis is inherently exploratory, and most who use SEM do some model exploration as they would with any other model.  Some SEM models have more constraints than others, but that does not require a separate name or way of thinking about the model.
 
-**Mediation** and **moderation**:  These mean different things, both straightforward, and which is utilized in a model should be based on theoretical notions.
+### Problematic and/or not very useful terms 
 
-- Mediation: an indirect effect, e.g. A->B->C, A has an indirect effect on C. A can have a direct effect on C too. 
-- Moderation: an interaction (the same ones utilized in a standard regression modeling)
+This section is based on my opinion, but also on what I see in consulting that confuses clients and muddies their thinking time and time again.  Honestly, give researchers and methodologists enough time and they will invent a unique term for every model one can think of, and applied researchers are already taught statistics poorly enough to not be able to see the bigger picture that ties many models together under one framework. The graphical depiction of your model should be clear enough to note what types of variables and paths are involved, and models do not require a new name due to slight adjustments of previous ones.
 
-See the terminology section in the graphical models chapter for more detail.
+- **Exploratory vs. Confirmatory**: This distinction is problematic.  Science and data analysis is inherently exploratory, and most who use SEM do some model exploration as they would with any other model.  Some SEM models have more constraints than others, but that does not require a separate name or way of thinking about the model.
+- **Mediation**: an indirect effect, e.g. A->B->C, A has an indirect effect on C. A can have a direct effect on C too. The term mediation should be reserved for explicitly causal scenarios.
+- **Moderation**: an interaction (the same ones utilized in a standard regression modeling) but with specific constraints on the relationships of the moderator and other variables.  The term Moderation should be reserved for explicitly causal scenarios. 
 
-**Fit**: Model fit is something very difficult to ascertain in SEM, and notoriously problematic in this setting, where all proposed cutoffs for a good fit are ultimately arbitrary.  Even if one had most fit indices suggesting a 'good' fit, there's little indication the model has predictive capability.
+See the [terminology section][Terminology issues] in the graphical models chapter for more detail.
 
-**Endo/Exogenous**: Endogenous variables are determined by other variables, i.e. have an arrow pointing at their node. Exogenous variables have no analyzed causes.
+- **Exploratory SEM**: a term as useful as 'exploratory' [factor analysis][Exploratory vs. Confirmatory].  
+- **Fully vs. Partially Latent SEM**: see previous.
+- **MIMIC Model**: see previous.  Honestly, what's the difference between a MIMIC and partially latent model except for calling one of the observed variables an indicator?
 
-**Disturbance**: residual variance. Includes measurement error and unknown causes.
 
-**Mixture Models**: models using categorical latent variables.
+With categorical data:
+
+```{r lcterminology2, echo=FALSE}
+tab = data_frame(`Indicator Categorical`=c('Latent Class', 'Latent Trait'),
+                 `Indicator Continuous`=c('Latent Profile', 'Factor Analysis'))
+rownames(tab) = c("Latent Categorical", 'Latent Continuous')
+DT::datatable(tab, autoHideNavigation=T, options=list(paging=F, searching=F, ordering=F, info=F, 
+                                                      columnDefs = list(list(className = 'dt-left', targets = 0:2))) )
+```
+
+Aside from noting whether the latent variable is categorical or not, these aren't very enlightening, and in the end, it's all just 'latent variable analysis'.
+
+
+
+
+## Lavaan Output
+
+Here I provided the most detailed output from an SEM with lavaan with each component explained.
+
+```{r lavoutputExplained, echo=FALSE}
+summary(alienation, fit=T, standardized=T, rsq=T)
+```
+
+```{r lavaan_iterations, echo=FALSE}
+cat("lavaan (0.5-22) converged normally after  73 iterations")
+```
+
+The first is the iterations, i.e. how many steps the estimation process took to arrive at the final conclusion for parameter estimates. It could potentially be a useful diagnostic if, for example, an alteration to the model resulted in many more iterations, but this is highly dependent on a number of things.  To understand more about this you'd need to get more familiar with maximum likelihood estimation.
+
+```{r lavaan_observations, echo=FALSE}
+cat("  Number of observations                           932")
+```
+
+Next is the sample size, which you should check against your expectations.  You will get two values if you did some something to deal with missing values. One will regard the complete cases only, the other larger one will regard the full data.  As with every other modeling setting, larger samples will result in smaller standard errors, all else being equal.
+
+```{r lavaan_chisq, echo=FALSE}
+cat("  Estimator                                         ML
+  Minimum Function Test Statistic                4.735
+  Degrees of freedom                                 4
+  P-value (Chi-square)                           0.316")
+```
+
+The next part regards the estimation technique along with the standard $\mathcal{\chi}^2$ test that is reported in all SEM studies. This first line tells us we're doing standard maximum likelihood estimation.  Much of the output following will be duplicated if you run a robust version, as it will give you both the standard ML output and the robust results. The `Minimum Function Test Statistic` is the $\mathcal{\chi}^2$ value. The degrees of freedom are essentially the number of observations in terms of covariances and variances minus the number of 'free' parameters, i.e. the number of parameters estimated. Recall that when these are equal, we the model is *just-identified*, and the fit is perfect.  If it's negative, the model is *under-identified* and you will need to go back to the drawing board.  In general, this reflects how far away the model implied covariance matrix is from the observed covariance matrix. See the [SEM chapter][Chi-square test] for more information.
+
+```{r lavaan_baseline, echo=FALSE}
+cat("Model test baseline model:
+
+  Minimum Function Test Statistic             2133.722
+  Degrees of freedom                                15
+  P-value                                        0.000")
+```
+
+The `Model test baseline model` is another $\mathcal{\chi}^2$ test essentially comparing the model fit vs. a model that assumes no covariances among the data, i.e. the worst-fitting model.  As such, this is similar to the model test result we get in standard regression settings, where the null model is an intercept-only model.  It should be statistically significant, but one shouldn't be doing cartwheels in the streets if it is.
+
+```{r lavaan_fit, echo=FALSE}
+cat("User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    1.000
+  Tucker-Lewis Index (TLI)                       0.999")
+```
+
+Next are two of many fit indices, several of which are based on the previous test.  See the [fit section][CFI etc.] for more detail.
+
+```{r lavaan_loglikelihood, echo=FALSE}
+cat("Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -15213.274
+  Loglikelihood unrestricted model (H1)     -15210.906")
+```
+
+Next is the log likelihood values that go into the initial $\mathcal{\chi}^2$. If you multiply their values by two and take the difference, you'll get the `Minimum Function Test Statistic`.  Note that your model is the null model here, and is compared to an unrestricted, i.e. saturated model.
+
+```{r lavaan_ic, echo=FALSE}
+cat("  Number of free parameters                         17
+  Akaike (AIC)                               30460.548
+  Bayesian (BIC)                             30542.783
+  Sample-size adjusted Bayesian (BIC)        30488.792")
+```
+
+Now we see how many parameters were estimated and information criteria.  See if you can look at the results of the coefficients etc. further down to come up with the value of `r alienation@Fit@npar`. The information criteria, which are not in any way specific to SEM and are widely used for model comparison, are based on the log-likelihood, but add a penalty for the number of parameters estimated.  For example, $\textrm{AIC} = -2\mathcal{L} + 2k$, i.e. 2 times the 'user model' log-likelihood plus the log of the number of parameters estimated. The others are variations on this theme. See the [fit indices section][AIC].
+
+```{r lavaan_rmsea, echo=FALSE}
+cat("Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.014
+  90 Percent Confidence Interval          0.000  0.053
+  P-value RMSEA <= 0.05                          0.930
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.007")
+```
+
+These are discussed in the [fit indices section][RMSEA].
+
+```{r lavaan_se, echo=FALSE}
+cat("Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard")
+```
+
+This bit of information that starts the parameter estimates section of output regards how the standard errors are calculated. As an example, one might desire bootstrapped standard errors, and this would be noted here, along with the number of bootstrap iterations.
+
+The rest regards the parameter estimates, i.e. the paths, variances, covariances, and possibly 'intercepts' if examination of mean structure is desired (e.g. as in growth curve models), and these may regard both latent and observed variables.  We will also get any user-defined parameter estimates.  See any of the previous sections for more detail.
+
 
 ## Parallel Process Example
 
@@ -374,6 +496,78 @@ Philosophical, such as Aristotle, Hume, non-Western as well.
 
 
 
+## Software Revisited
+
+### Mplus
+
+Mplus is more or less the gold standard for SEM programming, and there is no SEM-specific package or suite of commands that has all the functionality seen with Mplus.
+
+#### Pros
+
+- Mplus can potentially do practically everything one would want to in the SEM setting
+- Help forum: among the best you'll come across in that the Muthens themselves are willing to answer practically any question quickly
+
+#### Cons
+
+- Cost: very expensive up front, but notably less so to renew
+- License: Most universities will not have a campus-wide license
+- Data processing: This is not what Mplus is for, so don't.
+- Exploration: the lack of a proper programming language environment makes it difficult to do model exploration. It would be easier to use the Mplusautomation in R than do this with Mplus. Even the Mplus website suggests this.
+- User manual: None of the output, which for some models is notably complicated, is explained, and the simulated data examples are not very useful and are overly optimistic relative to what researchers will actually face. Too much space is devoted to identical models with only minor differences.
+- Closed source: not only that, it's practically one programmer doing all the work.
+
+#### Other
+
+It's not clear to me where the future of Mplus lies.  Bengt Muthén, the driving force behind Mplus has been emeritus faculty for some time now, and version 7 has been out without a full release longer than any other version of Mplus. 'Minor' corrections are typically taking several months.  
+
+### R
+
+R does everything, SEM or otherwise. It even helps you use Mplus more efficiently. There's no reason not to use it for SEM.  Between the SEM-specific tools, and other packages that can fill in the remaining functionality, it can do any model Mplus can, and many of them better and more efficiently.
+
+#### Pros
+
+- Cost: free
+- Development: source is freely available, issues are made known and tracked, and multiple people are involved in development.
+- Help forum: possibly several outlets for different packages.
+
+#### Cons
+I would say learning curve, but no one know SEM syntax until they do it, and it will always be different from the syntax typically employed by a statistical program.  If your data is already processed and ready to go, it is no more difficult to run an SEM in R than Stata, and it will be *easier* than Mplus, Amos, etc.
+
+
+### Stata
+
+Stata was very late to the SEM game, and it's not going to do as much as Mplus, but it's pretty easy to use, and is a nice statistical tool besides.  Stata probably has more readily available functionality for instrumental variable regression and other econometrics oriented techniques, but that isn't part of or specific to their SEM commands, and has been around a long time.
+
+#### Pros
+
+- Cost: for the price of Mplus you get an entire statistical software package with vastly more functionality.
+- License: research universities are far more likely to have a campus-wide license for Stata
+- Help forum: the Stata community is generally very friendly and helpful
+
+#### Cons
+
+- Cost: still costs more than free
+- License: You still won't be able to take it home.
+- I have seen issues with SEM in Stata that otherwise run fine with lavaan or Mplus.
+- No SEM specific forum
+- If you are using Mplus and/or R, there is no reason to use Stata for SEM.
+
+### Other
+
+#### Other SEM
+
+Lisrel, EQS etc. are no longer viable these days.  SAS has some functionality but it's rarely used relative to the other options.  SPSS Amos... if you have access to Amos you almost definitely have access to something better and just as easy to use.
+
+#### Other Modeling Tools
+
+Within R one can do mixture/latent class models, growth mixture models, multilevel models, etc.  There is a package that provides functionality for every model depicted in the Mplus manual, and they will almost always provide more tools and output for understanding and exploring those models.  OpenMx, while relatively very difficult compared to other packages, can be used to do any SEM one can think of.
+
+#### Bayesian
+
+Any of these analysis could be run with Bayesian programming languages such as Stan or BUGS, and you could feel more confident about understanding the underlying uncertainty when there are many parameters relative to the sample size.
+
+
+
 ## Resources
 
 This list serves only as a starting point, geared toward those that would be taking the course, though may be added to over time.
@@ -402,10 +596,12 @@ Kline, Rex. *Principles and Practice of Structural Equation Modeling*. A very ap
 
 Beaujean, A. A. (2014). [Latent variable modeling using R: A step by step guide](http://blogs.baylor.edu/rlatentvariable/). New York, NY: Routledge/Taylor and Francis. Lavaan based guide to SEM
 
+[SEMNET forum](http://www2.gsu.edu/~mkteer/semnet.html)
 
 ### lavaan
 
 [lavaan website](http://lavaan.ugent.be/)
+[lavaan google group](https://groups.google.com/forum/#!forum/lavaan)
 
 [Tutorial](http://lavaan.ugent.be/tutorial/tutorial.pdf) 
 
@@ -416,11 +612,12 @@ Beaujean, A. A. (2014). [Latent variable modeling using R: A step by step guide]
 [Interactive lavaan](https://github.com/kylehamilton/lavaan.shiny)
 
 
-### Other SEM
+### Other SEM tools in R
 
 [semTools]: Excellent set of tools for reliability assessment, measurement invariance, fit, simulation etc.
 
 [semPlot]: Visualize your lavaan models.
+
 
 
 [^afrsmoke]: Though it might be less of an effect than simply [being African-American](http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0050185), something I'm sure we can agree is not a causal effect.

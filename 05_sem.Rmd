@@ -32,7 +32,7 @@ Assuming SEM is the right tool for the job, the first analytical step is to look
 
 Next comes an examination of the correlations, possibly broken up to be more digestible or reflect item scales.  SEM does not supernaturally produce correlations in your data, it works on the correlations that are there.  If there are very low correlations, you will have a poor fit when you do the SEM, and possibly even estimation problems. This should not in any way be surprising.
 
-Now you are ready to consider your measurement models. This is a two stage process (at least). First, consider every latent variable on its own, i.e. examine whether the single factor models hold up.  Then you might allow those that are supposed to correlate in some fashion (whether it is a regression relationship or not doesn't matter), maybe even with observed variables.  Again, if you are spotting potential issues here, they aren't going to go away later.  Note that if you're using <span class="pack">lavaan</span> (or Mplus), you can simply write the syntax for a model with constraints specifying zero correlations, then just comment those lines out (recall that latent variables are allowed to correlate by default). 
+Now you are ready to consider your measurement models. This step itself is a two stage process (at least). First, consider every latent variable on its own, i.e. examine whether the single factor models hold up.  Then you might allow those that are supposed to correlate in some fashion (whether it is a regression relationship or not doesn't matter), maybe even with observed variables.  Again, if you are spotting potential issues here, they aren't going to go away later, and in fact, the problems can get worse in terms of fit with the structural component.  Note that if you're using <span class="pack">lavaan</span> (or Mplus), you can simply write the syntax for a model with constraints specifying zero correlations, then just comment those lines out (recall that latent variables are allowed to correlate by default). 
 
 Now you are ready for the SEM, though by this stage you should already be pretty knowledgeable about what to expect.  You should always have multiple models, and I can think of at least three in any SEM setting.  The first should be the simplest-yet-still-theoretically-plausible model.  This would likely resemble a standard regression model, though including latent variables, and possibly multiple outcomes (but at this stage left uncorrelated and considered separately).  The other model is the complex one that might include indirect effects and other posited correlations, i.e. the one that drove you to do the analysis in the first place. Ideally there would also be a model based on a competing theory, and if so, you should definitely run that. And finally, a data driven model. Perhaps your initial explorations of the data, or your interpretation of one of the other two models, suggested something else going on.  Try it out, just be clear about it being more exploratory in your write up.  Theories are great and all, but nature typically proves more interesting, and you don't want to ignore intriguing results just because they didn't align with theory.
 
@@ -227,7 +227,9 @@ digraph {
 
 <br>
 
-The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically.  Higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive vs. negative weights, and the closer to zero the more faded they are.
+The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically.  Note that the disturbances for the endogenous latent variables reflect only unobserved causes, not measurement error, which is captured via the uniquenesses for the indicators.   In other words, the path coefficients from one latent variable to another have been adjusted for measurement error.
+
+Here we see that higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive vs. negative weights, and the closer to zero the more faded they are.
 
 ```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
 semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
@@ -303,7 +305,7 @@ digraph {
 summary(alienation, fit=T, rsq=T)
 ```
 
-To be clear, your interpretations based on standard regression still hold here, as the edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
+To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
 
 ## Issues in SEM
 
@@ -318,7 +320,7 @@ There is no way for us to determine a unique solution for $a$ and $b$, e.g. the 
 - <span class="emph">Underidentified models</span> are models where it is not possible to find a unique estimate for each parameter. These models may have negative degrees of freedom or problematic model structures, as in the example above, and you'll generally know right away there is a problem as whatever software package will note an error, warning, or not provide output.
 - <span class="emph">Overidentified models</span> have positive degrees of freedom, meaning there is more than enough pieces of information to estimate each parameter. It is desirable to have overidentified models as it allows us to use other measures of model fit.
 
-Consider the following CFA example in which we try to estimate a latent variable model with only two observed variables, as would be the case in the prior Alienation measurement models if they are examined in isolation. We have only two variances and one covariance to estimate two paths, the latent variable variance and the two residual variances.  By convention, a path is always fixed at 1 to scale the latent variable, but that still leaves us with four parameters to estimate with only three pieces of information, hence the -1 degrees of freedom and other issues in the output.   
+Consider the following CFA example in which we try to estimate a latent variable model with only two observed variables, as would be the case in the prior Alienation measurement models if they are examined in isolation. We have only two variances and one covariance to estimate two paths, the latent variable variance and the two residual variances.  By convention, a path is always fixed at 1 to scale the latent variable, but that still leaves us with four parameters to estimate with only three pieces of information, hence the -1 degrees of freedom and lack of standard errors in the output.   
 
 ```{r identification, echo=-c(1:4,7,9)}
 LV = rnorm(100)
@@ -388,7 +390,7 @@ digraph {
 ```
 
 
-Now if we had a third manifest variable, we now have $N(N+1)/2 = 3*4/2 =$ six pieces of information, i.e. 3 variances and 3 covariances, to estimate the model, and still seven unknowns. Again though, we usually fix the first loading to 1, so it would be estimated. An alternative approach would be to fix the factor variance to some value (typically 1 to create a standardized latent variable). This will allow us to estimate a unique value for each path.
+Now if we had a third manifest variable, we now have $N(N+1)/2 = 3*4/2 =$ six pieces of information, i.e. 3 variances and 3 covariances, to estimate the model, and still seven unknowns. Again though, we usually fix the first loading to 1, so the model would be estimated. An alternative approach would be to fix the factor variance to some value (typically 1 to create a standardized latent variable). This will allow us to estimate a unique value for each path.
 
 Even so, this is the *just identified* situation, and so the model runs fine, but we won't have any fit measures because we can perfectly reproduce the observed correlation matrix.
 
@@ -462,7 +464,8 @@ digraph {
 Note that in the full alienation model, we have 6*7/2 = 21 variances and covariances, which provides enough to estimate the parameters of the model.
 
 
-Determining identification is difficult for any complex model. Necessary conditions include there being model degrees of freedom $\geq 0$, and scaling all latent variables, but they are not sufficient. In general though, it is enough to know conceptually what the issue is and how the information you have relates to what you can estimate.
+An important point to remember is that identification is based on the covariance matrix (and number of means for some models).  You can have an N of 10,000, but you're still not have enough information to estimate the model.  Note that determining identification is difficult for any complex model. Necessary conditions include there being model degrees of freedom $\geq 0$, and scaling of all latent variables, but they are not sufficient. In general though, it is enough to know conceptually what the issue is and how the information you have relates to what you can estimate.
+
 
 ### Fit
 
@@ -510,7 +513,7 @@ cat('User model versus baseline model:
 
 #### RMSEA
 
-The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don't be rigid with this.  <span class="pack">Lavaan</span> also provides a one-sided test that the RMSE is $\leq .05$, which ideally would be high, but the confidence interval is enough for reporting purposes.
+The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don't be rigid with this.  <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is $\leq .05$, or 'test of close fit', which ideally would be high, but it suffers the backwards logic that is inappropriate for null hypothesis testing.  The confidence interval is enough for reporting purposes. 
 
 ```{r rmseaoutput, echo=FALSE}
 cat('Root Mean Square Error of Approximation:
@@ -598,9 +601,9 @@ The first result is a likelihood ratio test. The model with no indirect path is 
 
 ### Prediction
 
-While the fitted correlation matrix is nice to be able to obtain, it has always struck me a bit odd that one can't even predict the actual data with typical SEM software.  Part of this is due to the fact that the models regard the covariance matrix as opposed to the raw data, and that is the focus in many SEM situations. But in path analysis, measurement models, and SEM where mean structures are of focus (e.g. growth curves), it stands to reason that one would like to get predicted values and/or be able to test a model on new data. Even in more complex models, predictions can be made by fixing parameters at estimated values and supplying new data.
+While the fitted correlation matrix is nice to be able to obtain, it has always struck me a bit odd that one can't even predict the actual data with typical SEM software.  Part of this is due to the fact that the models regard the covariance matrix as opposed to the raw data, and that is the focus in many SEM situations. In addition, most researchers using SEM seem only in explaining correlations.  However, in path analysis, measurement models, and SEM where mean structures are of focus (e.g. growth curves), it stands to reason that one would like to get predicted values and/or be able to test a model on new data. Even in more complex models, predictions can be made by fixing parameters at estimated values and supplying new data.
 
-<span class="pack">Lavaan</span> at least does do this for you, and its <span class="func">lavPredict</span> function allows one to get predicted values for both latent and observed variables, for the current or new data.  In addition, the <span class="pack">semTools</span> package is a great resource for comparing models generally, comparing models across groups, model simulation and so forth.
+<span class="pack">Lavaan</span> at least does do this for you with some models, and its <span class="func">lavPredict</span> function allows one to get predicted values for both latent and observed variables, for the current or new data.  In addition, the <span class="pack">semTools</span> package is a great resource for comparing models generally, comparing models across groups, model simulation and so forth.  Under active development is the capacity to create predictions in more complicated models with latent and observed variables.  If you have *only* observed variables, you might consider the <span class="pack">mediation</span> and <span class="pack">bnlearn</span> packages.
 
 ### Observed covariates
 
@@ -674,12 +677,28 @@ As in our previous path analysis example, one can write a paper on a good fittin
 
 SEM is a powerful modeling approach that generalizes many other techniques, but it simply cannot be used lightly. Strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest.  Go into it with competing ideas, and realize that your theory is wrong from the outset, even if there is evidence that it isn't way off.
 
+## Terminology
+
+- **Measurement model**: the factor analysis component of an SEM
+- **Structural model**: the regression component of an SEM
+- **Fit**: Model fit is something very difficult to ascertain in SEM, and notoriously problematic in this setting, where all proposed cutoffs for a good fit are ultimately arbitrary.  Even if one had most fit indices suggesting a 'good' fit, there's little indication the model has predictive capability.
+- **Exploratory SEM**: a term about as useful as 'exploratory' [factor analysis][Exploratory vs. Confirmatory].  
+- **Fully vs. Partially Latent SEM**: see previous.
+- **MIMIC Model**: see previous.
+- **Mixture Models**: models using categorical latent variables. See the relevant chapter.
+- **Growth Curve Models**: models for longitudinal data setting. See the relevant chapter.
+- **Growth Mixture Models**: guess.
+- **Single indicator models**: In some circumstances, and with the appropriate constraints, a latent variable can have a single indicator.
+- **Multilevel SEM**: a model where your Mplus syntax looks confusing, and then you see the output and long for the good ol' days.
+
+
+
 
 ## R packages used
 
-- lavaan
-- semTools
-- semPlots
+- <span class="pack">lavaan</span>
+- <span class="pack">semTools</span>
+- <span class="pack">semPlots</span>
 
 
 [^bpSEM]: Bollen & Pearl (2013) put the causal aspect this way: 'SEM is an inference engine that takes in two inputs, qualitative causal assumptions and empirical data, and derives two logical consequences of these inputs: quantitative causal conclusions and statistical measures of fit for the testable implications of the assumptions. Failure to fit the data casts doubt on the strong causal assumptions of zero coefficients or zero covariances and guides the researcher to diagnose, or repair the structural misspecifications. Fitting the data does not "prove" the causal assumptions, but it makes them tentatively more plausible. Any such positive results need to be replicated and to withstand the criticisms of researchers who suggest other models for the same data.'.
