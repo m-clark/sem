@@ -20,7 +20,7 @@ Next we turn to <span class="emph">structural equation modeling</span>, where pr
 
 ### Others
 
-Other topics are touched upon for reference, and may be added to in the future. For example <span class="emph">latent growth curve</span> models, are an alternative to a standard mixed model. Also, there are situations where the latent variable might be considered categorical, commonly called <span class="emph">mixture models</span> or cluster analysis, but in some specific contexts might go by other names (e.g. latent class analysis).  Finally, an overview of other types of latent variable or structural equation models, such as item response theory, collaborative filtering etc. may also be provided.
+The three sections just noted are the most developed, and serve as the basis for workshops. Other topics are touched upon for reference, and may also be added to in the future. For example <span class="emph">latent growth curve</span> models, are an alternative to a standard mixed model. Also, there are situations where the latent variable might be considered categorical, commonly called <span class="emph">mixture models</span> or cluster analysis, but in some specific contexts might go by other names (e.g. latent class analysis).  Finally, an overview of other types of latent variable or structural equation models, such as item response theory, collaborative filtering etc. may also be provided.
 
 
 ## Programming Language Choice
