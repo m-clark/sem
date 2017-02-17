@@ -159,7 +159,15 @@ A correlation matrix of 24 psychological tests given to 145 seventh and eight-gr
 
 Harman, H. H. (1976) Modern Factor Analysis, Third Edition Revised, University of Chicago Press, Table 7.4.
 
+### Marsh & Hocevar 1985
 
+#### Description
+
+Data collected using the Self-Description Questionnaire and includes sixteen subscales designed to measure nonacademic status: four intended to measure self-perception of physical ability, four intended to measure self-perception of physical appearance, four intended to measure quality of relations with peers, and four intended to measure quality of relations with parents. The *.dta file has summary  statistics based on 134 students in grade 4 and 251 students in grade 5 from Sydney, Australia. Group 1 is grade 4, group 2 is grade 5.  It's used as an example in the SEM reference manual for Stata.
+
+#### Reference
+
+Marsh, H. W. and Hocevar, D., (1985). "Application of confirmatory factor analysis to the study of self-concept: First- and higher order factor models and their invariance across groups", _Psychological Bulletin_, 97: 562-582.
 
 
 ## Terminology in SEM
@@ -255,7 +263,7 @@ cat("Model test baseline model:
   P-value                                        0.000")
 ```
 
-The `Model test baseline model` is another $\mathcal{\chi}^2$ test essentially comparing the model fit vs. a model that assumes no covariances among the data, i.e. the worst-fitting model.  As such, this is similar to the model test result we get in standard regression settings, where the null model is an intercept-only model.  It should be statistically significant, but one shouldn't be doing cartwheels in the streets if it is.
+The `Model test baseline model` is another $\mathcal{\chi}^2$ test essentially comparing the model fit vs. a model that assumes no covariances among the data, i.e. the worst-fitting model.  As such, this is similar to the model test result we get in standard regression settings, where the null model is an intercept-only model.  It should be statistically significant, but one shouldn't be doing cartwheels in the streets if it is.  However, one can use it to test an another (nested) <span class="objclass">lavaan model</span> result for statistical comparison.
 
 ```{r lavaan_fit, echo=FALSE}
 cat("User model versus baseline model:

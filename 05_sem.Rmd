@@ -51,26 +51,32 @@ SEM works best with strong causal theory and settings where those claims can be 
 
 ## SEM Example
 
-The following model is a classic example from Wheaton et al. (1977), which used longitudinal data to develop a model of the stability of alienation from 1967 to 1971, accounting for socioeconomic status as a covariate. Each of the three factors have two indicator variables, SES in 1966 is measured by education and occupational status in 1966 and alienation in both years is measured by powerlessness and anomia. The structural component of the model hypothesizes that SES in 1966 influences both alienation in 1967 and 1971 and alienation in 1967 influences the same measure in 1971.  We also let the disturbances correlate from one time point to the next.
+The following model is a classic example from Wheaton et al. (1977), which used longitudinal data to develop a model of the stability of alienation from 1967 to 1971, accounting for socioeconomic status as a covariate. Each of the three factors have two indicator variables, SES in 1966 is measured by education and occupational status in 1966 and alienation in both years is measured by powerlessness and anomie (a feeling of being lost with regard to society). The structural component of the model hypothesizes that SES in 1966 influences both alienation in 1967 and 1971 and alienation in 1967 influences the same measure in 1971.  We also let the disturbances correlate from one time point to the next.
 
-```{r wheatonSetup, echo=10, results='hide'}
-library(lavaan)
-# The classic Wheaton et. al. (1977) model 
-# panel data on he stability of alienation
-lower <- '
- 11.834,
-  6.947,    9.364,
-  6.819,    5.091,   12.532,
-  4.783,    5.028,    7.495,    9.986,
- -3.839,   -3.889,   -3.841,   -3.625,   9.610,
--21.899,  -18.831,  -21.748,  -18.775,  35.522,  450.288 '
- 
-# convert to a full symmetric covariance matrix with names
-wheaton.cov <- getCov(lower, names=c("anomia67","powerless67", "anomia71",
-                                     "powerless71","education","sei"))
- 
+```{r wheatonSetup, echo=19:25, results='hide'}
+# library(lavaan)
+# The classic Wheaton et. al. (1977) model panel data on the stability of
+# alienation
+# lower = '
+#  11.834,
+#   6.947,    9.364,
+#   6.819,    5.091,   12.532,
+#   4.783,    5.028,    7.495,    9.986,
+#  -3.839,   -3.889,   -3.841,   -3.625,   9.610,
+# -21.899,  -18.831,  -21.748,  -18.775,  35.522,  450.288 '
+#  
+# # convert to a full symmetric covariance matrix with names
+# wheaton.cov = getCov(lower, names=c("anomia67","powerless67", "anomia71",
+#                                      "powerless71","education","sei"))
+# 
+# write.csv(wheaton.cov, file='data/wheaton_cov.csv') 
+# write.csv(cov2cor(wheaton.cov), file='data/wheaton_cor.csv')
+
+# In this example we import the covariance matrix
+wheaton.cov = as.matrix(read.csv('data/wheaton_cov.csv', row.names=1))
+
 # the model
-wheaton.model <- '
+wheaton.model = '
   # measurement model
     ses     =~ education + sei
     alien67 =~ anomia67 + powerless67
@@ -87,7 +93,7 @@ wheaton.model <- '
   # Indirect effect
     IndirectEffect := sa*aa
 '
- 
+
 alienation <- sem(wheaton.model, sample.cov=wheaton.cov, sample.nobs=932)
 ```
 
@@ -302,7 +308,7 @@ digraph {
 
 
 ```{r wheatonResults, echo=FALSE}
-summary(alienation, fit=T, rsq=T)
+summary(alienation, fit=T, rsq=T, std=T)
 ```
 
 To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
@@ -321,19 +327,6 @@ There is no way for us to determine a unique solution for $a$ and $b$, e.g. the 
 - <span class="emph">Overidentified models</span> have positive degrees of freedom, meaning there is more than enough pieces of information to estimate each parameter. It is desirable to have overidentified models as it allows us to use other measures of model fit.
 
 Consider the following example in which we try to estimate a latent variable model with only two observed variables, as would be the case in the prior Alienation measurement models if they are examined in isolation. We have only two variances and one covariance to estimate two paths, the latent variable variance and the two residual variances.  By convention, a path is fixed at 1 to scale the latent variable, but that still leaves us with four parameters to estimate with only three pieces of information, hence the $3 - 4 = -1$ degrees of freedom and lack of standard errors in the output.   
-
-```{r identification, echo=-c(1:4,7,9)}
-LV = rnorm(100)
-x1 = 0 + .5*LV + rnorm(100, sd=sqrt(.75))
-x2 = 0 + .7*LV + rnorm(100, sd=sqrt(.5))
-x3 = 0 + .9*LV + rnorm(100, sd=sqrt(.2))
-modelUnder = 'LV =~ x1 + x2'
-modelJust = 'LV =~ x1 + x2 + x3'
-library(lavaan)
-underModel = cfa(modelUnder, data=cbind(x1,x2,x3))
-# semPlot::semPaths(underModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5503', label.color='#ffffff')
-summary(underModel)
-```
 
 ```{r underidentified, echo=F, dev='svglite'}
 tags$div(style="width:100%; margin:auto auto;",
@@ -390,16 +383,24 @@ digraph {
 ```
 
 
+```{r identification, echo=-c(1:4,7,9)}
+LV = rnorm(100)
+x1 = 0 + .5*LV + rnorm(100, sd=sqrt(.75))
+x2 = 0 + .7*LV + rnorm(100, sd=sqrt(.5))
+x3 = 0 + .9*LV + rnorm(100, sd=sqrt(.2))
+modelUnder = 'LV =~ x1 + x2'
+modelJust  = 'LV =~ x1 + x2 + x3'
+library(lavaan)
+underModel = cfa(modelUnder, data=cbind(x1,x2,x3))
+# semPlot::semPaths(underModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5503', label.color='#ffffff')
+summary(underModel)
+```
+
+
+
 If we had a third manifest variable, we now have $N(N+1)/2 = 3*4/2 = 6$ pieces of information, i.e. 3 variances and 3 covariances, to estimate the model, and still seven unknowns. Again though, we usually fix the first loading to 1 rather than estimate it, and so the model would be identified. An alternative approach would be to fix the factor variance to some value (typically 1 to create a standardized latent variable). This will allow us to estimate a unique value for each path.
 
 Even so, this is the *just-identified* situation, and so the model runs fine, but we won't have any fit measures because we can perfectly reproduce the observed correlation matrix.
-
-```{r justID, echo=-2}
-justModel = cfa(modelJust, data=cbind(x1,x2,x3))
-# semPlot::semPaths(justModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5503', label.color='#ffffff')
-summary(justModel, fit=T)
-```
-
 
 
 ```{r justid, echo=F, dev='svglite'}
@@ -461,10 +462,18 @@ digraph {
 ```
 
 
-Note that in the full alienation model, we have 6*7/2 = 21 variances and covariances, which provides enough information to estimate the `r alienation@Fit@npar` parameters of the model.
+```{r justID, echo=-2}
+justModel = cfa(modelJust, data=cbind(x1,x2,x3))
+# semPlot::semPaths(justModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5503', label.color='#ffffff')
+summary(justModel, fit=T)
+```
 
 
-An important point to remember is that identification is based on the covariance matrix (and number of means for some models).  You can have an N of 10,000, but you're still not have enough information to estimate the model.  Note that determining identification is difficult for any complex model. Necessary conditions include there being model degrees of freedom $\geq 0$, and scaling of all latent variables, but they are not sufficient. In general though, it is enough to know conceptually what the issue is and how the information you have relates to what you can estimate.
+
+Note that in the alienation model above, we have 6*7/2 = 21 variances and covariances, which provides enough information to estimate the `r alienation@Fit@npar` parameters of the model.  Thus had we run a two indicator measurement model on just one of those factors, it would not be identified without fixing some parameters. Allowing correlations among latent variables allows more information from the covariance matrix to be brought to bear.
+
+
+The important point to remember is that identification is based on the covariance matrix (and number of means for some models).  You can have an N of 10,000, but still may not have enough information to estimate the model.  Note that determining identification is difficult for any complex model. Necessary conditions include there being model degrees of freedom $\geq 0$, and scaling of all latent variables, but they are not sufficient. In general though, it is enough to know conceptually what the issue is and how the information you have relates to what you can estimate.
 
 
 ### Fit
@@ -478,7 +487,6 @@ fitMeasures(alienation, c('chisq', 'df', 'pvalue', 'cfi', 'rmsea', 'srmr', 'AIC'
 
 #### Chi-square test
 
-Conceptually the $\chi^2$ test measures the discrepancy between the observed correlations and those implied by the model.  In the [graphical model section](#path-analysis), we actually gave an example of reproducing a correlation from a path analysis. In general, the model goal is to reproduce them as closely as we can.  This test compares the fitted model with a (saturated) model that does not have any degrees of freedom. The degrees of freedom for this test are equal to the data (variances + covariances) minus the number of parameters estimated, and that is why when you have df=0 in a just-identified situation, you get no fit statistics.  A non-significant $\chi^2$ suggests our model-implied correlations are not statistically different from those we observe, so yay!
 
 ```{r chisqOutput, echo=F}
 cat(
@@ -490,17 +498,16 @@ cat(
 )
 ```
 
+Conceptually, the $\chi^2$ test measures the discrepancy between the observed correlations and those implied by the model.  In the [graphical model section](#path-analysis), we actually gave an example of reproducing a correlation from a path analysis. In general, the model goal is to reproduce them as closely as we can.  This test compares the fitted model with a (saturated) model that does not have any degrees of freedom. The degrees of freedom for this test are equal to the data (variances + covariances) minus the number of parameters estimated, and that is why when you have df=0 in a just-identified situation, you get no fit statistics.  A non-significant $\chi^2$ suggests our model-implied correlations are not statistically different from those we observe, so yay!
 
 **Or not**.  Those familiar with null-hypothesis testing know that one cannot accept a null hypothesis, and attempting to do so is fundamentally illogical.    Other things that affect this measure specifically include multivariate non-normality, the size of the correlations (larger ones are typically related to larger predicted vs. observed discrepancies), unreliable measures (can actually make this test fail to reject), and sample size (same as with any other model scenario and statistical significance).
 
-So if it worries you that a core measure of model fit in SEM is fundamentally problematic, good. As has been said before, no single measure will be good enough on its own, so gather as much info as you can.  Some suggest to pay more attention to the $\chi^2$ result, but to me, the flawed logic is something that can't really be overcome.  If you use it with appropriate null hypothesis testing logic, a significant $\chi^2$ test can tell you that something is potentially wrong with the model.
+So if it worries you that a core measure of model fit in SEM is fundamentally problematic, good. As has been said before, no single measure will be good enough on its own, so gather as much info as you can.  Some suggest to pay more attention to the $\chi^2$ result, but to me, even if useful in some sense, the flawed logic is something that can't really be overcome.  If you use it with appropriate null hypothesis testing logic, a significant $\chi^2$ test can tell you that something is potentially wrong with the model.
 
-- Note that <span class="pack">lavaan</span> also provides a Chi-square test which compares the current model to a model in which all paths are zero, and is essentially akin to the likelihood ratio test we might use in standard model settings (e.g. comparing against an intercept only model).  For that test, we want a statistically significant result.  However, one can specify a prior model conducted with <span class="pack">lavaan</span> to test against specifically (i.e. to compare nested models).
+Note that <span class="pack">lavaan</span> also provides a Chi-square test which compares the current model to a model in which all paths are zero, and is essentially akin to the likelihood ratio test we might use in standard model settings (e.g. comparing against an intercept only model).  For that test, we want a statistically significant result.  However, one can specify a prior model conducted with <span class="pack">lavaan</span> to test against specifically (i.e. to compare nested models), but there is a [specific function][Model Comparison Example] for that also, and it would provide more as well.
 
 
 #### CFI etc.
-
-The <span class="emph">Comparative Fit Index</span> compares the fitted model to a null model that assumes there is no relationship among the measured items. It ranges from 0 to 1, and CFI values larger than .9 or especially .95 are typically desired, but like other completely arbitrary cutoffs those values guarantee nothing. Others include the <span class="emph">Tucker-Lewis Fit Index</span>, which is provided in standard <span class="pack">lavaan</span> output, but there are more <span class="emph">incremental fit indices</span> where those come from.
 
 ```{r cfioutput, echo=FALSE}
 cat('User model versus baseline model:
@@ -510,10 +517,10 @@ cat('User model versus baseline model:
 )
 ```
 
+The <span class="emph">Comparative Fit Index</span> compares the fitted model to a null model that assumes there is no relationship among the measured items. It ranges from 0 to 1, or rather it is rounded to fall between 0 and 1, and CFI values larger than .9 or especially .95 are typically desired, but like other completely arbitrary cutoffs those values guarantee nothing. Others include the <span class="emph">Tucker-Lewis Fit Index</span>, which is provided in standard <span class="pack">lavaan</span> output, but there are more <span class="emph">incremental fit indices</span> where those come from.  Both of these are sensitive to the average correlations, to the point that adding meaningful covariates could actually worsen fit if they aren't notably correlated with other variables in the model.  You only need to report one, as they are generally notably correlated.
+
 
 #### RMSEA
-
-The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don't be rigid with this.  <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is $\leq .05$, or 'test of close fit', which ideally would be high.  The confidence interval is enough for reporting purposes. 
 
 ```{r rmseaoutput, echo=FALSE}
 cat('Root Mean Square Error of Approximation:
@@ -521,14 +528,18 @@ cat('Root Mean Square Error of Approximation:
   RMSEA                                          0.014
   90 Percent Confidence Interval          0.000  0.053
   P-value RMSEA <= 0.05                          0.930
+')
+```
 
-Standardized Root Mean Square Residual:
+The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don't be rigid with this.  <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is $\leq .05$, or 'test of close fit', which ideally would be high.  The confidence interval is enough for reporting purposes. 
+
+#### SRMR
+
+```{r srmroutput, echo=F}
+cat('Standardized Root Mean Square Residual:
 
   SRMR                                           0.007')
 ```
-
-
-#### SRMR
 
 The standardized root mean squared residual is the mean absolute correlation residual, i.e. the difference between the observed and model-implied correlations. Historical suggestions are to also look for values less than .05, but it is better to simply inspect the residuals and note where there are large discrepancies.
 
@@ -552,16 +563,16 @@ All of the above, while rooted in model comparison approaches, are by themselves
 
 #### AIC
 
-AIC is a good way to compare models in SEM just as it is elsewhere, where a penalty is imposed on the likelihood based on the number of parameters estimated, i.e. model complexity.  The value by itself is not useful, but the 'better' model will have a lower value. A natural question arises as to how low is low enough to prefer one model over another, but this is impossible to answer because the value of AIC varies greatly with the data and model in question. However, this frees you to know which is 'better', at least in terms of AIC, while still allowing you to consider the relative merits of the models being considered.  However, if the lower AIC is associated with the simpler model, you'd be hard-pressed to justify not taking it.  You could also bootstrap an AIC difference if you really desired a statistical way to determine 'lower by enough'.  
+AIC is a good way to compare models in SEM just as it is elsewhere, where a penalty is imposed on the likelihood based on the number of parameters estimated, i.e. model complexity.  The value by itself is not useful, but the 'better' model will have a lower value. A natural question arises as to how low is low enough to prefer one model over another, but this is impossible to answer because the value of AIC varies greatly with the data and model in question. However, this frees you to consider the relative merits of the models being considered, while knowing one has been deemed 'better', at least in terms of AIC.  However, if the lower AIC is associated with the simpler model, you'd be hard-pressed to justify not taking it.  Some suggest calculating $e^{\frac{\mathrm{AIC}_{min}-\mathrm{AIC}_{other}}{2}}$ to obtain the *relative* probability of a model vs the minimum AIC model.  But that just puts leaves you with a different arbitrary cutoff to consider.
 
 A couple other things. Even if not nested, models must have the same variables for them to be compared, which may require you to constrain certain paths to be zero.  Also, AIC can be used to compare just-identified models to over-identified ones.
 
 #### BIC
 
-While BIC is very popularly used in SEM, it has known issues relative to AIC if predictive capability is concerned. Most SEM programs will give you AIC as well. As such, one can probably ignore the BIC, but they will likely agree. Note that while BIC has a Bayesian interpretation, using it doesn't actually put you in a Bayesian context, and if you were using a Bayesian approach, WAIC or DIC would be appropriate.  If you aren't using a Bayesian approach, then AIC would likely be preferable in most circumstances.  The BIC has a different penalty than AIC, and is not a measure based on predictive performance, which is what we typically want in model selection.
+While BIC is very popularly used in SEM, it has known issues relative to AIC if predictive capability is concerned. Most SEM programs will give you AIC as well. As such, one can probably ignore the BIC, but they will likely agree. Note that while BIC has a Bayesian interpretation, using it doesn't actually put you in a Bayesian context, and if you were using a Bayesian approach, other measures would be used.  If you aren't using a Bayesian approach, then AIC would likely be preferable in most circumstances.  The BIC has a different penalty than AIC, and is not a measure based on predictive performance, which is what we typically want in model selection.
 
 
-#### Example
+#### Model Comparison Example
 
 Let's compare the previous model to one without the indirect effect and in which the SES and Alienation contributions are independent (i.e. just make the previous code change to `alien67 ~ 0*ses`).  We'll use the <span class="pack">semTools</span> package for easy side by side comparison via the <span class="func">compareFit</span> function[^compareFit].
 
@@ -610,17 +621,17 @@ While the fitted correlation matrix is nice to be able to obtain, it has always 
 
 ### Observed covariates
 
-While I would hope it is by now, just to be clear, SEM doesn't only have to be about structural relations among latent variables.  At any point observed covariates can be introduced to the structural model as well, and this is common practice.  As an example, the alienation model is fundamentally wrong (from a causal perspective if that's of particular interest), as it doesn't include many background or other characteristics we'd commonly collect on individuals and which might influence feelings of alienation.
+While I would hope it is by now, just to be clear, SEM doesn't only have to be about structural relations among latent variables.  At any point observed covariates can be introduced to the structural model as well, and this is common practice.  As an example, the alienation model is fundamentally inadequate, as it doesn't include many background or other characteristics we'd commonly collect on individuals and which might influence feelings of alienation.
 
 
 ### Interactions
 
-Interactions among both observed and latent variables can be included in SEM, and have the same interpretation as they would in any regression model.  With latent variables, one can think of adding a latent variable whose indicator variables consists of product terms of the indicators for the latent variables we want to have an interaction. See <span class="func">indProd</span> and <span class="func">probe2WayMC</span> in the <span class="pack">semTools</span> package. As noted previously, a common term for this in SEM terminology is <span class="emph">moderation</span>.  While many depictions in SEM suggest that one variable *moderates* another, statistically speaking, just like with standard interactions it is arbitrary whether one says **A** interacts with/moderates **B** or vice versa, and this fact doesn't change just because we are conducting an SEM.  One would need to have a specific causal setup as described previously to test for moderation.
+Interactions among both observed and latent variables can be included in SEM, and have the same interpretation as they would in any regression model.  With latent variables, one can think of adding a latent variable whose indicator variables consists of product terms of the indicators for the latent variables we want to have an interaction. See <span class="func">indProd</span> and <span class="func">probe2WayMC</span> in the <span class="pack">semTools</span> package. As noted previously, a common term for this in SEM terminology is <span class="emph">moderation</span>.  While many depictions in SEM suggest that one variable *moderates* another, statistically speaking, just like with standard interactions, it is arbitrary whether one says **A** interacts with/moderates **B** or vice versa, and this fact doesn't change just because we are conducting an SEM.  [As described previously][Terminology issues], one would need to have a specific causal setup to test for moderation.
 
 
 ### Estimation
 
-In everything demonstrated thus far, we have been using standard maximum likelihood to estimate the parameters.  This may not be the best choice for various situations. As an example, some estimation procedures provide 'robust' standard errors, essentially the equivalent of Huber-White standard errors in the SEM context. Other procedures may be better for categorical data situations.  The following list comes from the Mplus manual, and most of these are available in <span class="pack">lavaan</span>.  
+In everything demonstrated thus far, we have been using standard maximum likelihood to estimate the parameters.  This may not be the best choice for various situations. As an example, some estimation procedures provide 'robust' standard errors, essentially the equivalent of Huber-White standard errors in the SEM context. One should probably ask for these robust or bootstrapped standard errors almost as a default.  Other procedures may be better for categorical data situations.  The following list comes from the Mplus manual, and most of these are available in <span class="pack">lavaan</span>.  
 
 - **ML**: maximum likelihood parameter estimates with conventional standard errors and chi-square test statistic
 - **MLM**: maximum likelihood parameter estimates with standard errors and a mean-adjusted chi-square test statistic that are robust to non-normality. The chi-square test statistic is also referred to as the Satorra-Bentler chi-square.
@@ -656,7 +667,7 @@ Kline's third edition text listed over 50(!) ways in which one could fool themse
 
 If you don't have at least a thousand observations, and your primary means of understanding the model is through statistically significant paths under the assumption of stable results, you will probably only be able to conduct (possibly unrealistically) simple SEM models, or just the measurement models for scale development, or only structural models with observed variables (path analysis).  Even with simpler modeling situations and with truly ideal data circumstances (which rarely happens in practice), multiple studies have shown one should have several hundred observations for best results.  In the simple alienation model above, we already are dealing with 17 parameters to estimate, and it doesn't include any background covariates of the individuals, which is unrealistic.  Furthermore, because it's a mediation model, adding such variables might require additional direct and indirect paths, time-varying covariates that would have effects at both years, etc., and the number of parameters could balloon quite quickly.
 
-One will see many articles of published research with low sample sizes using SEM.  This doesn't make it correct to do so, and one should be highly suspicious of the results suggested in those papers, as they are overfit and/or are possibly not including relevant variables.
+One will see many articles of published research with low sample sizes using SEM.  This doesn't make it acceptable practice, only perhaps that the journal editors and reviewers of the article are not methodologists. One should be highly cautious of the results suggested in those papers, as they are overfit and/or are possibly not including relevant variables.
 
 ### Poor data
 
@@ -664,7 +675,7 @@ If the correlations among the data are low, one isn't going to magically have st
 
 ### Naming a latent variable doesn't mean it exists
 
-While everything may turn out well for one's measurement model, and the results in keeping with theory, this doesn't make it so.  This is especially the case with less reliable measures. Latent constructs require operational definitions and other considerations in order to be useful, and rule out that one isn't simply measuring something else, or that it makes sense that such a construct has real (physical ties).
+We discussed the naming fallacy in the section on [latent variables][Latent Variables], and it continues to exist when exploring structural relations among them. While everything may turn out well for one's measurement model, and the results in keeping with theory, this doesn't make it so.  This is especially the case with less reliable measures. Latent constructs require operational definitions and other considerations in order to be useful, and rule out that one isn't simply measuring something else, or that it makes sense that such a construct has real (physical ties).
 
 As an example, many diagnoses in the Diagnostic and Statistical Manual of Mental Disorders have not even been shown to exist via a statistical approach like SEM[^dsm], while others are simply assumed to exist, and even presumably (subsequently) supported by measurement models (often with low N), only to be shown to have no ties to any underlying physiology.
 
@@ -674,7 +685,7 @@ Ignoring residuals, warning messages, etc. is a sure path to trying to interpret
 
 ### Ignoring performance
 
-As in our previous path analysis example, one can write a paper on a good fitting model with statistically significant results, and not explain the targets of interest very well on a practical level. Check things like R-square (and accuracy if binary targets) when running your models.
+As in our previous path analysis example, one can write a paper on a good fitting model with statistically significant results, and not explain the targets of interest very well on a practical level. When possible, check things like R-square (and accuracy if binary targets) when running your models, compare them with AIC etc.
 
 ## Summary
 
