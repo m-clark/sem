@@ -48,7 +48,7 @@ For exercises, open the exercises.nb.html
 
 Or go to: 
 
-[m-clark.github.io/docs/sem/exercises.nb.html](http://m-clark.github.io/docs/sem/exercises.nb.html)
+[m-clark.github.io/docs/sem/exercises.html](http://m-clark.github.io/docs/sem/exercises.html)
 
 
 
