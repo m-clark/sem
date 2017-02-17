@@ -90,7 +90,7 @@ semPlot::semPaths(satistifaction_ModelResults, residuals=F, style='lisrel', size
                   edgeLabels='', residScale=10, nCharNodes=6, exoVar=F, rotation=2)
 ```
 
-First get the data in, then set up your model code.  The following provides a hint. Note that in this model you have *two* outcomes/endogenous varialabes, so write the model code pertaining to each.
+First get the data in, then set up your model code.  The following provides a hint. Note that in this model you have *two* outcomes/endogenous variables, so write the model code pertaining to each.
 
 ```{r pa1Hint1, eval=FALSE, code.fold='hide'}
 mtf = read.csv('data/monitorfuture.csv')
@@ -225,7 +225,7 @@ ggplot2::qplot(degree(g), geom='bar')
 
 ### Part 0 PCA and FA comparison
 
-An long-running personality theory posits 5 primary latent personality traits: Agreeableness, Conscientiousness, Extroversion, Neuroticism, and Opennness. 25 personality self report items taken from the International Personality Item Pool (ipip.ori.org). The data from 2800 subjects are included here.
+An long-running personality theory posits 5 primary latent personality traits: Agreeableness, Conscientiousness, Extroversion, Neuroticism, and Openness. 25 personality self report items taken from the International Personality Item Pool (ipip.ori.org). The data from 2800 subjects are included here.
 
 ```{r echo=FALSE, eval=FALSE}
 library(psych); library(tidyverse)
@@ -284,7 +284,7 @@ sapply(1:7, function(nf) fa(bfi_trim, nfactors = nf)$BIC)
 
 ### Part 1
 
-Data: National Longitudinal Survey of Youth (1997, NLSY97), which investigates the transition from youth to adulthood. For this example, a series of questions asked to the participants in 2006 pertaining to the government’s role in promoting well-being will be investigated. Questions regarded the government's responsibility for following issues: provide jobs for everyone, keep prices under control, provide health care, provide for elderly, help industry, provide for unemployed, reduce income differences, provide college financial aid, provide decent housing, protect environment.  They have four values 1:4, which range from 'definitely should be' to 'definitely should not be'.
+Data: National Longitudinal Survey of Youth (1997, NLSY97), which investigates the transition from youth to adulthood. For this example, a series of questions asked to the participants in 2006 pertaining to the government's role in promoting well-being will be investigated. Questions regarded the government's responsibility for following issues: provide jobs for everyone, keep prices under control, provide health care, provide for elderly, help industry, provide for unemployed, reduce income differences, provide college financial aid, provide decent housing, protect environment.  They have four values 1:4, which range from 'definitely should be' to 'definitely should not be'.
 
 
 1. Run a factor analysis using the `'data/nlsy97_governmentNumeric.csv'` dataset.  Your first model will have all items (sans ID) loading on a single factor, with a name of your choosing.  With <span class="pack">lavaan</span>, use the <span class="func">cfa</span> function.  Recall that you give it the model code (as a <span class="objclass">string</span>) and a `data = ` argument like `cfa(mod, data=mydata)`.
@@ -346,15 +346,13 @@ summary(compareFit(model1, model2))
 
 ## SEM
 
-If time allows do both, otherwise, pick one of the following.
+If time allows do both, otherwise, pick one of the following.  You will probably get more out choosing one and following the process steps outlined in the SEM chapter.
 
 ### Exercise 1
 
-The data for this exercise comes from a paper published by Marsh and Hocevar in 1985. The data regards information on 385 fourth and fifth grade students who filled out a ‘Self-Description Questionnaire.’ The questionnaire has 16 items, four of which measure physical ability, four measure physical appearance, four measure relations with peers and the final four measure relations with parents. The data is saved in the file ‘Marsh85.dta’ as summary data with means, standard deviations and correlations.  However you will just use 'Marsh85_SEMExercise.csv', which is the covariance matrix.
+The data for this exercise comes from an article by Marsh and Hocevar in 1985. The data regards information on 385 fourth and fifth grade students who filled out a 'Self-Description Questionnaire.' The questionnaire has 16 items, four of which measure self-perception of physical ability, four measure self-perception of physical appearance, four measure quality of relations with peers and the final four measure quality of relations with parents. The data in the file 'Marsh85.dta' has summary information with means, standard deviations and correlations.  Rather than raw data, we will be using the sample covariance matrix with sample size equal to 385. 
 
-We are interested in determining how a student’s physical appearance and physical ability might predict relationships with their peers. The diagram for the model of interest is shown below.
-
-<br><br><br>
+We are interested in determining how a student's physical appearance and physical ability might predict relationships with their peers. The diagram for the model of interest is shown below.
 
 ```{r sem1, echo=FALSE, results='hide'}
 marsh = haven::read_dta('../data/Marsh85.dta')  # grade 1 and 2 are 4 and fifth, first two rows of each are the means and sd
@@ -400,11 +398,10 @@ semPlot::semPaths(peerRel_Results, layout='tree2', style='lisrel', covAtResidual
                   label.color='#ffffff') 
 ```
 
+
+Note below how you can detect the structure visually.  Physical appearance hangs together well and is positively correlated with the other factors, which are more strongly correlated with each other.  This is extremely important in factor analysis and SEM, as they deal with the correlation matrix, you should often be able to see the structure before modeling even begins with appropriate visual tools.
+
 <br>
-
-The following will get you started. All you need to do is fill in the model code. Rather than raw data, we will be using the sample covariance matrix with sample size equal to 385. Note how you can detect the structure visually.  Physical ability hangs together well and is positively correlated with the other factors, which are more strongly correlated with each other.  This is extremely important in factor analysis and SEM, as they deal with the correlation matrix, you should often be able to see the structure before modeling even begins.
-
-
 
 ```{r corplot, echo=FALSE, eval=T, message=F, warning=F}
 # corrplot::corrplot(cov2cor(marshCov), order='hclust', addrect=3, rect.col='#ff5503', tl.col='gray50')
@@ -413,6 +410,8 @@ suppressMessages(lazerhawk::corrheat(cov2cor(marshCov), width='100%') %>%
 ```
 
 <br>
+
+The following will get you started. *All you need to do is fill in the model code*. Take your time, and start with each latent variable, and then add the structural/regression component. Recall that you can name the latent variables whatever you want. Refer back to the document examples as needed.
 
 ```{r sem1Starter, eval=FALSE}
 load('data/Marsh85_SEMExercise.RData')
@@ -446,7 +445,6 @@ In this second example, we will use the classic Political Democracy dataset used
 
 The model we wish to estimate is in according to the following diagram.
 
-<br><br>
 
 ```{r sem2, echo=F, dev='svglite'}
 poldem = read.csv('../data/PoliticalDemocracy.csv')
@@ -467,18 +465,16 @@ semPlot::semPaths(poldem_Results, layout='tree2', style='lisrel', covAtResiduals
                   label.color='#ffffff') 
 ```
 
-<br><br><br>
 
 ```{r corplotsem2, echo=FALSE, eval=F}
 # corrplot::corrplot(cor(poldem), order='hclust', addrect=3, rect.col='#ff5503', tl.col='gray50')
 lazerhawk::corrheat(cor(poldem))
 ```
 
-<br><br>
 
-Here is some starter code. All you need to do is fill in the model code.
+Here is some starter code. *All you need to do is fill in the model code*. Take your time, and start with each latent variable, and then add the structural/regression component. Recall that you can name the latent variables whatever you want. Refer back to the document examples as needed.
 
-<br><br>
+<br>
 
 ```{r sem2Starter, eval=FALSE}
 poldem = read.csv('data/PoliticalDemocracy.csv')
@@ -488,7 +484,7 @@ summary(poldem_Results, standardized=T, fit=T, rsquare=T)
 ```
 
 
-<br><br>
+<br>
 
 - Write a brief summary in terms of an assessment of the measurement components of the model, overall impression of model fit, and specifics of the structural relations (i.e. the paths among the latent variables) and model performance in terms of R^2^.
 
