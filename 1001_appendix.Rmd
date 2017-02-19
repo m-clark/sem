@@ -170,6 +170,20 @@ Data collected using the Self-Description Questionnaire and includes sixteen sub
 Marsh, H. W. and Hocevar, D., (1985). "Application of confirmatory factor analysis to the study of self-concept: First- and higher order factor models and their invariance across groups", _Psychological Bulletin_, 97: 562-582.
 
 
+### Abortion Attitudes
+
+#### Description
+The data contain responses given by 410 individuals to four out of seven items concerning attitude to abortion. A small number of individual did not answer to some of the questions and this data set contains only the complete cases.  379 individuals answered to the following questions after being asked if the law should allow abortion under the circumstances presented under each item.
+
+- Item 1: The woman decides on her own that she does not.
+- Item 2: The couple agree that they do not wish to have a child.
+- Item 3: The woman is not married and does not wish to marry the man.
+- Item 4: The couple cannot afford any more children.
+
+#### Reference
+
+McGrath, K. and Waterton, J. (1986) British social attitudes, 1983-86 panel survey.
+
 ## Terminology in SEM
 
 This just puts the terminology sections of the previous chapters together in one place.
