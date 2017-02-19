@@ -26,6 +26,7 @@ plogis(logit)
 Now let's speak more generally, and say that our response $y$ is the probability that a person answers correctly. In terms of a logistic regression model: 
 
 $$prob(y=1) = f(X)$$
+
 In other words, the probability of choosing the correct response (or simply endorsing an attitude or many other scenarios), $y=1$, is some function of the X variables, which will at a minimum be the items for an IRT model.
 
 
@@ -45,29 +46,40 @@ $$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}})$$
 
 IRT often utilizes a different parameterization, though the results are the same.  
 
-There is an additional parameter, $\alpha$, item discrimination, which refers to the item's ability to distinguish one person from another. In the Rasch model it is held constant, and originally at 1. If we add it to the mix we have:
+There is an additional parameter, $\alpha$, item discrimination, which refers to the item's ability to distinguish one person from another. In the Rasch model it is held constant, and in its original formulation it was fixed at 1. If we add it to the mix we have:
 
 $$prob(y=1|\theta, \delta) = \frac{1}{1+e^{\alpha(\delta_j-\theta_i)}}$$
+
 As we will see later, the two parameter IRT model estimates the discrimination parameter of item. Note also, the ltm package we will use doesn't fix the discrimination parameter to be 1 in the model, so you'll actually have an estimate for it, but it's still constant across items.
 
 
 ```{r ltm_1pm}
 library(ltm); library(tidyverse)
-rasch_mod1 = rasch(Abortion, IRT.param=F)
-rasch_mod2 = rasch(Abortion, IRT.param=T)
-# rasch_mod = rasch(Abortion, IRT.param=T, constraint = cbind(ncol(Abortion) + 1, 1))
-rasch_mod1
+data(Abortion, package='ltm')
+
+mf = mutate_all(Abortion, ordered)                # for later, convert to ordered factors
+mfn = mutate_all(Abortion, as.numeric)            # for comparison to standard sem if desired
+colnames(mf) = colnames(mfn) = paste0('Item_', 1:4)
+
+rasch_mod_par1 = rasch(Abortion, IRT.param=F)
+rasch_mod_par2 = rasch(Abortion, IRT.param=T)
+# rasch_mod_original = rasch(Abortion, IRT.param=F, constraint = cbind(ncol(Abortion) + 1, 1))
+rasch_mod_par1
+rasch_mod_par2
 ```
+
+
+#### IRT as a Mixed Model
 
 To me it makes more sense to think of this model from the perspective of a mixed model.  In this approach, we can put the data in long form such that multiple rows/observations pertain to an individual's response for the items. We then run a mixed model predicting the binary outcome with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person.
 
 ```{r mixedModel_1pm}
 ## See https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q4/004668.html
 library(lme4)
-dlong = gather(data.frame(Subject=1:nrow(Abortion), Abortion), key=Item, value=Response, -Subject) %>% 
+Abortion_long = gather(data.frame(Subject=1:nrow(Abortion), Abortion), key=Item, value=Response, -Subject) %>% 
   arrange(Subject, Item)
-head(dlong)
-lme_rasch = glmer(Response~ -1 + Item + (1|Subject) , dlong, family=binomial)
+head(Abortion_long, 8)
+lme_rasch = glmer(Response ~ -1 + Item + (1|Subject) , Abortion_long, family=binomial(link='logit'))
 summary(lme_rasch, cor=F)
 ```
 
@@ -76,36 +88,103 @@ Aside from the estimation approach, the only difference is that the IRT model as
 Comparing the fixed effects, they are quite similar.
 
 ```{r irt_mm1}
-data.frame(ltm=coef(rasch_mod1)[,'beta.i'], lme=fixef(lme_rasch))
+data.frame(ltm=coef(rasch_mod_par1)[,'beta.i'], lme=fixef(lme_rasch))
 ```
 
-Same with the latent individual scores. Since the Abortion data is essentially ordered by pattern of response, I'll mix it up a little bit.
+Same goes for the latent individual scores. Since the Abortion data is essentially ordered by pattern of response, I'll mix it up a little bit. As the results are on different scales, we can alternate rescaling one or the other to put them on equal footing. The correlation of the scores is essentially 1.0.
 
 ```{r irt_mm2}
 idx = sample(1:nrow(Abortion))
-discr = rasch_mod1$coefficients[1,2]
-iscore_rasch = factor.scores(rasch_mod1, resp.patterns=Abortion)[[1]]$z1
+discr = rasch_mod_par1$coefficients[1,2]
+iscore_rasch = factor.scores(rasch_mod_par1, resp.patterns=Abortion)[[1]]$z1
 iscore_lme = ranef(lme_rasch)$Subject[,1]
 head(data.frame(ltm=discr*iscore_rasch[idx], lmer=iscore_lme[idx]))
 head(data.frame(ltm=iscore_rasch[idx], lmer=iscore_lme[idx]/lme_rasch@theta))
 ```
 
-And probability of item endorsement.  In the mixed effect model, these are the unconditional estimated probabilities, i.e. those that ignore the individual-specific effect.
+We see the same thing with probability of item endorsement.  In the mixed effect model, these are the unconditional estimated probabilities, i.e. those that ignore the individual-specific effect. In the IRT model, these are the expected probabilities at the average latent trait score (i.e. 0).
 
 ```{r irt_mm3}
 unc_prob = plogis(fixef(lme_rasch))
-data.frame(coef(rasch_mod1, prob=T), unc_prob)
+data.frame(ltm=coef(rasch_mod_par1, prob=T)[,'P(x=1|z=0)'], lme=unc_prob)
 ```
 
-And probability of person endorsement. In the mixed effect model, these are the estimated probabilities conditional on the individual.
+And finally, we can look at probability of person endorsement. In the mixed effect model, these are the estimated probabilities conditional on the individual. In the IRT model, they include the latent score for the individual.
 
 ```{r irt_mm3}
 lme_cond_prob = fitted(lme_rasch)
-rasch_cond_prob = data.frame(Subject=1:nrow(Abortion), fitted(rasch_mod1,resp.patterns=Abortion, type='c'))
+rasch_cond_prob = data.frame(Subject=1:nrow(Abortion), fitted(rasch_mod_par1,resp.patterns=Abortion, type='c'))
 rasch_cond_prob = gather(rasch_cond_prob, key=Item, value=Response, -Subject) %>% 
   arrange(Subject, Item)
-head(data.frame(rasch_cond_prob[idx,], lme=cond_prob[idx]))
+head(data.frame(ltm=rasch_cond_prob[idx,'Response'], lme=lme_cond_prob[idx]))
 ```
+
+#### IRT as SEM
+
+Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a growth curve model can duplicate the results from a mixed model. It is unusual in the SEM framework in that most of the parameters are fixed.  In order to do a one-parameter model in SEM, we'll take the same approach of fixing several parameters.  We'll do so for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
+
+```{r lavaan_1pm_1}
+library(lavaan)
+oneP.model = '
+# loadings
+Theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4
+
+# thresholds
+Item_1 | th1*t1
+Item_2 | th2*t1
+Item_3 | th3*t1
+Item_4 | th4*t1
+
+# convert loading to discrimination
+discrm := l1 / sqrt(1-l1^2)
+
+# use thresholds to get difficulty   
+diff_1 := -th1 / sqrt(1-l1^2)
+diff_2 := -th2 / sqrt(1-l1^2)
+diff_3 := -th3 / sqrt(1-l1^2)
+diff_4 := -th4 / sqrt(1-l1^2)
+'
+oneP.fit <- cfa(oneP.model, data=mf, std.lv=T, std.ov=T, parameterization='delta')
+summary(oneP.fit)
+
+
+lme_rasch_prob = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, family=binomial(link='probit'))
+summary(lme_rasch_prob, cor=F)
+data.frame(ltm_diff = coef(rasch_mod_par1)[1:4]/1.7,
+           lme_diff = fixef(lme_rasch_prob), 
+           lav_diff = parameterEstimates(oneP.fit)[24:27, 'est'], 
+           ltm_disc = coef(rasch_mod_par1)[5]/1.7,
+           lme_disc = lme_rasch_prob@theta,
+           lav_disc = parameterEstimates(oneP.fit)[23, 'est']) %>% round(2)
+```
+
+```{r lavaan_1pm_2}
+oneP.model = '
+# loadings
+Theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4
+
+# thresholds
+Item_1 | th1*t1
+Item_2 | th2*t1
+Item_3 | th3*t1
+Item_4 | th4*t1
+# 
+# # convert loading to discrimination
+discrm := l1 / sqrt(1-l1^2) * 1.7 # see http://andrewgelman.com/2006/06/06/take_logit_coef/ and https://www.jstor.org/stable/1165298?seq=1#page_scan_tab_contents
+
+'
+oneP.fit <- cfa(oneP.model, data=mf, std.lv=T, std.ov=F)
+
+summary(oneP.fit)
+data.frame(ltm=coef(rasch_mod_par2), 
+           lav=coef(oneP.fit)[-(1:4)], 
+           discrm=parameterEstimates(oneP.fit)[23,'est']) %>% round(2)
+```
+
+
+
+
+
 
 ### 2 Parameter Model
 
@@ -113,11 +192,7 @@ head(data.frame(rasch_cond_prob[idx,], lme=cond_prob[idx]))
 ```{r dataSetup, echo=FALSE, eval=FALSE}
 # see also: SEM in R book https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models
 # Item information is ratio of squared loading to uniqueness
-data(Abortion, package='ltm')
-library(lavaan)
-mf = mutate_all(Abortion, ordered)
-mfn = mutate_all(Abortion, as.numeric)
-colnames(mf) = colnames(mfn) = paste0('Item_', 1:4)
+
 # model_code = '
 #   z1 =~ Item_1 + Item_2 + Item_3 + Item_4 + Item_5 + Item_6 + Item_7 + Item_8
 #   z1~~ 1*z1
