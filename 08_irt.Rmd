@@ -1,5 +1,7 @@
 # Item Response Theory
 
+IN PROGRESS
+
 <span class="emph">Item Response Theory</span> (IRT) is a class of latent variable models with a long history in the testing environment (e.g. scholastic aptitude), but are actually a more general latent variable approach that might be applicable to a wide variety  of settings.  In the typical scenario, we might have a set of test items which are simply binary indicators for whether the item was answered correctly.  The relationship between IRT and SEM comes in the form of a specific type of factor analysis depending on the type of IRT model being considered.
 
 ## Standard Models
@@ -90,11 +92,10 @@ factor.scores(rasch_mod_par2)[['score.dat']] %>%
 We can obtain some additional results to aid our understanding, as well as distinguish some of the different IRT models we'll discuss.  We'll start with the <span class="emph">item characteristic curve</span>. It plots the probability of endorsement as a function of the latent person trait.
 
 ```{r 1pm_ICC, dev='svglite'}
-# come back to this
 plot(rasch_mod_par1, type='ICC')
 ```
 
-In this case we can see that three of the items essentially behave identically, while the first item would take more 'ability' before endorsement. Even then it is not too different from the others.
+In this case we can see that three of the items essentially behave identically, while the first item would take more 'ability' before endorsement. Even then it is not too different from the others.  We can now start to think of the latent trait as representing a pro-choice stance, where at the average score the person would likely be endorsing all but the first item.
 
 Another way to look at this is in terms of <span class="emph">item information</span>.  The way to interpret this is that it tells us which individuals, in terms of the latent trait, are distinguished best by the items.  In this case they more or less distinguish individuals slightly below average for items 2-4, and slightly above for item 1.
 
@@ -126,7 +127,8 @@ Abortion_long = gather(data.frame(Subject=1:nrow(Abortion), Abortion),
                        key=Item, value=Response, -Subject) %>% 
   arrange(Subject, Item)
 head(Abortion_long, 8)
-lme_rasch = glmer(Response ~ -1 + Item + (1|Subject) , Abortion_long, family=binomial(link='logit'))
+lme_rasch = glmer(Response ~ -1 + Item + (1|Subject), Abortion_long, 
+                  family=binomial(link='logit'))
 summary(lme_rasch, cor=F)
 ```
 
@@ -162,19 +164,20 @@ And finally, we can look at probability of person endorsement. In the mixed effe
 
 ```{r irt_mm4}
 lme_cond_prob = fitted(lme_rasch)
-rasch_cond_prob = data.frame(Subject=1:nrow(Abortion), fitted(rasch_mod_par1,resp.patterns=Abortion, type='c'))
+rasch_cond_prob = data.frame(Subject=1:nrow(Abortion), 
+                             fitted(rasch_mod_par1,resp.patterns=Abortion, type='c'))
 rasch_cond_prob = gather(rasch_cond_prob, key=Item, value=Response, -Subject) %>% 
   arrange(Subject, Item)
 head(data.frame(ltm=rasch_cond_prob[idx,'Response'], lme=lme_cond_prob[idx]))
 ```
 
 
-The gist is that standard IRT is equivalent to a random effects model where item responses are clustered by individual.
+The gist is that standard IRT is equivalent to a generlized linear mixed model where item responses are clustered by individual.  Knowing this allows for forays into more flexible modeling situations, including structural equation modeling.  
 
 
 #### IRT as SEM
 
-Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model can duplicate the results from a mixed model, where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT as a random effects model, in order to do a one-parameter model in SEM, we'll take a similar approach as with the LGC of fixing several parameters.  An additional distinction here is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
+Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
 
 For the first approach, we fix all the loadings to be equal.  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it uses a probit link[^probit] by default and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. So we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
 
@@ -201,7 +204,8 @@ oneP.model = '
 '
 oneP.fit <- cfa(oneP.model, data=Abortion_asfactor, std.lv=T)
 summary(oneP.fit)
-lme_rasch_prob = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, family=binomial(link='probit'))
+lme_rasch_prob = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, 
+                       family=binomial(link='probit'))
 ```
 
 
@@ -251,8 +255,11 @@ discrm := l1 / sqrt(1-l1^2) * 1.7
 
 oneP.fit <- cfa(oneP.model, data=Abortion_asfactor, std.lv=T)
 
-summary(oneP.fit)
+# summary(oneP.fit) # not shown as is almost identical to previous
+```
 
+
+```{r compare1pm_sem, echo=F}
 data.frame(ltm=coef(rasch_mod_par2), 
            lav=coef(oneP.fit)[-(1:4)], 
            discrm=parameterEstimates(oneP.fit)[23,'est']) %>% 
@@ -261,7 +268,7 @@ data.frame(ltm=coef(rasch_mod_par2),
 ```
 
 
-
+In both scenarios the IRT and SEM results are quite close, and the mixed model is not far off, though it estimates less variance for the latent trait, which results in the rest of the estimates being off as well.  Again though, the correlation of the IRT latent trait and random effects from the mixed model are 1.0.
 
 
 
