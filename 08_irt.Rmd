@@ -91,26 +91,39 @@ factor.scores(rasch_mod_par2)[['score.dat']] %>%
 
 We can obtain some additional results to aid our understanding, as well as distinguish some of the different IRT models we'll discuss.  We'll start with the <span class="emph">item characteristic curve</span>. It plots the probability of endorsement as a function of the latent person trait.
 
-```{r 1pm_ICC, dev='svglite'}
-plot(rasch_mod_par1, type='ICC')
+```{r 1pm_ICC, echo=F, dev='svglite'}
+plotdat = plot(rasch_mod_par2, type='ICC', zrange=c(-2,2), lwd=2, legend=T,
+     col=RColorBrewer::brewer.pal(4, 'Set2'), bty='n', plot=F)
+# abline(h=.5, v=0, col=scales::alpha('black',.2))
+
+iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
+ggplot(aes(x=z, y=Probability), data=iccdat) +
+  geom_line(aes(group=Item, color=Item), lwd=1) + 
+  xlab(expression('Individual Latent Score')) +
+  lazerhawk::theme_trueMinimal()
 ```
 
-In this case we can see that three of the items essentially behave identically, while the first item would take more 'ability' before endorsement. Even then it is not too different from the others.  We can now start to think of the latent trait as representing a pro-choice stance, where at the average score the person would likely be endorsing all but the first item.
+In this case we can see that three of the items essentially behave identically, and in general distinguish (slightly less than average) individuals well. The first item would however would take more 'ability' before endorsement, i.e. it is more 'difficult' in test taking terms, but even then it is not too different from the others.  We can now start to think of the latent trait as representing a pro-choice stance, where at the average score the person would likely be endorsing all but the first item.
 
-Another way to look at this is in terms of <span class="emph">item information</span>.  The way to interpret this is that it tells us which individuals, in terms of the latent trait, are distinguished best by the items.  In this case they more or less distinguish individuals slightly below average for items 2-4, and slightly above for item 1.
+Another way to look at this is in terms of <span class="emph">item information</span>.  The way one can interpret this is that it tells us which individuals, in terms of the latent trait, are distinguished best by the items.  In this case they more or less distinguish individuals slightly below average for items 2-4, and slightly above for item 1.
 
-```{r 1pm_IIC, dev='svglite'}
-plot(rasch_mod_par2, type='IIC')
+```{r 1pm_IIC, echo=F, dev='svglite'}
+plotdat = plot(rasch_mod_par2, type='IIC', zrange=c(-2,2), plot=F)
+iccdat = gather(data.frame(plotdat), key=Item, value=Information, -z)
+ggplot(aes(x=z, y=Information), data=iccdat) +
+  geom_line(aes(group=Item, color=Item), lwd=1) +
+  xlab(expression('Individual Latent Score')) +
+  lazerhawk::theme_trueMinimal()
 ```
 
 When we allow item discrimination to vary for items, we'll see notably different types of plots.  Finally we can look at the density plot of the latent scores.  Dots reflect the difficulty estimates from the IRT parameterization.
 
-```{r 1pm_traitscores, echo=1, dev='svglite'}
-plot(factor.scores(rasch_mod_par2), include.items=T)
-# qplot(rep(factor.scores(rasch_mod_par1)[[1]][['z1']], factor.scores(rasch_mod_par1)[[1]][['Obs']]), 
-#       geom='density',  adjust=2, xlim=c(-2,2), xlab='Ability') +
-#   geom_point(aes(x=coef(rasch_mod_par1)[,1],y=0), size=3) +
-#   lazerhawk::theme_trueMinimal()
+```{r 1pm_traitscores, echo=F, dev='svglite'}
+# plot(factor.scores(rasch_mod_par2), include.items=T)
+qplot(rep(factor.scores(rasch_mod_par1)[[1]][['z1']], factor.scores(rasch_mod_par1)[[1]][['Obs']]),
+      geom='density',  adjust=2, xlim=c(-2,2), xlab='Ability', color=I('gray50')) +
+  geom_point(aes(x=coef,y=0, color=Item), size=3, data.frame(coef=coef(rasch_mod_par2)[,1], Item=factor(paste0('Item.', 1:4)))) +
+  lazerhawk::theme_trueMinimal()
 ```
 
 At this point we'll take a moment to summarize things.  IRT models can be seen as a specific type of logistic regression model. The 1PM assumes a latent individual score as well as item-specific difficulty, and from the model, we can gain information about person performance as well as item characteristics.  With extensions we'll gain even more information about how the items and individuals function.
@@ -118,7 +131,7 @@ At this point we'll take a moment to summarize things.  IRT models can be seen a
 
 #### IRT as a Mixed Model
 
-To me it makes more sense to think of IRT from the perspective of a mixed model.  In this approach, we can put the data in long form such that multiple rows/observations pertain to an individual's response for the items. We then run a mixed model predicting the binary resposne with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person in the mixed model. For easier presentation we'll omit the intercept.
+As an additional means of understanding, we can think of IRT from the perspective of a mixed model.  In this approach, we can melt the data into long format such that multiple rows/observations pertain to an individual's response for the items. We then run a mixed model predicting the binary resposne with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person in the mixed model. For easier presentation we'll omit the intercept.
 
 ```{r mixedModel_1pm}
 ## See https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q4/004668.html
@@ -179,11 +192,13 @@ The gist is that standard IRT is equivalent to a generlized linear mixed model w
 
 Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
 
-For the first approach, we fix all the loadings to be equal.  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it uses a probit link[^probit] by default and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. So we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
+For the first approach, we fix all the loadings to be equal.  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it uses a probit link[^probit] by default and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
+
+To make things comparable, we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
 
 ```{r lavaan_1pm_1}
 library(lavaan)
-oneP.model = '
+sem_rasch_model = '
   # loadings
   theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4
   
@@ -202,8 +217,8 @@ oneP.model = '
   diff_3 := -th3 / sqrt(1-l1^2)
   diff_4 := -th4 / sqrt(1-l1^2)
 '
-oneP.fit <- cfa(oneP.model, data=Abortion_asfactor, std.lv=T)
-summary(oneP.fit)
+sem_rasch <- cfa(sem_rasch_model, data=Abortion_asfactor, std.lv=T)
+summary(sem_rasch)
 lme_rasch_prob = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, 
                        family=binomial(link='probit'))
 ```
@@ -214,32 +229,32 @@ Logistic link comparison.
 ```{r compare1pm_logistic, echo=F}
 data.frame(ltm_diff = coef(rasch_mod_par1)[,'beta.i'],
            lme_diff = fixef(lme_rasch),
-           lav_diff = parameterEstimates(oneP.fit)[24:27, 'est']*1.7,
+           lav_diff = parameterEstimates(sem_rasch)[24:27, 'est']*1.7,
            ltm_disc = coef(rasch_mod_par1)[5],
            lme_disc = lme_rasch@theta,
-           lav_disc = parameterEstimates(oneP.fit)[23, 'est']*1.7) %>% 
+           lav_disc = parameterEstimates(sem_rasch)[23, 'est']*1.7) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'))
 ```
 
-Probit link comparison.
+Probit link comparison[^thresholds].
 
 ```{r compare1pm_probit, echo=F}
 data.frame(ltm_diff = coef(rasch_mod_par1)[,'beta.i']/1.7,
            lme_diff = fixef(lme_rasch_prob), 
-           lav_diff = parameterEstimates(oneP.fit)[24:27, 'est'], 
+           lav_diff = parameterEstimates(sem_rasch)[24:27, 'est'], 
            ltm_disc = coef(rasch_mod_par1)[5]/1.7,
            lme_disc = lme_rasch_prob@theta,
-           lav_disc = parameterEstimates(oneP.fit)[23, 'est']) %>% 
+           lav_disc = parameterEstimates(sem_rasch)[23, 'est']) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'))
 ```
 
 
-For the second IRT parameterization, `IRT.param=T` in the <span class="func">ltm</span> function, we just use the initial results. This time I multiply the discrimination estimate from <span class="pack">lavaan</span> by 1.7.
+For the second IRT parameterization, `IRT.param=T` in the <span class="func">ltm</span> function, we just use the initial results. This time I multiply the estimated loading, i.e. the discrimination, from <span class="pack">lavaan</span> by 1.7.
 
 ```{r lavaan_1pm_2}
-oneP.model = '
+sem_rasch_model = '
 # loadings
 theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4
 
@@ -253,16 +268,16 @@ Item_4 | th4*t1
 discrm := l1 / sqrt(1-l1^2) * 1.7 
 '
 
-oneP.fit <- cfa(oneP.model, data=Abortion_asfactor, std.lv=T)
+sem_rasch <- cfa(sem_rasch_model, data=Abortion_asfactor, std.lv=T)
 
-# summary(oneP.fit) # not shown as is almost identical to previous
+# summary(sem_rasch) # not shown as is almost identical to previous
 ```
 
 
 ```{r compare1pm_sem, echo=F}
 data.frame(ltm=coef(rasch_mod_par2), 
-           lav=coef(oneP.fit)[-(1:4)], 
-           discrm=parameterEstimates(oneP.fit)[23,'est']) %>% 
+           lav=coef(sem_rasch)[-(1:4)], 
+           discrm=parameterEstimates(sem_rasch)[23,'est']) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'))
 ```
@@ -274,6 +289,7 @@ In both scenarios the IRT and SEM results are quite close, and the mixed model i
 
 ### 2 Parameter Model
 
+The two parameter IRT model allows the discrimination parameter to vary by item
 
 ```{r dataSetup, echo=FALSE, eval=FALSE}
 # see also: SEM in R book https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models
@@ -478,5 +494,8 @@ summary(twoP.fit)
 [^probit]: The probit link uses the cumulative normal distribution to conver the latent variable (the logit from before) to the probability scale. In R we use <span class="func">pnorm</span> instead of <span class="func">plogis</span>.
 
 [^1.7]: The 1.7 is not arbitrary and has a long history in IRT.  The basic idea is that the variance of the logistic is $\pi^2/3$, or in terms of standard deviation, `r round(pi/sqrt(3), 3)`.  However, it turns out that 1.702 actually minimizes the difference between the two approaches. You can see it noted in the <span class="pack">ltm</span> vignette, but see this article for some historical context [Origin of the Scaling Constant d = 1.7 in Item Response Theory, Gregory Camilli](https://www.jstor.org/stable/1165298?seq=1#page_scan_tab_contents).
+
+[^thresholds]: Note that we can actually calculate the thresholds as follows: `-qnorm(colMeans(Abortion))` = `r round(-qnorm(colMeans(Abortion)), 3)`
+
 
 [^sem2irt]: These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT.  As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package.
