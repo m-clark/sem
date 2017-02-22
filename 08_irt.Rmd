@@ -289,7 +289,12 @@ In both scenarios the IRT and SEM results are quite close, and the mixed model i
 
 ### 2 Parameter Model
 
-The two parameter IRT model allows the discrimination parameter to vary by item
+The 1PM suggests items only differ by difficulty.  In the SEM approach, this lead to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination paramter was constant, so nothing else has changed besides that aspect.
+
+$$prob(y=1|\theta, \delta, \alpha) = \frac{1}{1+e^{\alpha_j(\delta_j-\theta_i)}}$$
+
+
+Let's see it how this turns out for the abortion data.
 
 ```{r dataSetup, echo=FALSE, eval=FALSE}
 # see also: SEM in R book https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models
@@ -304,16 +309,15 @@ The two parameter IRT model allows the discrimination parameter to vary by item
 # summary(test_ltm)
 ```
 
-```{r ltm2p}
-# logit link used for ltm
-library(ltm)
-test_ltm = ltm(Abortion ~ z1, IRT.param=T)
-coef(test_ltm)
+```{r ltm2p, echo=1:2}
+ltm_2pm_par1 = ltm(Abortion ~ z1, IRT.param=F)
+ltm_2pm_par2 = ltm(Abortion ~ z1, IRT.param=T)
+# coef(ltm_2pm)
 detach(package:ltm); detach(package:MASS) # MC longs for the day folks realize MASS is outdated and conflicts with everything
 ```
 
-```{r psych2p}
 
+```{r psych2p, echo=F, eval=F}
 # psych is akin to probit
 test_psych = psych::irt.fa(Abortion, fm='ML', plot=F) # longs for the day folks realize MASS is outdated
 loadings(test_psych$fa)
@@ -321,8 +325,40 @@ test_psych$irt
 test_psych$tau # equal to thresholds in lavaan cfa
 ```
 
+We start to see a lack of parallelism in the item characteristic curves.
+
+```{r 2pm_ICC, echo=F, dev='svglite'}
+plotdat = plot(ltm_2pm_par2, type='ICC', zrange=c(-2,2), lwd=2, legend=T,
+     col=RColorBrewer::brewer.pal(4, 'Set2'), bty='n', plot=F)
+# abline(h=.5, v=0, col=scales::alpha('black',.2))
+
+iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
+ggplot(aes(x=z, y=Probability), data=iccdat) +
+  geom_line(aes(group=Item, color=Item), lwd=1) + 
+  xlab(expression('Individual Latent Score')) +
+  lazerhawk::theme_trueMinimal()
+```
+
+
+
+```{r 2pm_IIC, echo=F, dev='svglite'}
+plotdat = plot(ltm_2pm_par2, type='IIC', zrange=c(-2,2), plot=F)
+iccdat = gather(data.frame(plotdat), key=Item, value=Information, -z)
+ggplot(aes(x=z, y=Information), data=iccdat) +
+  geom_line(aes(group=Item, color=Item), lwd=1) +
+  xlab(expression('Individual Latent Score')) +
+  lazerhawk::theme_trueMinimal()
+```
+
+#### 2PM as Mixed?
+
+
+#### 2PM as SEM
+
+The only change with the SEM approach is that we allow all the loadings to be estimated, much as we would in a typical SEM setting.
+
 ```{r lavaan2p}
-twoP.model = '
+sem_2pm_model = '
 # loadings
 Theta =~ l1*Item_1 + l2*Item_2 + l3*Item_3 + l4*Item_4
 
@@ -332,59 +368,73 @@ Item_2 | th2*t1
 Item_3 | th3*t1
 Item_4 | th4*t1
 
+# use thresholds to get difficulty    (or comment out and use thresholds from parameterization="theta")
+diff_1 := - th1 / sqrt(1-l1^2)
+diff_2 := - th2 / sqrt(1-l2^2)
+diff_3 := - th3 / sqrt(1-l3^2)
+diff_4 := - th4 / sqrt(1-l4^2)
+
 # convert loadings to discrimination  (or comment out and use loadings from parameterization="theta")
 discrm_1 := l1 / sqrt(1-l1^2)
 discrm_2 := l2 / sqrt(1-l2^2)
 discrm_3 := l3 / sqrt(1-l3^2)
 discrm_4 := l4 / sqrt(1-l4^2)
 
-
-# use thresholds to get difficulty    (or comment out and use thresholds from parameterization="theta")
-diff_1 := th1 / sqrt(1-l1^2)
-diff_2 := th2 / sqrt(1-l2^2)
-diff_3 := th3 / sqrt(1-l3^2)
-diff_4 := th4 / sqrt(1-l4^2)
-
 '
-twoP.fit <- cfa(twoP.model, data=Abortion_asfactor, std.lv=T)
-# twoP.fit <- cfa(twoP.model, data=Abortion_asfactor, std.lv=T, parameterization='theta')
-summary(twoP.fit)
+sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T)
+# sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization='theta')
+summary(sem_2pm)
 ```
 
-```{r compareResults}
-lavpars = partable(twoP.fit)
+Logistic link comparison.
+
+```{r compare2pm_logistic, echo=FALSE}
+lavpars = parameterestimates(sem_2pm)
+
+
+data.frame(ltm_diff = coef(ltm_2pm_par1)[,'(Intercept)'],
+           # lme_diff = fixef(lme_rasch),
+           lav_diff = lavpars[23:26, 'est']*1.7,
+           ltm_disc = coef(ltm_2pm_par1)[,'z1'],
+           # lme_disc = lme_rasch@theta,
+           lav_disc = lavpars[27:30, 'est']*1.7) %>% 
+  round(2) %>% 
+  DT::datatable(options=list(dom='t'))
+```
+
+Probit link comparison.
+
+```{r compare2pm_probit, echo=F}
+data.frame(ltm_diff = coef(ltm_2pm_par1)[,'(Intercept)']/1.7,
+           # lme_diff = fixef(lme_rasch),
+           lav_diff = lavpars[23:26, 'est'],
+           ltm_disc = coef(ltm_2pm_par1)[,'z1']/1.7,
+           # lme_disc = lme_rasch@theta,
+           lav_disc = lavpars[27:30, 'est']) %>% 
+  round(2) %>% 
+  DT::datatable(options=list(dom='t'))
 
 library(tidyverse)
-loadings_ = data.frame(lavaan=slice(lavpars, 1:4) %>% 
-                         select(est), 
-                        psych=test_psych$fa$loadings[,1])
-thresholds = data.frame(lavaan=filter(lavpars, rhs=='t1') %>% 
-                          select(est), 
-                        psych=test_psych$tau)
 
-difficulties = data.frame(ltm=coef(test_ltm)[,1],
-                          lavaan= lavpars %>% 
-                            slice(grep(.$label, pattern='diff')) %>% 
-                            select(est),
-                          psych=test_psych$irt$difficulty[[1]])
 
-discrimination = data.frame(ltm=coef(test_ltm)[,2]/sqrt(pi^2/3),
-                            lavaan= lavpars %>% 
-                              slice(grep(.$label, pattern='discr')) %>% 
-                              select(est),
-                            psych=test_psych$irt$discrimination)
-scores_ = data.frame(ltm = ltm::factor.scores.ltm(test_ltm, resp.patterns=Abortion, method='EAP')$score.dat$z1,
-                     lavaan = lavPredict(twoP.fit),            # lavaan takes a long time
-                     psych = psych::factor.scores(x=Abortion, f=test_psych$fa)$scores[,1])
-
-loadings_
-thresholds
-difficulties
-discrimination
-head(scores_, 20)
-cor(scores_)
-cor(scores_, method='spearman') # how  similarly would they rank people
-qplot(data=gather(data.frame(scale(scores_)), key='method', value='score'), x=score, color=method, geom='density')
+# difficulties = data.frame(ltm=coef(test_ltm)[,1],
+#                           lavaan= lavpars %>% 
+#                             slice(grep(.$label, pattern='diff')) %>% 
+#                             select(est))
+# 
+# discrimination = data.frame(ltm=coef(test_ltm)[,2]/sqrt(pi^2/3),
+#                             lavaan= lavpars %>% 
+#                               slice(grep(.$label, pattern='discr')) %>% 
+#                               select(est))
+# scores_ = data.frame(ltm = ltm::factor.scores.ltm(ltm_2pm_par1, resp.patterns=Abortion, method='EAP')$score.dat$z1,
+#                      lavaan = lavPredict(sem_2pm))
+# 
+# difficulties
+# discrimination
+# head(scores_, 20)
+# cor(scores_)
+# cor(scores_, method='spearman') # how  similarly would they rank people
+# qplot(data=gather(data.frame(scale(scores_)), key='method', value='score'), x=score, color=method, geom='density')
 ```
 
 
@@ -394,7 +444,7 @@ qplot(data=gather(data.frame(scale(scores_)), key='method', value='score'), x=sc
 ltm0
 ltm(Abortion~z1, IRT.param=F, control=list(iter.em=100, iter.qN=300))
 
-twoP.model<-'
+sem_2pm<-'
 # loadings
 Theta =~ l1*Item_1 + l2*Item_2 + l3*Item_3 + l4*Item_4 + l5*Item_5 + l6*Item_6 + l7*Item_7 + l8*Item_8
 
@@ -469,8 +519,8 @@ beta7.L := (-alpha7.L)*loc7.L
 beta8.L := (-alpha8.L)*loc8.L
 '
 
-twoP.fit <- cfa(twoP.model, data=Abortion_asfactor, std.lv=T, link='probit')
-summary(twoP.fit)
+sem_2pm <- cfa(sem_2pm, data=Abortion_asfactor, std.lv=T, link='probit')
+summary(sem_2pm)
 
 ```
 
