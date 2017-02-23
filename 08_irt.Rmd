@@ -192,7 +192,7 @@ The gist is that standard IRT is equivalent to a generlized linear mixed model w
 
 Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
 
-For the first approach, we fix all the loadings to be equal.  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it uses a probit link[^probit] by default and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
+For the first approach, we fix all the loadings to be equal, and fix the factor variance to 1 (`std.lv=T`).  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it uses a probit link[^probit] by default and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
 
 To make things comparable, we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
 
@@ -360,7 +360,7 @@ The only change with the SEM approach is that we allow all the loadings to be es
 ```{r lavaan2p}
 sem_2pm_model = '
 # loadings
-Theta =~ l1*Item_1 + l2*Item_2 + l3*Item_3 + l4*Item_4
+theta =~ l1*Item_1 + l2*Item_2 + l3*Item_3 + l4*Item_4
 
 # thresholds
 Item_1 | th1*t1
@@ -368,21 +368,22 @@ Item_2 | th2*t1
 Item_3 | th3*t1
 Item_4 | th4*t1
 
-# use thresholds to get difficulty    (or comment out and use thresholds from parameterization="theta")
+# use thresholds to get difficulty
+# or comment out and use thresholds from parameterization="theta"
 diff_1 := - th1 / sqrt(1-l1^2)
 diff_2 := - th2 / sqrt(1-l2^2)
 diff_3 := - th3 / sqrt(1-l3^2)
 diff_4 := - th4 / sqrt(1-l4^2)
 
-# convert loadings to discrimination  (or comment out and use loadings from parameterization="theta")
+# convert loadings to discrimination
+# or comment out and use loadings from parameterization="theta"
 discrm_1 := l1 / sqrt(1-l1^2)
 discrm_2 := l2 / sqrt(1-l2^2)
 discrm_3 := l3 / sqrt(1-l3^2)
 discrm_4 := l4 / sqrt(1-l4^2)
-
 '
 sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T)
-# sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization='theta')
+sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization='theta')
 summary(sem_2pm)
 ```
 
