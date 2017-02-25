@@ -1,14 +1,5 @@
 # Item Response Theory
 
-IN PROGRESS
-
-To do: 
-
-- make images smaller
-- add to Other IRT
-- check text from the beginning
-- save ltm results to get rid of MASS
-- redo titles to words
 
 <span class="emph">Item Response Theory</span> (IRT) is a class of latent variable models with a long history in the testing environment (e.g. scholastic aptitude), but are actually a more general latent variable approach that might be applicable to a wide variety  of settings.  In the typical scenario, we might have a set of test items which are simply binary indicators for whether the item was answered correctly.  The relationship between IRT and SEM comes in the form of a specific type of factor analysis depending on the type of IRT model being considered.
 
@@ -41,7 +32,7 @@ $$P(y=1) = f(X)$$
 In other words, the probability of choosing the correct response (or simply endorsing an attitude or many other scenarios), $y=1$, is some function of the X variables, which will at a minimum be the items and person scores for an IRT model.
 
 
-### 1 Parameter Model
+### One Parameter Model
 
 We now turn to specific IRT models.  The one-parameter, a.k.a. *Rasch*, model (1PM) can be expressed as follows:
 
@@ -79,14 +70,14 @@ colnames(Abortion_asfactor) = paste0('Item_', 1:4)
 ```
 
 
-The <span class="pack">ltm</span> package provides some nice decriptives via the <span class="func">descript</span> function.
+The <span class="pack">ltm</span> package provides some nice descriptives via the <span class="func">descript</span> function.
 
 ```{r, echo=FALSE}
 ltm::descript(Abortion)
 ```
 
 
-Now we'll start by examining the initial results from the 1PM by using the rasch function, for both IRT parameterizations.  If you want to look at the original formulation with discrimination fixed to 1.0 I show the code for that, but not the results.
+Now we'll start by examining the initial results from the 1PM by using the <span class="func">rasch</span> function, for both IRT parameterizations.  If you want to look at the original formulation with discrimination fixed to 1.0 I show the code for that, but not the results.
 
 ```{r ltm_1pm, eval=FALSE}
 library(ltm)
@@ -126,6 +117,7 @@ We can obtain some additional results to aid our understanding, as well as disti
 # iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
 
 ggplot(aes(x=z, y=Probability), data=iccdat) +
+  geom_vline(xintercept=0, alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) + 
   xlab(expression('Individual Latent Score')) +
   lazerhawk::theme_trueMinimal()
@@ -144,12 +136,13 @@ Because we don't estimate separate item discrimination, all items have the same 
 # iicdat = gather(data.frame(plotdat), key=Item, value=Information, -z)
 
 ggplot(aes(x=z, y=Information), data=iicdat) +
+  geom_vline(xintercept=0, alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) +
   xlab(expression('Individual Latent Score')) +
   lazerhawk::theme_trueMinimal()
 ```
 
-For further interpretation, consider a worst case scenario. Individuals would have the same chance of getting the answer correct regardless of ability. In otherwords the ICC would be flat, i.e. a constant.  The derivative of a constant is zero, meaning the item has no information at all.
+For further interpretation, consider a worst case scenario. Individuals would have the same chance of getting the answer correct regardless of ability. In other words the ICC would be flat, i.e. a constant.  The derivative of a constant is zero, meaning the item has no information at all.
 
 One final interpretation of item information- had we done a standard factor analysis, it would be equivalent to the ratio of the communality, i.e. the squared loading (or sum of for multiple factors) for that item to its uniqueness.  So item information can be seen as the reciprocal of the error of measurement for that item.
 
@@ -184,7 +177,7 @@ At this point we'll take a moment to summarize things.  IRT models can be seen a
 
 #### IRT as a Mixed Model
 
-As an additional means of understanding, we can think of IRT from the perspective of a mixed model.  In this approach, we can melt the data into long format such that multiple rows/observations pertain to an individual's response for the items. We then run a mixed model predicting the binary resposne with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person in the mixed model. For easier presentation we'll omit the intercept.
+As an additional means of understanding, we can think of IRT from the perspective of a mixed model.  In this approach, we can melt the data into long format such that multiple rows/observations pertain to an individual's response for the items. We then run a mixed model predicting the binary response with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person in the mixed model. For easier presentation we'll omit the intercept.
 
 ```{r mixedModel_1pm_datasetup, eval=T}
 Abortion_long = gather(data.frame(Subject=1:nrow(Abortion), Abortion), 
@@ -252,7 +245,7 @@ head(data.frame(ltm=rasch_cond_prob[idx,'Response'], lme=lme_cond_prob[idx]))
 ```
 
 
-The gist is that standard IRT is equivalent to a generlized linear mixed model where item responses are clustered by individual.  Knowing this allows for forays into more flexible modeling situations, including structural equation modeling.  
+The gist is that standard IRT is equivalent to a generalized linear mixed model where item responses are clustered by individual.  Knowing this allows for forays into more flexible modeling situations, including structural equation modeling.  
 
 
 #### IRT as SEM
@@ -362,14 +355,14 @@ save(irt_rasch_par1, irt_rasch_par2, iccdat, iicdat,
 ```
 
 
-### 2 Parameter Model
+### Two Parameter Model
 
 ```{r load2pmdata, echo=F}
 load('data/2pm.RData')
 ```
 
 
-The 1PM suggests items only differ by difficulty.  In the SEM approach, this led to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination paramter was constant, so nothing else has changed besides that aspect, where now it ias allowed to vary by item.
+The 1PM suggests items only differ by difficulty.  In the SEM approach, this led to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination parameter was constant, so nothing else has changed besides that aspect, where now it is allowed to vary by item.
 
 $$P(y_{ij}=1|\theta, \delta, \alpha) = \mathrm{logis}(\alpha_j(\theta_i-\delta_j))$$
 
@@ -394,7 +387,7 @@ test_psych$tau # equal to thresholds in lavaan cfa
 
 We start to see a lack of parallelism in the item characteristic curves, as well as differences in the item information curves.
 
-```{r 2pm_ICC, echo=F, dev='svglite', width=4.5, height=3.375}
+```{r 2pm_ICC, echo=F, dev='svglite', fig.width=6, fig.height=3.375}
 # plotdat = plot(irt_2pm_par2, type='ICC', zrange=c(-2,2), lwd=2, legend=T,
 #      col=RColorBrewer::brewer.pal(4, 'Set2'), bty='n', plot=F)
 # # abline(h=.5, v=0, col=scales::alpha('black',.2))
@@ -498,13 +491,13 @@ save(irt_2pm_par1, irt_2pm_par2,
 ```
 
 
-### 3 Parameter Model
+### Three Parameter Model
 
 The 3PM will add a guessing parameter to the 2PM model.  As an example, in most testing situations one can get a correct response on an item just by guessing. However, individuals do not necessarily guess randomly, such that if there are 4 choices, they'd not just have a .25 chance of getting something correct.
 
 $$P(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + (1-\gamma_j) \cdot \mathrm{logis}(\alpha_j(\theta_i-\delta_j))$$
 
-The model has the effect of including a lower bound on responding to the 2PM, and could vary by item as well.  While it probably isn't as applicable to the Abortion data, one can think of it as an offset or propensity/bias to endorse, and such a model in general might be suited to more imbalanced data response.  We can use the tpm function in ltm to estimate such a model.
+The model has the effect of including a lower bound on responding to the 2PM, and could vary by item as well.  While it probably isn't as applicable to the Abortion data, one can think of it as an offset or propensity/bias to endorse, and such a model in general might be suited to more imbalanced data response.  We can use the <span class="func">tpm</span> function in <span class="pack">ltm</span> to estimate such a model.
 
 ```{r 3pm_ICC, echo=FALSE, fig.width=4.5, fig.height=3.375}
 load('data/3pm.RData')
@@ -514,7 +507,7 @@ iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
 ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T) + 
-  annotate(x=-2,y=.15, label='↓', geom='text', size=10, color='#ff5503') +
+  annotate(x=-2,y=.15, label=sprintf('\U2193'), geom='text', size=8, color='#ff5503') +
   xlab('Individual Latent Score') +
   lazerhawk::theme_trueMinimal() +
   theme(legend.position=c(.85,.4),
@@ -523,7 +516,7 @@ ggplot(aes(x=z, y=Probability), data=iccdat) +
 
 Here we can see item 2, 'The couple agree that they do not wish to have a child.', does have an asymptote slightly above 0, where the others are estimated to be zero.  This is perhaps not surprising as this is not a testing scenario, and less amenable to guessing. 
 
-### 4 Parameter Model
+### Four Parameter Model
 
 As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement.  In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct.  I've seen these 'ceilings' referred to 1 - <span class="emph">slipping</span>, where the slip parameter is the probability of providing an incorrect response despite knowing the associated skill.
 
@@ -536,15 +529,15 @@ See the <span class="pack">sirt</span> package and its function <span class="fun
 
 ### Additional covariates
 
-If you think back to the Rasch model as a mixed model, it is very easy to add person level characteristics to the model.  One would think, and especially in the case of non-testing situations, that any number of demographic contexts might influence item endorsement.  As such, one might consider them when doing IRT as well.
+If you think back to the Rasch model as a mixed model, it is straightforward to add person level characteristics to the model.  One would think, and especially in the case of non-testing situations, that any number of demographic contexts might influence item endorsement.  As such, one might consider adding them when doing IRT as well.
 
 ### Graded Response Model
 
 The <span class="emph">graded response model</span> allows us to move from a simple binary setting to one in which we have multiple, ordered response categories, as with Likert items.  The first approach to analyze such data just switches to an ordinal model. If there are only two categories, it's identical to the 2PM, just as ordinal logistic regression would be to binary logistic regression.
 
-Consider a response with four categories. The basic ordinal model assumes different, ordered thresholds as we move from category 1 to 2, 2 to 3 and so on.  However, we only need $k-1$ thresholds, where $k$ is the number of categories, as any that are not classified into the k-1 groups would automatically be in the $k^{th}$ category.  Most ordinal regression models would assume that any fixed effects, for example, for items, would be constant as we consider 1 vs. 3:4, 1 or 2 vs. 3 or 4, 1:3 vs. 4.  
+Consider a response with four categories. The basic ordinal model assumes different, ordered thresholds as we move from category 1 to 2, 2 to 3 and so on.  However, we only need $k-1$ thresholds, where $k$ is the number of categories, as any that are not classified into the k-1 categories would automatically be in the $k^{th}$ category.  Most ordinal regression models would assume that any fixed effects, for example, for items, would be constant as we consider 1 vs. 3:4, 1 or 2 vs. 3 or 4, 1:3 vs. 4.  
 
-Given the multiple thresholds per item, the interpretation can no longer be thought of simply as 'difficulty', though the discrimination parameter would have the same interpretation as in the binary case. In general, any standard ordinal regression model would potentially be applicable (e.g. cumulative, continuous-ratio, adjacent-category, generalized etc.).  IRT specific extensions include the <span class="emph">partial credit model</span>, which in the simplest setting is the Rasch for ordered items, and a special case of the PCM, the <span class="emph">rating scale model</span>[^grm_as_ord], which is used if response categories have the same meaning for all items (thresholds are thus fixed to be equal across items). To get started, one might examine the <span class="func">grm</span> and <span class="func">gpcm</span> functions in <span class="pack">ltm</span>, or <span class="func">RSM</span> in the <span class="pack">eRm</span> package. If you move into the Rasch/1PM model setting, you might also consider the <span class="pack">ordinal</span> package for the mixed model approach with ordinal outcomes.
+Given the multiple thresholds per item, the interpretation can no longer be thought of simply as 'difficulty', though the discrimination parameter would have the same interpretation as in the binary case. In general, any standard ordinal regression model would potentially be applicable (e.g. cumulative, continuation-ratio, adjacent-category, generalized etc.).  IRT specific extensions include the <span class="emph">partial credit model</span>, which in the simplest setting is the Rasch for ordered items, and a special case of the PCM, the <span class="emph">rating scale model</span>[^grm_as_ord], which is used if response categories have the same meaning for all items (thresholds are thus fixed to be equal across items). To get started, one might examine the <span class="func">grm</span> and <span class="func">gpcm</span> functions in <span class="pack">ltm</span>, or <span class="func">RSM</span> in the <span class="pack">eRm</span> package. If you move into the Rasch/1PM model setting, you might also consider the <span class="pack">ordinal</span> package for the mixed model approach with ordinal outcomes.
 
 ```{r RSM, echo=F, eval=FALSE}
 Science[c(1,3,4,7)] %>% 
@@ -561,12 +554,12 @@ From the SEM perspective, multidimensional IRT is pretty straightforward, as we 
 
 ### Other IRT
 
-There are many more complicated variants of the models explicitly discussed here, different estimation methods, ways to assess multidimensionality
+There are many more complicated variants of the models explicitly discussed here, different estimation methods, ways to assess multidimensionality and so forth, and people have ascribed names to very similar models or slight tweaks.  In general though, the IRT approach is highly flexible for a wide range of item situations.
 
 
 ## Summary
 
-Too many exposed to latent class analysis seem to think that's the only way to deal with categorical sets of items. In fact, assuming distinct latent classes is likely less plausible than positing an underlying contiuum, and many who find such classes often consider them ordered anyway.  IRT supplies not only a rich way to understand potentially multiple traits, it provides a means for deep inspection of item performance, lending much to assessing reliability of a measure in a more modern way.
+Too many exposed to latent class analysis seem to think that's the only way to deal with categorical sets of items. In fact, assuming distinct latent classes is likely less plausible than positing an underlying continuum, and many who find such classes often consider them ordered anyway.  IRT supplies not only a rich way to understand potentially multiple traits, it provides a means for deep inspection of item performance, lending much to assessing reliability of a measure in a more comprehensive fashion than simply noting a single statistic like Cronbach's $\alpha$. In general, IRT provides many tools for assessment and development of scales to measure any number of things, and should be in your SEM toolbox.
 
 
 ## IRT Terminology
@@ -582,8 +575,8 @@ Too many exposed to latent class analysis seem to think that's the only way to d
 
 
 ## R Packages Used
-https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models
 
+- <span class="pack">ltm</span>
 
 
 [^revelleirt]: This bit on item information is more or less a paraphrase of a section [Revelle's chapter on IRT](https://www.personality-project.org/r/book/Chapter8.pdf) which, though incomplete, provides still more detail.
@@ -594,9 +587,9 @@ https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_the
 
 [^thresholds]: Note that we can actually calculate the thresholds as follows: `-qnorm(colMeans(Abortion))` = `r round(-qnorm(colMeans(Abortion)), 3)`
 
-[^bayesirt]: I actually did a Bayesian Rasch model and a Bayesian mixed model approach, both with Stan (the latter with <span class="pack">brms</span>), and came up with around ~4.3 for the birt and duplicated ltm's resulty with the mixed model. 
+[^bayesirt]: I actually did a Bayesian Rasch model and a Bayesian mixed model approach, both with Stan (the latter with <span class="pack">brms</span>), and came up with around ~4.3 for the birt and duplicated ltm's result with the mixed model. 
 
-[^sem2irt]: These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT.  As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package.
+[^sem2irt]: These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT.  As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package.  Also see the code here for the text on latent variable modeling in R- [link](https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models).
 
 
-[^grm_as_ord]: The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.=.
+[^grm_as_ord]: The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.
