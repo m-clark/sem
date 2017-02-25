@@ -4,11 +4,11 @@ IN PROGRESS
 
 To do: 
 
-- more on item information and possibly other stats
 - make images smaller
 - add to Other IRT
 - check text from the beginning
 - save ltm results to get rid of MASS
+- redo titles to words
 
 <span class="emph">Item Response Theory</span> (IRT) is a class of latent variable models with a long history in the testing environment (e.g. scholastic aptitude), but are actually a more general latent variable approach that might be applicable to a wide variety  of settings.  In the typical scenario, we might have a set of test items which are simply binary indicators for whether the item was answered correctly.  The relationship between IRT and SEM comes in the form of a specific type of factor analysis depending on the type of IRT model being considered.
 
@@ -249,9 +249,9 @@ The gist is that standard IRT is equivalent to a generlized linear mixed model w
 
 #### IRT as SEM
 
-Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
+Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here from our previous SEM examples is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
 
-For the first approach, we fix all the loadings to be equal, and fix the factor variance to 1 (`std.lv = T`).  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it only uses a probit link[^probit], and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to a factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
+For the first approach, we fix all the loadings to be equal, and fix the factor variance to 1 (`std.lv = T`).  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one issue with using <span class="pack">lavaan</span> is that it only uses a probit link[^probit] (or at least will not do a logit link not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to a factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
 
 So to make things comparable, we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
 
@@ -336,15 +336,17 @@ sem_rasch <- cfa(sem_irt_raschel, data=Abortion_asfactor, std.lv=T)
 
 ```{r compare1pm_sem, echo=F}
 thresh = parameterEstimates(sem_rasch) %>% filter(rhs=='t1') %>% dplyr::select(est) %>% round(2)
-data.frame(ltm=coef(irt_rasch_par2), 
-           lav=coef(sem_rasch)[-(1:4)], 
-           discrm=thresh) %>% 
+discr = parameterEstimates(sem_rasch) %>% filter(label=='discrm') %>% dplyr::select(est)
+data.frame(ltm_diff=coef(irt_rasch_par2)[,1], 
+           ltm_disc=coef(irt_rasch_par2)[,2], 
+           lav_diff=thresh[,1], 
+           lav_disc=discr[,1]) %>% 
   round(2) %>% 
-  DT::datatable(options=list(dom='t'))
+  DT::datatable(options=list(dom='t'), width='75%')
 ```
 
 
-In both scenarios the IRT and SEM results are quite close, and the mixed model is not far off, though it estimates less variance for the latent trait, which results in the rest of the estimates being off as well.  Again though, the correlation of the IRT latent trait and random effects from the mixed model are 1.0.
+In both scenarios the IRT and SEM results are quite close, and the mixed model is not far off, though it estimates less variance for the latent trait, which results in the rest of the estimates being slightly different since the latent trait scores are slightly different.  Again though, the correlation of the IRT latent trait and random effects from the mixed model are 1.0, so we are not coming to different conclusions.
 
 ```{r save_rasch, echo=FALSE, eval=FALSE}
 save(irt_rasch_par1, irt_rasch_par2, iccdat, iicdat,
@@ -575,7 +577,7 @@ https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_the
 
 [^revelleirt]: This bit on item information is more or less a paraphrase of a section [Revelle's chapter on IRT](https://www.personality-project.org/r/book/Chapter8.pdf) which, though incomplete, provides still more detail.
 
-[^probit]: The probit link uses the cumulative normal distribution to conver the latent variable (the logit from before) to the probability scale. In R we use <span class="func">pnorm</span> instead of <span class="func">plogis</span>.
+[^probit]: The probit link uses the cumulative normal distribution to convert the latent variable (the logit from before) to the probability scale. In R we use <span class="func">pnorm</span> instead of <span class="func">plogis</span>.
 
 [^1.7]: The 1.7 is not arbitrary and has a long history in IRT.  The basic idea is that the variance of the logistic is $\pi^2/3$, or in terms of standard deviation, `r round(pi/sqrt(3), 3)`.  However, it turns out that 1.702 actually minimizes the difference between the two approaches. You can see it noted in the <span class="pack">ltm</span> vignette, but see this article for some historical context [Origin of the Scaling Constant d = 1.7 in Item Response Theory, Gregory Camilli](https://www.jstor.org/stable/1165298?seq=1#page_scan_tab_contents).
 
