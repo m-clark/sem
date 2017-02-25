@@ -78,6 +78,14 @@ Abortion_asfactor = mutate_all(Abortion, ordered)
 colnames(Abortion_asfactor) = paste0('Item_', 1:4)
 ```
 
+
+The <span class="pack">ltm</span> package provides some nice decriptives via the <span class="func">descript</span> function.
+
+```{r, echo=FALSE}
+ltm::descript(Abortion)
+```
+
+
 Now we'll start by examining the initial results from the 1PM by using the rasch function, for both IRT parameterizations.  If you want to look at the original formulation with discrimination fixed to 1.0 I show the code for that, but not the results.
 
 ```{r ltm_1pm, eval=FALSE}
@@ -338,8 +346,8 @@ sem_rasch <- cfa(sem_irt_raschel, data=Abortion_asfactor, std.lv=T)
 thresh = parameterEstimates(sem_rasch) %>% filter(rhs=='t1') %>% dplyr::select(est) %>% round(2)
 discr = parameterEstimates(sem_rasch) %>% filter(label=='discrm') %>% dplyr::select(est)
 data.frame(ltm_diff=coef(irt_rasch_par2)[,1], 
-           ltm_disc=coef(irt_rasch_par2)[,2], 
            lav_diff=thresh[,1], 
+           ltm_disc=coef(irt_rasch_par2)[,2], 
            lav_disc=discr[,1]) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'), width='75%')
@@ -361,7 +369,7 @@ load('data/2pm.RData')
 ```
 
 
-The 1PM suggests items only differ by difficulty.  In the SEM approach, this led to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination paramter was constant, so nothing else has changed besides that aspect.
+The 1PM suggests items only differ by difficulty.  In the SEM approach, this led to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination paramter was constant, so nothing else has changed besides that aspect, where now it ias allowed to vary by item.
 
 $$P(y_{ij}=1|\theta, \delta, \alpha) = \mathrm{logis}(\alpha_j(\theta_i-\delta_j))$$
 
@@ -386,7 +394,7 @@ test_psych$tau # equal to thresholds in lavaan cfa
 
 We start to see a lack of parallelism in the item characteristic curves, as well as differences in the item information curves.
 
-```{r 2pm_ICC, echo=F, dev='svglite', height=3}
+```{r 2pm_ICC, echo=F, dev='svglite', width=4.5, height=3.375}
 # plotdat = plot(irt_2pm_par2, type='ICC', zrange=c(-2,2), lwd=2, legend=T,
 #      col=RColorBrewer::brewer.pal(4, 'Set2'), bty='n', plot=F)
 # # abline(h=.5, v=0, col=scales::alpha('black',.2))
@@ -496,9 +504,9 @@ The 3PM will add a guessing parameter to the 2PM model.  As an example, in most 
 
 $$P(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + (1-\gamma_j) \cdot \mathrm{logis}(\alpha_j(\theta_i-\delta_j))$$
 
-The model has the effect of including a lower bound on responding to the 2PM, and could vary by item as well.  While it probably isn't as applicable to the Abortion data, one can think of it as an offset or propensity/bias to endorse, and such a model in general might be suited to more imbalanced data response.
+The model has the effect of including a lower bound on responding to the 2PM, and could vary by item as well.  While it probably isn't as applicable to the Abortion data, one can think of it as an offset or propensity/bias to endorse, and such a model in general might be suited to more imbalanced data response.  We can use the tpm function in ltm to estimate such a model.
 
-```{r 3pm_ICC, echo=FALSE}
+```{r 3pm_ICC, echo=FALSE, fig.width=4.5, fig.height=3.375}
 load('data/3pm.RData')
 # ltm_3pm = tpm(Abortion)
 # plotdat = plot(ltm_3pm, type='ICC', zrange=c(-2,2), plot=F)
@@ -506,20 +514,23 @@ iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
 ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T) + 
+  annotate(x=-2,y=.15, label='↓', geom='text', size=10, color='#ff5503') +
   xlab('Individual Latent Score') +
-  lazerhawk::theme_trueMinimal()
+  lazerhawk::theme_trueMinimal() +
+  theme(legend.position=c(.85,.4),
+        legend.key.height=unit(.5, 'cm'))
 ```
 
-Here we can see item 2, 'The couple agree that they do not wish to have a child.', does have an asymptote slightly above 0, where the others are estimated to be zero. 
+Here we can see item 2, 'The couple agree that they do not wish to have a child.', does have an asymptote slightly above 0, where the others are estimated to be zero.  This is perhaps not surprising as this is not a testing scenario, and less amenable to guessing. 
 
 ### 4 Parameter Model
 
-As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement.  In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct.  I've seen these 'ceilings' also referred to 1 - 'slipping'.
+As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement.  In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct.  I've seen these 'ceilings' referred to 1 - <span class="emph">slipping</span>, where the slip parameter is the probability of providing an incorrect response despite knowing the associated skill.
 
 
 $$P(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + (\zeta_j-\gamma_j) \cdot \mathrm{logis}(\alpha_j(\theta_i-\delta_j))$$
 
-See the <span class="pack">sirt</span> package <span class="func">rasch.mml2</span> for a means to estimate such models.
+See the <span class="pack">sirt</span> package and its function <span class="func">rasch.mml2</span> for a means to estimate such models.
 
 ## Other IRT Models
 
