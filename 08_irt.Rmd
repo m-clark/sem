@@ -14,7 +14,7 @@ $$y \sim \mathrm{Bernoulli}(\pi)$$
 
 The link function $g(.)$ is the logistic function, and its inverse maps our linear predictor, the logit, or log odds ($\ln(\pi)/\ln(1-\pi)$), to the probability scale.  Finally, our binary response is bernoulli distributed (i.e. binomial with size=1).  Let's see this for a single observation to remove any mystery.
 
-```{r}
+```{r logit_example}
 logit = -1
 exp(logit)/(1+exp(logit))  # convert logit to probability
 1/(1+exp(-logit))          # convert logit to probability (alternate)
@@ -137,7 +137,7 @@ As an additional means of understanding, we can think of IRT from the perspectiv
 ## See https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q4/004668.html
 library(lme4)
 Abortion_long = gather(data.frame(Subject=1:nrow(Abortion), Abortion), 
-                       key=Item, value=Response, -Subject) %>% 
+                       key=Item, value=Response, -Subject, factor_key=T) %>% 
   arrange(Subject, Item)
 head(Abortion_long, 8)
 lme_rasch = glmer(Response ~ -1 + Item + (1|Subject), Abortion_long, 
@@ -192,9 +192,9 @@ The gist is that standard IRT is equivalent to a generlized linear mixed model w
 
 Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
 
-For the first approach, we fix all the loadings to be equal, and fix the factor variance to 1 (`std.lv=T`).  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it uses a probit link[^probit] by default and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
+For the first approach, we fix all the loadings to be equal, and fix the factor variance to 1 (`std.lv = T`).  For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait $\theta$ as the covariate.  The one drawback to using <span class="pack">lavaan</span> is that it only uses a probit link[^probit], and does not include a logit link at present (or at least not without difficulty and slowness).  Likewise the <span class="pack">ltm</span> package *only* uses the logit link. Interestingly, using the probit link in IRT is equivalent to a factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.
 
-To make things comparable, we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
+So to make things comparable, we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7[^1.7], or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7.  We'll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters[^sem2irt]. 
 
 ```{r lavaan_1pm_1}
 library(lavaan)
@@ -270,14 +270,15 @@ discrm := l1 / sqrt(1-l1^2) * 1.7
 
 sem_rasch <- cfa(sem_rasch_model, data=Abortion_asfactor, std.lv=T)
 
-# summary(sem_rasch) # not shown as is almost identical to previous
+# summary(sem_rasch) # not shown as is identical to previous
 ```
 
 
 ```{r compare1pm_sem, echo=F}
+thresh = parameterEstimates(sem_rasch) %>% filter(rhs=='t1') %>% dplyr::select(est) %>% round(2)
 data.frame(ltm=coef(rasch_mod_par2), 
            lav=coef(sem_rasch)[-(1:4)], 
-           discrm=parameterEstimates(sem_rasch)[23,'est']) %>% 
+           discrm=thresh) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'))
 ```
@@ -289,25 +290,12 @@ In both scenarios the IRT and SEM results are quite close, and the mixed model i
 
 ### 2 Parameter Model
 
-The 1PM suggests items only differ by difficulty.  In the SEM approach, this lead to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination paramter was constant, so nothing else has changed besides that aspect.
+The 1PM suggests items only differ by difficulty.  In the SEM approach, this led to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where $\alpha$, the discrimination paramter was constant, so nothing else has changed besides that aspect.
 
-$$prob(y=1|\theta, \delta, \alpha) = \frac{1}{1+e^{\alpha_j(\delta_j-\theta_i)}}$$
+$$prob(y_{ij}=1|\theta, \delta, \alpha) = \frac{1}{1+e^{\alpha_j(\delta_j-\theta_i)}}$$
 
 
 Let's see it how this turns out for the abortion data.
-
-```{r dataSetup, echo=FALSE, eval=FALSE}
-# see also: SEM in R book https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models
-# Item information is ratio of squared loading to uniqueness
-
-# model_code = '
-#   z1 =~ Item_1 + Item_2 + Item_3 + Item_4 + Item_5 + Item_6 + Item_7 + Item_8
-#   z1~~ 1*z1
-# '
-# test_lavaan = cfa(model_code, data=Abortion_asfactor, std.lv=T)
-# test_ltm = cfa(model_code, data=Abortion_asnumeric, std.lv=T)
-# summary(test_ltm)
-```
 
 ```{r ltm2p, echo=1:2}
 ltm_2pm_par1 = ltm(Abortion ~ z1, IRT.param=F)
@@ -319,7 +307,7 @@ detach(package:ltm); detach(package:MASS) # MC longs for the day folks realize M
 
 ```{r psych2p, echo=F, eval=F}
 # psych is akin to probit
-test_psych = psych::irt.fa(Abortion, fm='ML', plot=F) # longs for the day folks realize MASS is outdated
+test_psych = psych::irt.fa(Abortion, fm='ML', plot=F)
 loadings(test_psych$fa)
 test_psych$irt
 test_psych$tau # equal to thresholds in lavaan cfa
@@ -327,35 +315,49 @@ test_psych$tau # equal to thresholds in lavaan cfa
 
 We start to see a lack of parallelism in the item characteristic curves.
 
-```{r 2pm_ICC, echo=F, dev='svglite'}
+```{r 2pm_ICC, echo=F, dev='svglite', height=3}
 plotdat = plot(ltm_2pm_par2, type='ICC', zrange=c(-2,2), lwd=2, legend=T,
      col=RColorBrewer::brewer.pal(4, 'Set2'), bty='n', plot=F)
 # abline(h=.5, v=0, col=scales::alpha('black',.2))
 
 iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
-ggplot(aes(x=z, y=Probability), data=iccdat) +
-  geom_line(aes(group=Item, color=Item), lwd=1) + 
-  xlab(expression('Individual Latent Score')) +
+p1 = ggplot(aes(x=z, y=Probability), data=iccdat) +
+  geom_vline(xintercept=0, color='black', alpha=.2) +
+  geom_line(aes(group=Item, color=Item), lwd=1, show.legend=F) + 
+  xlab('Individual Latent Score') +
   lazerhawk::theme_trueMinimal()
-```
 
-
-
-```{r 2pm_IIC, echo=F, dev='svglite'}
 plotdat = plot(ltm_2pm_par2, type='IIC', zrange=c(-2,2), plot=F)
 iccdat = gather(data.frame(plotdat), key=Item, value=Information, -z)
-ggplot(aes(x=z, y=Information), data=iccdat) +
+p2 = ggplot(aes(x=z, y=Information), data=iccdat) +
+  geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1) +
-  xlab(expression('Individual Latent Score')) +
-  lazerhawk::theme_trueMinimal()
+  xlab('Individual Latent Score') +
+  lazerhawk::theme_trueMinimal() +
+  theme(legend.position=c(.75,.9),
+        legend.key.height=unit(.5, 'cm'))
+gridExtra::grid.arrange(p1, p2, ncol=2)
 ```
 
-#### 2PM as Mixed?
+
+
+Above, we see that Item 3, 'The woman is not married and does not wish to marry the man.' has little discriminatory ability for anyone above average on the latent trait, as all above average would typically have endorsed that item.  In the testing interpretation, it is a relatively 'easy' item, though not too different from items, 2 and 4. However, as it is relatively narrower, it is less able to distinguish individuals on the latent trait relative to other items. Item 1 on the other hand, 'The woman decides on her own that she does not.', doesn't discriminate well those who are low-scoring on the latent trait, but does for those on the high end.  In the testing interpretation, this would be a relatively difficult item.
+
+
+```{r brms_attempt, echo=F, eval=FALSE}
+# This is not viable
+library(brms)
+test = brm(bf(Response ~ Item + Subject, disc~Item), data=Abortion_long, 
+           family=cumulative, cores=4)
+summary(test)
+fixef(test)
+rasch_mod_par1
+```
 
 
 #### 2PM as SEM
 
-The only change with the SEM approach is that we allow all the loadings to be estimated, much as we would in a typical SEM setting.
+The only change with the SEM approach is that we allow all the loadings to be estimated, much as we would with typical SEM models. The following shows the necessary model syntax.
 
 ```{r lavaan2p}
 sem_2pm_model = '
@@ -383,7 +385,7 @@ discrm_3 := l3 / sqrt(1-l3^2)
 discrm_4 := l4 / sqrt(1-l4^2)
 '
 sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T)
-sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization='theta')
+# sem_2pm <- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization='theta')
 summary(sem_2pm)
 ```
 
@@ -392,12 +394,9 @@ Logistic link comparison.
 ```{r compare2pm_logistic, echo=FALSE}
 lavpars = parameterestimates(sem_2pm)
 
-
 data.frame(ltm_diff = coef(ltm_2pm_par1)[,'(Intercept)'],
-           # lme_diff = fixef(lme_rasch),
            lav_diff = lavpars[23:26, 'est']*1.7,
            ltm_disc = coef(ltm_2pm_par1)[,'z1'],
-           # lme_disc = lme_rasch@theta,
            lav_disc = lavpars[27:30, 'est']*1.7) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'))
@@ -407,35 +406,11 @@ Probit link comparison.
 
 ```{r compare2pm_probit, echo=F}
 data.frame(ltm_diff = coef(ltm_2pm_par1)[,'(Intercept)']/1.7,
-           # lme_diff = fixef(lme_rasch),
            lav_diff = lavpars[23:26, 'est'],
            ltm_disc = coef(ltm_2pm_par1)[,'z1']/1.7,
-           # lme_disc = lme_rasch@theta,
            lav_disc = lavpars[27:30, 'est']) %>% 
   round(2) %>% 
   DT::datatable(options=list(dom='t'))
-
-library(tidyverse)
-
-
-# difficulties = data.frame(ltm=coef(test_ltm)[,1],
-#                           lavaan= lavpars %>% 
-#                             slice(grep(.$label, pattern='diff')) %>% 
-#                             select(est))
-# 
-# discrimination = data.frame(ltm=coef(test_ltm)[,2]/sqrt(pi^2/3),
-#                             lavaan= lavpars %>% 
-#                               slice(grep(.$label, pattern='discr')) %>% 
-#                               select(est))
-# scores_ = data.frame(ltm = ltm::factor.scores.ltm(ltm_2pm_par1, resp.patterns=Abortion, method='EAP')$score.dat$z1,
-#                      lavaan = lavPredict(sem_2pm))
-# 
-# difficulties
-# discrimination
-# head(scores_, 20)
-# cor(scores_)
-# cor(scores_, method='spearman') # how  similarly would they rank people
-# qplot(data=gather(data.frame(scale(scores_)), key='method', value='score'), x=score, color=method, geom='density')
 ```
 
 
@@ -527,20 +502,70 @@ summary(sem_2pm)
 
 
 
-
-#### Graded Response Model
-
 ### 3 Parameter Model
+
+The 3PM will add a guessing parameter to the 2PM model.  As an example, in most testing situations one can get a correct response on an item just by guessing. However, individuals do not necessarily guess randomly, such that if there are 4 choices, they'd not just have a .25 chance of getting something correct.
+
+$$prob(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + \frac{1-\gamma_j}{1+e^{\alpha_j(\delta_j-\theta_i)}}$$
+
+The model has the effect of including a lower bound on responding to the 2PM, and could vary by item as well.  While it probably isn't as applicable to the Abortion data, one can think of it as an offset or propensity/bias to endorse, and such a model in general might be suited to more imbalanced data response.
+
+```{r 3pm_ICC, echo=FALSE}
+load('data/3pm.RData')
+# ltm_3pm = tpm(Abortion)
+# plotdat = plot(ltm_3pm, type='ICC', zrange=c(-2,2), plot=F)
+iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
+ggplot(aes(x=z, y=Probability), data=iccdat) +
+  geom_vline(xintercept=0, color='black', alpha=.2) +
+  geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T) + 
+  xlab('Individual Latent Score') +
+  lazerhawk::theme_trueMinimal()
+```
+
+Here we can see item 2. 'The couple agree that they do not wish to have a child.', does have an asymptote slightly above 0, where the others are estimated to be zero. 
 
 ### 4 Parameter Model
 
+As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement.  In the testing scenario, this would regard very difficult items that even those high on the latent trait might not have a high probability of being correct.
+
+$$prob(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + \frac{\zeta_j -\gamma_j}{1+e^{\alpha_j(\delta_j-\theta_i)}}$$
+
+See the <span class="pack">sirt</span> package <span class="func">rasch.mml2</span> for a means to estimate such models.
+
 ## Other IRT Models
+
+### Additional covariates
+
+If you think back to the Rasch model as a mixed model, it is very easy to add person level characteristics to the model.  One would think, and especially in the case of non-testing situations, that any number of demographic contexts might influence item endorsement.  As such, one might consider them when doing IRT as well.
+
+### Graded Response Model
+
+The <span class="emph">graded response model</span> allows us to move from a simple binary setting to one in which we have multiple, ordered response categories, as with Likert items.  The first approach to analyze such data just switches to an ordinal model. If there are only two categories, it's identical to the 2PM, just as ordinal logistic regression would be to binary logistic regression.
+
+Consider a response with four categories. The basic ordinal model assumes different, ordered thresholds as we move from category 1 to 2, 2 to 3 and so on.  However, we only need $k-1$ thresholds, where $k$ is the number of categories, as any that are not classified into the k-1 groups would automatically be in the $k^{th}$ category.  Most ordinal regression models would assume that any fixed effects, for example, for items, would be constant as we consider 1 vs. 3:4, 1 or 2 vs. 3 or 4, 1:3 vs. 4.  
+
+Given the multiple thresholds per item, the interpretation can no longer be thought of simply as 'difficulty', though the discrimination parameter would have the same interpretation as in the binary case. In general, any standard ordinal regression model would potentially be applicable (e.g. cumulative, continuous-ratio, adjacent-category, generalized etc.).  IRT specific extensions include the <span class="emph">partial credit model</span>, which in the simplest setting is the Rasch for ordered items, and a special case of the PCM, the <span class="emph">rating scale model</span>[^grm_as_ord], which is used if response categories have the same meaning for all items (thresholds are thus fixed to be equal across items). To get started, one might examine the <span class="func">grm</span> and <span class="func">gpcm</span> functions in <span class="pack">ltm</span>, or <span class="func">RSM</span> in the <span class="pack">eRm</span> package. If you move into the Rasch/1PM model setting, you might also consider the <span class="pack">ordinal</span> package for the mixed model approach with ordinal outcomes.
+
+```{r RSM, echo=F, eval=FALSE}
+Science[c(1,3,4,7)] %>% 
+  mutate_all(as.numeric) %>% 
+  mutate_all(function(x) x-1) %>% 
+  eRm::RSM %>% 
+  summary
+```
+
+
+### Multidimensional IRT
+
+From the SEM perspective, multidimensional IRT is pretty straightforward, as we simply assume more than one latent variable pertaining to individuals.  As in SEM, this should be driven by theoretical considerations as much as possible.  See the <span class="pack">mirt</span> package.
 
 ## Terminology
 
 ## Summary
 
 ## R Packages Used
+https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models
+
 
 [^probit]: The probit link uses the cumulative normal distribution to conver the latent variable (the logit from before) to the probability scale. In R we use <span class="func">pnorm</span> instead of <span class="func">plogis</span>.
 
@@ -550,3 +575,5 @@ summary(sem_2pm)
 
 
 [^sem2irt]: These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT.  As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package.
+
+[^grm_as_ord]: The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.=.
