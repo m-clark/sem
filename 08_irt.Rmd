@@ -175,7 +175,7 @@ qplot(rep(fscore$z1, fscore$Obs),
 At this point we'll take a moment to summarize things.  IRT models can be seen as a specific type of logistic regression model. The 1PM assumes a latent individual score as well as item-specific difficulty, and from the model, we can gain information about person performance as well as item characteristics.  With extensions we'll gain even more information about how the items and individuals function.
 
 
-#### IRT as a Mixed Model
+#### 1PM as a Mixed Model
 
 As an additional means of understanding, we can think of IRT from the perspective of a mixed model.  In this approach, we can melt the data into long format such that multiple rows/observations pertain to an individual's response for the items. We then run a mixed model predicting the binary response with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person in the mixed model. For easier presentation we'll omit the intercept.
 
@@ -248,7 +248,7 @@ head(data.frame(ltm=rasch_cond_prob[idx,'Response'], lme=lme_cond_prob[idx]))
 The gist is that standard IRT is equivalent to a generalized linear mixed model where item responses are clustered by individual.  Knowing this allows for forays into more flexible modeling situations, including structural equation modeling.  
 
 
-#### IRT as SEM
+#### 1PM as SEM
 
 Now let's look at the model from a structural equation modeling perspective.  We saw in the [growth curve modeling section][Latent Growth Curves] how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well.  The LGCM is unusual in the SEM framework in that most of the parameters are fixed.  As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we'll take a similar approach of fixing several parameters.  An additional distinction here from our previous SEM examples is that we are now dealing categorical indicators.  We'll look at the SEM approach for each IRT parameterization.  We'll start with the first and compare the results to the mixed model as well.
 
@@ -428,7 +428,7 @@ irt_rasch_par1
 
 #### 2PM as SEM
 
-The only change with the SEM approach is that we allow all the loadings to be estimated, much as we would with typical SEM models. The following shows the necessary model syntax.
+The only change with the SEM approach[^nomixed] is that we allow all the loadings to be estimated, much as we would with typical SEM models. The following shows the necessary model syntax.
 
 ```{r lavaan2p}
 sem_2pm_model = '
@@ -577,6 +577,10 @@ Too many exposed to latent class analysis seem to think that's the only way to d
 ## R Packages Used
 
 - <span class="pack">ltm</span>
+- <span class="pack">lavaan</span>
+- <span class="pack">lme4</span>
+
+Others noted but not demonstrated include <span class="pack">mirt</span> and <span class="pack">sirt</span>.
 
 
 [^revelleirt]: This bit on item information is more or less a paraphrase of a section [Revelle's chapter on IRT](https://www.personality-project.org/r/book/Chapter8.pdf) which, though incomplete, provides still more detail.
@@ -591,5 +595,7 @@ Too many exposed to latent class analysis seem to think that's the only way to d
 
 [^sem2irt]: These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT.  As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package.  Also see the code here for the text on latent variable modeling in R- [link](https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models).
 
+
+[^nomixed]: Note that the 2PM has no generalized linear mixed model complement as it uses products of parameters.  Others extend the 2PM and so the story is the same for those.  See Boeck et al. (2011) The Estimation of Item Response Models with the lmer Function from the lme4 Package in R.
 
 [^grm_as_ord]: The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.

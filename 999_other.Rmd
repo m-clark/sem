@@ -3,14 +3,12 @@
 
 These are other topics that may be covered in varying detail in the future. With possible packages noted. 
 
-- IRT
-    - ltm, lavaan or other
+- Topic Models
+- Nonparametric Bayesian
 - Collaborative filtering
     - recommenderlab
-- Mixture models (additional to what is already there) 
+- Other Mixture models (additional to what is already there) 
     - Discuss zero-inflated models, and possibly add other content.
-- Nonparametric Bayesian
-- Example of topic modeling
 - HMM, Linear Dynamical Systems
     - HMM, HiddenMarkov depmixS4
 - Others
