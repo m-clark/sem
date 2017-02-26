@@ -1,0 +1,70 @@
+# Bayesian Nonparametric Models
+
+IN PROGRESS
+
+In mixture models and factor anlaysis we must set the number of clusters or factors respectively in order to run the models.  The natural question is obviously *how many clusters* or *how many factors*? There is no answer[^42].  For standard cluster analyses like k-means and standard factor analysis, crude measures may be provided but they are not very satisfactory. Model based approaches like mixture models and SEM may allow for information-based model comparison or similar, but are still problematic.
+
+Bayesian nonparametric approaches allow for a different approach. Instead of predetermining the number of clusters or latent variables, their numbers are allowed to grow with the data itself, or rather, the number is assumed infinite and the addition of latent classes/variables grows with the datat.  The section provides a very brief overview of the techniques.
+
+
+## Chinese Restaurant Process
+
+The Chinese Restaurant Process (CRP) regards the extension of (finite) [mixture models][Mixture Models] previously discussed, but where we now consider infinite capacity models.  The idea is to imagine a restaurant[^chinese] with an infinite number of tables, where the tables represent our clusters. Now come the customers.  The first sits at the first table.  The next sits at that table with probability $1/(1+\alpha)$, or the next table with $\alpha/(1+\alpha)$. The process continues for the n^th^ person, who sits at any occupied table with probability $m_k/(n-1+\alpha)$ where $m_k$ is the number of people sitting at table $k$, and at a new table $\alpha/(n - 1+\alpha)$.  In other words, a person sits at the occupied tables with some probability proportional to the number of people already sitting there, and the unoccupied table at some probability proportional to $\alpha$.  The choice of the parameter determines how likely new customers are to join an occupied or new table.
+
+It is perhaps instructive, at least for those more familiar with R or other programming, to see the code for this process.  The following code is in no way optimized, and serves only for demonstration. One can set the alpha parameter and number of observations.
+
+```{r crpRaw}
+crp <- function(alpha, n) {
+  table_assignments = 1
+  
+  for (i in 2:n){
+    table_counts = table(table_assignments)
+    table_prob = table_counts/(i-1+alpha)
+    current_table_assignment = sample(seq_len(length(table_counts)+1), 1, 
+                                      prob=c(table_prob, 1-sum(table_prob)))
+    table_assignments = c(table_assignments, current_table_assignment)  
+  }
+  table_assignments
+}
+```
+
+```{r debugcrp, echo=FALSE, eval=FALSE}
+# if desired
+debugonce(crp)
+crp(alpha=1, n=10)
+```
+
+
+Setting a higher $\alpha$, sometimes called the concentration parameter, allows new table assignments to be made more easily.
+
+```{r crpPlot, dev='svglite'}
+crp(alpha=1, n=100) %>% table %>% plot
+crp(alpha=5, n=100) %>% table %>% plot
+```
+
+Going back to the finite mixture model setting, the CRP defines the prior for category membership in the mixture model setting, without assuming a number of classes beforehand.  As in the standard mixture model, any number of parameters $\theta_k$ may serve to define each of the $k$ categories. In addition, in the Bayesian context, a hyperprior may be placed on an unknown $\alpha$.  
+
+
+## Indian Buffet Process
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[^42]: There is no answer because they aren't real.
+
+[^chinese]: The name comes from an early paper whose authors were referencing restaurants in San Francisco.
