@@ -1,8 +1,8 @@
 # Mixture Models
 
-Thus far we have understood latent variables as possessing an underlying continuum, i.e. normally distributed with a mean of zero and some variance.  This does not have to be the case, and instead we can posit a categorical variable.  Some approaches you may be already familiar with, as any modeling process under the heading of 'cluster analysis' could be said to deal with latent categorical variables.  The issue is that we may feel that there is some underlying structure to the data that is described as discrete, and based on perhaps multiple variables.  
+Thus far we have understood latent variables as possessing an underlying continuum, i.e. normally distributed with a mean of zero and some variance.  This does not have to be the case, and instead we can posit a categorical variable.  Some approaches you may be already familiar with, as any modeling process under the heading of <span class="emph">cluster analysis</span> could be said to deal with latent categorical variables.  The issue is that we may feel that there is some underlying structure to the data that is described as discrete, and based on perhaps multiple variables.  
 
-We will approach this in the way that has been done from statistical and related motivations, rather than the SEM/psychometric approach.  This will hopefully make clearer what it is we're dealing with, as well as not get bogged down in terminology.  Furthermore, mixture models are typically poorly implemented within SEM, as many of the typical issues found in such models can often be magnified.  The goal here as before is clarity of thought over 'being able to run it'.  
+We will approach this in the way that has been done from statistical and related motivations, rather than the SEM/psychometric specific approach.  This will hopefully make clearer what it is we're dealing with, as well as not get bogged down in terminology.  Furthermore, mixture models are typically poorly implemented within SEM, as many of the typical issues found in such models can often be magnified.  The goal here as before is clarity of thought over 'being able to run it'.  
 
 A common question in such analysis is *how many clusters*?  There are many, many techniques for answering this question, and not a single one of them even remotely definitive.  On the plus side, the good news is that we already know the answer, because the answer is always 1.  However, that won't stop us from trying to discover more than that, so here we go.
 
@@ -19,7 +19,9 @@ plot_ly(data=faithful, x=~eruptions, y=~waiting) %>%
 ```
 
 <br>
-Take a good look.  This is probably the cleanest separation of clustered data you will likely ever see[^iris], and even so there are still data points that might fall into either cluster.
+Take a good look.  This is probably the cleanest separation of clustered data you will likely ever see in practice[^iris], at least where the categories wouldn't be obvious without any statistical analysis. Even so there are still data points that might fall into either cluster.
+
+
 
 ## Create Clustered Data
 
@@ -48,7 +50,9 @@ More advanced approaches might include:
 - Predicting the latent classes with other covariates in a manner akin to logistic regression
 - Allow your model coefficients to vary based on cluster membership
     - For example, have separate regression models for each class
-- Use more recent techniques that will allow the number of clusters to grow with the data (non-SEM)
+- Use more recent techniques that will allow the number of clusters to grow with the data (see the [BNP][Bayesian Nonparametric Models] section)
+
+
 
 ## Mixture modeling with Old Faithful
 
@@ -94,23 +98,120 @@ ggplotly(width=500)
 
 Dealing with categorical latent variables can be somewhat problematic. Interpreting a single SEM model might be difficult enough, but then one might be allowing parts of it to change depending on which latent class observations belong to, while having to assess the latent class measurement model as well.  It can be difficult to find a clarity of understanding from this process, as one is discovering classes then immediately assuming key differences among these classes they didn't know existed beforehand[^latclass].  In addition, one will need even more data than standard SEM to deal with all the additional parameters that are allowed to vary across the classes.  
 
-Researchers also tend to find classes that represent 'hi-lo' or 'hi-med-lo' groups, which may suggest they should have left the latent construct as a continuous variable. When given the choice to discretize continuous variables in normal settings, it is rare in which the answer is anything but a resounding *no*.  As such, one should think hard about the ultimate goals of such a model.  
+Researchers also tend to find classes that represent 'hi-lo' or 'hi-med-lo' groups, which may suggest they should have left the latent construct as a continuous variable. When given the choice to discretize continuous variables in normal settings, it is rare in which the answer is anything but a resounding *no*.  As such, one should think hard about the ultimate goals of such a model. See the [IRT section][Item Response Theory] for alternative approaches to similar data. 
 
-Another issue I've seen in applied practice is that the the 'latent' classes uncovered are in fact intact classes representing an interaction of variables available in the data, or possibly some grouping variable that wasn't in the model.  It would be much more straightforward to use the standard interaction approach in a more guided fashion, as opposed to assuming *every* variable effect interacts with a latent variable.  In typical modeling scenarios such an option (i.e. laying waste to our model with interactions) is almost never considered, and even then we'd want some sort of regularizing approach[^factorMachine], which is non-existent in this SEM setting.
+Another issue I've seen in applied practice is that the the 'latent' classes uncovered are in fact intact classes representing an interaction of variables available in the data, or possibly some grouping variable that wasn't in the model.  It would be much more straightforward to use the standard interaction approach in a more guided fashion, as opposed to assuming *every* variable effect interacts with a latent variable.  In typical modeling scenarios such an option (i.e. laying waste to our model with interactions) is relatively rarely considered, and even then we'd want some sort of regularizing approach[^factorMachine], which is non-existent in this SEM setting.
+
+All that said, let's go ahead and look at a traditional latent class approach. We'll use the <span class="pack">poLCA</span> package which is geared specifically to such analysis.  The term 'latent class analysis' would assume binary outcomes, but as we've noted before, usage of a latent categorical variable does not require them (nor does this package).  Our example will also not be binary data.
+
+<!-- The data regards binary values from 216 respondents to four questions measuring tendencies towards "universalistic" or "particularistic" values, where 1 = particularistic and 2 universalistic.  I've altered the original data for clarity, but otherwise it's the same that comes with the package. -->
+
+<!-- ```{r lca_example, echo=-(2:4)} -->
+<!-- library(poLCA) -->
+<!-- data(values) -->
+<!-- values = sapply(values, factor, labels=c('particularistic', 'universalistic')) %>% data.frame -->
+<!-- colnames(values) = paste0('Q', 1:4) -->
+<!-- result = poLCA(cbind(Q1, Q2, Q3, Q4) ~ 1, nclass=2, data=values) -->
+<!-- result -->
+<!-- ``` -->
+
+Recall the depression data from the section on latent variable models. We have three items regarding emotional well-being (depression)- how often the person felt down or blue, how often they've been a happy person, and how often they've been depressed in the last month. These are four point scales and range from 'all of the time' (1) to 'none of the time' (4) (i.e. reversed). 
+
+The conceptual model is still the same, except that we are thinking of the latent variable as categorical, and thus people will fall under depression types rather than have a continuous score that reflects 'depression'.
+
+
+```{r lca_diagram, eval=TRUE, echo=FALSE}
+tags$div(style="width:50%; margin:auto auto;",
+DiagrammeR("
+digraph {
+ # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
+
+ # Intialization of graph attributes
+ graph [overlap=false rankdir=TB]
+ 
+ # Node statements
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ # U0 [width=.25 height=.25 style='' label=''];
+ DepressionCat [fontsize=10, width=1.25, height=1];
+ 
+ node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style='']
+ subgraph {
+    rank=same;
+    node [label='Felt\n\nDown' fontcolor=gray50 fontsize=6]    
+    FD; 
+    node [label='Been\n\nHappy' fontcolor=gray50 fontsize=6]    
+    BH; 
+    node [label='Depressed\n\nLast Month' fontcolor=gray50 fontsize=6]    
+    DLM; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ edge [style=dashed label='' fontcolor=gray25 fontsize=10 minlen=2]
+ DepressionCat -> FD 
+ edge [style='' label='' fontcolor=gray25 fontsize=10 minlen=2];
+ DepressionCat -> BH ;
+ edge [label='' fontcolor=gray25 fontsize=10 minlen=2]
+ DepressionCat -> DLM ;
+
+ subgraph {
+    rank=same;
+    node [width=.25, height=.25, shape=circle, color=gray80]
+    # U1 [label='']; 
+    # U2 [label='']; 
+    # U3 [label='']; 
+ }
+
+  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] 
+  # FD -> U1 [label=''];
+  # BH -> U2 [label=''];
+  # DLM -> U3 [label=''];
+ }
+ ", type='grViz', width='100%')
+)
+```
+
+
+We now run the model.   As with mixture models before, and to be clear we are still conducting a finite mixture model, one of our primary goals is to assign individuals to a latent class.  In addition, we can obtain probabilities of each item category according to latent class. If we had covariates, we could also look at their relationship to the latent classes
+
+```{r depressedLCA, eval=F}
+library(poLCA)
+result = poLCA(cbind(FeltDown, BeenHappy, DepressedLastMonth) ~ 1, depressed)
+result
+```
+```{r depressedLCA_setup, echo=F}
+# depressed = read.csv('data/nlsy97_depressedNumeric.csv')
+# depressed = sapply(depressed[,-1], factor, labels=c('All of the time', 'Some of the time', 'Rarely', 'None of the time')) %>% data.frame
+# result = poLCA::poLCA(cbind(FeltDown, BeenHappy, DepressedLastMonth)~1, depressed)
+# save(result, file='data/lca.RData')
+load('data/lca.RData')
+poLCA:::print.poLCA(result)
+```
+
+In general, aside from poLCA reordering the variable labels alphabetically, this is a fairly clear result. The first class, which are about 2/3 of the individuals, are those that rarely or didn't feel down nor were depressed in the past month, and felt happy some or all of the time.  The other class represents our more depressed individuals.
+
+However, this is a good example where it would be notably more appropriate to assume depression on a continuous scale, rather than categorical.  We have a lot more output from the LCA, but nothing is really gained in our understanding of the latent aspect underlying the scores. Furthermore,  we actually haven't moved away from a continuous latent variable, as the probabilities of class membership *are* continuous, and we are merely picking an arbitrary cutpoint to create the latent class.
+
+
 
 ### Latent Categories vs. Multi-group Analysis
 
-The primary difference between the latent class analysis and a multiple group approach is that in the latter, grouping structure explicitly exists in the data, for example, sex, race etc. In that case, a <span class="emph">multi-group analysis</span>, a.k.a. multi-sample analysis, would allow for separate SEM models per group.  In the latent categorical variable situation, one must first discover the latent groups. By contrast, in multi-group analysis, a common goal is to test <span class="emph">measurement invariance</span>, a concept which has several definitions itself.  An example would be to see if the latent structure holds for an American vs. foreign sample, with the same items for the scale provided in the respective languages. This makes a lot of sense from a measurement model perspective and has some obvious use.
+The primary difference between the latent class analysis and a multiple group approach is that in the latter, grouping structure explicitly exists in the data, for example, sex, race etc. In that case, a <span class="emph">multi-group analysis</span>, a.k.a. multi-sample analysis, would allow for separate SEM models per group.  In the latent categorical variable situation, one must first discover the latent groups. By contrast, in multi-group analysis, a common goal is to test <span class="emph">measurement invariance</span>, a concept which has several definitions itself.  An example would be to see if the latent structure holds for an American vs. non-U.S. sample, with the same items for the scale provided in the respective languages. This makes a lot of sense from a measurement model perspective and has some obvious use.
 
 If one wants to see a similar situation for a less practically driven model, e.g. to see if an SEM model is the same for males vs. females, this is equivalent to having an interaction with the sex variable for every path in the model.  The same holds for 'subgroup analysis' in typical settings, where you won't find any more than you would by including the interactions of interest with the whole sample, though you will certainly have less data to work with.  In any case, whether the classes are latent or intact, we need a lot of data to estimate parameters that are allowed to vary by group vs. a model in which they are fixed, and many simply do not have enough data for this.
 
+
 ### Latent Trajectories
 
-As noted in the growth curve modeling section, these are growth curve models in which intercepts and slopes are allowed to vary across latent groups as well as the clusters.  The <span class="pack">flexmix</span> package used previously as well as others would allow one to estimate such models from the mixed model perspective, and might be preferred.
+As noted in the growth curve modeling section, these are growth curve models in which intercepts and slopes are allowed to vary across latent groups clusters.  The <span class="pack">flexmix</span> package used previously as well as others would allow one to estimate such models from the mixed model perspective, and might be preferred.
+
 
 ### Estimation
 
-If you would like to see the conceptual innards of estimating mixture models using the <span class="emph">EM Algorithm</span>, see [this link](https://github.com/mclark--/Miscellaneous-R-Code/tree/master/ModelFitting/EM%20Examples) on my GitHub page.
+If you would like to see the conceptual innards of estimating mixture models using the <span class="emph">EM Algorithm</span>, see  [my GitHub page](https://github.com/mclark--/Miscellaneous-R-Code/tree/master/ModelFitting/EM%20Examples) for some examples.
+
+
 
 
 ### Terminology in SEM
@@ -148,11 +249,16 @@ Some other terminology includes:
 <span class="emph">Latent Trait Analysis</span> refers to dealing with continuous latent variables in the context of multivariate categorical data. Again, most people outside of SEM would simply call this a mixture model, but it also serves as the setting for Item-Response Theory models where we, for example, find latent 'ability' among binary test items that are correct vs. not.
 
 
+## Summary 
+
+In general, humans are predisposed to think and label things in terms of categories because it presumably simplifies things. More often than not, it's an oversimplification, and has a long history of causing more trouble than it's worth.  Furthermore, we know from our study of reliability that if we categorize a continuous variable, it is a less reliable measure, and potentially causes numerous issues statistically. One should think long and hard about positing types instead of allowing more nuance.  Even so, it might be appropriate for a specific avenue of study, in which case mixture models may serve one well.
+
+
 ## R Packages Used
 
 - <span class="pack">flexmix</span>
 
-
+Note that one shortcoming of <span class="pack">lavaan</span> relative to Mplus is the lack of estimating latent classes.  However, along with flexmix where the latent classes are on the predictor side of the equation and serve to moderate the predictor effects, one might also consider PoLCA, which models latent classes for an outcome similar to traditional LCA within the SEM setting.  This is essentially logistic regression where the classes to predict are latent.  However, as of early 2017, while some have inquired about such models, I've not come across an R package that easily does both, i.e. simultaneously estimates latent classes on either side of the regression equation.  Mplus can do so with Mplus simulated data, but it's not clear how easily it's been used in practice.  The number of parameters to interpret would easily become overwhelming, not to mention ratios of odds ratios.
 
 
 [^iris]: Outside of iris, which is also used regularly to give people unrealistic expectations about what to expect from their cluster analysis.

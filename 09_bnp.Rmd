@@ -2,9 +2,9 @@
 
 IN PROGRESS
 
-In mixture models and factor anlaysis we must set the number of clusters or factors respectively in order to run the models.  The natural question is obviously *how many clusters* or *how many factors*? There is no answer[^42].  For standard cluster analyses like k-means and standard factor analysis, crude measures may be provided but they are not very satisfactory. Model based approaches like mixture models and SEM may allow for information-based model comparison or similar, but are still problematic.
+In mixture models and factor analysis we must set the number of clusters or factors respectively in order to run the models.  The natural question is obviously *how many clusters* or *how many factors*? There is no answer[^42].  For standard cluster analyses like k-means and standard factor analysis, crude measures may be provided but they are not very satisfactory. Model based approaches like mixture models and SEM may allow for information-based model comparison or similar, but are still problematic.
 
-Bayesian nonparametric approaches allow for a different approach. Instead of predetermining the number of clusters or latent variables, their numbers are allowed to grow with the data itself, or rather, the number is assumed infinite and the addition of latent classes/variables grows with the datat.  The section provides a very brief overview of the techniques.
+Bayesian nonparametric approaches allow for a different approach. Instead of predetermining the number of clusters or latent variables, their numbers are allowed to grow with the data itself, or rather, the number is assumed infinite and the addition of latent classes/variables grows with the data.  The section provides a very brief overview of the techniques.
 
 
 ## Chinese Restaurant Process
@@ -37,12 +37,12 @@ crp(alpha=1, n=10)
 
 Setting a higher $\alpha$, sometimes called the concentration parameter, allows new table assignments to be made more easily.
 
-```{r crpPlot, dev='svglite'}
-crp(alpha=1, n=100) %>% table %>% plot
-crp(alpha=5, n=100) %>% table %>% plot
+```{r crpPlot, dev='svglite', echo=FALSE}
+crp(alpha=1, n=100) %>% table %>% barplot(bty='n', col='#ff5503', border=NA, pch=19, col.axis='gray25', main=expression('alpha = 1'), col.main='gray25', xlab='Cluster', ylab='Frequency', col.lab='gray10')
+crp(alpha=5, n=100) %>% table %>% barplot(bty='n', col='#ff5503', border=NA, pch=19, col.axis='gray25', main=expression('alpha = 5'), col.main='gray25', xlab='Cluster', ylab='Frequency', col.lab='gray10')
 ```
 
-Going back to the finite mixture model setting, the CRP defines the prior for category membership in the mixture model setting, without assuming a number of classes beforehand.  As in the standard mixture model, any number of parameters $\theta_k$ may serve to define each of the $k$ categories. In addition, in the Bayesian context, a hyperprior may be placed on an unknown $\alpha$.  
+Going back to the finite mixture model setting, the CRP defines the prior for category membership in that context, but without assuming a number of classes beforehand.  As in the standard mixture model, any number of parameters $\theta_k$ may serve to define each of the $k$ categories. In addition, in the Bayesian context, a hyperprior may be placed on an unknown $\alpha$.  
 
 
 ## Indian Buffet Process
