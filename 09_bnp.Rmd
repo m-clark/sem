@@ -47,8 +47,7 @@ Going back to the finite mixture model setting, the CRP defines the prior for ca
 
 ## Indian Buffet Process
 
-
-
+The so-called Indian Buffet Process is the continuous latent variable counterpart to the CRP. The idea is that of sampling an infinite number dishes at an Indian restaurant buffet, where each dish represents a latent factor.  Like sitting at tables in the CRP, individuals are more likely to sample dishes that have already been sampled. One key difference is that data points may be associated with any number of dishes (latent factors), whereas in the CRP, data points are assigned to only one latent class.
 
 
 
