@@ -18,8 +18,9 @@ crp <- function(alpha, n) {
   table_assignments = 1
   
   for (i in 2:n){
-    table_counts = table(table_assignments)
-    table_prob = table_counts/(i-1+alpha)
+    table_counts = table(table_assignments)                    # counts of table assignments
+    table_prob = table_counts/(i-1+alpha)                      # probabilities of previous table assignments
+    # sample assignment based on probability of current tables and potential next table
     current_table_assignment = sample(seq_len(length(table_counts)+1), 1, 
                                       prob=c(table_prob, 1-sum(table_prob)))
     table_assignments = c(table_assignments, current_table_assignment)  
@@ -47,11 +48,51 @@ Going back to the finite mixture model setting, the CRP defines the prior for ca
 
 ## Indian Buffet Process
 
-The so-called Indian Buffet Process is the continuous latent variable counterpart to the CRP. The idea is that of sampling an infinite number dishes at an Indian restaurant buffet, where each dish represents a latent factor.  Like sitting at tables in the CRP, individuals are more likely to sample dishes that have already been sampled. One key difference is that data points may be associated with any number of dishes (latent factors), whereas in the CRP, data points are assigned to only one latent class.
+The so-called Indian Buffet Process (IBP) is the continuous latent variable counterpart to the CRP. The idea is that of sampling an infinite number dishes at an Indian restaurant buffet, where each dish represents a latent factor.  Like sitting at tables in the CRP, individuals are more likely to sample dishes that have already been sampled. One key difference is that data points may be associated with any number of dishes (latent factors), whereas in the CRP, data points are assigned to only one latent class.
 
 
 
 
+```{r}
+ibp = function(alpha, N){
+  # original at https://github.com/mcdickenson/shinyapps/tree/master/ibp-demo
+  # preallocate assignments with upper bound pf N*alpha on expected number of columns 
+  assignments = matrix(NA, nrow=N, ncol=N*alpha) 
+  
+  # start with some dishes
+  dishes = max(1, rpois(1, alpha))      # fixed so it won't start with zero (we need at least one dish or there is no buffet!)
+  zeroes = ncol(assignments) - dishes   # fill in the rest of potential dishes
+  
+  assignments[1,] = c(rep(1, dishes), rep(0, zeroes))
+  
+  for(i in 2:N){
+    last_previously_sampled_dish = max(which(assignments==1, arr.ind=T)[, 'col'])
+    last_previously_sampled_dish = which.max(apply(assignments, 2, function(x) any(x>0)))
+    dishes_from_previously_sampled = matrix(NA, nrow=1, ncol=last_previously_sampled_dish)
+    
+    for(k in 1:last_previously_sampled_dish){
+      m_k = sum(assignments[1:(i-1),k])                      # fixed, before it was 1:i-1, which would attempt to index 0, though had no effect
+      prob = m_k / i
+      dishes_from_previously_sampled[1,k] = rbinom(1,1, prob)
+    }
+    
+    new_dishes = rpois(1, alpha/i)
+    zeroes = ncol(assignments) - (last_previously_sampled_dish + new_dishes)
+    assignments[i,] = c(dishes_from_previously_sampled, rep(1,new_dishes), rep(0, zeroes))
+  }
+  
+  last_sampled_dish = max(which(assignments==1, arr.ind=T)[, 'col'])
+  assignments = assignments[1:N, 1:last_sampled_dish]
+  
+  return(assignments)
+}
+
+# debugonce(ibp)
+test = replicate(100, ibp(10, 100))
+res = ibp(1, 100)
+d3heatmap::d3heatmap(res, Rowv=F, Colv=F)
+
+```
 
 
 
