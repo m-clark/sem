@@ -60,20 +60,23 @@ ibp = function(alpha, N){
   assignments = matrix(NA, nrow=N, ncol=N*alpha) 
   
   # start with some dishes
+  # dishes = rpois(1, alpha)      # this will result in an error for dishes_from_previously_sampled if zero
   dishes = max(1, rpois(1, alpha))      # fixed so it won't start with zero (we need at least one dish or there is no buffet!)
   zeroes = ncol(assignments) - dishes   # fill in the rest of potential dishes
   
   assignments[1,] = c(rep(1, dishes), rep(0, zeroes))
   
   for(i in 2:N){
+    prev = i-1
     last_previously_sampled_dish = max(which(assignments==1, arr.ind=T)[, 'col'])
-    last_previously_sampled_dish = which.max(apply(assignments, 2, function(x) any(x>0)))
+    # last_previously_sampled_dish = which.max(apply(assignments, 2, function(x) any(x>0)))
+    last_previously_sampled_dish = sum(colSums(assignments[1:prev,,drop=F])>0)
     dishes_from_previously_sampled = matrix(NA, nrow=1, ncol=last_previously_sampled_dish)
     
     for(k in 1:last_previously_sampled_dish){
-      m_k = sum(assignments[1:(i-1),k])                      # fixed, before it was 1:i-1, which would attempt to index 0, though had no effect
+      m_k = sum(assignments[1:prev, k])                     # before it was 1:i-1, which would attempt to index 0, though had no effect
       prob = m_k / i
-      dishes_from_previously_sampled[1,k] = rbinom(1,1, prob)
+      dishes_from_previously_sampled[1, k] = rbinom(1, 1, prob)
     }
     
     new_dishes = rpois(1, alpha/i)
@@ -88,8 +91,8 @@ ibp = function(alpha, N){
 }
 
 # debugonce(ibp)
-test = replicate(100, ibp(10, 100))
-res = ibp(1, 100)
+# test = replicate(100, ibp(10, 100))
+res = ibp(4, 100)
 d3heatmap::d3heatmap(res, Rowv=F, Colv=F)
 
 ```
