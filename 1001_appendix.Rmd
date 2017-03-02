@@ -338,7 +338,7 @@ The rest regards the parameter estimates, i.e. the paths, variances, covariances
 On GitHub I have some [R code](https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/cfa_ml.R) I've put together that will estimate a factor analysis via maximum likelihood, i.e. a 'by-hand' approach fully within R. It will simulate some data for two correlated factors with four indicators each, and produce raw (function shown below) and standardized loadings, the log-likelihood, AIC, and BIC.  It will also compare these results to <span class="pack">lavaan</span> output for the same data, as well as provide the corresponding Mplus code.
 
 
-```{r cfaML}
+```{r cfaML, eval=FALSE}
 # measurement model, covariance approach
 cfa.cov = function (parms, data) {
   # Arguments- parms: initial values (named); data: raw data
@@ -478,15 +478,15 @@ d3heatmap::d3heatmap(cor(select(dparallel, -Subject), ranef), Rowv = F, Colv = F
 
 
 process1Model = "
-i1 =~ 1*y11 + 1*y12 + 1*y13 + 1*y14
-s1 =~ 0*y11 + 1*y12 + 2*y13 + 3*y14
+  i1 =~ 1*y11 + 1*y12 + 1*y13 + 1*y14
+  s1 =~ 0*y11 + 1*y12 + 2*y13 + 3*y14
 "
 p1Res = growth(process1Model, data=dparallel)
 fscoresP1 = lavPredict(p1Res)
 
 process2Model = "
-i2 =~ 1*y21 + 1*y22 + 1*y23 + 1*y24
-s2 =~ 0*y21 + 1*y22 + 2*y23 + 3*y24
+  i2 =~ 1*y21 + 1*y22 + 1*y23 + 1*y24
+  s2 =~ 0*y21 + 1*y22 + 2*y23 + 3*y24
 "
 p2Res = growth(process2Model, data=dparallel)
 fscoresP2 = lavPredict(p2Res)
@@ -494,10 +494,10 @@ fscoresP2 = lavPredict(p2Res)
 fscoresSeparate = data.frame(fscoresP1, fscoresP2)
 
 pathMod = "
-s1 ~ i2
-s2 ~ i1
-
-i1~~i2
+  s1 ~ i2
+  s2 ~ i1
+  
+  i1~~i2
 "
 
 pathModRes = sem(pathMod, data=fscoresSeparate, fixed.x = F)
@@ -737,6 +737,7 @@ Beaujean, A. A. (2014). [Latent variable modeling using R: A step by step guide]
 
 Gershman & Blei (2011). A Tutorial on Bayesian Nonparametric Models.
 
+Griffiths & Ghahramani (2005). Infinite latent feature models and the Indian buffet process. 
 
 ### lavaan
 
