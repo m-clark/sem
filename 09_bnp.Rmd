@@ -175,7 +175,7 @@ So now that we have the binary, on-off, switch, $Z$, that results from the IBP, 
 $$Z \odot w = \Lambda$$ 
 $$X_n =  \Lambda F_n + \epsilon_n$$
 
-The above assumes an observed data matrix $X$, where each $n$ observations is of some dimension $m$.  $\Lambda$ is our $m$ by $k$ loading matrix, where $k$ is the number of latent factors, $F$ represents our factors, and $\epsilon$ the noise.
+The above assumes an observed data matrix $X$, where each $n$ observations is of some dimension $m$.  $\Lambda$ is our $m$ by $k$ loading matrix, where $k$ is the number of latent factors, and is created by the elementwise product of $Z$ and $w$. $F$ represents our factors, and $\epsilon$ the noise.
 
 ## Summary
 
