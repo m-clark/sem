@@ -122,7 +122,7 @@ Harman, H. *Modern Factor Analysis*. [Google Books link](https://books.google.co
 - **E5**: Take charge. (q_1768)
 - **N1**: Get angry easily. (q_952)
 - **N2**: Get irritated easily. (q_974)
-- **N3**: Have frequent mood swings. (q_1099
+- **N3**: Have frequent mood swings. (q_1099)
 - **N4**: Often feel blue. (q_1479)
 - **N5**: Panic easily. (q_1505)
 - **O1**: Am full of ideas. (q_128)
