@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=F, message = F, warning=F,
 
 
 ```{r echo=FALSE}
-library(tidyverse); library(htmltools); library(lazerhawk)
+library(tidyverse); library(htmltools); library(lazerhawk); library(heatR)
 ```
 
 

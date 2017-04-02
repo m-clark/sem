@@ -469,7 +469,7 @@ fscores = lavPredict(mainRes)
 broom::tidy(data.frame(fscores))
 lm(s2~., fscores)
 
-lazerhawk::corrheat(cor(fscores))
+heatR::corrheat(cor(fscores))
 qplot(s1, i2, data=data.frame(fscores)) + geom_smooth(method='lm', se=F)
 fv = lavPredict(mainRes, 'ov')
 summary(mainRes, standardized=T)

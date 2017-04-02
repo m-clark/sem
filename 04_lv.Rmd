@@ -334,7 +334,7 @@ fac1$BIC
 fac2$BIC
 
 tags$div(style="width:50%; margin:0 auto",
-         lazerhawk::corrheat(fac2$residual, psychOptions=list(), ordering='absolute', width='100%', 
+         heatR::corrheat(fac2$residual, psychOptions=list(), ordering='absolute', width='100%', 
                              xaxis_font_size=10, yaxis_font_size=10)
          )
 ```
@@ -946,7 +946,7 @@ mat0[9:12,1:4] = .2
 mat0[9:12,5:8] = .2
 mat0 = as.matrix(mat0)
 mat0[upper.tri(mat0)] = t(mat0)[upper.tri(mat0)]
-lazerhawk::corrheat(mat0)
+heatR::corrheat(mat0)
 test = MASS::mvrnorm(100, mu=rep(0,12), Sigma=mat0)
 alpha(test)
 omega(test)

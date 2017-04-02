@@ -248,7 +248,7 @@ Judging from the following correlation matrix (blue= positive correlation, red=n
 load('../data/bfi.RData')
 bfi_trim %>% 
   cor(use='pair') %>% 
-  lazerhawk::corrheat(psychOptions = list(fm='ml', rotate='promax'), width='100%') %>% 
+  heatR::corrheat(psychOptions = list(fm='ml', rotate='promax'), width='100%') %>% 
   tags$div(style="width:75%; margin:auto auto;")
 ```
 
@@ -405,7 +405,7 @@ Note below how you can detect the structure visually.  Physical appearance hangs
 
 ```{r corplot, echo=FALSE, eval=T, message=F, warning=F}
 # corrplot::corrplot(cov2cor(marshCov), order='hclust', addrect=3, rect.col='#ff5503', tl.col='gray50')
-suppressMessages(lazerhawk::corrheat(cov2cor(marshCov), width='100%') %>% 
+suppressMessages(heatR::corrheat(cov2cor(marshCov), width='100%') %>% 
   tags$div(style="width:75%; margin:auto auto;"))  # knitr won't ignore message otherwise
 ```
 
@@ -468,7 +468,7 @@ semPlot::semPaths(poldem_Results, layout='tree2', style='lisrel', covAtResiduals
 
 ```{r corplotsem2, echo=FALSE, eval=F}
 # corrplot::corrplot(cor(poldem), order='hclust', addrect=3, rect.col='#ff5503', tl.col='gray50')
-lazerhawk::corrheat(cor(poldem))
+heatR::corrheat(cor(poldem))
 ```
 
 
