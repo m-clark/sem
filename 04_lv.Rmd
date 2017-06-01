@@ -267,8 +267,9 @@ And to reproduce the correlation matrix:
 $$R \approx LL' + \Psi$$
 So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'll note that the uniquenesses are all zero, but this is not the case with factor analysis.
 
-```{r fa_preproduce_cormat}
-fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F)
+```{r fa_preproduce_cormat, echo=-1}
+# see details in helpfile for fa; due to change, fm='old.min' required for this example to wrok
+fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F, fm='old.min')
 all.equal(tcrossprod(loadings(fa_all)), cor(Harman.5))           # doesn't reproduce cormat
 
 # add uniquenesses
