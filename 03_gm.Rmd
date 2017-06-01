@@ -490,6 +490,70 @@ summary(modiv)
 
 While instrumental variable regression is common, this is perhaps not a typical path model seen in SEM. With SEM, a model comparison approach might be taken to compare models of competing complexity.  One issue not discussed is where instruments come from.  Generally data is not collected with acquiring them in mind, so it might be very difficult to use such an analysis.  Furthermore, the structured causal framework that includes SEM would generally be a more flexible approach.
 
+##### Heckman Selection Model
+
+A different kind of instrumental variable model comes into play with sample selection models.  Very common in econometrics, and practically nowhere else, in this situation, our dependent variable is censored in some fashion, such that we only observe some the population.  The classic, and evidently only, textbook example you'll find on this regards the wages of working women.  Here is the description from the Stata manual.
+
+> In one classic example, the first equation describes the wages of women. Women choose whether to work, and thus, from our point of view as researchers, whether we observe their wages in our data. If women made this decision randomly, we could ignore that not all wages are observed and use ordinary regression to fit a wage model. Such an assumption of random participation, however, is unlikely to be true; women who would have low wages may be unlikely to choose to work, and thus the sample of observed wages is biased upward. In the jargon of economics, women choose not to work when their personal reservation wage is greater than the wage offered by employers. Thus women who choose not to work might have even higher offer wages than those who do work—they may have high offer wages, but they have even higher reservation wages. We could tell a story that competency is related to wages, but competency is rewarded more at home than in the labor force.
+
+So the primary problem here again is bias. Now you may say- but I'm not interested in the generalizing to all women, or, if I were really worried about exact inference there are a whole host of other things being ignored, but the economists will have none of it[^vogons].  Conceptually, the model is as follows:
+
+$$ y = X\beta + \epsilon$$
+$$\mathrm{observed} = Z\gamma + \nu$$
+$$\begin{pmatrix}
+\epsilon \\ \nu
+\end{pmatrix}
+\sim N\begin{bmatrix}
+\begin{pmatrix}
+0 \\ 0
+\end{pmatrix},
+\begin{pmatrix}
+\sigma & \rho\\
+\rho & 1
+\end{pmatrix}\end{bmatrix}$$
+
+So again we have the correlated errors issue, and, as with instrumental variable regression, we can take a two step approach here, albeit a bit differently. In the one model, we will predict whether the data is observed or not using a probit model. Then we'll use a variable based on the fits from that model in the next step. Note these are not the fitted values, but the <span class="emph">inverse Mills ratio</span> based on them.   I show results using the <span class="pack">sampleSelection</span> package, and how to duplicate the process with standard R model functions.
+
+```{r heckman}
+wages = haven::read_dta('data/heckman_women.dta') 
+library(sampleSelection)
+wages$select_outcome = factor(!is.na(wages$wage), labels=c('not', 'observed'))
+
+selection_model = selection(select_outcome ~ married + children + education + age, 
+                            wage ~ education + age,
+                            data=wages, method='2step')
+summary(selection_model)
+
+
+# probit model
+probit = glm(select_outcome ~ married + children + education + age, data=wages, family=binomial(link = 'probit'))
+
+# setup for wage model
+probit_lp = predict(probit)
+mills0 = dnorm(probit_lp)/pnorm(probit_lp)
+imr = mills0[wages$select_outcome=='observed']
+
+lm_select = lm(wage ~ education + age + imr, data=filter(wages, select_outcome=='observed'))
+summary(probit)
+summary(lm_select)
+```
+
+Dividing the coefficient for `imr` by $\sigma$ will give you a rough estimate of $\rho$, but the $\sigma$ from the package results is the lm result plus an extra component, so the rough estimate will be a bit larger.
+
+Unfortunately there isn't a real good way to formulate this in SEM.  Conceptually it's still an instrumental variable type of model, but the complete separation of the data, where part of the model only exists for one category means that standard approaches won't estimate it.  Probably a good thing in the end.
+
+```{r  echo=FALSE, eval=FALSE}
+heckmodel_sem = '
+wage ~ education + age + select_outcome
+
+select_outcome ~ married + children + education + age
+wage ~~ select_outcome
+select_outcome ~~ 1*select_outcome
+'
+
+test = sem(heckmodel_sem, data=wages, ordered='select_outcome', missing='fiml')
+summary(test)
+```
 
 
 #### Aside: Nonrecursive Models
@@ -874,3 +938,5 @@ Graphical models are a general way to formulate and visualize statistical models
 
 [^direct]: In Pearl's language, Z is d-separated from Y if the X -> Y path is removed, but not d-separated from X.  The *d* stands for *directional*.
 
+
+[^vogons]: Economists are like Vogons. They do good work, efficient, consistent, and without bias, but in the end no one wants anything to do with their poetry.
