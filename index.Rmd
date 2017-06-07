@@ -36,18 +36,18 @@ url: 'https\://m-clark.github.io/docs/sem/'  # evidently the \: is required or y
 github-repo:  m-clark/sem/
 ---
 
-```{r setup, include=FALSE}
+```{r setup_chunkopts, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=F, message = F, warning=F, 
                       R.options=list(width=120), fig.align='center')
 ```
 
 
-```{r echo=FALSE}
-library(tidyverse); library(htmltools); library(lazerhawk); library(heatR)
+```{r setup_packages, echo=FALSE, cache=FALSE}
+library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan)
 ```
 
 
-```{r include=FALSE}
+```{r setup_bib, include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib')
 ```

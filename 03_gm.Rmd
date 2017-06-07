@@ -538,9 +538,9 @@ summary(probit)
 summary(lm_select)
 ```
 
-Dividing the coefficient for `imr` by $\sigma$ will give you a rough estimate of $\rho$, but the $\sigma$ from the package results is the lm result plus an extra component, so the rough estimate will be a bit larger.
+Dividing the coefficient for `imr` by $\sigma$ will give you a rough estimate of $\rho$, but the $\sigma$ from the package results is the <span class="func">lm</span> <span class="objclass">sigma</span> plus an extra component, so the rough estimate of $\rho$ from just the <span class="func">lm</span> results will be a bit larger.
 
-Unfortunately there isn't a real good way to formulate this in SEM.  Conceptually it's still an instrumental variable type of model, but the complete separation of the data, where part of the model only exists for one category means that standard approaches won't estimate it.  Probably a good thing in the end.
+Unfortunately there isn't a real good way to formulate this in SEM.  Conceptually it's still an instrumental variable type of model, but the complete separation of the data, where part of the model only exists for one category means that standard approaches won't estimate it.  Probably a good thing in the end.  You could however estimate the IMR, and do the second step only using robust standard errors.  It still won't be exactly the same as the <span class="pack">sampleSelection</span> result, but close.
 
 ```{r  echo=FALSE, eval=FALSE}
 heckmodel_sem = '
