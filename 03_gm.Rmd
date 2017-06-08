@@ -551,8 +551,6 @@ wage ~~ select_outcome
 select_outcome ~~ 1*select_outcome
 '
 
-test = sem(heckmodel_sem, data=wages, ordered='select_outcome', missing='fiml')
-summary(test)
 ```
 
 
