@@ -82,14 +82,14 @@ g = qplot(x=mod@posterior$scaled[,1], y=mod@posterior$scaled[,2]) +
   xlab('Posterior Probablity for Group 1') +
   ylab('Posterior Probablity for Group 2') +
   lazerhawk::theme_trueMinimal() 
-ggplotly(width=500)
+ggplotly(width=500, height=500)
 ```
 ```{r eruptionsContourPlot, echo=FALSE}
 cluster = factor(mod@cluster)
 g = qplot(data=faithful, x=eruptions, y=waiting, color=cluster) + 
     geom_density2d() +
   lazerhawk::theme_trueMinimal()
-ggplotly(width=500)
+ggplotly(width=500, height=500)
 ```
 
 
@@ -265,7 +265,7 @@ Note that one shortcoming of <span class="pack">lavaan</span> relative to Mplus 
 
 [^cluster]: Note that k-means and other common cluster analysis techniques are not model based as in this example.  In model-based approaches we assume some probabilistic data generating process (e.g. normal distribution) rather than some heuristic.
 
-[^latclass]: By contrast, continuous latent variables are typically clearly theoretically motivated in typical SEM practice.  Typical SEM data set sizes would usually limit the number of groups to three or four at most, because the smallest latent group will be the limiting factor, but still needs enough data to run an SEM model confidently.  However, there is no reason to believe there would only be three distinct latent classes in any reasonable amount of data.
+[^latclass]: By contrast, continuous latent variables are typically clearly theoretically motivated in usual SEM practice. In addition, SEM data set sizes would usually limit the number of groups to three or four at most, because the smallest latent group will be the limiting factor, but still needs enough data to run an SEM model confidently.  However, there is no reason to believe there would only be three distinct latent classes in any reasonable amount of data.
 
 [^proftrait]: I can never keep profile vs. trait straight.
 
