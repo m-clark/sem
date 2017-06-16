@@ -14,18 +14,12 @@ output:
     toc: TRUE
     toc_float: TRUE
     code_folding: hide
-  # html_notebook:  # there is nothing to be gained by notebook aside from caching issues, no svg, broken css etc.
-  #   # css: ../sem.css # using css will mess up line breaks in code
-  #   theme: sandstone
-  #   font-family: Roboto
-  #   highlight: zenburn
-  #   toc: TRUE
-  #   toc_float: TRUE
-  #   code_folding: hide
 ---
- 
+
+
 ```{r setupExercises, include=FALSE}
 knitr::opts_chunk$set(cache = F, message = F, warning = F, R.options=list(width=120), comment=NA)
+knitr::opts_knit$set(root.dir = normalizePath(".."))
 library(magrittr); library(dplyr); library(lavaan); library(semPlot); library(htmltools)
 ```
 
@@ -80,7 +74,7 @@ This exercise investigates satisfaction in high school seniors using the 1993 Mo
 
 
 ```{r pa1, echo=FALSE}
-mtf = read.csv('../data/monitorfuture.csv')
+mtf = read.csv('data/monitorfuture.csv')
 satistifaction_ModelCode = '
   overall ~ esteem + lonely
   esteem ~ locus + lonely
@@ -239,13 +233,13 @@ data(bfi)
 bfi_trim = bfi %>% 
   select(-gender, -age, -education) %>% 
   mutate_if(whichneg, function(x) -x)
-save(bfi_trim, file='../data/bfi.RData')
+save(bfi_trim, file='data/bfi.RData')
 ```
 
 Judging from the following correlation matrix (blue= positive correlation, red=negative, bold=stronger, faded=weaker; hover for value), can you already see some structure appearing? How many factors do you see? How are they correlated with one another?
 
 ```{r, echo=FALSE, eval=TRUE}
-load('../data/bfi.RData')
+load('data/bfi.RData')
 bfi_trim %>% 
   cor(use='pair') %>% 
   heatR::corrheat(psychOptions = list(fm='ml', rotate='promax'), width='100%') %>% 
@@ -355,7 +349,7 @@ The data for this exercise comes from an article by Marsh and Hocevar in 1985. T
 We are interested in determining how a student's physical appearance and physical ability might predict relationships with their peers. The diagram for the model of interest is shown below.
 
 ```{r sem1, echo=FALSE, results='hide'}
-marsh = haven::read_dta('../data/Marsh85.dta')  # grade 1 and 2 are 4 and fifth, first two rows of each are the means and sd
+marsh = haven::read_dta('data/Marsh85.dta')  # grade 1 and 2 are 4 and fifth, first two rows of each are the means and sd
 
 marshCov = marsh %>%
   filter(grade==1) %>%
@@ -369,7 +363,7 @@ meanssds =  marsh %>%  slice(1:2) %>% select(contains('phyab'), contains('appear
 marshCov = lavaan::cor2cov(R=marshCov, sds=unlist(meanssds[2,]))
 
 # write.csv(marshCov, file='../data/Marsh85_SEMExercise.csv', row.names=T)
-marshCov = read.csv('../data/Marsh85_SEMExercise.csv', row.names = 1)  
+marshCov = read.csv('data/Marsh85_SEMExercise.csv', row.names = 1)  
 marshCov = as.matrix(marshCov)
 # save(marshCov, file='data/Marsh85_SEMExercise.RData')
 
@@ -447,7 +441,7 @@ The model we wish to estimate is in according to the following diagram.
 
 
 ```{r sem2, echo=F, dev='svglite'}
-poldem = read.csv('../data/PoliticalDemocracy.csv')
+poldem = read.csv('data/PoliticalDemocracy.csv')
 poldem_ModelCode = '
   # measurement model
     ind60 =~ GNP60 + EnConsump60 + PercLaborForce60

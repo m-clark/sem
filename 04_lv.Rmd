@@ -108,7 +108,7 @@ d3heatmap::d3heatmap(pc$loadings)
 library(htmltools)
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
          d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
-                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50), width=500)
+                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-.3,1), bins=50), width=500)
          )
 ```
 
@@ -297,7 +297,7 @@ Once again, we'll depict the loadings visually.
 ```{r Vis_faHarman, echo=FALSE}
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
          d3heatmap::d3heatmap(fac$loadings, dendrogram='none',
-                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50), width=500)
+                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-.2,1), bins=50), width=500)
          )
 ```
 

@@ -31,7 +31,7 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 description: "Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and 'factor analysis', measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc."
-cover-image: img/bob.jpg
+cover-image: img/198R_1.png
 url: 'https\://m-clark.github.io/docs/sem/'  # evidently the \: is required or you'll get text in the title/toc area
 github-repo:  m-clark/sem/
 ---
@@ -56,9 +56,9 @@ knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib
 #
 
 ```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
-knitr::include_graphics('img/bob.jpg', dpi = NA)
+knitr::include_graphics('img/198R_1.png', dpi = NA)
 ```
 
 <!-- Empty pound will allow for one to create a single title page -->
 
-<img src="img/198R_1.png" style="display:block; margin: 0 auto; width:20%"><br>
+<!-- <img src="img/198R_1.png" style="display:block; margin: 0 auto;"><br> -->

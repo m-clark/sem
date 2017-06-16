@@ -89,7 +89,7 @@ cluster = factor(mod@cluster)
 g = qplot(data=faithful, x=eruptions, y=waiting, color=cluster) + 
     geom_density2d() +
   lazerhawk::theme_trueMinimal()
-ggplotly(width=500, height=500)
+ggplotly(width=750, height=500)
 ```
 
 
@@ -241,6 +241,8 @@ Some other terminology includes:
 <span class="emph">Finite Mixture models</span> Same thing.
 
 <span class="emph">Cluster analysis</span> Same thing.
+
+<span class="emph">Infinite Mixture model</span> A Bayesian version of it.
 
 <span class="emph">Latent Class Analysis</span> refers to dealing with categorical latent variables in the context of multivariate data, especially within the measurement model scenario.  For example one might have a series of yes/no questions on a survey, and want to discover categories of collections of responses.  Some use it for the specific case of categorical indicators, but this is not necessary.
 
