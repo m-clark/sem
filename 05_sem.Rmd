@@ -690,8 +690,11 @@ As in our previous path analysis example, one can write a paper on a good fittin
 
 ## Summary
 
-SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest.  It works best for models with explicit causal motivations, but doesn't have to be restricted to such. Go into it cautiously, prepare to spend a lot of time in model building and inspection, and allow for competing ideas to have their say, and you may find success.
+SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Unfortunately, you cannot look much to how SEM is typically practiced to find out how to do SEM well[^whysembad].  The usual issues are poor underlying theory, small samples, poor samples, use of post-hoc 'theory correction', and lack of competition among plausible alternatives. The vast majority of the situations I've come across would have benefitted from the model search paradigm described in the section on [Bayesian networks][Baysian Networks].
 
+On the other hand, strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest.  While it doesn't have to be restricted to such, SEM works best for models with explicit causal motivations. Go into it cautiously, prepare to spend a lot of time in model building and inspection, and allow for competing ideas to have their say, and you may find success.
+
+  
 
 ## Terminology
 
@@ -731,3 +734,5 @@ SEM is a powerful modeling approach that generalizes many other statistical tech
 [^compareFit]: This function, while very useful, incorrectly notes which fit is 'better' in terms of fit indices that cannot be used to compare models, and furthermore provides no way to turn the flag off.
 
 [^fitkenny]: See also this [site](http://davidakenny.net/cm/fit.htm), which seems to somehow have escaped the dissolution of GeoCities webpages.
+
+[^whysembad]: I'm not sure why this is, but usually it is due to a lack of communication.  According to Google scholar, Rex Kline's applied text on SEM, which did not even have a chapter on graphical models until the most recent edition (which came out 17 years after the first), has been cited 10000 times more than any specific work Pearl has put out, who has several works cited well over 1000 times each.  I would hazard a guess that most of the people doing SEM in psychology and education are not citing Pearl, despite his having provided many non-technical summaries that most could follow.  There is certainly a disconnect somewhere.

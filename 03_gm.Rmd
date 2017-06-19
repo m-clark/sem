@@ -492,11 +492,11 @@ While instrumental variable regression is common, this is perhaps not a typical 
 
 ##### Heckman Selection Model
 
-A different kind of instrumental variable model comes into play with sample selection models.  Very common in econometrics, and practically nowhere else, in this situation, our dependent variable is censored in some fashion, such that we only observe some the population.  The classic, and evidently only, textbook example you'll find on this regards the wages of working women.  Here is the description from the Stata manual.
+A different kind of instrumental variable model comes into play with sample selection models.  Very common in econometrics or those exposed to it, and practically nowhere else, in this situation, our dependent variable is censored in some fashion, such that we only observe some the population.  The classic, and evidently only, textbook example you'll find on this regards the wages of working women.  Here is the description from the Stata manual.
 
 > In one classic example, the first equation describes the wages of women. Women choose whether to work, and thus, from our point of view as researchers, whether we observe their wages in our data. If women made this decision randomly, we could ignore that not all wages are observed and use ordinary regression to fit a wage model. Such an assumption of random participation, however, is unlikely to be true; women who would have low wages may be unlikely to choose to work, and thus the sample of observed wages is biased upward. In the jargon of economics, women choose not to work when their personal reservation wage is greater than the wage offered by employers. Thus women who choose not to work might have even higher offer wages than those who do work—they may have high offer wages, but they have even higher reservation wages. We could tell a story that competency is related to wages, but competency is rewarded more at home than in the labor force.
 
-So the primary problem here again is bias. Now you may say- but I'm not interested in the generalizing to all women, or, if I were really worried about exact inference there are a whole host of other things being ignored, but the economists will have none of it[^vogons].  Conceptually, the model is as follows:
+So the primary problem here again is bias. Now you may say- but I'm not interested in the generalizing to all women[^modelmissing], or, if I were really worried about exact inference there are a whole host of other things being ignored, but the economists will have none of it[^vogons].  Conceptually, the model is as follows:
 
 $$ y = X\beta + \epsilon$$
 $$\mathrm{observed} = Z\gamma + \nu$$
@@ -512,7 +512,7 @@ $$\begin{pmatrix}
 \rho & 1
 \end{pmatrix}\end{bmatrix}$$
 
-So again we have the correlated errors issue, and, as with instrumental variable regression, we can take a two step approach here, albeit a bit differently. In the one model, we will predict whether the data is observed or not using a probit model. Then we'll use a variable based on the fits from that model in the next step. Note these are not the fitted values, but the <span class="emph">inverse Mills ratio</span> based on them.   I show results using the <span class="pack">sampleSelection</span> package, and how to duplicate the process with standard R model functions.
+There are actually two models to consider- one that we care about, and one regarding whether we observe the target variable $y$ or not. As before, we have the correlated errors issue, and, as with instrumental variable regression, we can take a two step approach here, albeit a bit differently. In the one model, we will predict whether the data is observed or not using a probit model. Then we'll use a variable based on the fits from that model in the next step. Note these are not the fitted values, but the <span class="emph">inverse Mills ratio</span>, or in survival model lingo, the nonselection hazard, based on them.   I show results using the <span class="pack">sampleSelection</span> package, and how to duplicate the process with standard R model functions.
 
 ```{r heckman}
 wages = haven::read_dta('data/heckman_women.dta') 
@@ -526,7 +526,9 @@ summary(selection_model)
 
 
 # probit model
-probit = glm(select_outcome ~ married + children + education + age, data=wages, family=binomial(link = 'probit'))
+probit = glm(select_outcome ~ married + children + education + age, 
+             data=wages, 
+             family=binomial(link = 'probit'))
 
 # setup for wage model
 probit_lp = predict(probit)
@@ -540,7 +542,7 @@ summary(lm_select)
 
 Dividing the coefficient for `imr` by $\sigma$ will give you a rough estimate of $\rho$, but the $\sigma$ from the package results is the <span class="func">lm</span> <span class="objclass">sigma</span> plus an extra component, so the rough estimate of $\rho$ from just the <span class="func">lm</span> results will be a bit larger.
 
-Unfortunately there isn't a real good way to formulate this in SEM.  Conceptually it's still an instrumental variable type of model, but the complete separation of the data, where part of the model only exists for one category means that standard approaches won't estimate it.  Probably a good thing in the end.  You could however estimate the IMR, and do the second step only using robust standard errors.  It still won't be exactly the same as the <span class="pack">sampleSelection</span> result, but close.
+Unfortunately there isn't a real good way to formulate this in SEM.  Conceptually it's still an instrumental variable type of model, but the complete separation of the data, where part of the model only exists for one category means that standard approaches won't estimate it.  Probably a good thing in the end.  You could however estimate the IMR, and do the second step only using robust standard errors.  It still won't be exactly the same as the <span class="pack">sampleSelection</span> result, but close.  If you'd like to see more detail, check [this out](https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/heckman_selection.R).
 
 ```{r  echo=FALSE, eval=FALSE}
 heckmodel_sem = '
@@ -936,5 +938,6 @@ Graphical models are a general way to formulate and visualize statistical models
 
 [^direct]: In Pearl's language, Z is d-separated from Y if the X -> Y path is removed, but not d-separated from X.  The *d* stands for *directional*.
 
+[^modelmissing]: I'm curious how common it is that you would have enough fully complete X, but no Y to even model the missingness. The usual situation I see is either complete missingness or, far more commonly, missingness all over the data, which means you'd have to model the missingness in X in order to model they Y. In other words, you'd have a general missingness problem to consider to even be able to do the initial probit model.  Stuff like this seems endemic to instrumental variable analysis. In the standard IV model, it's all well and good, *if you have an instrument*. But as previously mentioned, no one collects data thinking about getting some instrumental variables *just in case*, and if you don't get it right, which is impossible to tell, you've likely opened up any number of back doors in a causal sense.  And if you think economists have it all figured out, do a search on 'rainfall' 'tv' and 'autism', or perhaps just use common sense and know those three things should not go together in a model.
 
 [^vogons]: Economists are like Vogons. They do good work, efficient, consistent, and without bias, but in the end no one wants anything to do with their poetry.
