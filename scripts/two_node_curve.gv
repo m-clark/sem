@@ -1,0 +1,14 @@
+digraph M {
+      graph []
+
+     subgraph {
+        rank=same;
+        a b [style=invis] c ;
+     }
+    edge[dir=both, style=curved]
+    a -> c ; 
+    
+    a -> b [style=invis];
+    b -> c [style=invis];
+
+}
