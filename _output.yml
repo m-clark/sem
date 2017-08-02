@@ -8,7 +8,7 @@ bookdown::gitbook:
         <li><a href="https://m-clark.github.io/docs/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#ff5503">Structural Equation Models</span></a></li>
       after: |
         <li><a href="https://m-clark.github.io" target="blank" style="font-size:150%; font-variant:small-caps; color:#ff5500">Michael Clark</a></li>
-        <li><a href="https://github.com/rstudio/bookdown" target="blank" style="font-size:75%;">Published with bookdown</a></li>
+        <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></li>
     edit:
       link: https://github.com/rstudio/bookdown-demo/edit/master/%s
     highlight: pygments
