@@ -72,7 +72,7 @@ colnames(Abortion_asfactor) = paste0('Item_', 1:4)
 
 The <span class="pack">ltm</span> package provides some nice descriptives via the <span class="func">descript</span> function.
 
-```{r, echo=FALSE}
+```{r abortion_descriptives, echo=FALSE}
 ltm::descript(Abortion)
 ```
 

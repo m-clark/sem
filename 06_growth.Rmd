@@ -114,7 +114,79 @@ Our fixed effects are at the values we set for the overall intercept and slope. 
 
 ## Running a Growth Curve Model
 
-As before, we'll use <span class="pack">lavaan</span>, but now the syntax will look a bit strange compared to what we're used to with our prior SEM, because we have to fix the factor loadings to specific values in order to make it work.  This also leads to non-standard output relative to other SEM models, as there is nothing to estimate for the many fixed parameters.  Furthermore, our data needs to be in *wide* format, where each row represents a person, as opposed to the *long* format we used in the previous mixed model.  We can use <span class="pack">tidyr</span> to help with that.
+As before, we'll use <span class="pack">lavaan</span>, but now the syntax will look a bit strange compared to what we're used to with our prior SEM, because we have to fix the factor loadings to specific values in order to make it work.  This also leads to non-standard output relative to other SEM models, as there is nothing to estimate for the many fixed parameters.  
+
+Specifically, we'll have a latent variable representing the random intercepts, as well as one representing the random slopes.  All loadings for the intercept are all 1. The slopes for time are arbitrary, but should accurately reflect the time spacing, and typically it is good to start at zero.
+
+```{r growth_graph, echo=FALSE}
+# note to self Diagrammer is difficult at best for multifactor loading situations, mostly because there is no control over label placement
+tags$div(style="width:100%; margin:auto auto; fontsize:'50%'",
+DiagrammeR("
+digraph neato {
+           # specifying label position is impossible as long as Diagrammer ignores several label attributes inherent in graphviz
+           # Intialization of graph attributes
+           graph [overlap=false ordering=out outputorder = edgesfirst splines=false fontsize='50%']   # order out keeps observed nodes in order; splines will keep straight after specifying headport
+           
+           # Node statements
+           node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+           
+           subgraph{
+            rankdir = LR;
+             rank = same;
+
+             # using plotly palette with alpha
+             Intercept [label='Inter', fontname=Arial, fontcolor=white, fontsize=10, fixedsize=true, width=1, height=1, fillcolor='#1f77b480'];  
+             Slope [fontname=Arial, fontcolor=white, fontsize=10, fixedsize=true, width=1, height=1, fillcolor='#ff7f0e80'];
+           }
+
+           node [width=.66, height=.66, fixedsize=true, shape=square, style='']
+           subgraph {
+             rankdir = TB;
+             rank=same;
+             node [fontcolor=gray50 fontsize=10]
+             node [color='#9467bd']
+             
+             V1 [label='Y@_{T1}'];
+             V2 [label='Y@_{T2}']; 
+             V3 [label='Y@_{T3}']; 
+             V4 [label='Y@_{T4}']; 
+           }
+
+           # Initialization of edge attributes
+           edge [color = gray50 overlap=false arrowsize=.5]
+           
+           # Edge statements
+           
+           edge [ fontcolor=gray25 fontsize='10%' dir=both ]  # labeleangle, labeldistance etc. attributes ignored
+           Intercept -> Slope[label='  &rho;\n' minlen=2];
+           
+           edge [dir=forward headport='c' minlen=1]
+           edge [label='1'  color='#1f77b4' fontcolor='#1f77b4']
+           Intercept -> V1; 
+           edge [label='1'   color='#1f77b4' fontcolor='#1f77b4']
+           Intercept -> V2;
+           edge [label='1'  color='#1f77b4' fontcolor='#1f77b4']
+           Intercept -> V3;
+           edge [label='1'  color='#1f77b4' fontcolor='#1f77b4']
+           Intercept -> V4;
+           
+           edge [dir=forward headport='n' minlen=1]
+           edge [label='0'  color='#ff7f0e' fontcolor='#ff7f0e' labelposition=3]
+           Slope -> V1; 
+           edge [label='1'  color='#ff7f0e' fontcolor='#ff7f0e']
+           Slope -> V2;
+           edge [label='2'  color='#ff7f0e' fontcolor='#ff7f0e']
+           Slope -> V3;
+           edge [label='3'  color='#ff7f0e' fontcolor='#ff7f0e']
+           Slope -> V4;
+} "
+           , type='grViz', width='100%')
+)
+
+```
+
+
+As can probably be guessed, additionally our data needs to be in *wide* format, where each row represents a person and we have separate columns for each time point of the target variable, as opposed to the *long* format we used in the previous mixed model.  We can use <span class="pack">tidyr</span> to help with that.
 
 ```{r wideData, echo=-1}
 head(d)
@@ -222,7 +294,7 @@ ranefLatent %>% cor %>% round(2)
 
 Both approaches allow those residuals to covary, though it gets tedious in SEM syntax, while it is a natural extension in the mixed model framework. Here is the syntax for letting each time point covary with the next, at least, what it might be. It's unclear if <span class="pack">lavaan</span> actually will do this, and the syntax here roughly follows Mplus' manual, except that we can't define new variables in <span class="pack">lavaan</span> as there.  As such, the hope is that the `a` parameter should equal `resvar*corr` as in the Mplus syntax, but there's not a clear way to fix it to be.  It seems consistent here and with larger sample sizes.
 
-```{r, echo=1}
+```{r lavaan_res_cor_attempt, echo=1}
 model = "
     # intercept and slope with fixed coefficients
     i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3

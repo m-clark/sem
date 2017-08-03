@@ -341,7 +341,7 @@ $\epsilon_3 = 2 - 0*.5 - 3*.2 = 1.4$
 
 If a person is in the control group, this setup suggests the predicted value for the Target would be 3\*.2 + 1.4 = 2.  Let's now figure out what the value would be if this person was in the treatment.  The Mediator value would  now be 3 + 1\*.3 = 3.3.  This would in turn result in a predicted Target value as follows: 1.4 + 3.3\*.2 + 1\*.5 = 2.56. And we could take this approach for other situations.  We could, for example, ask what the expected value be if the Treatment level is 0, but the Mediator was at whatever value it would have been, had the person received the treatment?  The value is 3.3\*.2 + 1.4 = 2.06, which if we subtract from when they are are fully in the control group gives us the mediated effect 2.06 - 2 = .06.  In this linear model it is equivalent to indirect effect via the product-of-paths approach, .3\*.2 = .06.  But now with the estimate based on the target variable rather than coefficients, we don't have to be restricted to linear models.
 
-```{r echo=F, eval=F}
+```{r simmed, echo=F, eval=F}
 set.seed(123)
 N = 10000
 Treatment = rep(0:1, length.out = N)
@@ -544,7 +544,7 @@ Dividing the coefficient for `imr` by $\sigma$ will give you a rough estimate of
 
 Unfortunately there isn't a real good way to formulate this in SEM.  Conceptually it's still an instrumental variable type of model, but the complete separation of the data, where part of the model only exists for one category means that standard approaches won't estimate it.  Probably a good thing in the end.  You could however estimate the IMR, and do the second step only using robust standard errors.  It still won't be exactly the same as the <span class="pack">sampleSelection</span> result, but close.  If you'd like to see more detail, check [this out](https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/heckman_selection.R).
 
-```{r  echo=FALSE, eval=FALSE}
+```{r heckman_misc, echo=FALSE, eval=FALSE}
 heckmodel_sem = '
 wage ~ education + age + select_outcome
 

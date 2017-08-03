@@ -18,8 +18,8 @@ output:
           family: serif
           size: 2
         sharing:
-          facebook: false
-          twitter: false
+          facebook: true
+          twitter: true
     # bookdown::tufte_html_book:
     #   toc: yes
     #   css: [toc.css, ../notebooks.css]
@@ -37,8 +37,9 @@ github-repo:  m-clark/sem/
 ---
 
 ```{r setup_chunkopts, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=F, message = F, warning=F, 
-                      R.options=list(width=120), fig.align='center')
+knitr::opts_chunk$set(echo = TRUE, comment=NA, message = F, warning=F, R.options=list(width=120), 
+                      cache.rebuild=F, cache=T,
+                      fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
 ```
 
 
@@ -55,7 +56,7 @@ library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); libr
 
 #
 
-```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
+```{r rimg, fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
 knitr::include_graphics('img/198R_1.png', dpi = NA)
 ```
 
