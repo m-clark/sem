@@ -48,8 +48,8 @@ library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); libr
 
 
 ```{r setup_bib, include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib')
+# automatically create a bib database for R packages; just run every once in a while (on most updated machine)
+# knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib')
 ```
 
 
