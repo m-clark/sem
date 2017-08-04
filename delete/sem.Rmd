@@ -3427,12 +3427,12 @@ Specifically, we'll have a latent variable representing the random intercepts, a
 
 ```{r growth_graph, echo=FALSE}
 # note to self Diagrammer is difficult at best for multifactor loading situations, mostly because there is no control over label placement
-tags$div(style="width:100%; margin:auto auto; fontsize:'50%'",
+tags$div(style="width:100%; margin:auto auto; fontsize:'20%'",
 DiagrammeR("
 digraph neato {
            # specifying label position is impossible as long as Diagrammer ignores several label attributes inherent in graphviz
            # Intialization of graph attributes
-           graph [overlap=false ordering=out outputorder = edgesfirst splines=false fontsize='50%']   # order out keeps observed nodes in order; splines will keep straight after specifying headport
+           graph [overlap=false ordering=out outputorder = edgesfirst splines=false]   # order out keeps observed nodes in order; splines will keep straight after specifying headport
            
            # Node statements
            node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
@@ -3442,15 +3442,15 @@ digraph neato {
              rank = same;
 
              # using plotly palette with alpha
-             Intercept [label='Inter', fontname=Arial, fontcolor=white, fontsize=10, fixedsize=true, width=1, height=1, fillcolor='#1f77b480'];  
-             Slope [fontname=Arial, fontcolor=white, fontsize=10, fixedsize=true, width=1, height=1, fillcolor='#ff7f0e80'];
+             Intercept [label='Inter', fontname=Arial, fontcolor=white, fixedsize=true, width=1, height=1, fillcolor='#1f77b480'];  
+             Slope [fontname=Arial, fontcolor=white, fixedsize=true, width=1, height=1, fillcolor='#ff7f0e80'];
            }
 
            node [width=.66, height=.66, fixedsize=true, shape=square, style='']
            subgraph {
              rankdir = TB;
              rank=same;
-             node [fontcolor=gray50 fontsize=10]
+             node [fontcolor=gray50]
              node [color='#9467bd']
              
              V1 [label='Y@_{T1}'];
@@ -3464,7 +3464,7 @@ digraph neato {
            
            # Edge statements
            
-           edge [ fontcolor=gray25 fontsize='10%' dir=both ]  # labeleangle, labeldistance etc. attributes ignored
+           edge [ fontcolor=gray25 dir=both ]  # labeleangle, labeldistance etc. attributes ignored
            Intercept -> Slope[label='  &rho;\n' minlen=2];
            
            edge [dir=forward headport='c' minlen=1]

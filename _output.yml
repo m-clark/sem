@@ -17,4 +17,4 @@ bookdown::gitbook:
 #     in_header: preamble.tex
 #   latex_engine: xelatex
 #   citation_package: natbib
-bookdown::epub_book: default
+# bookdown::epub_book: default
