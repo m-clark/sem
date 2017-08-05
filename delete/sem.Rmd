@@ -1449,7 +1449,7 @@ pc = principal(Harman.5, nfactors=3,  rotate='none', covar = F)
 pc
 ```
 
-First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(Harman.5), 2))`).  The `Cumulative Var` tells us that all `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
+First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(psych::Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(psych::Harman.5), 2))`).  The `Cumulative Var` tells us that all `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(psych::Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
 
 <span class='emph'>Loadings</span>, also referred to as the <span class="emph">pattern matrix</span>, in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. As an example, we can reproduce the loadings by correlating the observed variables with the estimated component scores, something we'll talk more about later.
 
@@ -3423,87 +3423,29 @@ Our fixed effects are at the values we set for the overall intercept and slope. 
 
 As before, we'll use <span class="pack">lavaan</span>, but now the syntax will look a bit strange compared to what we're used to with our prior SEM, because we have to fix the factor loadings to specific values in order to make it work.  This also leads to non-standard output relative to other SEM models, as there is nothing to estimate for the many fixed parameters.  
 
-Specifically, we'll have a latent variable representing the random intercepts, as well as one representing the random slopes.  All loadings for the intercept are all 1. The slopes for time are arbitrary, but should accurately reflect the time spacing, and typically it is good to start at zero.
+Specifically, we'll have a latent variable representing the random intercepts, as well as one representing the random slopes.  All loadings for the intercept factor are 1[^likematrix]. The loadings for the effect of time are arbitrary, but should accurately reflect the time spacing, and typically it is good to start at zero, so that the zero has a meaningful interpretation.
 
 ```{r growth_graph, echo=FALSE}
 # note to self Diagrammer is difficult at best for multifactor loading situations, mostly because there is no control over label placement
-tags$div(style="width:100%; margin:auto auto; fontsize:'20%'",
-DiagrammeR("
-digraph neato {
-           # specifying label position is impossible as long as Diagrammer ignores several label attributes inherent in graphviz
-           # Intialization of graph attributes
-           graph [overlap=false ordering=out outputorder = edgesfirst splines=false]   # order out keeps observed nodes in order; splines will keep straight after specifying headport
-           
-           # Node statements
-           node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
-           
-           subgraph{
-            rankdir = LR;
-             rank = same;
-
-             # using plotly palette with alpha
-             Intercept [label='Inter', fontname=Arial, fontcolor=white, fixedsize=true, width=1, height=1, fillcolor='#1f77b480'];  
-             Slope [fontname=Arial, fontcolor=white, fixedsize=true, width=1, height=1, fillcolor='#ff7f0e80'];
-           }
-
-           node [width=.66, height=.66, fixedsize=true, shape=square, style='']
-           subgraph {
-             rankdir = TB;
-             rank=same;
-             node [fontcolor=gray50]
-             node [color='#9467bd']
-             
-             V1 [label='Y@_{T1}'];
-             V2 [label='Y@_{T2}']; 
-             V3 [label='Y@_{T3}']; 
-             V4 [label='Y@_{T4}']; 
-           }
-
-           # Initialization of edge attributes
-           edge [color = gray50 overlap=false arrowsize=.5]
-           
-           # Edge statements
-           
-           edge [ fontcolor=gray25 dir=both ]  # labeleangle, labeldistance etc. attributes ignored
-           Intercept -> Slope[label='  &rho;\n' minlen=2];
-           
-           edge [dir=forward headport='c' minlen=1]
-           edge [label='1'  color='#1f77b4' fontcolor='#1f77b4']
-           Intercept -> V1; 
-           edge [label='1'   color='#1f77b4' fontcolor='#1f77b4']
-           Intercept -> V2;
-           edge [label='1'  color='#1f77b4' fontcolor='#1f77b4']
-           Intercept -> V3;
-           edge [label='1'  color='#1f77b4' fontcolor='#1f77b4']
-           Intercept -> V4;
-           
-           edge [dir=forward headport='n' minlen=1]
-           edge [label='0'  color='#ff7f0e' fontcolor='#ff7f0e' labelposition=3]
-           Slope -> V1; 
-           edge [label='1'  color='#ff7f0e' fontcolor='#ff7f0e']
-           Slope -> V2;
-           edge [label='2'  color='#ff7f0e' fontcolor='#ff7f0e']
-           Slope -> V3;
-           edge [label='3'  color='#ff7f0e' fontcolor='#ff7f0e']
-           Slope -> V4;
-} "
-           , type='grViz', width='100%')
+tags$div(style="width:50%; margin:auto auto; font-size:50%",
+         DiagrammeR::DiagrammeR('scripts/growth.gv', type='grViz', width='100%', height='25%')
 )
 
 ```
 
+<br>
 
-As can probably be guessed, additionally our data needs to be in *wide* format, where each row represents a person and we have separate columns for each time point of the target variable, as opposed to the *long* format we used in the previous mixed model.  We can use <span class="pack">tidyr</span> to help with that.
+As can probably be guessed, additionally our data needs to be in *wide* format, where each row represents a person and we have separate columns for each time point of the target variable, as opposed to the *long* format we used in the previous mixed model.  We can use the <span class="func">spread</span> function from <span class="pack">tidyr</span> to help with that.
 
 ```{r wideData, echo=-1}
 head(d)
-library(tidyr)
-dWide = d %>%  
-  spread(time, y1)
-head(dWide)
+# also change the names, as usually things don't work well if they start with a 
+# number. yes, it is the 21st century.
 
-# change the names, as usually things don't work well if they start with a number
-colnames(dWide)[-1] = paste0('y', 0:3)
+dWide = d %>%  
+  spread(time, y1) %>% 
+  rename_at(vars(-subject), function(x) paste0('y', x))
+head(dWide)
 ```
 
 Now we're ready to run the model. Note that <span class="pack">lavaan</span> has a specific function, <span class="func">growth</span>, to use for these models.  It doesn't spare us any effort for the model syntax, but does make it unnecessary to set various things with the <span class="func">sem</span> function. 
@@ -3813,6 +3755,8 @@ Growth curve modeling is an alternative way to do what is very commonly accompli
 [^reml]: One can set REML=F so as to use standard maximum likelihood and make the results directly comparable to <span class="pack">lavaan</span>.
 
 [^nonlinearfewtimepts]: I personally cannot *see* bends with only four time points, at least such that I couldn't just as easily posit a linear trend.
+
+[^likematrix]: Those familiar with the model matrix for regression will recognize 'intercept as 1'.
 
 <!--chapter:end:06_growth.Rmd-->
 
@@ -4696,6 +4640,181 @@ Others noted but not demonstrated include <span class="pack">mirt</span> and <sp
 [^grm_as_ord]: The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.
 
 <!--chapter:end:08_irt.Rmd-->
+
+# Topic Models
+
+Anyone who has taken a literature class has been asked to discuss the various themes of a given text. How are such themes discovered? Upon close reading of the text, recurrent references to similar concepts might be bundled in our minds as some general theme hidden throughout the text. Discovery of such themes is part of the joy of reading in general.
+
+One can think of these hidden, or latent, themes much as we would latent variables in factor analysis. Different texts have both different and similar themes, but the author doesn’t usually come out and announce a theme explicitly. Now consider a situation in which you have a million books. You can’t read that many, but may still want to discover the themes in them. This is what <span class="emph">topic modeling</span> is all about.
+
+We don't actually analyze raw text, but what we can do is get word counts for every text, and construct a <span class="emph">document term matrix</span> (DTM). In this matrix, rows represent the documents and columns represent terms that are found in all documents. The values represent the counts of how many times a term is found in a text. With many texts, one will easily have thousands of columns, and most texts do not use most of the words, resulting in a very sparse matrix that is mostly zeros. Still, now that we have a numeric matrix we can perform analysis on it. The goal is just like the goal PCA and factor analysis- we want to reduce these thousands of columns of terms to a far fewer number of topics. Furthermore, like factor analysis, we will want to interpret the topics, in this case based on the terms associated with them.
+
+
+## Latent Dirichlet Allocation
+
+The most common approach to topic modeling is <span class="emph">latent dirichlet allocation</span> (LDA), which one can think of as discrete PCA. In my opinion, this should be as much a part of your toolbox as PCA and Factor Analysis, as 'compositional' data, where we have counts of occurrences (out of some total), are quite common. In the past PCA was applied to such data, but it is essentially a less performant approach with less intuitive results.  
+
+I have gone into far more detailed demonstration elsewhere, and have no desire to duplicate it.  I have [workshop notes](http://m-clark.github.io/workshops/text_analysis/) devoted exclusively to it, as well as hands-on demos [here](http://m-clark.github.io/docs/topic_models/topic-model-demo.html) and [here](http://micl.shinyapps.io/texEx/texEx.Rmd).  However we can discuss a couple things, starting with the dirichlet distribution.  A draw from the dirichlet distribution can be seen as a probability distribution for a k category event. It has one parameter, we'll call α, which is often referred to as the concentration parameter. If the k α values are equal, the resulting k probabilities will be equal on average, and with larger α, there will be less variance around that probability. When they are unequal, the larger values will result in larger probabilities assigned. Consider the following for `k=5` topics.
+
+
+```{r dirichlet_draw}
+library(gtools)
+probs1 = rdirichlet(n=1000, alpha=rep(1,5))
+probs2 = rdirichlet(n=1000, alpha=rep(100,5))
+probs3 = rdirichlet(n=1000, alpha=(1:5)^2)
+map(list(probs1, probs2, probs3), colMeans) %>% map(round, 2)
+# one more example of where purrr can only replicate the apply family for anything meaningful, can't return a matrix, can't bind the rows... sigh
+```
+
+In topic modeling, the probabilities can represent the probability of various topics, or the probability of terms within topics. However, the thing to note is that LDA can be applied to any appropriate data, it doesn't have to be a document-term matrix resulting from text. Any count-based data matrix might potentially be appropriate.
+
+
+## Analysis
+
+When it comes to topic modeling, most of the time is spent on processing the text itself.  Importing/scraping it, dealing with capitalization, punctuation, removing stopwords, dealing with encoding issues, removing other miscellaneous common words.  It is a highly iterative process such that once you get to the document-term matrix, you're just going to find the stuff that was missed before and repeat the process with new 'cleaning parameters' in place.  So getting to the analysis stage is the hard part.  The following image is from the [tidytext book](http://tidytextmining.com/), and depicts the process as well as some R packages that might be of use to you.
+
+
+<img src="http://tidytextmining.com/images/tidyflow-ch-6.png" style="display:block; margin: 0 auto;" width=50%>
+
+
+In what follows we'll start at the point of having the DTM in place and ready for analysis.  For our needs we'll use the <span class="pack">topicModels</span> package for the analysis, and mostly others for post-processing.  Due to the large number of terms, this could take a while to run depending on your machine (maybe a minute or two).  As mentioned, one of the primary results of such an analysis are the probabilities of terms within topics, which like factor loadings, can aid in interpreting the topics. The other result is the probability that a topic will be present in a given document.
+
+
+```{r dtm_setup, echo=FALSE}
+library(gutenbergr)
+
+titles = c('The vision of hell. by Dante Alighieri',
+           'The Divine Comedy by Dante, Illustrated, Purgatory, Complete',
+           'The Divine Comedy by Dante, Illustrated, Paradise, Complete')
+ids = c('The vision of hell. by Dante Alighieri',
+           'The Divine Comedy by Dante, Illustrated, Purgatory, Complete',
+           'The Divine Comedy by Dante, Illustrated, Paradise, Complete')
+purgatory = 8795
+paradise = 8799
+hell = 8789
+dc_books = gutenberg_works(gutenberg_id %in% c(purgatory, paradise, hell)) %>%
+  gutenberg_download(meta_fields = "title") %>% 
+  mutate(title = factor(title, labels=c('Paradise', 'Purgatory', 'Inferno')))   # checked
+
+# dc_whole = gutenberg_works(gutenberg_id==8800) %>% 
+#   gutenberg_download(meta_fields = c('title'))
+
+
+library(tidytext)
+library(stringr)
+
+by_chapter = dc_books %>%
+  group_by(title) %>%
+  filter(!str_detect(text, pattern='[0-99]')) %>% # get rid of 'list of cantos
+  slice(-(1:25)) %>% # get rid of title page
+  mutate(chapter = cumsum(str_detect(text, regex("^canto ", ignore_case = TRUE)))) %>%
+  ungroup() %>%
+  filter(chapter > 0)
+
+by_chapter_word = by_chapter %>%
+  unite(title_chapter, title, chapter) %>%
+  unnest_tokens(word, text)
+
+by_chapter_bigram = by_chapter %>%
+  unite(title_chapter, title, chapter) %>%
+  unnest_tokens(word, text, token='ngrams', n=2)
+
+
+old_stops0 = read_lines('data/topic/old_english_stop_words.txt')
+old_stops = data_frame(word=str_conv(old_stops0, 'UTF8'),
+                      lexicon = 'cltk')
+
+me_stops0 = read_lines('data/topic/middle_english_stop_words.txt')
+me_stops = data_frame(word=str_conv(me_stops0, 'UTF8'),
+                      lexicon = 'cltk')
+
+em_stops0 = read_lines('data/topic/early_modern_english_stop_words.txt')
+em_stops = data_frame(word=str_conv(em_stops0, 'UTF8'),
+                      lexicon = 'emc')
+
+word_counts = by_chapter_word %>%
+  # bind_rows(by_chapter_bigram) %>% 
+  anti_join(old_stops) %>%
+  anti_join(em_stops) %>%
+  anti_join(me_stops) %>%
+  anti_join(stop_words) %>%
+  filter(word!='canto') %>% 
+  count(title_chapter, word, sort = TRUE) %>%
+  ungroup()
+
+
+
+word_counts
+
+divine_comedy_chapters_dtm = word_counts %>%
+  cast_dfm(title_chapter, word, n)
+
+# with stemming
+# divine_comedy_chapters_dtm = word_counts %>%
+#   cast_dfm(title_chapter, word, n) %>%
+#   quanteda::dfm_wordstem()
+  
+
+divine_comedy_chapters_dtm
+save('divine_comedy_chapters_dtm', file='data/topic/divine_comedy_dtm.RData')
+```
+
+
+The texts we'll analyze are Dante's Divine Comedy.  Each canto will be treated as a document.  I have already created the DTM where stopwords have been removed, but plenty more cleaning could have been applied.  As with factor or cluster analysis, one must choose the number of topics to retain. There are various methods/statistics that can help with this, but simple interpretabibility could be used as well.
+
+```{r lda_divine_comedy}
+load('data/topic/divine_comedy_dtm.RData')
+library(topicmodels)
+chapters_lda = LDA(divine_comedy_chapters_dtm, k = 3, control = list(seed = 1234))
+chapters_lda
+```
+
+First, we can simply look at probable terms. The following shows the top 10 most probable terms for each topic.
+
+```{r top_terms, echo=FALSE}
+chapters_lda_td = tidy(chapters_lda)
+chapters_lda_td
+
+top_terms = chapters_lda_td %>%
+  group_by(topic) %>%
+  top_n(10, beta) %>%
+  ungroup() %>%
+  arrange(topic, -beta)
+
+top_terms %>%
+  mutate(term = reorder(term, beta)) %>%
+  arrange(desc(beta)) %>% 
+  ggplot(aes(term, beta)) +
+  geom_point(aes(color=factor(topic)), size=3, show.legend=F) +
+  facet_wrap(~ topic, scales = "free_x") +
+  theme(axis.text.x = element_text(size = 15, angle = 90, hjust = 1)) +
+  theme_trueMinimal()
+```
+
+
+
+Looking at which book would go with which topic, in this case it's more about what they don't have. For example, with the Inferno, there are few cantos that will talk about the topic where god and heaven are more probable.  Likewise, for Paradise you are less likely to find the topic containing 'beneath' and 'earth' but more likely to find the topics regarding virtue and sun and god.  Purgatory, perhaps not surpisingly is a fairly balanced mix of topics.
+
+```{r doc_topics}
+chapters_lda_gamma <- tidy(chapters_lda, matrix = "gamma")
+chapters_lda_gamma
+
+chapters_lda_gamma <- chapters_lda_gamma %>%
+  separate(document, c("title", "chapter"), sep = "_", convert = TRUE) %>% 
+  mutate(title = factor(title),
+         topic = factor(topic)) %>% 
+  rename(canto = chapter)
+
+chapters_lda_gamma
+
+ggplot(chapters_lda_gamma, aes(gamma, fill = topic)) +
+  geom_histogram() +
+  facet_wrap(~ title, nrow = 3) + 
+  theme_minimal()
+```
+
+
+<!--chapter:end:08b_topic.Rmd-->
 
 # Bayesian Nonparametric Models
 
@@ -5668,7 +5787,6 @@ Griffiths & Ghahramani (2005). Infinite latent feature models and the Indian buf
 These are other topics that may be covered in varying detail in the future. With possible packages noted. 
 
 - Topic Models
-- Nonparametric Bayesian
 - Collaborative filtering
     - recommenderlab
 - Other Mixture models (additional to what is already there) 
