@@ -11,10 +11,11 @@ A graphical model can be seen as a mathematical or statistical construct connect
 <img src="img/graphicalModels.png" style="display:block; margin: 0 auto; width:50%">
 
 ```{r graphVizExample, echo=FALSE, eval=FALSE}
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; background:transparent; background-color:'#fffff8'",
 DiagrammeR("
 digraph DAG {
   # Intialization of graph attributes
-  graph [overlap = false]
+  graph [overlap = false  fill='#fffff8']
 
   # Initialization of node attributes
   node [shape = circle,
@@ -30,7 +31,7 @@ digraph DAG {
   X; Y; Z; ☺;  1; 2; 3;
 
   node [fontcolor = 'darkred']
-  ♥; ☻;
+  ♥; ☻;                         # Diagrammer/graphviz doesn't recognize this
 
   # Edge statements
   X -> Y; Z -> Y;
@@ -41,6 +42,7 @@ digraph DAG {
   1 -> 2; 2 -> 3; 1 -> 3;
 }
 ", type='grViz')
+)
 
 ```
 
@@ -50,7 +52,7 @@ Any statistical model you've conducted can be expressed as a graphical model.  A
 A key idea of a graphical model is that of <span class="emph">conditional independence</span>, something one should keep in mind when constructing their models.  The concept can be demonstrated with the following graph.
 
 ```{r conditionalIndependence, echo=FALSE, eval=T}
-tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%", 
+tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%;", 
 DiagrammeR::DiagrammeR("scripts/condindie.gv", type='grViz', width=500, height=250))
 # <img src="img/conditionalIndependence.png" style="display:block; margin: 0 auto; width:25%">
 ```
@@ -69,7 +71,7 @@ As noted previously, we can represent standard models as graphical models.  In m
 Let's start with the standard linear model (SLiM), i.e. a basic regression we might estimate via ordinary least squares (but not necessarily). In this setting, we want to examine the effect of each potential predictor (x* in the graph) on the target variable (y).  The following shows what the graphical model might look like.
 
 
-```{r SLiMasGraph, echo=FALSE, fig.width=2, fig.height=3, fig.align='center', cache=FALSE, eval=F}
+```{r SLiMasGraph, echo=FALSE, eval=T}
 # library(lavaan)
 # X = cbind(1, matrix(rnorm(150), 50))
 # y = X %*% c(2,.2,-.2,0) + rnorm(50)
@@ -89,10 +91,12 @@ Let's start with the standard linear model (SLiM), i.e. a basic regression we mi
 # 
 # 
 # library(DiagrammeR)
-DiagrammeR::grViz("scripts/SLiM.gv")
+
+tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%;",
+DiagrammeR::DiagrammeR("scripts/SLiM.gv", type='grViz', width=500, height=250))
 ```
 
-<img src="img/regasgraph.png" style="display:block; margin: 0 auto; width:50%">
+<!-- <img src="img/regasgraph.png" style="display:block; margin: 0 auto; width:50%"> -->
 
 While we start simpler, we can use much of the same sort of thinking with more complex models later.  In what follows, we'll show that whether we use a standard R modeling approach (via the <span class="func">lm</span> function), or an SEM approach (via the <span class="func">sem</span> function in <span class="pack">lavaan</span>), the results are identical aside from the fact that sem is using maximum likelihood (so the variances will be slightly different).  First, we'll with the standard <span class="func">lm</span> approach.
 

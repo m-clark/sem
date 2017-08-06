@@ -25,6 +25,7 @@ a {
 
 body {
   color: #595959;
+  background: none transparent;
 }
 
 p {
@@ -92,6 +93,15 @@ h1, h2, h3, h4, h5 {
 
 
 div.datatables {
-    margin-left: auto;     /* to center them when full is not necessary. */
-    margin-right: auto;
+  margin-left: auto;     /* to center them when full is not necessary. */
+  margin-right: auto;
+}
+
+.graph {
+  background-color: transparent;
+}
+
+polygon {
+    background: transparent;
+    fill: none;   /* ignore rstudio warning, this is necessary to change Diagrammer to transparent background*/
 }

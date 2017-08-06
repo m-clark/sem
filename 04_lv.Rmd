@@ -41,11 +41,11 @@ Visually, we can display PCA as a graphical model. Here is one with four compone
 
 ```{r pcaGM, echo=FALSE, cache=FALSE}
 library(DiagrammeR); library(htmltools)
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; background:transparent",
   DiagrammeR("
   digraph DAG {
     # Intialization of graph attributes
-    graph [overlap = false]
+    graph [overlap = false fill=none]
   
     # Initialization of node attributes
     node [shape = circle,

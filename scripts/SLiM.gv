@@ -1,11 +1,11 @@
 digraph DAG {
 
-graph [rankdir = LR]
+graph [rankdir = LR ]
 
-node [shape = circle, style=filled, color=gray, fontcolor=gray10]
+node [shape = circle, fontcolor=gray10]
 
-node [fillcolor=white, fontname="Helvetica"]
-x1; x2; x3; 
+node [fontname="Helvetica"]
+x1 [label=<x<sub>1</sub>>]; x2 [label=<x<sub>2</sub>>]; x3 [label=<x<sub>3</sub>>]; 
 
 node [fillcolor=gray90]
 y;

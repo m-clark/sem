@@ -155,9 +155,12 @@ top_terms %>%
   arrange(desc(beta)) %>% 
   ggplot(aes(term, beta)) +
   geom_point(aes(color=factor(topic)), size=3, show.legend=F) +
-  scale_color_brewer(type='qual', palette=1) +
+  ylab('Probability') + 
+  # scale_color_brewer(type='qual', palette=1) +
+  # scale_color_manual(values=scales::alpha(c(palettes$orange$orange, palettes$orange$triadic), .75)) +
+  scale_color_manual(values=scales::alpha(c(palettes$latvian_red$latvian_red, palettes$latvian_red$triadic), .85)) +
   facet_wrap(~ topic, scales = "free_x") +
-  theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=0)) +
+  theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=.25)) +
   theme_trueMinimal()
 # ggplotly()
 ```
@@ -183,7 +186,10 @@ chapters_lda_gamma %>%
   summarise(`Average Probability`=mean(gamma)) %>% 
   ggplot(aes(x=topic, y=`Average Probability`, fill = topic)) +
   geom_point(aes(color=topic), size=5) +
-  scale_color_brewer(type='qual', palette=1) +
+  # scale_color_brewer(type='qual', palette=1) +
+  # scale_color_manual(values=scales::alpha(c(palettes$orange$orange, palettes$orange$triadic), .75)) +
+  scale_color_manual(values=scales::alpha(c(palettes$latvian_red$latvian_red, palettes$latvian_red$triadic), .85)) +
+  # scale_color_manual(values=scales::alpha(NineteenEightyR::sonny(3), .85)) +
   ylim(c(0,.6)) +
   facet_wrap(~ title, nrow = 1) + 
   theme_minimal() +
