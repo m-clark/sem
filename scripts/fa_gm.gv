@@ -1,0 +1,43 @@
+digraph fa_gm {
+ # Intialization of graph attributes
+ graph [overlap = false rankdir=TB bgcolor=transparent]
+ 
+ # Initialization of node attributes
+ node [shape = circle fontname = Helvetica color = gray80 type = box fixedsize = true]
+ 
+ # Node statements
+ Factor  [width=1.5 height=1 shape = circle color='#1f65b7' style=filled fillcolor='#1f65b780' fontcolor=white];
+ 
+ node [width=1 shape=square color='#1f65b780' fontcolor='#1f65b775' fontname=Roboto fixedsize=true]
+ subgraph {
+    rank=same;
+    X1 [label=<X<sub>1</sub>>]; 
+    X2 [label=<X<sub>2</sub>>]; 
+    X3 [label=<X<sub>3</sub>>]; 
+    X4 [label=<X<sub>4</sub>>]; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50 rel = yields]
+ 
+ # Edge statements
+ Factor -> X1 [style=dashed] ;
+ Factor -> {X2 X3 X4};
+
+ subgraph {
+    rank=same;
+    node [width=.5 height=.5 shape=circle fontcolor=white color=gray75 style=filled fillcolor=gray90 ]
+    U1 [label=<U<sub>1</sub>>]; 
+    U2 [label=<U<sub>2</sub>>]; 
+    U3 [label=<U<sub>3</sub>>]; 
+    U4 [label=<U<sub>4</sub>>]; 
+ }
+
+  edge [dir=back]  
+  X1 -> U1;
+  X2 -> U2;
+  X3 -> U3;
+  X4 -> U4;
+
+
+ 
+ }

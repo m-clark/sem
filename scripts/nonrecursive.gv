@@ -1,5 +1,5 @@
 digraph iv {
-  graph [rankdir=LR]
+  graph [rankdir=LR bgcolor=transparent]
   
   node [shape = rectangle, style=filled, fillcolor='#ff5500', color=gray80, 
         fontcolor=white, fontname=Roboto, fixedsize=true, fontsize='10%']

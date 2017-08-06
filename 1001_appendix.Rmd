@@ -739,7 +739,7 @@ Beaujean, A. A. (2014). [Latent variable modeling using R: A step by step guide]
 
 
 
-### Bayesian Nonparametric models
+### Nonparametric models
 
 Gershman & Blei (2011). A Tutorial on Bayesian Nonparametric Models.
 

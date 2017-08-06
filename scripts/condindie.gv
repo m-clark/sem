@@ -1,6 +1,6 @@
 digraph DAG {
   # Intialization of graph attributes
-  graph [overlap = false]
+  graph [overlap = false bgcolor=transparent]
 
   # Initialization of node attributes
   node [shape = circle,

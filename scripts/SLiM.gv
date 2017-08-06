@@ -1,6 +1,6 @@
 digraph DAG {
 
-graph [rankdir = LR ]
+graph [rankdir = LR bgcolor=transparent]
 
 node [shape = circle, fontcolor=gray25 color=gray80]
 

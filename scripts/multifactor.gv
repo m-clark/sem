@@ -1,0 +1,72 @@
+digraph multifactor {
+ # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
+
+ # Intialization of graph attributes
+ graph [overlap=false rankdir=TB bgcolor=transparent]
+ 
+ # Node statements
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ 
+ subgraph {
+ rank = same;
+ Verbal [fontsize=10, width=1.25, height=1, fillcolor=palegreen];
+ Spatial [fontsize=10, width=1.25, height=1, fillcolor=salmon];
+ }
+
+ node [width=1, height=1, fixedsize=true, shape=square, style='']
+ subgraph {
+    rank=same;
+    node [fontcolor=gray50 fontsize=10]
+    node [color=palegreen]
+    V4 V16 V17 V19; 
+    node [color=salmon]
+    S3 S4 S6 S8; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ 
+ edge [label='   .49' fontcolor=gray25 fontsize=10 minlen=2 dir=both]
+ Verbal -> Spatial;
+
+ edge [label='   .56' fontcolor=gray25 fontsize=10 minlen=2 dir=forward]
+ Verbal -> V4; 
+ edge [label='   .63' fontcolor=gray25 fontsize=10 minlen=2]
+ Verbal -> V16;
+ edge [label='   .43' fontcolor=gray25 fontsize=10 minlen=2]
+ Verbal -> V17;
+ edge [label='   .57' fontcolor=gray25 fontsize=10 minlen=2]
+ Verbal -> V19;
+ edge [label='   .43' fontcolor=gray25 fontsize=10 minlen=2]
+ Spatial -> S3; 
+ edge [label='   .23' fontcolor=gray25 fontsize=10 minlen=2]
+ Spatial -> S4;
+ edge [style='' label='   .55' fontcolor=gray25 fontsize=10 minlen=2];
+ Spatial -> S6;
+ edge [label='   .70' fontcolor=gray25 fontsize=10 minlen=2]
+ Spatial -> S8;
+
+ subgraph {
+    rank=same;
+    node [width=.25, height=.25, shape=circle, color=gray80]
+    U1 [label='']; 
+    U2 [label='']; 
+    U3 [label='']; 
+    U4 [label='']; 
+    U5 [label='']; 
+    U6 [label='']; 
+    U7 [label='']; 
+    U8 [label='']; 
+ }
+
+  edge [dir=back fontsize=8 fontcolor=gray25 minlen=.5] 
+  V4  -> U1 [label='   .69'];
+  V16 -> U2 [label='   .60'];
+  V17 -> U3 [label='   .82'];
+  V19 -> U4 [label='   .67'];
+  S3 -> U5 [label='   .81'];
+  S4 -> U6 [label='   .95'];
+  S6 -> U7 [label='   .69'];
+  S8 -> U8 [label='   .51'];
+}

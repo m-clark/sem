@@ -1,0 +1,29 @@
+  digraph PCA {
+    # Intialization of graph attributes
+    graph [overlap = false  bgcolor=transparent]
+  
+    # Initialization of node attributes
+    node [shape = circle fontname = Roboto color = gray80 type = box fixedsize = true penwidth=2 fontcolor=gray75]
+  
+  
+    # Node statements
+    PC3 [label=<PC<sub>3</sub>> width=.75];
+    PC4 [label=<PC<sub>4</sub>> width=.5]; 
+    PC1 [label=<PC<sub>1</sub>> width=1.5, style=filled fillcolor='#b2001d80', fontcolor='white']; 
+    PC2 [label=<PC<sub>2</sub>> width=1.25];    # reordered to deal with unusual ordering otherwise
+
+    node [width=1 shape=square color=gray25]
+    X3 [label=<X<sub>3</sub>>]; 
+    X4 [label=<X<sub>4</sub>>]; 
+    X1 [label=<X<sub>1</sub>>]; 
+    X2 [label=<X<sub>2</sub>>]; 
+  
+    # Xnitialization of edge attributes
+    edge [color = gray50 rel = yields]
+  
+    # Edge statements
+    edge [arrowhead=none penwidth=2]
+    PC1 -> {X1 X2 X3 X4}[color='#b2001d50'];
+    {PC2 PC3 PC4} -> {X1 X2 X3 X4};
+
+}

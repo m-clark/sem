@@ -1,5 +1,5 @@
 digraph mediation {
-graph [background='transparent' rankdir=TB]
+graph [bgcolor=transparent rankdir=TB]
 
 
   node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, width=.75, height=.75,

@@ -1,0 +1,43 @@
+digraph {
+ # Intialization of graph attributes
+ graph [overlap=false rankdir=TB bgcolor=transparent]
+ 
+ # Node statements
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ # U0 [width=.25 height=.25 style='' label=''];
+ DepressionCat [fontsize=10, width=1.25, height=1];
+ 
+ node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style='']
+ subgraph {
+    rank=same;
+    node [label='Felt\n\nDown' fontcolor=gray50 fontsize=6]    
+    FD; 
+    node [label='Been\n\nHappy' fontcolor=gray50 fontsize=6]    
+    BH; 
+    node [label='Depressed\n\nLast Month' fontcolor=gray50 fontsize=6]    
+    DLM; 
+ }
+ # Initialization of edge attributes
+ edge [color = gray50, rel = yields]
+ 
+ # Edge statements
+ edge [style=dashed label='' fontcolor=gray25 fontsize=10 minlen=2]
+ DepressionCat -> FD 
+ edge [style='' label='' fontcolor=gray25 fontsize=10 minlen=2];
+ DepressionCat -> BH ;
+ edge [label='' fontcolor=gray25 fontsize=10 minlen=2]
+ DepressionCat -> DLM ;
+
+ subgraph {
+    rank=same;
+    node [width=.25, height=.25, shape=circle, color=gray80]
+    # U1 [label='']; 
+    # U2 [label='']; 
+    # U3 [label='']; 
+ }
+
+  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] 
+  # FD -> U1 [label=''];
+  # BH -> U2 [label=''];
+  # DLM -> U3 [label=''];
+ }

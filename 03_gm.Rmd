@@ -11,6 +11,7 @@ A graphical model can be seen as a mathematical or statistical construct connect
 <img src="img/graphicalModels.png" style="display:block; margin: 0 auto; width:50%">
 
 ```{r graphVizExample, echo=FALSE, eval=FALSE}
+# encoding issue with icons means just creating the png instead
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; background:transparent; background-color:'#fffff8'",
 DiagrammeR("
 digraph DAG {
@@ -593,9 +594,9 @@ semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=
                   label.color='#ffffff') # simply doesn't plot nonrecursive models correctly
 ```
 
-```{r nonrecursive}
+```{r nonrecursive, echo=F}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
-         DiagrammeR::grViz('scripts/nonrecursive.gv', width=500, height=250)
+         grViz('scripts/nonrecursive.gv', width=500, height=250)
          )
 ```
 
@@ -618,9 +619,9 @@ semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, 
                   label.color='#ffffff') # simply doesn't plot res cov
 ```
 
-```{r nonrecursive2}
+```{r nonrecursive2, echo=FALSE}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
-         DiagrammeR::grViz('scripts/nonrecursive2.gv', width=500, height=250)
+         grViz('scripts/nonrecursive2.gv', width=500, height=250)
          )
 ```
 
@@ -657,7 +658,7 @@ semPlot::semPaths(pathMod, whatLabels = 'par', style = 'lisrel',
                   edge.label.cex=1.25, edge.color='gray50',
                   color='#ff5500', 
                   borders=T, border.color='gray80',  border.width=2,
-                  label.color='#ffffff')
+                  label.color='#ffffff', bg='transparent')
 ```
 
 To reproduce the correlation between A and C (sometimes referred to as a 'total effect'):

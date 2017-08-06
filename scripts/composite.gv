@@ -1,0 +1,23 @@
+digraph composite {
+  # Intialization of graph attributes
+  graph [overlap = false fill=none bgcolor=transparent]
+
+  # Initialization of node attributes
+  node [shape = rectangle style=filled fillcolor='#1f65b780' color=gray80 width=.25 height=.25 fontcolor=white fontname=Roboto fixedsize=true]
+
+  # Node statements
+  Component [width=1.5 height=1 shape = circle color='#1f65b7'];
+
+  node [width=1 shape=square color='#1f65b780' fillcolor=none fontcolor='#1f65b775' fontname=Roboto fixedsize=true]
+    X1 [label=<X<sub>1</sub>>]; 
+    X2 [label=<X<sub>2</sub>>]; 
+    X3 [label=<X<sub>3</sub>>]; 
+    X4 [label=<X<sub>4</sub>>]; 
+
+  # Xnitialization of edge attributes
+  edge [color = gray50 rel = yields]
+
+  # Edge statements
+  {X1 X2 X3 X4} -> Component;
+
+}

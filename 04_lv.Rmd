@@ -40,46 +40,12 @@ scale(Harman.5, scale=F) %*% evector
 Visually, we can display PCA as a graphical model. Here is one with four components/variables. The size of the components represents the amount of variance each accounts for.
 
 ```{r pcaGM, echo=FALSE, cache=FALSE}
-library(DiagrammeR); library(htmltools)
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto; background:transparent",
-  DiagrammeR("
-  digraph DAG {
-    # Intialization of graph attributes
-    graph [overlap = false fill=none]
-  
-    # Initialization of node attributes
-    node [shape = circle,
-          fontname = Helvetica,
-          color = gray80,
-          type = box,
-          fixedsize = true, penwidth=2, fontcolor=gray50]
-  
-  
-    # Node statements
-    PC3 [label=<PC<sub>3</sub>> width=.75, color=gray70];
-    PC4 [label=<PC<sub>4</sub>> width=.5, color=gray70]; 
-    PC1 [label=<PC<sub>1</sub>> width=1.5, color=salmon2, fontcolor=salmon2]; 
-    PC2 [label=<PC<sub>2</sub>> width=1.25, color=gray70];    # reordered to deal with unusual ordering otherwise
-
-    node [width=1, shape=square, color=gray25]
-    X3 [label=<X<sub>3</sub>>]; 
-    X4 [label=<X<sub>4</sub>>]; 
-    X1 [label=<X<sub>1</sub>>]; 
-    X2 [label=<X<sub>2</sub>>]; 
-  
-    # Xnitialization of edge attributes
-    edge [color = gray50, rel = yields]
-  
-    # Edge statements
-    edge [arrowhead=none, penwidth=2]
-    PC1 -> {X1 X2 X3 X4}[color=salmon];
-    {PC2 PC3 PC4} -> {X1 X2 X3 X4};
-
-    }
-  ", type='grViz', width='100%', height='50%')
-)
+tags$div(style="width:50%; margin:0 auto; font-family:Roboto; font-size:50%",
+         DiagrammeR::grViz('scripts/pca_gm.gv', width='100%', height='400px')
+         )
 ```
 
+<br>
 
 Let's see an example. The following regards a very small data set[^pcafacormat] 5 socioeconomic indicators for 12 census tracts in Los Angeles (a classic example from [Harman, 1967][Harman 5]). We'll use the  <span class='pack'>psych</span> package, and the <span class="func">principal</span> function within it.  To use the function we provide the data (available via the package), specify the number of components/factors we want to retain, and other options (in this case, a *rotated* solution might be a little more interpretable[^rotation], but is typically not employed in PCA, so we specify 'none').  The <span class="pack">psych</span> package gives us more options and a little more output than standard PCA packages and functions, and one that is more consistent with the factor analysis technique we'll spend time with later.  While we will also use <span class="pack">lavaan</span> for factor analysis to be consistent with the SEM approach, the <span class="pack">psych</span> package is a great tool for standard factor analysis, assessing scale reliability, and other fun stuff.
 
@@ -108,7 +74,9 @@ d3heatmap::d3heatmap(pc$loadings)
 library(htmltools)
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
          d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
-                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-.3,1), bins=50), width=500)
+                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), 
+                                                     domain=c(-.3,1), bins=50), 
+                              width=500)
          )
 ```
 
@@ -131,7 +99,7 @@ We can get a quick graphical model displayed as follows[^nobiplot]:
 # fa.graph(pc, cut=.2)
 # unlink('scripts/pcload.gv')
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
-         DiagrammeR::DiagrammeR('scripts/pcload.gv', type='grViz', width='100%', height='25%')
+         DiagrammeR::grViz('scripts/pcload.gv', width='100%', height='400px')
 )
 ```
 
@@ -159,37 +127,8 @@ all.equal(tcrossprod(loadings(pc_all)), cor(Harman.5))
 ```
 
 ```{r visPCA, echo=F}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",  
-DiagrammeR("
-digraph DAG2 {
-  # Intialization of graph attributes
-  graph [overlap = false]
-
-  # Initialization of node attributes
-  node [shape = circle,
-        fontname = Helvetica,
-        color = gray80,
-        type = box,
-        fixedsize = true]
-
-
-  # Node statements
-  Component [width=1.5, height=1, shape=circle, color=gray80];
-
-  node [width=1, shape=square, color=gray10]
-    X1 [label=<X<sub>1</sub>>]; 
-    X2 [label=<X<sub>2</sub>>]; 
-    X3 [label=<X<sub>3</sub>>]; 
-    X4 [label=<X<sub>4</sub>>]; 
-
-  # Xnitialization of edge attributes
-  edge [color = gray50, rel = yields]
-
-  # Edge statements
-  X1 -> Component [style=dashed]; X2 -> Component; X3 -> Component; X4 -> Component;
-
-  }
-", type='grViz', width='100%', height='50%')
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+         DiagrammeR::grViz('scripts/composite.gv', width='100%', height='50%')
 )
 ```
 
@@ -209,56 +148,7 @@ Each observed variable $x$ is a function of the latent variables that it is asso
 #### Diagrammer is the width of the tag box, so 100% width should keep
 #### it centered in the div
 tags$div(style="width:50%; margin:0 auto; text-align='center'",
-DiagrammeR("
-digraph DAG2 {
- # Intialization of graph attributes
- graph [overlap = false rankdir=TB]
- 
- # Initialization of node attributes
- node [shape = circle,
- fontname = Helvetica,
- color = gray80,
- type = box,
- fixedsize = true]
- 
- # Node statements
- node [width=1.5, height=1, shape=circle, color=gray80];
- Factor;
- 
- node [width=1, shape=square, color=gray10]
- subgraph {
-    rank=same;
-    X1 [label=<X<sub>1</sub>>]; 
-    X2 [label=<X<sub>2</sub>>]; 
-    X3 [label=<X<sub>3</sub>>]; 
-    X4 [label=<X<sub>4</sub>>]; 
- }
- # Initialization of edge attributes
- edge [color = gray50, rel = yields]
- 
- # Edge statements
- Factor -> X1 [style=dashed] ;
- Factor -> {X2 X3 X4};
-
- subgraph {
-    rank=same;
-    node [width=.5, height=.5, shape=circle, color=gray80]
-    U1 [label=<U<sub>1</sub>>]; 
-    U2 [label=<U<sub>2</sub>>]; 
-    U3 [label=<U<sub>3</sub>>]; 
-    U4 [label=<U<sub>4</sub>>]; 
- }
-
-  edge [dir=back]  ##### TRICK IS HERE
-  X1 -> U1;
-  X2 -> U2;
-  X3 -> U3;
-  X4 -> U4;
-
-
- 
- }
- ", type='grViz', width='100%', height='25%')
+DiagrammeR::grViz('scripts/fa_gm.gv', width='100%', height='50%')
 )
 ```
 
@@ -357,7 +247,7 @@ There are several methods available to estimate a factor analysis.
 
 #### Nonparametric Factor Analysis
 
-As noted previously, one of the hard problems in factor analysis is determining the number of factors to retain, a similar issue seen in cluster analysis. Although relatively rarely used, if even heard of, among many practitioners of factor analysis, Bayesian nonparametric approaches get around this by letting the number of clusters/factors grow with the data.  Sticking with factor analysis, an underlying Dirichlet or other process is assumed, and depending on the prior, new factors will be added with more or less ease.  Such approaches would also be applicable to a streaming data context.  
+As noted previously, one of the hard problems in factor analysis is determining the number of factors to retain, a similar issue seen in cluster analysis. Although relatively rarely used, if even heard of, among many practitioners of factor analysis, Bayesian nonparametric approaches get around this by letting the number of clusters/factors grow with the data.  Sticking with factor analysis, an underlying Dirichlet or other process is assumed, and depending on the prior, new factors will be added with more or less ease.  Such approaches would also be applicable to a streaming data context.  See the [related section][Bayesian Nonparametric Models] in this document.
 
 
 ### Other Techniques
@@ -370,7 +260,7 @@ Before leaving PCA and common factor analysis for factor analysis of the sort we
 - **PC Regression**: combining PCA with regression in one model.
 - **NMF**: non-negative matrix factorization. Applied to positive valued matrices, produces positive valued factors. Useful, for example, when dealing with counts.
 - **LSI**: Latent Semantic Indexing, an early form of topic modeling. It has an equivalence to NMF.
-- **LDA**: Latent Dirichlet Allocation, the typical approach for topic modeling, generalizes LSI/NMF. Essentially can be seen as discrete PCA, i.e. a special case of exponential/generalized PCA.
+- **LDA**: Latent Dirichlet Allocation, the typical approach for topic modeling, generalizes LSI/NMF. Essentially can be seen as discrete PCA, i.e. a special case of exponential/generalized PCA.  See the [topic models][Topic Models] section for an example.
 - **Canonical correlation**: an early approach to correlating two sets of variables by constructing composite variables of the corresponding sets. Standard regression, MANOVA/discriminant function analysis, and the simple Pearson correlation are all special cases. Superseded by SEM.
 - Many others.  Check the ['other uses'][Some Other Uses of Latent Variables] section.
 
@@ -454,56 +344,8 @@ semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F,
 ```
 
 ```{r plotFARaw, echo=F, eval=T}
-tags$div(style="width:50%; margin:auto auto;",
-DiagrammeR("
-digraph {
- # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
-
- # Intialization of graph attributes
- graph [overlap=false rankdir=TB]
- 
- # Node statements
- node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
- U0 [width=.25 height=.25 style='' label=''];
- Depression [fontsize=10, width=1.25, height=1];
- 
- node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style='']
- subgraph {
-    rank=same;
-    node [label='Felt\n\nDown' fontcolor=gray50 fontsize=6]    
-    FD; 
-    node [label='Been\n\nHappy' fontcolor=gray50 fontsize=6]    
-    BH; 
-    node [label='Depressed\n\nLast Month' fontcolor=gray50 fontsize=6]    
-    DLM; 
- }
- # Initialization of edge attributes
- edge [color = gray50, rel = yields]
- 
- # Edge statements
- edge [label='   .29', fontcolor=gray25, fontsize=6]
- U0 -> Depression;
- edge [style=dashed label='   1.0' fontcolor=gray25 fontsize=10 minlen=2]
- Depression -> FD 
- edge [style='' label='   -.73' fontcolor=gray25 fontsize=10 minlen=2];
- Depression -> BH ;
- edge [label='   .72' fontcolor=gray25 fontsize=10 minlen=2]
- Depression -> DLM ;
-
- subgraph {
-    rank=same;
-    node [width=.25, height=.25, shape=circle, color=gray80]
-    U1 [label='']; 
-    U2 [label='']; 
-    U3 [label='']; 
- }
-
-  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] 
-  FD -> U1 [label='   .15'];
-  BH -> U2 [label='   .27'];
-  DLM -> U3 [label='   .20'];
- }
- ", type='grViz', width='100%')
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+         DiagrammeR::grViz('scripts/depression_fa.gv', width='100%', height='50%')
 )
 ```
 
@@ -531,56 +373,8 @@ semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F,
 ```
 
 ```{r plotFAStd, echo=F, eval=T}
-tags$div(style="width:50%; margin:auto auto;",
-DiagrammeR("
-digraph {
- # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
-
- # Intialization of graph attributes
- graph [overlap=false rankdir=TB]
- 
- # Node statements
- node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
- U0 [width=.25 height=.25 style='' label=''];
- Depression [fontsize=10, width=1.25, height=1];
- 
- node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style='']
- subgraph {
-    rank=same;
-    node [label='Felt\n\nDown' fontcolor=gray50 fontsize=6]    
-    FD; 
-    node [label='Been\n\nHappy' fontcolor=gray50 fontsize=6]    
-    BH; 
-    node [label='Depressed\n\nLast Month' fontcolor=gray50 fontsize=6]    
-    DLM; 
- }
- # Initialization of edge attributes
- edge [color = gray50, rel = yields]
- 
- # Edge statements
- edge [style=dashed label='   1.0', fontcolor=gray25, fontsize=6]
- U0 -> Depression;
- edge [label='   .81' fontcolor=gray25 fontsize=10 minlen=2]
- Depression -> FD 
- edge [style='' label='   -.61' fontcolor=gray25 fontsize=10 minlen=2];
- Depression -> BH ;
- edge [label='   .65' fontcolor=gray25 fontsize=10 minlen=2]
- Depression -> DLM ;
-
- subgraph {
-    rank=same;
-    node [width=.25, height=.25, shape=circle, color=gray80]
-    U1 [label='']; 
-    U2 [label='']; 
-    U3 [label='']; 
- }
-
-  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] 
-  FD -> U1 [label='   .34'];
-  BH -> U2 [label='   .63'];
-  DLM -> U3 [label='   .57'];
- }
- ", type='grViz', width='100%')
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+DiagrammeR::grViz('scripts/depression_fa_std.gv', width='100%', height='50%')
 )
 ```
 
@@ -615,80 +409,7 @@ To begin, we do see that the factors are notably correlated at roughly `r round(
 
 ```{r plotMultiFactor, echo=F, eval=T}
 tags$div(style="width:100%; margin:auto auto;",
-DiagrammeR("
-digraph {
- # note that without basically treating each node and edge as a snowflake, most attributes will not be applied 
-
- # Intialization of graph attributes
- graph [overlap=false rankdir=TB]
- 
- # Node statements
- node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
- 
- subgraph {
- rank = same;
- Verbal [fontsize=10, width=1.25, height=1, fillcolor=palegreen];
- Spatial [fontsize=10, width=1.25, height=1, fillcolor=salmon];
- }
-
- node [width=1, height=1, fixedsize=true, shape=square, style='']
- subgraph {
-    rank=same;
-    node [fontcolor=gray50 fontsize=10]
-    node [color=palegreen]
-    V4 V16 V17 V19; 
-    node [color=salmon]
-    S3 S4 S6 S8; 
- }
- # Initialization of edge attributes
- edge [color = gray50, rel = yields]
- 
- # Edge statements
- 
- edge [label='   .49' fontcolor=gray25 fontsize=10 minlen=2 dir=both]
- Verbal -> Spatial;
-
- edge [label='   .56' fontcolor=gray25 fontsize=10 minlen=2 dir=forward]
- Verbal -> V4; 
- edge [label='   .63' fontcolor=gray25 fontsize=10 minlen=2]
- Verbal -> V16;
- edge [label='   .43' fontcolor=gray25 fontsize=10 minlen=2]
- Verbal -> V17;
- edge [label='   .57' fontcolor=gray25 fontsize=10 minlen=2]
- Verbal -> V19;
- edge [label='   .43' fontcolor=gray25 fontsize=10 minlen=2]
- Spatial -> S3; 
- edge [label='   .23' fontcolor=gray25 fontsize=10 minlen=2]
- Spatial -> S4;
- edge [style='' label='   .55' fontcolor=gray25 fontsize=10 minlen=2];
- Spatial -> S6;
- edge [label='   .70' fontcolor=gray25 fontsize=10 minlen=2]
- Spatial -> S8;
-
- subgraph {
-    rank=same;
-    node [width=.25, height=.25, shape=circle, color=gray80]
-    U1 [label='']; 
-    U2 [label='']; 
-    U3 [label='']; 
-    U4 [label='']; 
-    U5 [label='']; 
-    U6 [label='']; 
-    U7 [label='']; 
-    U8 [label='']; 
- }
-
-  edge [dir=back fontsize=8 fontcolor=gray25 minlen=.5] 
-  V4  -> U1 [label='   .69'];
-  V16 -> U2 [label='   .60'];
-  V17 -> U3 [label='   .82'];
-  V19 -> U4 [label='   .67'];
-  S3 -> U5 [label='   .81'];
-  S4 -> U6 [label='   .95'];
-  S6 -> U7 [label='   .69'];
-  S8 -> U8 [label='   .51'];
- }
- ", type='grViz', width='100%')
+grViz('scripts/multifactor.gv', width='100%')
 )
 ```
 
@@ -702,68 +423,7 @@ In <span class="emph">hierarchical</span> models we posit that latent variables 
 
 ```{r secondorder, echo=F}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
-DiagrammeR("
-digraph DAG2 {
- # Intialization of graph attributes
- graph [overlap = false rankdir=TB]
- 
- # Initialization of node attributes
- node [shape = circle,
- fontname = Helvetica,
- color = gray80,
- type = box,
- fixedsize = true]
- 
- # Node statements
- node [width=1.5, height=1, shape=circle, fontcolor=gray25];
-  F1 [label=<Factor<sub>1</sub>>, color='#ff5503']; 
-  F2 [label=<Factor<sub>2</sub>>, color=salmon]; 
-  F3 [label=<Factor<sub>3</sub>>, color=limegreen]; 
-  Fg [label=<Factor<sub>g</sub>>, color=dodgerblue]; 
- 
- node [width=1, shape=square, color=gray10]
- subgraph {
-    rank=same;
-    X1 [label=<X<sub>1</sub>>, color='#ff5503']; 
-    X2 [label=<X<sub>2</sub>>, color='#ff5503']; 
-    X3 [label=<X<sub>3</sub>>, color='#ff5503']; 
-    X4 [label=<X<sub>4</sub>>, color='#ff5503']; 
- }
- node [width=1, shape=square, color=salmon]
- subgraph {
-    rank=same;
-    X5 [label=<X<sub>5</sub>>]; 
-    X6 [label=<X<sub>6</sub>>]; 
-    X7 [label=<X<sub>7</sub>>]; 
-    X8 [label=<X<sub>8</sub>>]; 
- }
- node [width=1, shape=square, color=limegreen]
- subgraph {
-    rank=same;
-    X9 [label=<X<sub>9</sub>>]; 
-    X10 [label=<X<sub>10</sub>>]; 
-    X11 [label=<X<sub>11</sub>>]; 
-    X12 [label=<X<sub>12</sub>>]; 
- }
- # Initialization of edge attributes
- edge [color = gray50, rel = yields]
- 
- # Edge statements
- F1 -> X1 [style=dashed color='#ff5503'] ;
- F1 -> {X2 X3 X4} [color='#ff5503'] ;
-
- F2 -> X5 [style=dashed  color=salmon] ;
- F2 -> {X6 X7 X8} [color=salmon];
-
- F3 -> X9 [style=dashed color=limegreen] ;
- F3 -> {X10 X11 X12}[color=limegreen];
-
- Fg -> F1 [style=dashed color=dodgerblue] ;
- Fg -> {F2 F3} [color=dodgerblue];
-
- 
- }
- ", type='grViz', width='100%', height='45%')
+grViz('scripts/second_order.gv', width='100%', height='45%')
 )
 ```
 
@@ -794,76 +454,7 @@ A <span class="emph">bifactor</span> model might seem similar to the hierarchica
 
 ```{r bifactor, echo=F}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
-DiagrammeR("
-digraph DAG2 {
- # Intialization of graph attributes
- graph [overlap = false rankdir=BT]
- 
- # Initialization of node attributes
- node [shape = circle,
- fontname = Helvetica,
- color = gray80,
- type = box,
- fixedsize = true]
- 
- # Node statements
- node [width=1.5, height=1, shape=circle, fontcolor=gray25];
- subgraph{rank=same;
-  F1 [label=<Factor<sub>1</sub>>, color='#ff5503']; 
-  F2 [label=<Factor<sub>2</sub>>, color=salmon]; 
-  F3 [label=<Factor<sub>3</sub>>, color=limegreen]; 
-  }
-  Fg [label=<Factor<sub>g</sub>>, color=dodgerblue]; 
- 
- node [width=1, shape=square, color=gray10]
- subgraph {
-    rank=same;
-    X1 [label=<X<sub>1</sub>>, color='#ff5503']; 
-    X2 [label=<X<sub>2</sub>>, color='#ff5503']; 
-    X3 [label=<X<sub>3</sub>>, color='#ff5503']; 
-    X4 [label=<X<sub>4</sub>>, color='#ff5503']; 
- }
- node [width=1, shape=square, color=salmon]
- subgraph {
-    rank=same;
-    X5 [label=<X<sub>5</sub>>]; 
-    X6 [label=<X<sub>6</sub>>]; 
-    X7 [label=<X<sub>7</sub>>]; 
-    X8 [label=<X<sub>8</sub>>]; 
- }
- node [width=1, shape=square, color=limegreen]
- subgraph {
-    rank=same;
-    X9 [label=<X<sub>9</sub>>]; 
-    X10 [label=<X<sub>10</sub>>]; 
-    X11 [label=<X<sub>11</sub>>]; 
-    X12 [label=<X<sub>12</sub>>]; 
- }
- # Initialization of edge attributes
- edge [color = gray50, rel = yields]
- 
- # Edge statements
- F1 -> X1 [style=dashed color='#ff5503'] ;
- F1 -> {X2 X3 X4} [color='#ff5503'] ;
-
- F2 -> X5 [style=dashed  color=salmon] ;
- F2 -> {X6 X7 X8} [color=salmon];
-
- F3 -> X9 [style=dashed color=limegreen] ;
- F3 -> {X10 X11 X12}[color=limegreen];
-
- edge[dir=both, style=curved]
- F1 -> F2;
- F2 -> F3;
- F3 -> F1;
-
- edge [dir=back; minlen=2.3 color=dodgerblue]
- X1 -> Fg [style=dashed]; 
- {X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12} -> Fg;
-
- 
- }
- ", type='grViz', width='100%', height='45%')
+grViz('scripts/bifactor.gv', width='100%', height='45%')
 )
 ```
 
@@ -1091,38 +682,11 @@ On many occasions, people reduce the number of variables in a model by using a m
 
 <span class="emph">Composites</span> scores are what we'd have if we turned the arrows around, and allowed different weights for the different variables, which may not be similar too similar in nature or necessarily correlated (e.g. think of how one might construct a measure of socioeconomic status).  Unlike a simple mean, these would have different weights associated with the items, which might make them preferred in that comparison.  As we noted previously, PCA is one way one could create such a composite.  Sometimes people just make up weights to use based on what they think they *should* be  (especially in the sporting world). This is silly in my opinion, as I can't think of any reasonable justification for such an approach over the many available that would better represent the data.
 
-<img src="img/composite.png" style="display:block; margin: 0 auto;"></img>
+<!-- <img src="img/composite.png" style="display:block; margin: 0 auto;"></img> -->
 
-```{r composite, eval=F, echo=FALSE, cache=FALSE}
-# diagrammer package just completely borks here even with an empty graph; code will produce graph, so who knows
+```{r composite, eval=T, echo=FALSE}
 tags$div(style="width:250px; margin-left:auto;  margin-right:auto",
-DiagrammeR("
-digraph DAG2 {
-  # Intialization of graph attributes
-  graph [overlap = false]
-
-  # Initialization of node attributes
-  node [shape = circle,
-        fontname = Helvetica,
-        color = gray80,
-        type = box,
-        fixedsize = true]
-
-
-  # Node statements
-  Composite [width=3, height=1, shape=hexagon, color=gray80];
-
-  node [width=1, shape=square, color=gray10]
-  I1; I2; I3; I4; 
-
-  # Initialization of edge attributes
-  edge [color = gray50, rel = yields]
-
-  # Edge statements
-  I1 -> Composite [style=dashed]; I2 -> Composite; I3 -> Composite; I4 -> Composite;
-
-  }
-", type='grViz', width='250', height='250')
+grViz('scripts/composite2.gv', width='250', height='250')
 )
 ```
 
@@ -1148,11 +712,11 @@ Some also note latent variables with *causal* indicators, such that the variable
 
 - **EM algorithm**: A very common technique to estimate model parameters for a variety of model situations, it incorporates a latent variable approach where parameters of interest are treated as a latent variable (e.g. probability of belonging to some cluster).
 
-- **Item Response Theory**: uses latent variables, especially in test situations (though is much broader), to assess things like item discrimination, student ability etc.
+- **Item Response Theory**: uses latent variables, especially in test situations (though is much broader), to assess things like item discrimination, student ability etc.   See the related section in this document.
 
 - **Hidden Markov Model**:  A latent variable model approach commonly used for time series.
 
-- **Topic Model**: In the analysis of text, one can discover latent 'topics' based on the frequency of words.
+- **Topic Model**: In the analysis of text, one can discover latent 'topics' based on the frequency of words.  See the related section in this document.
 
 - **Collaborative Filtering**: For example, in recommender systems for movies or music, the latent variable might represent genre or demographic subsets.
 

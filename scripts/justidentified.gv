@@ -1,0 +1,51 @@
+digraph {
+
+ # Intialization of graph attributes
+ graph [rankdir=TB layout=dot bgcolor=transparent]
+ 
+ #### Node statements
+ ## Intialization of node attributes
+ node [color=gray75 fontcolor=gray50];
+ 
+ ## latent variables and associated variances
+ subgraph {
+    rank = same;
+    node [color='#00aaff' shape=square, fontsize=10, width=.5, height=.5, fontcolor=gray50];
+    X1;
+    X2;
+    X3;
+ }
+
+ subgraph {
+    rank = same;
+    node [width=.5 height=.5 shape='none' color='none' fillcolor='none' label=''];
+    X1var;
+    X2var;
+    X3var;
+ }
+ 
+    LV [style='filled' shape=circle fontsize=10 width=1 height=1 fillcolor='#00aaff' fontcolor=white]; 
+    LVvar[shape='none' color='none' fillcolor='none' label=''];
+
+
+ #### Edge statements
+ 
+ ## Initialization of edge attributes
+
+ edge [color = gray80, rel = yields dir=forward fontsize=12]
+ 
+ ## latent to observed
+
+ edge [label='' fontcolor=gray25 minlen=1] # set min to 1 made it centered
+ LV -> X1 [minlen=2 style=dashed];
+ LV -> X2 [minlen=2];
+ LV -> X3 [minlen=2];
+
+ ## variances
+
+ LVvar -> LV[];
+ X1 -> X1var[dir=back];
+ X2 -> X2var[dir=back];
+ X3 -> X3var[dir=back];
+
+ }

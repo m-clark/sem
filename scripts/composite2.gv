@@ -1,0 +1,25 @@
+digraph composite2 {
+  # Intialization of graph attributes
+  graph [overlap = false bgcolor=transparent]
+
+  # Initialization of node attributes
+  node [shape = circle,
+        fontname = Helvetica,
+        color = gray80,
+        type = box,
+        fixedsize = true]
+
+
+  # Node statements
+  Composite [width=3, height=1, shape=hexagon, color=gray80];
+
+  node [width=1, shape=square, color=gray10]
+  I1; I2; I3; I4; 
+
+  # Initialization of edge attributes
+  edge [color = gray50, rel = yields]
+
+  # Edge statements
+  I1 -> Composite [style=dashed]; I2 -> Composite; I3 -> Composite; I4 -> Composite;
+
+  }

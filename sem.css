@@ -99,9 +99,11 @@ div.datatables {
 
 .graph {
   background-color: transparent;
+  bgcolor: transparent;
 }
 
 polygon {
     background: transparent;
+    bgcolor: transparent;
     /*fill: none;   /* ignore rstudio warning, this is necessary to change Diagrammer to transparent background*/
 }

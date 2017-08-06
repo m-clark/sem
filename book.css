@@ -6,7 +6,7 @@
 }
 
 .section {
-  background-color: #fffff8;
+  background-color: black; /*#fffff8*/
 }
 
 .book .book-body .page-wrapper .page-inner section.normal {
