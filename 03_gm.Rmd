@@ -1,7 +1,7 @@
 # Graphical Models
 
 ```{r setupGM, include=FALSE}
-knitr::clean_cache()
+# knitr::clean_cache()
 library(lavaan); library(DiagrammeR); library(bnlearn); library(visNetwork); library(igraph) # only load mediation as needed
 ```
 
@@ -71,7 +71,7 @@ As noted previously, we can represent standard models as graphical models.  In m
 Let's start with the standard linear model (SLiM), i.e. a basic regression we might estimate via ordinary least squares (but not necessarily). In this setting, we want to examine the effect of each potential predictor (x* in the graph) on the target variable (y).  The following shows what the graphical model might look like.
 
 
-```{r SLiMasGraph, echo=FALSE, eval=T}
+```{r SLiMasGraph, echo=FALSE, eval=TRUE}
 # library(lavaan)
 # X = cbind(1, matrix(rnorm(150), 50))
 # y = X %*% c(2,.2,-.2,0) + rnorm(50)
@@ -393,13 +393,16 @@ Too often investigators will merely throw in these indirect effects and simply r
 
 Some refer to models with indirect effects as <span class="emph">mediation</span> models[^kline_indvmed], and that terminology appears commonly in the SEM (and esp. psychology) literature[^buffer].  Many applied researchers just starting out with SEM often confuse the term with <span class="emph">moderation</span>, which is called an <span class="emph">interaction</span> in every other statistical modeling context. As you begin your SEM journey, referring to <span class="emph">indirect effects</span> and <span class="emph">interactions</span> will likely keep you clear on what you're modeling, and perhaps be clearer to those who may not be as familiar with SEM when you present your work.
 
-In models with moderation, one will often see a specific variable denoted as the *moderator*. However, this is completely arbitrary in the vast majority of situations in which it is used. In a typical model that includes an interaction, it makes just as much sense to say that the $\mathcal{A} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{B}$ as it does the $\mathcal{B} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{A}$.  Some suggest using the term *moderation* when only when there is a potential causal relation, almost always temporal in nature, such that the moderator variable precedes the variable in question. In addition, the moderator and the variable moderated must be *uncorrelated*[^wuzumbo].  While such restrictions would render almost every model I've ever seen that uses the term moderation as an ordinary interaction instead, the idea is that the moderator has a causal effect on the path between the variable in question and its target.  This is why you see silly graphs like the one to the left below, which has no tie to any statistical model and generally confuses people more often than it illuminates (the *correct* graph is to the right).  Again though, the actual model is statistically indistinguishable from a standard model including an interaction, so if you want to understand moderation, you simply need to understand what an interaction is. 
+In models with moderation, one will often see a specific variable denoted as the *moderator*. However, this is completely arbitrary in the vast majority of situations in which it is used. In a typical model that includes an interaction, it makes just as much sense to say that the $\mathcal{A} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{B}$ as it does the $\mathcal{B} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{A}$.  Some suggest using the term *moderation* when only when there is a potential causal relation, almost always temporal in nature, such that the moderator variable precedes the variable in question. In addition, the moderator and the variable moderated must be *uncorrelated*[^wuzumbo].  While such restrictions would render almost every model I've ever seen that uses the term moderation as an ordinary interaction instead, the idea is that the moderator has a causal effect on the path between the variable in question and its target.  This is why you see graphs like the one to the left below, which has no tie to any statistical model and generally confuses people more often than it illuminates (the *correct* graph is to the right).  Again though, the actual model is statistically indistinguishable from a standard model including an interaction, so if you want to understand moderation, you simply need to understand what an interaction is. 
 
-<div class='col2'><img src="img/moderation.png" style="display:block; margin: 0 auto; width:75%">
+<div class='col2'>
+<!-- <img src="img/moderation.png" style="display:block; margin: 0 auto; width:75%"> -->
 
 ```{r modpic, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='right'}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%", 
-DiagrammeR::DiagrammeR("scripts/moderation.gv", type='grViz', width=400, height=200))
+DiagrammeR::DiagrammeR("scripts/moderation0.gv", type='grViz', width=400, height=200),
+DiagrammeR::DiagrammeR("scripts/moderation.gv", type='grViz', width=400, height=200)
+)
 ```
 </div>
 <br>
@@ -567,7 +570,7 @@ Recursive models have all unidirectional causal effects and disturbances are not
 A classic example of a nonrecursive relationship is marital satisfaction: the more satisfied one partner is, the more satisfied the other, and vice versa (at least that's the theory). This can be represented by a simple model (below).
 
 
-```{r nonRecursive, echo=F, fig.align='center', fig.height=2, dev='svg'}
+```{r nonRecursive_old, eval=FALSE, echo=F, fig.align='center', fig.height=2, dev='svg'}
 WifeSatisfaction = rnorm(100)
 HusbandSatisfaction = rnorm(100)
 WifeEdu = rnorm(100)
@@ -590,11 +593,18 @@ semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=
                   label.color='#ffffff') # simply doesn't plot nonrecursive models correctly
 ```
 
+```{r nonrecursive}
+tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
+         DiagrammeR::grViz('scripts/nonrecursive.gv', width=500, height=250)
+         )
+```
+
+
 Such models are notoriously difficult to specify in terms of *identification*, which we will talk more about later.  For now, we can simply say the above model would not even be estimated as there are more parameters to estimate (two paths, two variances) than there is information in the data (two variances and one covariance).
 
 To make this model identified, we use <span class="emph">instrumental variables</span> as we did before. In this scenario, instrumental variables directly influence one of the variables in a recursive relationship, but not the other. For example, a wife’s education can influence her satisfaction directly and a husband’s education can influence his satisfaction directly, but a husband’s education cannot directly impact a wife’s satisfaction and vice versa (at least for this demonstration). These instrumental variables can indirectly impact a spouses’ satisfaction.  In the following model family income is also included.  The dashed line represents an unanalyzed correlation.
 
-```{r nonRecursive2, echo=F, fig.align='center', dev='svg'}
+```{r nonRecursive2_old, eval=FALSE, echo=F, fig.align='center', dev='svg'}
 model2 = '
 WifeSatisfaction + HusbandSatisfaction ~ FamIncome
 FamIncome ~ WifeEdu + HusbandEdu
@@ -608,6 +618,11 @@ semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, 
                   label.color='#ffffff') # simply doesn't plot res cov
 ```
 
+```{r nonrecursive2}
+tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
+         DiagrammeR::grViz('scripts/nonrecursive2.gv', width=500, height=250)
+         )
+```
 
 Many instances of nonrecursive models might better be represented by a correlation.  One must have a very strong theoretical motivation for such models, which is probably why they aren't seen as often in the SEM literature, though they are actually quite common in some areas such as economics, where theory is assumed to be stronger (by economists).
 
@@ -638,7 +653,10 @@ model = "
 pathMod = sem(model, data=abc)
 coef(pathMod)
 semPlot::semPaths(pathMod, whatLabels = 'par', style = 'lisrel',  
-                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
+                  sizeMan=10, 
+                  edge.label.cex=1.25, edge.color='gray50',
+                  color='#ff5500', 
+                  borders=T, border.color='gray80',  border.width=2,
                   label.color='#ffffff')
 ```
 
@@ -707,8 +725,8 @@ visNetwork(nodes=data.frame(g$nodes, value=100), edges=g$edges, width='75%') %>%
            font=list(size=12, color='#fff'),
            shape='circle', 
            scaling=list(label=list(enabled=T, min=10, max=12), max=5),  
-           color=list(background='#ff5503', highlight=list(background='salmon'))) %>% 
-  visEdges(color='#1e90ff', arrows='to', smooth=list(enabled=T, forceDirection='horizontal')) %>% 
+           color=list(background='#ff5500', highlight=list(background='salmon'))) %>% 
+  visEdges(color='#00aaff', arrows='to', smooth=list(enabled=T, forceDirection='horizontal')) %>% 
   visLayout(randomSeed=123)
 
 
@@ -764,11 +782,11 @@ diag(adj) = 0
 g = graph_from_adjacency_matrix(adj, mode='undirected')
 visIgraph(g) %>% 
   visNodes(shadow=list(enabled=T, color='rgba(0,0,0,0.25)'),
-           font=list(size=12, color='#FF5503'),
+           font=list(size=12, color='#FF5500'),
            shape='text', 
            scaling=list(label=list(enabled=T, min=10, max=12), max=5),  
-           color=list(background='#ff5503', highlight=list(background='salmon'))) %>% 
-  visEdges(color='#1e90ff', smooth=list(enabled=T, forceDirection='horizontal')) %>% 
+           color=list(background='#ff5500', highlight=list(background='salmon'))) %>% 
+  visEdges(color='#00aaff', smooth=list(enabled=T, forceDirection='horizontal')) %>% 
   visLayout(randomSeed=123)
 
 ```

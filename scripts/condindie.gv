@@ -15,7 +15,7 @@ digraph DAG {
   X; Y; Z;
 
   # Initialization of edge attributes
-  edge [color = gray25, rel = yields, arrowhead=none]
+  edge [color = gray50, rel = yields, arrowhead=none]
 
   # Edge statements
   X -> Y; Y -> Z;

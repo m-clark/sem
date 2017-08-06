@@ -1,15 +1,15 @@
 digraph iv {
-graph [rankdir=LR]
+  graph [rankdir=LR]
+  
+  node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, width=.25, height=.25,
+        fontcolor=white, fontname=Roboto, fixedsize=true, fontsize='5%']
+  X; Y; Z;
+  
+  edge [shape = circle, alpha=.5 color=gray50 style=filled penwidth=.5 arrowsize=.5]
+  Z -> X;
+  X -> Y;
 
-node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.25, height=.25,
-      fontcolor=gray25, fontname=Baskerville, fixedsize=true, fontsize='5%']
-X; Y; Z;
-
-edge [color=gray50, penwidth=.5, arrowsize=.5]
-Z -> X;
-X -> Y;
-
-subgraph {
-   rank = same; X; Z;
-}
+  subgraph {
+     rank = same; X; Z;
+  }
 }

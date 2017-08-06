@@ -103,5 +103,5 @@ div.datatables {
 
 polygon {
     background: transparent;
-    fill: none;   /* ignore rstudio warning, this is necessary to change Diagrammer to transparent background*/
+    /*fill: none;   /* ignore rstudio warning, this is necessary to change Diagrammer to transparent background*/
 }

@@ -1,0 +1,21 @@
+digraph mediation {
+graph [background='transparent' rankdir=TB]
+
+
+  node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, width=.75, height=.75,
+        fontcolor=white, fontname=Baskerville, fixedsize=true, fontsize='15%']
+  subgraph {
+    rank=same;
+  
+    X ; Y; 
+    X2 [shape=none, width=0, height=0, label='']; 
+    
+  }
+  M ;
+
+  edge [color=gray50 style=filled minlen=2]
+  
+  X -> X2 [arrowhead=none];
+  X2 -> Y;
+  M -> X2;
+}

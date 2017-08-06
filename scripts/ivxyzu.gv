@@ -1,12 +1,12 @@
 digraph iv {
 graph [rankdir=BT]
 
-node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.25, height=.25,
-      fontcolor=gray25, fontname=Baskerville, fixedsize=true, fontsize='5%']
+node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, width=.25, height=.25,
+      fontcolor=white, fontname=Roboto, fixedsize=true, fontsize='5%']
 
 X; Y; Z;
 
-node [shape = circle, alpha=.5, color=gray75]
+node [shape = circle, alpha=.5, color=gray75 style=filled, fillcolor=gray90]
 U;
 
 edge [color=gray50, penwidth=.5, arrowsize=.5]

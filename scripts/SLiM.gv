@@ -2,14 +2,14 @@ digraph DAG {
 
 graph [rankdir = LR ]
 
-node [shape = circle, fontcolor=gray10]
+node [shape = circle, fontcolor=gray25 color=gray80]
 
 node [fontname="Helvetica"]
 x1 [label=<x<sub>1</sub>>]; x2 [label=<x<sub>2</sub>>]; x3 [label=<x<sub>3</sub>>]; 
 
-node [fillcolor=gray90]
+node [fillcolor=gray90 style=filled]
 y;
 
-edge [color=gray50]
+edge [color=gray50 style=filled]
 x1 -> y; x2 -> y; x3 -> y;
 }

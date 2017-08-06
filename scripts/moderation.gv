@@ -1,12 +1,14 @@
 digraph mediation {
-graph [rankdir = LR, background='transparent']
+graph [background='transparent' rankdir=LR]
 
-node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.75, height=.75,
-      fontcolor=gray25, fontname=Baskerville, fixedsize=true, fontsize='15%']
-X; Y; M; XM;
 
-edge [color=gray50]
+  node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, width=.75, height=.75,
+        fontcolor=white, fontname=Baskerville, fixedsize=true, fontsize='15%']
 
-{X, M, XM} -> Y;
+  X; Y; M; XM;
+  
+  edge [color=gray50 style=filled]
+  
+  {X, M, XM} -> Y;
 
 }

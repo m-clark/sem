@@ -1,0 +1,39 @@
+digraph iv {
+  graph [rankdir=LR splines=true]
+  
+  node [shape = rectangle, style=filled, fillcolor='#ff5500', color=gray80, 
+        fontcolor=white, fontname=Roboto, fixedsize=true, fontsize='10%']
+  subgraph {
+    rank = same;
+    H [label='Hus.\n Satis']; 
+    Inc [label='Family\n Income']; 
+    W [label='Wife\n Satis'];
+  }
+  subgraph {
+    rank = same;
+    Hed [label='Hus.\n Edu']; 
+    Wed [label='Wife\n Edu'];
+  }
+
+  subgraph {  
+    #rank = same;
+    stupid [style=invisible  width=0 height=0 shape=none];
+    #Inc;
+  }
+  
+  edge [shape = circle, alpha=.5 color=gray50 style=filled penwidth=.75 arrowsize=.75 minlen=2]
+  Hed -> Inc [minlen=2];
+  Wed -> Inc [minlen=2];
+  Hed -> Wed [style=dashed dir=both headport='nw' tailport='sw'];
+  #Inc -> W;
+  W -> Inc [dir=back];
+  Inc -> H [];
+  #H -> W [dir=both];
+  stupid -> Inc [style=invisible arrowhead=none ];
+  H -> stupid [style=curved dir=back tailport='e'];
+  W -> stupid [style=curved dir=back tailport='e'];
+  #W -> H [style=curved dir=both headport='ne' tailport='se'  minlen=1];  # unfucking believable
+  #H -> W [style=curved dir=both];
+  
+
+}

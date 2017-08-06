@@ -1,9 +1,9 @@
 digraph mediation {
 graph [rankdir = LR]
 
-node [shape = rectangle, style=filled, fillcolor=white, color=gray, width=.75]
+node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, width=.75]
 
-node [fontcolor=gray25, fontname=Helvetica, fixedsize=true, fontsize='5%']
+node [fontcolor=white, fontname=Roboto, fixedsize=true, fontsize='5%']
 Treatment; Mediator; Target;
 
 node [shape=circle, width=.1, fixedsize=F, fontsize=8]
