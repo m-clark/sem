@@ -3,7 +3,6 @@
 
 These are other topics that may be covered in varying detail in the future. With possible packages noted. 
 
-- Topic Models
 - Collaborative filtering
     - recommenderlab
 - Other Mixture models (additional to what is already there) 
