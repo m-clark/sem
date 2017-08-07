@@ -31,7 +31,7 @@ In topic modeling, the probabilities can represent the probability of various to
 When it comes to topic modeling, most of the time is spent on processing the text itself.  Importing/scraping it, dealing with capitalization, punctuation, removing stopwords, dealing with encoding issues, removing other miscellaneous common words.  It is a highly iterative process such that once you initially get to the document-term matrix, you're just going to find the stuff that was missed before and repeat the process with new 'cleaning parameters' in place.  So getting to the analysis stage is the hard part.  The following image is from the [tidytext book](http://tidytextmining.com/), and gives some sense of the process, as well as some R packages that might be of use to you.
 
 
-<img src="http://tidytextmining.com/images/tidyflow-ch-6.png" style="display:block; margin: 0 auto;" width=75%>
+<a href="http://tidytextmining.com/images/tidyflow-ch-6.png"><img src="img/tidyflow.png" style="display:block; margin: 0 auto;" width=75%></a>
 
 
 In what follows we'll start at the point of having the DTM in place and ready for analysis.  For our needs we'll use the <span class="pack">topicModels</span> package for the analysis, and mostly others for post-processing.  As mentioned, one of the primary results of such an analysis are the probabilities of terms within topics, which like factor loadings, can aid in interpreting the topics. The other result is the probability that a topic will be present in a given document.  
@@ -149,19 +149,43 @@ top_terms = chapters_lda_td %>%
   arrange(-beta)
 
 # top_terms
-
-top_terms %>%
-  mutate(term = reorder(term, beta)) %>%
-  arrange(desc(beta)) %>% 
+# all of the following is because of ggplot's refusal to order data as it is presented
+t1 = top_terms %>%
+  mutate(topic = factor(topic)) %>% 
+  filter(topic==1) %>%
+  mutate(term = factor(term, levels=unique(term))) %>% 
   ggplot(aes(term, beta)) +
-  geom_point(aes(color=factor(topic)), size=3, show.legend=F) +
+  geom_point(aes(color=topic), size=3, show.legend=F) +
   ylab('Probability') + 
-  # scale_color_brewer(type='qual', palette=1) +
-  # scale_color_manual(values=scales::alpha(c(palettes$orange$orange, palettes$orange$triadic), .75)) +
-  scale_color_manual(values=scales::alpha(c(palettes$latvian_red$latvian_red, palettes$latvian_red$triadic), .85)) +
-  facet_wrap(~ topic, scales = "free_x") +
+  ylim(c(.0025,.0065)) +
+  scale_color_manual(values=scales::alpha(palettes$latvian_red$latvian_red), .85) +
   theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=.25)) +
-  theme_trueMinimal()
+  theme_trueMinimal()  
+t2 = top_terms %>%
+  mutate(topic = factor(topic)) %>% 
+  filter(topic==2) %>%
+  mutate(term = factor(term, levels=unique(term))) %>% 
+  ggplot(aes(term, beta)) +
+  geom_point(aes(color=topic), size=3, show.legend=F) +
+  ylab('Probability') + 
+  ylim(c(.0025,.0065)) +
+  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic[1]), .85) +
+  theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=.25)) +
+  theme_trueMinimal()  
+t3 = top_terms %>%
+  mutate(topic = factor(topic)) %>% 
+  filter(topic==3) %>%
+  mutate(term = factor(term, levels=unique(term))) %>% 
+  ggplot(aes(term, beta)) +
+  geom_point(aes(color=topic), size=3, show.legend=F) +
+  ylab('Probability') + 
+  ylim(c(.0025,.0065)) +
+  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic[2]), .85) +
+  theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=.25)) +
+  theme_trueMinimal()  
+  
+
+cowplot::plot_grid(t1, t2, t3, nrow=1, align='v', axis='l') 
 # ggplotly()
 ```
 

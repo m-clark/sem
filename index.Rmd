@@ -1,7 +1,7 @@
 --- 
-title: <span style="font-size:150%; font-variant:small-caps; font-style:italic; color:#1e90ff">Graphical and Latent Variable Modeling</span>
+title: <span style="font-size:150%; font-variant:small-caps; font-style:italic; color:#1f65b7">Graphical and Latent Variable Modeling</span>
 author:  |
-  <div class="title"><span style="font-size:125%; font-variant:small-caps; ">Michael Clark</span><br>
+  <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
   <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br>
   <img src="img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div>
 date: "`r Sys.Date()`"
@@ -36,10 +36,11 @@ url: 'https\://m-clark.github.io/docs/sem/'  # evidently the \: is required or y
 github-repo:  m-clark/sem/
 ---
 
-```{r setup_chunkopts, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment=NA, message = F, warning=F, R.options=list(width=120), 
-                      cache.rebuild=F, cache=T,
+```{r setup_chunkopts, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, message = FALSE, warning=FALSE, R.options=list(width=120), 
+                      cache.rebuild=FALSE, cache=TRUE,
                       fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
+knitr::clean_cache()
 ```
 
 

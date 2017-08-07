@@ -5,9 +5,9 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="https://m-clark.github.io/docs/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#ff5500">Structural Equation Models</span></a></li>
+        <li><a href="https://m-clark.github.io/docs/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#1f65b7">Structural Equation Models</span></a></li>
       after: |
-        <li><a href="https://m-clark.github.io" target="blank" style="font-size:150%; font-variant:small-caps; color:#ff5500; margin: 0 auto;">Michael Clark</a></li><br><br>
+        <li><a href="https://m-clark.github.io" target="blank" style="font-size:150%; font-variant:small-caps; color:#1f65b7; margin: 0 auto;">Michael Clark</a></li><br><br>
         <li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0; display:block; margin: 0 auto;" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></li>
     edit:
       link: https://github.com/rstudio/bookdown-demo/edit/master/%s

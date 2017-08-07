@@ -119,8 +119,11 @@ We can obtain some additional results to aid our understanding, as well as disti
 ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) + 
+  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  # scale_color_manual(values=c(palettes$latvian_red$latvian_red, palettes$latvian_red$tetradic)) +
+  # scale_color_manual(values=c(palettes$stan_red$stan_red, palettes$stan_red$tetradic)) +
   xlab(expression('Individual Latent Score')) +
-  lazerhawk::theme_trueMinimal()
+  theme_trueMinimal()
 ```
 
 In this case we can see that three of the items essentially behave identically, and in general distinguish (slightly less than average) individuals. The first item would however would take more 'ability' before endorsement, i.e. it is more 'difficult' in test taking terms, but even then it is not too different from the others.  We can now start to think of the latent trait as representing a pro-choice stance, where at the average score the person would likely be endorsing all but the first item.
@@ -138,8 +141,9 @@ Because we don't estimate separate item discrimination, all items have the same 
 ggplot(aes(x=z, y=Information), data=iicdat) +
   geom_vline(xintercept=0, alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) +
+  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
   xlab(expression('Individual Latent Score')) +
-  lazerhawk::theme_trueMinimal()
+  theme_trueMinimal()
 ```
 
 For further interpretation, consider a worst case scenario. Individuals would have the same chance of getting the answer correct regardless of ability. In other words the ICC would be flat, i.e. a constant.  The derivative of a constant is zero, meaning the item has no information at all.
@@ -168,8 +172,9 @@ diffscore =              data.frame(coef=coef(irt_rasch_par2)[,1],
                         Item=factor(paste0('Item.', 1:4)))
 qplot(rep(fscore$z1, fscore$Obs),
       geom='density',  adjust=2, xlim=c(-2,2), xlab='Ability', color=I('gray50')) +
-  geom_point(aes(x=coef,y=0, color=Item), size=3, data=diffscore, alpha=.5) +
-  lazerhawk::theme_trueMinimal()
+  geom_point(aes(x=coef,y=0, color=Item), size=3, data=diffscore, alpha=.75) +
+  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  theme_trueMinimal()
 ```
 
 At this point we'll take a moment to summarize things.  IRT models can be seen as a specific type of logistic regression model. The 1PM assumes a latent individual score as well as item-specific difficulty, and from the model, we can gain information about person performance as well as item characteristics.  With extensions we'll gain even more information about how the items and individuals function.
@@ -395,17 +400,19 @@ We start to see a lack of parallelism in the item characteristic curves, as well
 # iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
 p1 = ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
-  geom_line(aes(group=Item, color=Item), lwd=1, show.legend=F) + 
+  geom_line(aes(group=Item, color=Item), lwd=1, show.legend=F, alpha=.75) + 
+  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
   xlab('Individual Latent Score') +
-  lazerhawk::theme_trueMinimal()
+  theme_trueMinimal()
 
 # plotdat = plot(irt_2pm_par2, type='IIC', zrange=c(-2,2), plot=F)
 # iicdat = gather(data.frame(plotdat), key=Item, value=Information, -z)
 p2 = ggplot(aes(x=z, y=Information), data=iicdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
-  geom_line(aes(group=Item, color=Item), lwd=1) +
+  geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) +
+  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
   xlab('Individual Latent Score') +
-  lazerhawk::theme_trueMinimal() +
+  theme_trueMinimal() +
   theme(legend.position=c(.75,.9),
         legend.key.height=unit(.5, 'cm'))
 gridExtra::grid.arrange(p1, p2, ncol=2)
@@ -506,10 +513,11 @@ load('data/3pm.RData')
 iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
 ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
-  geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T) + 
+  geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T, alpha=.75) + 
+  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
   annotate(x=-2,y=.15, label=sprintf('\U2193'), geom='text', size=8, color='#ff5503') +
   xlab('Individual Latent Score') +
-  lazerhawk::theme_trueMinimal() +
+  theme_trueMinimal() +
   theme(legend.position=c(.85,.4),
         legend.key.height=unit(.5, 'cm'))
 ```

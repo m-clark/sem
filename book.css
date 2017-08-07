@@ -6,7 +6,7 @@
 }
 
 .section {
-  background-color: black; /*#fffff8*/
+  background-color: #fffff8; /*black, to test plot backgrounds*/
 }
 
 .book .book-body .page-wrapper .page-inner section.normal {
@@ -65,5 +65,5 @@ i {
 }
 
 .book .book-summary ul.summary li a:hover, .book .book-summary ul.summary li.active>a {
-  color: #9E1B34;  /*#6197D5*/
+  color: #6197d5;  /*#9E1B34*/
 }
