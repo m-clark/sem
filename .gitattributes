@@ -36,3 +36,5 @@ _book/*.pdf
 *.html linguist-vendored
 *.css linguist-vendored
 *.stan linguist-language=Stan
+*.inp linguist-language=Mplus
+*.out linguist-generated=true
