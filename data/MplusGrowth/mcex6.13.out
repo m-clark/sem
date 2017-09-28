@@ -1,9 +1,3 @@
-<HTML>
-<HEAD>
-   <TITLE>Mplus User's Guide Examples</TITLE>
-</HEAD>
-<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
-<PRE>
 Mplus VERSION 7.3
 MUTHEN & MUTHEN
 09/22/2014   5:18 PM
@@ -696,7 +690,4 @@ Web: www.StatModel.com
 Support: Support@StatModel.com
 
 Copyright (c) 1998-2014 Muthen & Muthen
-</PRE>
-<P><A HREF="http://www.statmodel.com/ugexcerpts.shtml">Back to examples</A>
-</BODY>
-</HTML>
+
