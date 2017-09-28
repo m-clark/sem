@@ -34,7 +34,9 @@ _book/*.pdf
 *.knit.md
 
 *.html linguist-vendored
+*.sh linguist-vendored
 *.css linguist-vendored
+
 *.stan linguist-language=Stan
 *.inp linguist-language=Mplus
 *.out linguist-generated=true
