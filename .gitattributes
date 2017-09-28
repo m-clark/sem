@@ -18,8 +18,8 @@
 .Rproj.user/
 
 # produced vignettes
-*.html
-*.pdf
+_book/*.html
+_book/*.pdf
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
