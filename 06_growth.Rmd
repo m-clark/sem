@@ -436,7 +436,7 @@ In the [appendix][Parallel Process Example] I provide an example of a parallel p
 
 ## Summary
 
-Growth curve modeling is an alternative way to do what is very commonly accomplished through mixed models, and allow for more complex models than typically seen for standard mixed models.  One's default should probably be to use the more common, and probably more flexible (in most situations), mixed modeling tools, where there are packages in R that could handle nonlinear effects, mediation and multivariate outcomes for mixed models. I have other documents regarding mixed models on my [website](https://m-clark.github.io/documents) and code at [GitHub](https://github.com/m-clark/Miscellaneous-R-Code). However, the latent variable approach may provide what you need, and at the very least gives you a fresh take on the standard mixed model perspective.
+Growth curve modeling is an alternative way to do what is very commonly accomplished through mixed models, and allow for more complex models than typically seen for standard mixed models.  One's default should probably be to use the more common, and probably more flexible (in most situations), mixed modeling tools, where there are packages in R that could handle nonlinear effects, mediation and multivariate outcomes for mixed models. I have other documents regarding mixed models on my [website](https://m-clark.github.io/documents) and code at [GitHub](https://github.com/m-clark/Miscellaneous-R-Code), including a document that does [more comparison to growth curve models](http://m-clark.github.io/mixed-growth-comparison/). However, the latent variable approach may provide what you need, and at the very least gives you a fresh take on the standard mixed model perspective.
 
 ## R Packages Used
 

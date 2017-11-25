@@ -1,2 +1,3 @@
 book_filename: "sem"
 chapter_name: "Chapter "
+output_dir: "docs"

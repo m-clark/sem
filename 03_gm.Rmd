@@ -1,7 +1,7 @@
 # Graphical Models
 
 ```{r setupGM, include=FALSE}
-# knitr::clean_cache()
+# knitr::clean_cache(clean=T)
 library(lavaan); library(DiagrammeR); library(bnlearn); library(visNetwork); library(igraph) # only load mediation as needed
 ```
 
@@ -139,7 +139,7 @@ Most models deal only with <span class="emph">direct effects</span>.  In this ca
 
 While relatively seldom used, multivariate linear regression[^mvreg] is actually very straightforward in some programming environments such as R, and conducting models with multivariate outcomes does not require anything specific to SEM, but that is the realm we'll stick with.  Using the [McClelland data][McClelland], let's try it for ourselves. First, let's look at the data to get a sense of things.
 
-```{r mcclellandCors, cache=FALSE, echo=F, fig.align='center'}
+```{r mcclellandCors, echo=F, cache=T, fig.align='center'}
 psych::describe(mcclelland)
 numericdat = select(mcclelland, -college, -college_missing, -male, -adopted)
 tags$div(style="width:250px; margin:0 auto;",
@@ -148,7 +148,7 @@ tags$div(style="width:250px; margin:0 auto;",
 <br>
 While these are only weakly correlated variables to begin with, one plausible model might try to predict math and reading at age 21 with measures taken at prior years. 
 
-```{r paMultipleTargets, cache=TRUE}
+```{r paMultipleTargets}
 model = "
   read21 ~ attention4 + vocab4 + read7
   math21 ~ attention4 + math7

@@ -80,6 +80,8 @@ h1, h2, h3, h4, h5 {
   color:rgb(97,151,213);
 }
 
+
+
 .col2 {
   columns: 2 200px;         /* number of columns and width in pixels*/
   -webkit-columns: 2 200px; /* chrome, safari */

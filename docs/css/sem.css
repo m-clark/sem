@@ -1,0 +1,16 @@
+
+div.datatables {
+  margin-left: auto;     /* to center them when full is not necessary. */
+  margin-right: auto;
+}
+
+.graph {
+  background-color: transparent;
+  bgcolor: transparent;
+}
+
+polygon {
+    background: transparent;
+    bgcolor: transparent;
+    /*fill: none;   /* ignore rstudio warning, this is necessary to change Diagrammer to transparent background*/
+}
