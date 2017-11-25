@@ -20,8 +20,10 @@ output:
         sharing:
           facebook: true
           twitter: true
-        toc_depth: 3
-        toc_collapse: section
+        toc:
+          depth: 3
+          collapse: section
+          scroll_highlight: yes
     # bookdown::tufte_html_book:
     #   toc: yes
     #   css: [toc.css, ../notebooks.css]
