@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-11-25">
+<meta name="date" content="2017-12-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -108,9 +108,9 @@ code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* Com
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
-<link rel="stylesheet" href="css\book.css" type="text/css" />
-<link rel="stylesheet" href="css\standard_html.css" type="text/css" />
-<link rel="stylesheet" href="css\sem.css" type="text/css" />
+<link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="css/standard_html.css" type="text/css" />
+<link rel="stylesheet" href="css/sem.css" type="text/css" />
 </head>
 
 <body>
@@ -452,7 +452,7 @@ y =<span class="st"> </span>x <span class="op">+</span><span class="st"> </span>
 mod =<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)
 <span class="kw">summary</span>(x)</code></pre></div>
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--2.6909 -0.7128 -0.0170 -0.0860  0.5007  1.8867 </code></pre>
+-2.5599 -0.6782 -0.1229 -0.1027  0.4160  2.4271 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mod)</code></pre></div>
 <pre><code>
 Call:
@@ -460,18 +460,18 @@ lm(formula = y ~ x)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--2.3834 -0.6504  0.0400  0.7920  2.2290 
+-2.9896 -0.5372  0.1184  0.5720  1.9029 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -0.06568    0.10622  -0.618    0.538    
-x            1.21160    0.12098  10.015   &lt;2e-16 ***
+(Intercept) -0.14631    0.09871  -1.482    0.141    
+x            0.90128    0.11156   8.079 1.72e-12 ***
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 1.057 on 98 degrees of freedom
-Multiple R-squared:  0.5058,    Adjusted R-squared:  0.5008 
-F-statistic: 100.3 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 0.9804 on 98 degrees of freedom
+Multiple R-squared:  0.3997,    Adjusted R-squared:  0.3936 
+F-statistic: 65.26 on 1 and 98 DF,  p-value: 1.724e-12</code></pre>
 <p>In both cases we used the <code>summary</code> function, but get different results. There are two <span class="emph">methods</span> for summary at work here: <span>summary.default</span> and <span>summary.lm</span>. Which is used depends on the class of the object given as an argument to the summary function. Most of the time however, there are unique functions that will only work on one class of object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(x)</code></pre></div>
 <pre><code>[1] &quot;numeric&quot;</code></pre>
@@ -622,7 +622,7 @@ gitbook.start({
 "download": null,
 "toc": {
 "collapse": "section",
-"depth": 3,
+"depth": 1,
 "scroll_highlight": true
 },
 "highlight": "pygments",
