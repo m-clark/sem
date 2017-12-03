@@ -52,12 +52,12 @@ Any statistical model you've conducted can be expressed as a graphical model.  A
 
 A key idea of a graphical model is that of <span class="emph">conditional independence</span>, something one should keep in mind when constructing their models.  The concept can be demonstrated with the following graph.
 
-```{r conditionalIndependence, echo=FALSE, eval=T}
+```{r conditionalIndependence, echo=FALSE, eval=F}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%;", 
 DiagrammeR::DiagrammeR("scripts/condindie.gv", type='grViz', width=500, height=250))
+# export_graph() # won't work except on dgr objects of course
 # <img src="img/conditionalIndependence.png" style="display:block; margin: 0 auto; width:25%">
 ```
-
 <br>
 In this graph, X is *conditionally independent* of Z given Y- there is no correlation between X and Z once Y is accounted for[^condind].  We will revisit this concept when discussing path analysis and latent variable models.  Graphs can be *directed*, *undirected*, or *mixed*. Directed graphs have arrows, sometimes implying a causal flow (a difficult endeavor to demonstrate explicitly) or noting a time component. Undirected graphs merely denote relations among the nodes, while mixed graphs might contain both directional and symmetric relationships.  Most of the models discussed in this document will be directed or mixed.
 
@@ -195,13 +195,13 @@ Consider the following model.
 
 
 ```{r mediationDiag, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='center'}
-tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
-         DiagrammeR::grViz('scripts/mediation.gv', width=500, height=250))
+# tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
+#          DiagrammeR::grViz('scripts/mediation.gv', width=500, height=250))
 
 # DiagrammeR::grViz('scripts/mediation.gv')
 
 ```
-
+<img src="img/mediation.png" style="display:block; margin: 0 auto;" width=50%>
 
 Here we posit attention span and vocabulary at age 4 as indicative of what to expect for reading skill at age 7, and that is ultimately seen as a precursor to adult reading ability. In this model, attention span and vocabulary at 4 only have an indirect effect on adult reading ability through earlier reading skill.  At least temporally it makes sense, so let's code this up.
 
@@ -396,16 +396,23 @@ Some refer to models with indirect effects as <span class="emph">mediation</span
 
 In models with moderation, one will often see a specific variable denoted as the *moderator*. However, this is completely arbitrary in the vast majority of situations in which it is used. In a typical model that includes an interaction, it makes just as much sense to say that the $\mathcal{A} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{B}$ as it does the $\mathcal{B} \rightarrow \mathcal{Y}$ relationship varies as a function of $\mathcal{A}$.  Some suggest using the term *moderation* when only when there is a potential causal relation, almost always temporal in nature, such that the moderator variable precedes the variable in question. In addition, the moderator and the variable moderated must be *uncorrelated*[^wuzumbo].  While such restrictions would render almost every model I've ever seen that uses the term moderation as an ordinary interaction instead, the idea is that the moderator has a causal effect on the path between the variable in question and its target.  This is why you see graphs like the one to the left below, which has no tie to any statistical model and generally confuses people more often than it illuminates (the *correct* graph is to the right).  Again though, the actual model is statistically indistinguishable from a standard model including an interaction, so if you want to understand moderation, you simply need to understand what an interaction is. 
 
-<div class='col2'>
 <!-- <img src="img/moderation.png" style="display:block; margin: 0 auto; width:75%"> -->
 
-```{r modpic, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='right'}
-tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%", 
-DiagrammeR::DiagrammeR("scripts/moderation0.gv", type='grViz', width=400, height=200),
-DiagrammeR::DiagrammeR("scripts/moderation.gv", type='grViz', width=400, height=200)
-)
+```{r modpic, echo=FALSE, eval=F, cache=F, fig.align='right', out.width='50%'}
+# whatever code diagrammer is producing for this will just screw any number of things up, including subsequent graphs; even running just one of them separately it will display a previous graph instead of the correct one.  Have given up 
+# tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
+# DiagrammeR::DiagrammeR("scripts/moderation0.gv", type='grViz', width=400, height=200)
+# )
+# 
+# tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
+# DiagrammeR::DiagrammeR("scripts/moderation.gv", type='grViz', width=400, height=200)
+# )
 ```
+<div class='col2' text-align='center>
+<img src="img/mod_problematic.png" style="display:block; margin: 0 auto; float:left;" width=75%>
+<img src="img/mod_better.png" style="display:block; margin: 0 auto; float:left;" width=75%>
 </div>
+
 <br>
 Like SEM relative to standard modeling techniques, so too is mediation and moderation to indirect effects and interactions. Statistically they are indistinguishable models. Theoretically however, there is an underlying causal framework, and in some cases specific causal claims can be tested (e.g. via simulation).
 
@@ -418,10 +425,12 @@ The gist is that if you want to talk about your relations using the terms 'media
 
 Path analysis of a different sort has a long history in econometrics.  A very common approach one may see utilized is <span class="emph">instrumental variable</span> analysis. The model can be depicted graphically as follows:
 
-```{r ivmodel, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='center'}
+```{r ivmodel, echo=FALSE, eval=F, cache=FALSE, fig.align='center'}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/iv.gv', width=500, height=250))
 ```
+
+<img src="img/iv.png" style="display:block; margin: 0 auto;" width=50%>
 
 In the graph, $\mathcal{Y}$ is our target variable, $\mathcal{X}$ is the causal variable of interest, and $\mathcal{Z}$ the instrument. The instrumental variable must not be correlated with disturbance of the target variable (later depicted as $\mathcal{U}$), and only has an indirect relation to $\mathcal{Y}$ through $\mathcal{X}$.  Neither target nor causal variable are allowed to effect the instrument directly or indirectly.  In graph theory, this involves the notion of conditional independence we've mentioned before, where $\mathcal{Z}$ is conditionally independent of Y given X, or in other words, if we remove the $\mathcal{X} \rightarrow \mathcal{Y}$ path, $\mathcal{Z}$ and $\mathcal{Y}$ are independent.  Furthermore, $\mathcal{Z}$ is *not* conditionally independent of $\mathcal{X}$ with the removal of that path[^direct].
 
@@ -621,7 +630,7 @@ semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, 
 
 ```{r nonrecursive2, echo=FALSE}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
-         grViz('scripts/nonrecursive2.gv', width=500, height=250)
+         DiagrammeR::grViz('scripts/nonrecursive2.gv', width=500, height=250)
          )
 ```
 

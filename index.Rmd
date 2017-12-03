@@ -42,7 +42,7 @@ github-repo:  m-clark/sem/
 
 ```{r setup_chunkopts, include=FALSE, cache=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA, message = FALSE, warning=FALSE, R.options=list(width=120), 
-                      cache.rebuild=FALSE, cache=TRUE,
+                      cache.rebuild=F, cache=TRUE,
                       fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
 knitr::clean_cache()
 ```
@@ -56,6 +56,13 @@ library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); libr
 ```{r setup_bib, include=FALSE}
 # automatically create a bib database for R packages; just run every once in a while (on most updated machine)
 # knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib')
+
+# Diagrammer continues to become more problematic in markdown with each update,
+# consistently somehow shows the WRONG visual,cache or no cache, and is
+# difficult to debug; will sometimes throw a random error where there was no
+# previous issue but ONLY in the document, not in the bookdown build process;
+# might ignore the transparent background even. just save the img and display
+# accordingly until issues are resolved.
 ```
 
 

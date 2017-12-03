@@ -1,4 +1,4 @@
-digraph DAG2 {
+digraph bifactor {
  # Intialization of graph attributes
  graph [overlap = false rankdir=BT]
  
