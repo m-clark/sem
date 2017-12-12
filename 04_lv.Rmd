@@ -407,9 +407,9 @@ pars = parameterEstimates(famod, standardized=T)
 
 To begin, we do see that the factors are notably correlated at roughly `r round(pars[nrow(pars),'std.all'],2)`, but in general these aren't the most spectacular results, as some items are not loading too highly on their respective construct, and some R-squares reinforce that notion. Remember also our distinction between pattern and structure coefficients though. Just because we don't have paths from some items to the other factor doesn't mean they aren't correlated with that factor.
 
-```{r plotMultiFactor, echo=F, eval=T}
+```{r plotMultiFactor, echo=F, eval=T, cache=FALSE}
 tags$div(style="width:100%; margin:auto auto;",
-grViz('scripts/multifactor.gv', width='100%')
+DiagrammeR::grViz('scripts/multifactor.gv', width='100%')
 )
 ```
 
@@ -421,9 +421,9 @@ grViz('scripts/multifactor.gv', width='100%')
 
 In <span class="emph">hierarchical</span> models we posit that latent variables can also serve as indicators of other latent variables.  As an example, one latent variable might represent verbal cognition, another mathematical strength, a third scientific acumen, and they might be indicators for a general 'scholastic ability' latent variable.  Graphically they can be depicted as follows:
 
-```{r secondorder, echo=F}
+```{r secondorder, echo=F, cache=FALSE}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
-grViz('scripts/second_order.gv', width='100%', height='45%')
+DiagrammeR::grViz('scripts/second_order.gv', width='100%', height='45%')
 )
 ```
 
@@ -460,6 +460,23 @@ grViz('scripts/bifactor.gv', width='100%', height='45%')
 
 
 The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which, see the [scale development][Scale development] section below.
+
+```{r bifactor_lavaan, eval=F, echo=FALSE}
+# won't actually converge with this data
+HS.model3 = ' 
+visual  =~ x1 + x2 + x3 
+textual =~ x4 + x5 + x6
+speed   =~ x7 + x8 + x9 
+g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+
+g ~~ 0*visual + 0*textual +  0*speed
+# visual ~~ 0*textual + 0*speed
+# textual ~~ 0*speed
+'
+fit3 = cfa(HS.model3, data = HolzingerSwineford1939, std.lv = TRUE, information="observed")
+summary(fit3)
+```
+
 
 
 #### Measurement invariance

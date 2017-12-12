@@ -55,10 +55,10 @@ digraph bifactor {
  F3 -> X9 [style=dashed color=limegreen] ;
  F3 -> {X10 X11 X12}[color=limegreen];
 
- edge[dir=both, style=curved]
- F1 -> F2;
- F2 -> F3;
- F3 -> F1;
+ # edge[dir=both, style=curved]
+ # F1 -> F2;
+ # F2 -> F3;
+ # F3 -> F1;
 
  edge [dir=back; minlen=2.3 color=dodgerblue]
  X1 -> Fg [style=dashed]; 
