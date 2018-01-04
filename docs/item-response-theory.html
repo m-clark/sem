@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-12-12">
+<meta name="date" content="2018-01-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,9 +55,9 @@
 <script src="libs/d3heatmapcore-0.0.0/heatmapcore.js"></script>
 <script src="libs/d3-tip-0.6.6/index.js"></script>
 <script src="libs/d3heatmap-binding-0.6.1.1/d3heatmap.js"></script>
-<link href="libs/vis-4.20.0/vis.css" rel="stylesheet" />
-<script src="libs/vis-4.20.0/vis.min.js"></script>
-<script src="libs/visNetwork-binding-2.0.1/visNetwork.js"></script>
+<link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
+<script src="libs/vis-4.20.1/vis.min.js"></script>
+<script src="libs/visNetwork-binding-2.0.2/visNetwork.js"></script>
 <script src="libs/datatables-binding-0.2/datatables.js"></script>
 <link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
@@ -387,13 +387,13 @@ logit</code></pre></div>
 <h3>One Parameter Model</h3>
 <p>We now turn to specific IRT models. The one-parameter, a.k.a. <em>Rasch</em>, model (1PM) can be expressed as follows:</p>
 <p><span class="math display">\[P(y=1|\theta, \delta) = \mathrm{logis}(\theta_i-\delta_j)\]</span></p>
-<p>In this setting, the probability of endorsement (or getting an item correct), <span class="math inline">\(\pi_{ij}\)</span>, is a function of the difficulty of item <span class="math inline">\(j\)</span>, <span class="math inline">\(\delta_j\)</span> above, and the latent trait (ability) of person <span class="math inline">\(i\)</span>, <span class="math inline">\(\theta_i\)</span>. In other words, it’s a specific type of logistic regression model. In the testing context, a person with more ‘ability’ relative to the item difficulty will answer correctly. In terms of the logit:</p>
+<p>In this setting, the probability of endorsement (or getting an item correct), <span class="math inline">\(\pi_{ij}\)</span>, is a function of the <span class="emph">difficulty</span> of item <span class="math inline">\(j\)</span>, <span class="math inline">\(\delta_j\)</span> above, and the latent trait (<span class="emph">ability</span>) of person <span class="math inline">\(i\)</span>, <span class="math inline">\(\theta_i\)</span>. In other words, it’s a specific type of logistic regression model. In the testing context, a person with more ‘ability’ relative to the item difficulty will answer correctly. In terms of the logit:</p>
 <p><span class="math display">\[\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j\]</span></p>
 <p>IRT often utilizes a different parameterization, though the results are the same.</p>
-<p>There is an additional parameter, <span class="math inline">\(\alpha\)</span>, item discrimination, which refers to the item’s ability to distinguish one person from another. In the Rasch model it is held constant, and in its original formulation it was fixed at 1. If we add it to the mix we have:</p>
+<p>There is an additional parameter, <span class="math inline">\(\alpha\)</span>, item <span class="emph">discrimination</span>, which refers to the item’s ability to distinguish one person from another. In the Rasch model it is held constant, and in its original formulation it was fixed at 1. If we add it to the mix we have:</p>
 <p><span class="math display">\[P(y=1|\theta, \delta) = \mathrm{logis}(\alpha(\theta_i-\delta_j))\]</span></p>
 <p>As we will see later, the two parameter IRT model estimates the discrimination parameter for each item. Note also, the <span class="pack">ltm</span> package we will use doesn’t fix the discrimination parameter to be 1 in the 1PM, so you’ll actually have an estimate for it, but it’s still constant across items.</p>
-<p>To begin we’ll use the abortion data that comes with the <span class="pack">ltm</span> package. I provide this non-testing example so that one will be clear that IRT is not just for testing data, though I will often refer to the testing lingo for additional context. It regards 379 individuals who were asked if the law should allow abortion under the circumstances presented for each item:</p>
+<p>To begin, we’ll use the abortion data that comes with the <span class="pack">ltm</span> package. I provide this non-testing example so that one will be clear that IRT is not just for testing data, though I will often refer to the testing lingo for additional context. This data regards 379 individuals who were asked if the law should allow abortion under the circumstances presented for each item:</p>
 <ul>
 <li>Item 1: The woman decides on her own that she does not.</li>
 <li>Item 2: The couple agree that they do not wish to have a child.</li>
@@ -450,7 +450,7 @@ Pairwise Associations:
 4      1      2  &lt;2e-16
 5      2      3  &lt;2e-16
 6      3      4  &lt;2e-16</code></pre>
-<p>Now we’ll start by examining the initial results from the 1PM by using the <span class="func">rasch</span> function, for both IRT parameterizations. If you want to look at the original formulation with discrimination fixed to 1.0 I show the code for that, but not the results.</p>
+<p>Now we’ll start by examining the initial results from the 1PM by using the <span class="func">rasch</span> function, for both IRT parameterizations. If you want to look at the original formulation with discrimination fixed to 1.0, I show the code for that, but not the results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ltm)
 irt_rasch_par1 =<span class="st"> </span><span class="kw">rasch</span>(Abortion, <span class="dt">IRT.param=</span>F)
 irt_rasch_par2 =<span class="st"> </span><span class="kw">rasch</span>(Abortion, <span class="dt">IRT.param=</span>T)
@@ -476,7 +476,7 @@ Dffclt.Item 1  Dffclt.Item 2  Dffclt.Item 3  Dffclt.Item 4         Dscrmn
         0.164         -0.237         -0.358         -0.304          4.457  
 
 Log.Lik: -708.55</code></pre>
-<p>Again, the parameterization used doesn’t really matter (note the identical log likelihoods and discrimination). Though setting <code>IRT.param=T</code> is perhaps more common in the IRT world, the other is more in keeping with standard logistic models elsewhere. The gist is, that the first item is ‘more difficult’, i.e. less likely to be endorsed by default, <em>relative to the other items</em>. In the second parameterization, we can think of it as requiring a latent trait score above average (i.e. 0) for endorsement. We can see this even by just looking at the proportion of endorsements via <span class="func">colMeans</span>.</p>
+<p>Again, the parameterization used doesn’t matter (note the identical log likelihoods and discrimination). Though setting <code>IRT.param=T</code> is perhaps more common in the IRT world, the other is more in keeping with standard logistic models elsewhere. The gist is, that the first item is ‘more difficult’, i.e. less likely to be endorsed by default, <em>relative to the other items</em>. In the second parameterization, we can think of it as requiring a latent trait score above average (i.e. 0) for endorsement. We can see this even by just looking at the proportion of endorsements via <span class="func">colMeans</span>.</p>
 <p>Now let’s look at some of the individual latent trait scores. By default, <span class="pack">ltm</span> will only provide scores for the unique response <em>patterns</em>, and in fact for the standard estimation only the response patterns are required rather than all the observations. With only items and no other individual information, multiple response patterns of the same type are redundant in estimating the latent trait. These are obtained with the <span class="func"></span>factor.scores function. Other information includes standard errors, and observed and expected frequencies.</p>
 <div id="htmlwidget-167b8f6fca7cef16402c" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-167b8f6fca7cef16402c">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],[0,0,0,0,0,0,0,0,1,1,1,1,1,1],[0,0,0,0,1,1,1,1,0,0,1,1,1,1],[0,0,1,1,0,0,1,1,0,1,0,0,1,1],[0,1,0,1,0,1,0,1,0,1,0,1,0,1],[103,13,10,21,9,6,7,44,1,6,3,3,12,141],[103.58,11.71,14.92,14.08,8.68,8.19,10.43,41.57,1.46,6.98,1.02,4.06,5.17,144.02],[-0.9,-0.44,-0.44,-0.19,-0.44,-0.19,-0.19,0.1,-0.44,0.1,-0.19,0.1,0.1,0.65],[0.46,0.25,0.25,0.24,0.25,0.24,0.24,0.27,0.25,0.27,0.24,0.27,0.27,0.52]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Item.1<\/th>\n      <th>Item.2<\/th>\n      <th>Item.3<\/th>\n      <th>Item.4<\/th>\n      <th>Obs<\/th>\n      <th>Exp<\/th>\n      <th>z1<\/th>\n      <th>se.z1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","pageLength":14,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,14,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>

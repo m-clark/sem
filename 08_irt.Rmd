@@ -39,20 +39,20 @@ We now turn to specific IRT models.  The one-parameter, a.k.a. *Rasch*, model (1
 $$P(y=1|\theta, \delta) = \mathrm{logis}(\theta_i-\delta_j)$$
 
 
-In this setting, the probability of endorsement (or getting an item correct), $\pi_{ij}$, is a function of the difficulty of item $j$, $\delta_j$ above, and the latent trait (ability) of person $i$, $\theta_i$.  In other words, it's a specific type of logistic regression model. In the  testing context, a person with more 'ability' relative to the item difficulty will answer correctly.  In terms of the logit:
+In this setting, the probability of endorsement (or getting an item correct), $\pi_{ij}$, is a function of the <span class="emph">difficulty</span> of item $j$, $\delta_j$ above, and the latent trait (<span class="emph">ability</span>) of person $i$, $\theta_i$.  In other words, it's a specific type of logistic regression model. In the  testing context, a person with more 'ability' relative to the item difficulty will answer correctly.  In terms of the logit:
 
 $$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j$$
 
 IRT often utilizes a different parameterization, though the results are the same.  
 
-There is an additional parameter, $\alpha$, item discrimination, which refers to the item's ability to distinguish one person from another. In the Rasch model it is held constant, and in its original formulation it was fixed at 1. If we add it to the mix we have:
+There is an additional parameter, $\alpha$, item <span class="emph">discrimination</span>, which refers to the item's ability to distinguish one person from another. In the Rasch model it is held constant, and in its original formulation it was fixed at 1. If we add it to the mix we have:
 
 
 $$P(y=1|\theta, \delta) = \mathrm{logis}(\alpha(\theta_i-\delta_j))$$
 
 As we will see later, the two parameter IRT model estimates the discrimination parameter for each item. Note also, the <span class="pack">ltm</span> package we will use doesn't fix the discrimination parameter to be 1 in the 1PM, so you'll actually have an estimate for it, but it's still constant across items.
 
-To begin we'll use the abortion data that comes with the <span class="pack">ltm</span> package.  I provide this non-testing example so that one will be clear that IRT is not just for testing data, though I will often refer to the testing lingo for additional context. It regards 379 individuals who were asked if the law should allow abortion under the circumstances presented for each item:
+To begin, we'll use the abortion data that comes with the <span class="pack">ltm</span> package.  I provide this non-testing example so that one will be clear that IRT is not just for testing data, though I will often refer to the testing lingo for additional context. This data regards 379 individuals who were asked if the law should allow abortion under the circumstances presented for each item:
 
 - Item 1: The woman decides on her own that she does not.
 - Item 2: The couple agree that they do not wish to have a child.
@@ -77,7 +77,7 @@ ltm::descript(Abortion)
 ```
 
 
-Now we'll start by examining the initial results from the 1PM by using the <span class="func">rasch</span> function, for both IRT parameterizations.  If you want to look at the original formulation with discrimination fixed to 1.0 I show the code for that, but not the results.
+Now we'll start by examining the initial results from the 1PM by using the <span class="func">rasch</span> function, for both IRT parameterizations.  If you want to look at the original formulation with discrimination fixed to 1.0, I show the code for that, but not the results.
 
 ```{r ltm_1pm, eval=FALSE}
 library(ltm)
@@ -95,7 +95,7 @@ ltm:::print.rasch(irt_rasch_par2)
 ```
 
 
-Again, the parameterization used doesn't really matter (note the identical log likelihoods and discrimination). Though setting `IRT.param=T` is perhaps more common in the IRT world, the other is more in keeping with standard logistic models elsewhere. The gist is, that the first item is 'more difficult', i.e. less likely to be endorsed by default, *relative to the other items*.  In the second parameterization, we can think of it as requiring a latent trait score above average (i.e. 0) for endorsement. We can see this even by just looking at the proportion of endorsements via <span class="func">colMeans</span>.
+Again, the parameterization used doesn't matter (note the identical log likelihoods and discrimination). Though setting `IRT.param=T` is perhaps more common in the IRT world, the other is more in keeping with standard logistic models elsewhere. The gist is, that the first item is 'more difficult', i.e. less likely to be endorsed by default, *relative to the other items*.  In the second parameterization, we can think of it as requiring a latent trait score above average (i.e. 0) for endorsement. We can see this even by just looking at the proportion of endorsements via <span class="func">colMeans</span>.
 
 Now let's look at some of the individual latent trait scores. By default, <span class="pack">ltm</span> will only provide scores for the unique response *patterns*, and in fact for the standard estimation only the response patterns are required rather than all the observations. With only items and no other individual information, multiple response patterns of the same type are redundant in estimating the latent trait. These are obtained with the <span class="func"></span>factor.scores function.  Other information includes standard errors, and observed and expected frequencies.
 
@@ -119,7 +119,7 @@ We can obtain some additional results to aid our understanding, as well as disti
 ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) + 
-  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  scale_color_manual(values=palettes$orange$tetradic) +
   # scale_color_manual(values=c(palettes$latvian_red$latvian_red, palettes$latvian_red$tetradic)) +
   # scale_color_manual(values=c(palettes$stan_red$stan_red, palettes$stan_red$tetradic)) +
   xlab(expression('Individual Latent Score')) +
@@ -141,7 +141,7 @@ Because we don't estimate separate item discrimination, all items have the same 
 ggplot(aes(x=z, y=Information), data=iicdat) +
   geom_vline(xintercept=0, alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) +
-  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  scale_color_manual(values=palettes$orange$tetradic) +
   xlab(expression('Individual Latent Score')) +
   theme_trueMinimal()
 ```
@@ -173,7 +173,7 @@ diffscore =              data.frame(coef=coef(irt_rasch_par2)[,1],
 qplot(rep(fscore$z1, fscore$Obs),
       geom='density',  adjust=2, xlim=c(-2,2), xlab='Ability', color=I('gray50')) +
   geom_point(aes(x=coef,y=0, color=Item), size=3, data=diffscore, alpha=.75) +
-  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  scale_color_manual(values=palettes$orange$tetradic) +
   theme_trueMinimal()
 ```
 
@@ -401,7 +401,7 @@ We start to see a lack of parallelism in the item characteristic curves, as well
 p1 = ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, show.legend=F, alpha=.75) + 
-  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  scale_color_manual(values=palettes$orange$tetradic) +
   xlab('Individual Latent Score') +
   theme_trueMinimal()
 
@@ -410,7 +410,7 @@ p1 = ggplot(aes(x=z, y=Probability), data=iccdat) +
 p2 = ggplot(aes(x=z, y=Information), data=iicdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, alpha=.75) +
-  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  scale_color_manual(values=palettes$orange$tetradic) +
   xlab('Individual Latent Score') +
   theme_trueMinimal() +
   theme(legend.position=c(.75,.9),
@@ -514,7 +514,7 @@ iccdat = gather(data.frame(plotdat), key=Item, value=Probability, -z)
 ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T, alpha=.75) + 
-  scale_color_manual(values=c(palettes$orange$orange, palettes$orange$tetradic)) +
+  scale_color_manual(values=palettes$orange$tetradic) +
   annotate(x=-2,y=.15, label=sprintf('\U2193'), geom='text', size=8, color='#ff5503') +
   xlab('Individual Latent Score') +
   theme_trueMinimal() +
