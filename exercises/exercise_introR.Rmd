@@ -53,4 +53,3 @@ new_data = data.frame(x, z)
 class(new_data)
 summary(new_data)
 ```
-

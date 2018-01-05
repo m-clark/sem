@@ -19,7 +19,7 @@ output:
 
 ```{r setupExercises, include=FALSE}
 knitr::opts_chunk$set(cache = F, message = F, warning = F, R.options=list(width=120), comment=NA)
-knitr::opts_knit$set(root.dir = normalizePath(".."))
+# knitr::opts_knit$set(root.dir = normalizePath(".."))
 library(magrittr); library(dplyr); library(lavaan); library(semPlot); library(htmltools)
 ```
 
