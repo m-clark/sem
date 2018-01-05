@@ -221,7 +221,6 @@ Hopefully you'll get the hang of things as we run the code in later chapters.  Y
 
 ### Exercises
 
-Interactive version [here](exercise_introR.nb.html)
 
 1. Create an object that consists of the numbers one through five.
 using `c(1,2,3,4,5)` or `1:5`
