@@ -1,0 +1,43 @@
+digraph Factor  {
+  graph [rankdir=RL  bgcolor=transparent]
+  
+  node [fontname="Roboto" fontsize=10 fixedsize=TRUE, shape=box, width=1, color='#b2001d75', fontcolor='gray50'];
+  edge [fontname="Roboto" fontsize=8 color=gray75 arrowhead=none fontcolor='gray50'];
+  V1  [label = "population"];
+  V2  [label = "schooling"];
+  V3  [label = "employment"];
+  V4  [label = "professional"];
+  V5  [label = "housevalue"];
+  
+  node [shape=ellipse width =1.5 height=1.5 fillcolor='#b2001d80' style=filled fontcolor='white'];
+  PC1 [label=<PC<sub>1</sub>> width =1 height=1]; 
+  PC2 [label=<PC<sub>2</sub>> width =.5 height=.5];
+  
+  
+  edge [color='#8B000094'];
+  PC1-> V1 [ label = 0.58 penwidth=1.15];  # penwidths based on rescale of loadings to c(.5,2)
+  edge [color="#8B0000C4"];
+  PC1-> V2 [ label = 0.77 penwidth=1.61];
+  edge [color="#8B0000AB"];
+  PC1-> V3 [ label = 0.67 penwidth=1.37];
+  edge [color="#8B0000EE"];
+  PC1-> V4 [ label = 0.93 penwidth=2.0];
+  edge [color="#8B0000CA"];
+  PC1-> V5 [ label = 0.79 penwidth=1.66];
+  
+  
+  edge [color="#8B0000CE"];
+  PC2-> V1 [ label = 0.81 penwidth=1.71];
+  edge [color="#228B22CE"];
+  PC2-> V2 [ label = -0.54 penwidth=1.06];
+  edge [color="#8B0000B9"];
+  PC2-> V3 [ label = 0.73 penwidth=1.52];
+  edge [color="#228B228E"];
+  PC2-> V5 [ label = -0.56 penwidth=1.10];
+  
+  
+  { rank=same;
+  V1;V2;V3;V4;V5;}
+  { rank=same;
+  PC1;PC2;}
+}

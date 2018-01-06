@@ -5,7 +5,7 @@ digraph depression {
  graph [overlap=false rankdir=TB bgcolor=transparent]
  
  # Node statements
- node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];
+ node [shape=circle, style=filled, fillcolor=lightblue, color=gray75, fontcolor=gray50, fontname='Roboto'];
  U0 [width=.25 height=.25 style='' label=''];
  Depression [fontsize=10, width=1.25, height=1];
  
@@ -20,7 +20,7 @@ digraph depression {
     DLM; 
  }
  # Initialization of edge attributes
- edge [color = gray50, rel = yields]
+ edge [color = gray50, rel = yields, fontname='Roboto']
  
  # Edge statements
  edge [label='   .29', fontcolor=gray25, fontsize=6]

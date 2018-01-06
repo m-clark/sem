@@ -54,11 +54,11 @@ For the PCA, we'll retain three components and use no rotation, and we'll also f
 ```{r pca, echo=2:4}
 set.seed(1234)
 library(psych)
-pc = principal(Harman.5, nfactors=3,  rotate='none', covar = F)
+pc = principal(Harman.5, nfactors=2,  rotate='none', covar = F)
 pc
 ```
 
-First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(psych::Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(psych::Harman.5), 2))`).  The `Cumulative Var` tells us that all `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(psych::Harman.5)` variables. We can see that each component accounts for a decreasing amount of variance.
+First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix, summing across all 5 possible components would equal the value of 5). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', ncol(psych::Harman.5), ' = ', round(print(pc)$Vaccounted[1]/ncol(psych::Harman.5), 2))`).  The `Cumulative Var` tells us that `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/5, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r ncol(psych::Harman.5)` variables (i.e. the cumulative explained variance would = 1). We can see that the second component accounts for less variance, and this would continue with additional components, where each accounts for a decreasing amount of variance.
 
 <span class='emph'>Loadings</span>, also referred to as the <span class="emph">pattern matrix</span>, in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. As an example, we can reproduce the loadings by correlating the observed variables with the estimated component scores, something we'll talk more about later.
 
@@ -69,16 +69,27 @@ cor(Harman.5, pc$scores) %>% round(2)
 It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger loadings are indicated by blue, and we can see the different variables associated with different components. 
 
 ```{r pcaLoadingsVis, echo=F, eval=-1, cache=FALSE}
-d3heatmap::d3heatmap(pc$loadings)
-
 library(htmltools)
+# tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+#          d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
+#                               colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), 
+#                                                      domain=c(-.3,1), bins=50), 
+#                               width=500)
+#          )
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
-         d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
-                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), 
-                                                     domain=c(-.3,1), bins=50), 
-                              width=500)
+heatmaply::heatmaply(pc$loadings, dendrogram='none',
+                     colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(pc$loadings)),
+                     hide_colorbar=T, 
+                     plot_method='ggplot'
+                     ) %>% 
+  plotly::layout(yaxis = list(showline = F),
+         xaxis = list(showline = F)
          )
+, width=500
+)
 ```
+
+<br>
 
 Interpretation is the fun but commonly difficult part. As an example, PC1 looks to be mostly our socioeconomic status of the tract.  Any tract with a high score on that component will have high values on all variables.  It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. The underlying cause of the result could for example merely be due to population itself.
 
@@ -99,7 +110,7 @@ We can get a quick graphical model displayed as follows[^nobiplot]:
 # fa.graph(pc, cut=.2)
 # unlink('scripts/pcload.gv')
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
-         DiagrammeR::grViz('scripts/pcload.gv', width='100%', height='400px')
+         DiagrammeR::grViz('scripts/pcload_2.gv', width='100%', height='400px')
 )
 ```
 
@@ -155,11 +166,11 @@ DiagrammeR::grViz('scripts/fa_gm.gv', width='100%', height='50%')
 And to reproduce the correlation matrix:
 
 $$R \approx LL' + \Psi$$
-So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well. If you look at the <span class="objclass">pc_all</span> results, you'll note that the uniquenesses are all zero, but this is not the case with factor analysis.
+So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well[^fm]. If you look at the <span class="objclass">pc_all</span> results, you'll note that the uniquenesses are all zero, but this is not the case with factor analysis.
 
 ```{r fa_preproduce_cormat, echo=-1}
-# see details in helpfile for fa; due to change, fm='old.min' required for this example to wrok
-fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F, fm='old.min')
+# see details in helpfile for fa; due to change, fm='old.min' required for this example to work
+fa_all = fa(Harman.5, nfactors=5,  rotate='none', covar = F, fm = 'gls')
 all.equal(tcrossprod(loadings(fa_all)), cor(Harman.5))           # doesn't reproduce cormat
 
 # add uniquenesses
@@ -178,19 +189,40 @@ What this amounts to conceptually are a few key ideas:
 Let's now do the factor analysis for the same Harman 5 data.
 
 ```{r faHarman}
-fac = fa(Harman.5, nfactors=3,  rotate='none')
+fac = fa(Harman.5, nfactors=2,  rotate='none')
 fac
 ```
 
 Once again, we'll depict the loadings visually.
 
-```{r Vis_faHarman, echo=FALSE}
+```{r Vis_faHarman, echo=FALSE, cache=FALSE}
+# heatmaply ugly defaults are difficult to overcome; ggplot theme args will be ignored
+# tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+#          d3heatmap::d3heatmap(fac$loadings, dendrogram='none',
+#                               colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-.2,1), bins=50), width=500)
+#          )
+# heatmaply::heatmaply(fac$loadings, dendrogram='none',
+#                      colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(fac$loadings)),
+#                      hide_colorbar=T, 
+#                      plot_method='ggplot'
+#                      ) +
+#   theme(axis.line.x = element_line(color='red', size = 5))
+
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
-         d3heatmap::d3heatmap(fac$loadings, dendrogram='none',
-                              colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-.2,1), bins=50), width=500)
+heatmaply::heatmaply(fac$loadings, dendrogram='none',
+                     colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(fac$loadings)),
+                     hide_colorbar=T, 
+                     plot_method='ggplot'
+                     ) %>% 
+  plotly::layout(yaxis = list(showline = F),
+         xaxis = list(showline = F)
          )
+, width=500
+)
+# ggplotly() %>% hide_colorbar() %>% lazerhawk::theme_plotly()
 ```
 
+<br>
 
 We have a notably different interpretation with this approach. To begin, our first two factors account for roughly the same amount of variance.  Secondly, none reflect all the variables simultaneously.  For example, the first might reflect the wealth of census tracts, while the second size.  The third latent variable has a murky interpretation at best, but is mostly reflective of education.  However, for identifiability reasons, a topic we will address more later, technically 3 factors is too many for five variables without imposing constraints on some of the parameters.
 
@@ -257,7 +289,7 @@ Before leaving PCA and common factor analysis for factor analysis of the sort we
 - **SVD**: singular value decomposition. Works on a raw data matrix rather than covariance matrix, and is still a very viable technique that may perform better in a lot of situations relative to fancier latent variable models, and other more recently developed techniques.  Variations on SVD are/were behind some recommender systems of the sort you come across at Amazon, Netflix etc. There is a notable [tie between SVD and PCA](https://math.stackexchange.com/questions/3869/what-is-the-intuitive-relationship-between-svd-and-pca) such that SVD is actually used for PCA for computational reasons in many scenarios.
 - **ICA**: Independent components analysis. Extracts non-normal, independent components. The primary goal is to create independent latent variables.
 - **Generalized PCA**: PCA techniques for different types of data, e.g. binary data situations.
-- **PC Regression**: combining PCA with regression in one model.
+- **PC Regression**: combining PCA with regression in one model.  There isn't a reason I can think of to ever do this relative to alternatives (e.g. SEM, PLS, neural networks, etc.).
 - **NMF**: non-negative matrix factorization. Applied to positive valued matrices, produces positive valued factors. Useful, for example, when dealing with counts.
 - **LSI**: Latent Semantic Indexing, an early form of topic modeling. It has an equivalence to NMF.
 - **LDA**: Latent Dirichlet Allocation, the typical approach for topic modeling, generalizes LSI/NMF. Essentially can be seen as discrete PCA, i.e. a special case of exponential/generalized PCA.  See the [topic models][Topic Models] section for an example.
@@ -407,9 +439,9 @@ pars = parameterEstimates(famod, standardized=T)
 
 To begin, we do see that the factors are notably correlated at roughly `r round(pars[nrow(pars),'std.all'],2)`, but in general these aren't the most spectacular results, as some items are not loading too highly on their respective construct, and some R-squares reinforce that notion. Remember also our distinction between pattern and structure coefficients though. Just because we don't have paths from some items to the other factor doesn't mean they aren't correlated with that factor.
 
-```{r plotMultiFactor, echo=F, eval=T, cache=FALSE}
+```{r plotMultiFactor, echo=F, eval=T}
 tags$div(style="width:100%; margin:auto auto;",
-DiagrammeR::grViz('scripts/multifactor.gv', width='100%')
+grViz('scripts/multifactor.gv', width='100%')
 )
 ```
 
@@ -421,9 +453,9 @@ DiagrammeR::grViz('scripts/multifactor.gv', width='100%')
 
 In <span class="emph">hierarchical</span> models we posit that latent variables can also serve as indicators of other latent variables.  As an example, one latent variable might represent verbal cognition, another mathematical strength, a third scientific acumen, and they might be indicators for a general 'scholastic ability' latent variable.  Graphically they can be depicted as follows:
 
-```{r secondorder, echo=F, cache=FALSE}
+```{r secondorder, echo=F}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
-DiagrammeR::grViz('scripts/second_order.gv', width='100%', height='45%')
+grViz('scripts/second_order.gv', width='100%', height='45%')
 )
 ```
 
@@ -460,23 +492,6 @@ grViz('scripts/bifactor.gv', width='100%', height='45%')
 
 
 The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which, see the [scale development][Scale development] section below.
-
-```{r bifactor_lavaan, eval=F, echo=FALSE}
-# won't actually converge with this data
-HS.model3 = ' 
-visual  =~ x1 + x2 + x3 
-textual =~ x4 + x5 + x6
-speed   =~ x7 + x8 + x9 
-g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-
-g ~~ 0*visual + 0*textual +  0*speed
-# visual ~~ 0*textual + 0*speed
-# textual ~~ 0*speed
-'
-fit3 = cfa(HS.model3, data = HolzingerSwineford1939, std.lv = TRUE, information="observed")
-summary(fit3)
-```
-
 
 
 #### Measurement invariance
@@ -768,6 +783,8 @@ Latent variable approaches are a necessary tool to have in your statistical tool
 [^factphil]: There are actually deep philosophical underpinnings to this approach, going at least as far back as the notion of the Platonic forms, and continuing on through philosophical debates about what mental aspects can be measured scientifically. However, even when it became a more quantitative discipline, the philosophy was not far behind. See, for example, [The Vectors of Mind](https://archive.org/details/vectorsofmindmul010122mbp) by L.L. Thurstone, one of the pioneers of measurement theory (1935).  As a philosophy major from back in the day, latent variable modeling has always had great appeal to me.
 
 [^factpca]: One version of factor analysis is nearly identical to PCA in terms of mechanics, save for what are on the diagonals of the correlation matrix (1s for PCA vs. 'communalities' for FA).
+
+[^fm]: For those that might wonder, I use the 'gls' method here only to get the result for demonstration purposes.  A five factor model with five variables is not identified (nor is a 4 or 3 factor model).
 
 [^rotation]: I don't think it necessary to get into rotation here, though will likely add a bit in the future. If you're doing PCA, you're likely not really concerned about interpretation of loadings, as you are going to use the components for other means.  It might help with standard factor analysis, but this workshop will spend time on more focused approaches where one would have some idea of the underlying structure rather than looking to uncover the structure.  Rotation doesn't change anything about the fundamental model result, so one just uses whatever leads to the clearest interpretation.
 
