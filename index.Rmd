@@ -16,13 +16,13 @@ output:
         # edit: false
         fontsettings:
           family: san-serif
-          size: 2
+          size: 1
         sharing:
           facebook: true
           twitter: true
         toc:
           depth: 3
-          collapse: section
+          collapse: 'section'
           scroll_highlight: yes
     # bookdown::tufte_html_book:
     #   toc: yes

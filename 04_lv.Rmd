@@ -1,5 +1,11 @@
 # Latent Variables
 
+```{r include=FALSE}
+# if diagrammer starts randomly pulling visuals from other scripts, rebuild all here
+knitr::opts_chunk$set(cache.rebuild=F, cache=TRUE)
+```
+
+
 Not everything we want to measure comes with an obvious yardstick.  If one wants to measure something like a person's happiness, what would they have at their disposal? 
 
 - Are they smiling?
@@ -486,7 +492,7 @@ A <span class="emph">bifactor</span> model might seem similar to the hierarchica
 
 ```{r bifactor, echo=F}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
-grViz('scripts/bifactor.gv', width='100%', height='45%')
+DiagrammeR::grViz('scripts/bifactor.gv', width='100%', height='45%')
 )
 ```
 

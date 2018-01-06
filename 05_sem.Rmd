@@ -1,5 +1,11 @@
 # Structural Equation Modeling
 
+```{r include=FALSE}
+# if diagrammer starts randomly pulling visuals from other scripts, rebuild all here
+knitr::opts_chunk$set(cache.rebuild=F, cache=TRUE)
+```
+
+
 Structural equation modeling combines the path analytic and latent variable techniques together to allow for regression models among latent and observed variables.  Any model, even the SLiM, can be seen as some form of SEM, or graphical model more generally.  However, the term is typically reserved for the combination of latent and observed variables in a model, often with causal implications[^bpSEM].
 
 
