@@ -8,27 +8,21 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
     bookdown::gitbook:
-      # css: [book.css, sem.css]
       highlight: pygments
       number_sections: false
       config:
+        toc:
+          depth: 1
+          collapse: section  # ignored for reasons unknown
+          scroll_highlight: yes
         search: yes
-        # edit: false
         fontsettings:
           family: san-serif
-          size: 1
         sharing:
           facebook: true
           twitter: true
-        toc:
-          depth: 3
-          collapse: 'section'
-          scroll_highlight: yes
-    # bookdown::tufte_html_book:
-    #   toc: yes
-    #   css: [toc.css, ../notebooks.css]
 always_allow_html: yes
-font-import: http://fonts.googleapis.com/css?family=Risque|Roboto|Open+Sans
+# font-import: http://fonts.googleapis.com/css?family=Roboto|Open+Sans
 font-family: 'Roboto'
 documentclass: book
 bibliography: [book.bib, packages.bib]
