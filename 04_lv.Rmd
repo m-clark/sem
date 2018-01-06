@@ -484,7 +484,7 @@ However, theoretically we may have a specific latent cause in mind and want to e
 A <span class="emph">bifactor</span> model might seem similar to the hierarchical model at first blush.  I'll use the previous 3-factor model example, and see if you can come up with why these are different models specifically.
 
 
-```{r bifactor, echo=F, dev.args=list(bg = 'transparent')}
+```{r bifactor, echo=F}
 tags$div(style="width:75%; margin:0 auto; text-align='center'",
 grViz('scripts/bifactor.gv', width='100%', height='45%')
 )

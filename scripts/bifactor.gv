@@ -1,6 +1,6 @@
 digraph bifactor {
  # Intialization of graph attributes
- graph [overlap = false rankdir=BT]
+ graph [overlap = false rankdir=BT bgcolor=transparent]
  
  # Initialization of node attributes
  node [shape = circle,
