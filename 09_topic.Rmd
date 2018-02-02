@@ -169,7 +169,7 @@ t2 = top_terms %>%
   geom_point(aes(color=topic), size=3, show.legend=F) +
   ylab('Probability') + 
   ylim(c(.0025,.0065)) +
-  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic[1]), .85) +
+  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic[2]), .85) +
   theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=.25)) +
   theme_trueMinimal()  
 t3 = top_terms %>%
@@ -180,7 +180,7 @@ t3 = top_terms %>%
   geom_point(aes(color=topic), size=3, show.legend=F) +
   ylab('Probability') + 
   ylim(c(.0025,.0065)) +
-  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic[2]), .85) +
+  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic[3]), .85) +
   theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust=.25)) +
   theme_trueMinimal()  
   
@@ -212,7 +212,7 @@ chapters_lda_gamma %>%
   geom_point(aes(color=topic), size=5) +
   # scale_color_brewer(type='qual', palette=1) +
   # scale_color_manual(values=scales::alpha(c(palettes$orange$orange, palettes$orange$triadic), .75)) +
-  scale_color_manual(values=scales::alpha(c(palettes$latvian_red$latvian_red, palettes$latvian_red$triadic), .85)) +
+  scale_color_manual(values=scales::alpha(palettes$latvian_red$triadic, .85)) +
   # scale_color_manual(values=scales::alpha(NineteenEightyR::sonny(3), .85)) +
   ylim(c(0,.6)) +
   facet_wrap(~ title, nrow = 1) + 
