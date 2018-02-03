@@ -47,7 +47,7 @@ You'll get the hang of finding, installing, and using packages quite quickly. Ho
 
 ### RStudio
 
-RStudio is an <span class="emph">integrated development environment</span> (**IDE**) specifically geared toward R (though it works for other languages too).  At the very least it will make your programming far easier and more efficient, at best you can create publish-ready documents, manage projects, create interactive website regarding your research, use version control, and much more. I have an overview [here](https://m-clark.github.io/docs/introRStudio.html).
+RStudio is an <span class="emph">integrated development environment</span> (**IDE**) specifically geared toward R (though it works for other languages too).  At the very least it will make your programming far easier and more efficient, at best you can create publish-ready documents, manage projects, create interactive website regarding your research, use version control, and much more. I have an overview [here](https://m-clark.github.io/docs/introRstudio.html).
 
 See [Emacs Speaks Statistics](http://ess.r-project.org/) for an alternative. The point is, base R is not an efficient way to use R, and you have at least two very powerful options to make your coding experience easier and more efficient.
 
