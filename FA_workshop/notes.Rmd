@@ -1,0 +1,84 @@
+---
+title: "FA Talk"
+author:  |
+  <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
+  <!-- <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br> -->
+  <!-- <img src="img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div> -->
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    highlight: pygments
+    theme: sandstone
+# css: css/standard_html.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Thinking about FA
+- Dimension Reduction
+- Matrix Factorization
+- Latent Linear Models
+- Measurement error
+
+
+## PCA
+
+Seek to find orthogonal factors to minimize reconstruction error.
+
+$$\mathscr{Loss} = X - ZW^T$$
+
+X is the $NxD$ matrix of observed scores, $Z$ are the $N x L$ component scores where L < D, while $W$ are the $DxL$ weights, typically referred to as the <span class="emph">factor loading</span> matrix.
+
+With all components
+
+$$X = ZW^T$$
+
+The MNIST data contains 28 by 28 pixel images of digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit.  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components the reconstruction is perfect.
+
+<img src="../img/pca_recon.png" style="display:block; margin: 0 auto;">
+
+
+## FA
+
+
+$$X \approx ZW^T$$
+
+## FA for measurement
+
+### "Confirmatory" Factor Analysis
+### SEM
+### IRT
+
+## As latent linear models
+
+
+### FA
+
+$$ X \sim \mathcal{N}(ZW^T + \mu, \Psi) $$
+$\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
+
+
+### Probabilistic PCA
+
+For probabilistic PCA $\Psi$ is $\sigma^2I$.
+
+### PCA
+PCA $\sigma$ = 0,
+
+Count-based
+
+ - NMF
+ - LDA
+
+Latent classes
+
+ - Mixture models
+ - Other cluster analysis
+
+Other
+
+ - ICA
+ - Recommender systems
+ - Bayesian
