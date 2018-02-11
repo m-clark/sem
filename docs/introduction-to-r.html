@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-02-10">
+<meta name="date" content="2018-02-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -452,7 +452,7 @@ y =<span class="st"> </span>x <span class="op">+</span><span class="st"> </span>
 mod =<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)
 <span class="kw">summary</span>(x)</code></pre></div>
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--3.3306 -0.4330  0.2495  0.1593  0.7078  2.4532 </code></pre>
+-2.1325 -0.5316  0.1077  0.0980  0.6256  2.5982 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mod)</code></pre></div>
 <pre><code>
 Call:
@@ -460,18 +460,18 @@ lm(formula = y ~ x)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--3.08747 -0.69059  0.06241  0.85892  2.19917 
+-2.70041 -0.72953  0.03944  0.72466  2.88650 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -0.0964     0.1059  -0.910    0.365    
-x             1.0682     0.1076   9.931   &lt;2e-16 ***
+(Intercept)  0.05984    0.10725   0.558    0.578    
+x            0.93619    0.11406   8.208 9.13e-13 ***
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 1.045 on 98 degrees of freedom
-Multiple R-squared:  0.5016,    Adjusted R-squared:  0.4965 
-F-statistic: 98.62 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 1.067 on 98 degrees of freedom
+Multiple R-squared:  0.4074,    Adjusted R-squared:  0.4013 
+F-statistic: 67.37 on 1 and 98 DF,  p-value: 9.129e-13</code></pre>
 <p>In both cases we used the <code>summary</code> function, but get different results. There are two <span class="emph">methods</span> for summary at work here: <span>summary.default</span> and <span>summary.lm</span>. Which is used depends on the class of the object given as an argument to the summary function. Most of the time however, there are unique functions that will only work on one class of object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(x)</code></pre></div>
 <pre><code>[1] &quot;numeric&quot;</code></pre>
