@@ -67,10 +67,18 @@ For probabilistic PCA $\Psi$ is $\sigma^2I$.
 ### PCA
 PCA $\sigma$ = 0,
 
-Count-based
+## Count-based Matrix Factorization
 
- - NMF
- - LDA
+Commonly our data regards counts or otherwise compositional data.  In this case we can use techniques that are better suited to such data.
+ 
+### NMF
+
+Non-negative matrix factorization is similar to PCA, just with the constraint that scores be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
+
+
+### LDA
+
+Latent Dirichlet takes a different approach
 
 Latent classes
 
@@ -82,3 +90,9 @@ Other
  - ICA
  - Recommender systems
  - Bayesian
+ 
+ 
+ ## Issues
+
+- how many factors?
+- two step models vs. simultaneous estimation

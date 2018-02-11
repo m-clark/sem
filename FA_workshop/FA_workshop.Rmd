@@ -4,7 +4,7 @@ output:
   learnr::tutorial:
     theme: sandstone
     highlight: pygments
-font-family: ['Open Sans', 'Roboto', ]
+font-family: 'Roboto'
 runtime: shiny_prerendered
 ---
 
@@ -26,15 +26,22 @@ library(psych)
 
 ### Exercise with Code
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
 
-Now write a function that adds any two numbers and then call it:
+
+
+## Common Factor Analysis
+
+Use the fa function to conduct a factor analysis
+
 
 ```{r fa, exercise=TRUE}
 
 ```
-
-## Common Factor Analysis
+```{r fa-hint}
+psych::fa(mtcars, nfactors = 1)
+psych::fa(mtcars, nfactors = 2)
+psych::fa(mtcars, nfactors = 3)
+```
 
 ### Exercise with Hint
 
