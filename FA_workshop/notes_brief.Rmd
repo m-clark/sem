@@ -1,0 +1,202 @@
+---
+title: "FA Talk"
+author:  |
+  <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
+  <!-- <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br> -->
+  <!-- <img src="img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div> -->
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    highlight: pygments
+    theme: sandstone
+css: standard_html.css
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, message = FALSE, warning=FALSE, R.options=list(width=120), 
+                      cache.rebuild=F, cache=TRUE,
+                      fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
+knitr::opts_knit$set(root.dir = '../')
+library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan)
+```
+
+
+## Thinking about FA
+
+- Dimension Reduction
+- Matrix Factorization
+- Latent Linear Models
+- Measurement error
+- Additional approaches
+
+
+
+### PCA Summary
+
+Why do it? 
+
+- Reduce the dimensions of the data
+- Retain as much variance as possible
+
+Issues
+
+- It might not be the best choice with some data types
+- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do)
+- Non-numeric or mixed data types
+
+
+Other stuff
+
+- Scale the variables
+- Biplots are ugly
+
+### FA Summary
+
+Why do it? 
+
+- Reduce the dimensions of the data
+- Explain why the variables are correlated
+- You don't assume variables are measured without error
+- Prefer a better measure than a mean or sum score
+- Want to apply (confirm) theory
+- Scale development
+
+Issues
+
+- It might not be the best choice with some data types
+- It is not the choice to make if you are wanting to get the most variance seen in the variables
+- Non-numeric or mixed data types add complexity
+
+
+Other stuff
+
+- The concept of FA is very generalizable
+
+### ICA
+
+The latent linear model versions of PCA and factor analysis assume the latent variables are normal.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).</span>
+
+
+
+```{r ica, echo=FALSE, results='hide', cache=FALSE}
+set.seed(2)
+N = 1000
+
+A = matrix(c(2,3,2,1), 2)*.3
+Suni = matrix(runif(2*N, min = -1), ncol = 2)*sqrt(3)
+Xuni = Suni %*% A
+
+ica_res = fastICA::fastICA(Xuni, 2)
+ica_res$A
+A
+
+pc_res = psych::principal(Xuni, 2)$scores 
+```
+
+```{r ica_plot, echo=FALSE, cache=FALSE}
+p1 = qplot(Suni[,1], Suni[,2], color=I('#ff550040')) + 
+  labs(x='', y='', title='Sources') +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  theme_trueMinimal()
+p2 = qplot(Xuni[,1], Xuni[,2], color=I('#ff550040')) +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  labs(x='', y='', title='Observed Data') +
+  theme_trueMinimal()
+p3 = qplot(pc_res[,1], pc_res[,2], color=I('#ff550040')) +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  labs(x='', y='', title='PCA') +
+  theme_trueMinimal()
+p4 = qplot(ica_res$S[,1], ica_res$S[,2], color=I('#ff550040')) + 
+  labs(x='', y='', title='ICA') +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  theme_trueMinimal()
+cowplot::plot_grid(p1, p2, p3, p4)
+```
+
+
+```{matlab ica_matlab, echo=F}
+setSeed(2);
+%Number of data points
+N=100;
+%Choose a nice mixing matrix
+A=[2,3;2,1]*.3;
+
+
+%% Uniform data
+
+%Create data with uniform distribution
+Suni=(rand(2,N)*2-1)*sqrt(3);
+Xuni=A*Suni;
+Vuni = fastica(Xuni,'only','white');
+Shat = fastica(Xuni,'g','tanh','approach','symm');
+cmax=3; 
+
+h1=plot(Suni(1,:),Suni(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+%just cosmetics:
+set(h1,'LineWidth',2);
+set(h1,'MarkerSize',16);
+axis equal;
+title('uniform data')
+printPmtkFigure('icaUniformSource')
+
+%Plot uniform mixed data
+figure;
+h1=plot(Xuni(1,:),Xuni(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+axis equal;
+set(h1,'LineWidth',2);
+set(h1,'MarkerSize',16);
+title('uniform data after linear mixing')
+printPmtkFigure('icaUniformMixed')
+
+
+%Plot uniformly distributed data after PCA whitening
+figure;
+h1=plot(Vuni(1,:),Vuni(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+axis equal;
+set(h1,'LineWidth',2);
+set(h1,'MarkerSize',16);
+title('PCA applied to mixed data from uniform source')
+printPmtkFigure('icaUniformPCA')
+
+
+%Plot estimated ICs from uniformly distributed data
+figure
+h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+```
+
+
+Why do it? 
+
+- You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed.
+- You deal with images or sound, but haven't heard anything about deep learning.
+
+Issues
+
+- The ratio of where this isn't applicable to where it is strikes me as very large.
+
+
+Other stuff
+
+- ??
+
+### NMF/LDA
+
+Why do it? 
+
+- Reduce the dimensions of the data.
+- Your data represents counts or is compositional in nature.
+
+Issues
+
+- Slower
+
+Other stuff
+
+- NMF can be seen as a special case of LDA
+
+
+
+
+### Fourier Transform
+
+### Deep Learning

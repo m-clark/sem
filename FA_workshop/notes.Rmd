@@ -9,14 +9,20 @@ output:
   html_document: 
     highlight: pygments
     theme: sandstone
-# css: css/standard_html.css
+css: standard_html.css
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, message = FALSE, warning=FALSE, R.options=list(width=120), 
+                      cache.rebuild=F, cache=TRUE,
+                      fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
+knitr::opts_knit$set(root.dir = '../')
+library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan)
 ```
 
+
 ## Thinking about FA
+
 - Dimension Reduction
 - Matrix Factorization
 - Latent Linear Models
@@ -31,23 +37,185 @@ $$\mathscr{Loss} = X - ZW^T$$
 
 X is the $NxD$ matrix of observed scores, $Z$ are the $N x L$ component scores where L < D, while $W$ are the $DxL$ weights, typically referred to as the <span class="emph">factor loading</span> matrix.
 
-With all components
+Each component, or factor, created accounts for less of the variance in the original data.  With all components, 
 
 $$X = ZW^T$$
 
 The MNIST data contains 28 by 28 pixel images of digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit.  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components the reconstruction is perfect.
 
 <img src="../img/pca_recon.png" style="display:block; margin: 0 auto;">
+<!-- I guess html ignores working directory -->
+
+### Example
+
+Let's see an example with more digestible results.  The following data are 16 multiple choice ability items taken from the Synthetic Aperture Personality Assessment (SAPA) web based personality assessment project. There are 1525 total subjects, and four categories of questions.
+
+- reason: verbal reasoning questions
+- letter: In the following alphanumeric series, what letter comes next?
+- matrix: A matrix reasoning task
+- rotate: spatial rotation task
+
+```{r data_cogab, echo=1:2}
+library(psych)
+cog_ability = psych::iqitems
+DT::datatable(cog_ability[1:10,],
+              rownames = F,
+              options = list(dom='t', 
+                             scrollX=T,
+                             autoWidth=T,
+                             columnDefs=list(list(width = '100px', targets='_all'),
+                                             list(className = 'dt-center', targets = '_all'))),
+              width='100%')
+```
+
+<br>
+
+
+Let's do a PCA.  We'll look at four components, though remember that PCA technically returns as many components as there are variables. You're just seeing part of the results. Note that PCA almost universally requires you to <span class="emph">standardize</span> the data,  so that each variable has the same variance.  Otherwise you'll just get components reflecting the relative variances. In what follows the PCA is done on the correlation matrix, which amounts to the same thing.
+
+```{r pc_cog, echo=-3}
+pc = principal(cog_ability, 4)
+pc
+p = ncol(cog_ability)
+```
+
+First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix as the basis, summing across all `r p` possible components would equal the value of `r p`). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', p, ' = ', round(print(pc)$Vaccounted[1]/p, 2))`).  The `Cumulative Var` tells us that `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r p` variables (i.e. the cumulative explained variance would = 1). We can see that the second component accounts for less variance, and this would continue with additional components, where each accounts for a decreasing amount of variance.
+
+Some explanation of the other parts of the output:
+
+- `h2`: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings, a.k.a. <span class="emph">communality</span>. For example, the first reasoning item shares only 38% of its variance with these components.
+- `u2`: 1 - h2
+- `com`: A measure of complexity. A value of 1 might be seen for something that loaded on only one component, and zero otherwise (a.k.a. perfect simple structure).
+
+
+<span class='emph'>Loadings</span>, also referred to as the <span class="emph">pattern matrix</span>, in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. As an example, we can reproduce the loadings by correlating the observed variables with the estimated component scores[^rotated].
+
+```{r pc_LoadingsReproduced, dependson=-1}
+cor(cog_ability, pc$scores, use = 'pair') %>% round(2)
+```
+
+
+It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger loadings are indicated by blue, and we can see the different variables associated with different components. 
+
+```{r pc_LoadingsVis, echo=F, cache=FALSE}
+library(htmltools)
+# tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+#          d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
+#                               colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), 
+#                                                      domain=c(-.3,1), bins=50), 
+#                               width=500)
+#          )
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+heatmaply::heatmaply(pc$loadings, dendrogram='none',
+                     colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(pc$loadings)),
+                     hide_colorbar=T, 
+                     plot_method='ggplot'
+                     ) %>% 
+  plotly::layout(yaxis = list(showline = F),
+         xaxis = list(showline = F)
+         )
+, width=500
+)
+```
+
+<br>
+
+```{r biplot, echo=FALSE}
+# spider(1:8, data=cor(cog_ability[,1:8], use='pair'), cex.lab=.5, scale=1)
+biplot.psych(pc, col = viridis::viridis(3, alpha = .5), hist.col = '#00aaff80')
+
+# fa.graph(pc, out.file = 'FA_workshop/pc_cog_graph.gv',
+#          node.font = 'Roboto',
+#          edge.font = 'Roboto',
+#          rank.direction = 'TB',
+#          main='PCA Results',
+#          fontize=10,
+#          bgcolor=transparent,
+#          arrowhead=none)
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
+         DiagrammeR::grViz('FA_workshop/pc_cog_graph.gv', width='100%', height='400px')
+)
+```
+
+
+
+Interpretation is the fun, but commonly difficult, part. In this case, the variables don't appear to be grouping like we'd expect, except for some of the reasoning scores[^badfactor].  It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. In addition, for PCA the goal is not interpretation, but to reduce the data while retaining as much of the variance as possible.
+
+
+### PCA Summary
+
+Why do it? 
+
+- Reduce the dimensions of the data
+- Retain as much variance as possible
+
+Issues
+
+- It might not be the best choice with some data types
+- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do)
+- Non-numeric or mixed data types
+
+
+Other stuff
+
+- Scale the variables
+- Biplots are ugly
+
 
 
 ## FA
 
-
 $$X \approx ZW^T$$
+
+
+```{r fa_res}
+fa_model = fa(cog_ability, 4, rotate='oblimin')
+fa_model
+```
+
+
+
+```{r fa_LoadingsVis, echo=F, cache=FALSE}
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
+heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
+                     colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(pc$loadings)),
+                     hide_colorbar=T, 
+                     plot_method='ggplot'
+                     ) %>% 
+  plotly::layout(yaxis = list(showline = F),
+         xaxis = list(showline = F)
+         )
+, width=500
+)
+```
+
+
+
 
 ## FA for measurement
 
 ### "Confirmatory" Factor Analysis
+
+
+```{r eval=FALSE}
+modelCode = "
+  verbal =~ reason.4 + reason.16 + reason.17 + reason.19
+  spatial =~ rotate.3 + rotate.4 + rotate.6 + rotate.8
+
+  # not necessary
+  # verbal ~~ spatial
+
+  # if you don't want them correlated
+  # verbal ~~ 0*spatial
+"
+
+famod = cfa(modelCode, data=cog_ability)
+summary(famod, standardized=T, rsq=T, nd=2)
+pars = parameterEstimates(famod, standardized=T)
+```
+
+
+
 ### SEM
 ### IRT
 
@@ -65,7 +233,8 @@ $\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
 For probabilistic PCA $\Psi$ is $\sigma^2I$.
 
 ### PCA
-PCA $\sigma$ = 0,
+
+For standard PCA, $\sigma \rightarrow 0$,
 
 ## Count-based Matrix Factorization
 
@@ -73,26 +242,55 @@ Commonly our data regards counts or otherwise compositional data.  In this case 
  
 ### NMF
 
-Non-negative matrix factorization is similar to PCA, just with the constraint that scores be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
+Non-negative matrix factorization is similar to PCA, just with the constraint that scores and weights be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
 
+<img src="../img/nmf_recon10.png" style="display:block; margin: 0 auto;">
 
 ### LDA
 
-Latent Dirichlet takes a different approach
+<span class="emph">Latent Dirichlet Allocation</span> takes a different approach to deal with count data. The classic example regards text analysis, where LDA is applied to word frequencies across topics.  Consider a document-term matrix where each row regards a document, and each column a word or term.  LDA looks for latent *topics* that are probability distributions over the *terms*.    There is a probability distribution for the topics as well as the terms, and given both, we will see some occurrence of the term in each document. Each *document* can be seen a mix of topics.
 
-Latent classes
+In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
+
+
+Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a mulinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times given some probability.
+
+```{r multinom_ex, echo=-1}
+set.seed(1234)
+t(rmultinom(1, size = 20, prob=5:1)) # first term is most likely, 5th term is least likely
+```
+
+Those are the counts we see for a given observation. 
+
+
+LDA wouldn't be the best tool if your goal is prediction, and you don't care much about interpretation.
+
+LDA is basically NMF with Dirichlet priors on the topics.  
+
+
+<img src="../img/lda_recon.png" style="display:block; margin: 0 auto;">
+
+## Latent classes
 
  - Mixture models
  - Other cluster analysis
 
-Other
+## Other
 
  - ICA
  - Recommender systems
  - Bayesian
  
  
- ## Issues
+## Issues
 
 - how many factors?
 - two step models vs. simultaneous estimation
+
+
+
+[^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the crossproduct of the loading matrix.
+
+[^rotated]: These results have been rotated, something practically no one using PCA actually does.  
+
+[^badfactor]: Results like this are more the rule than the exception in my experience. Not enough initial development is typically done with scales, and when other people use them in other settings, it often ends with disappointment.  Just think, many psychological scales are developed on freshman psychology students.  How well do you think that will generalize?
