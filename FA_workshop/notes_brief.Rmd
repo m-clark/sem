@@ -36,12 +36,12 @@ library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); libr
 Why do it? 
 
 - Reduce the dimensions of the data
-- Retain as much variance as possible
+- Retain as much variance as possible with each factor
 
 Issues
 
 - It might not be the best choice with some data types
-- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do)
+- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do) more than the variance
 - Non-numeric or mixed data types
 
 
@@ -49,6 +49,8 @@ Other stuff
 
 - Scale the variables
 - Biplots are ugly
+
+
 
 ### FA Summary
 
@@ -74,7 +76,7 @@ Other stuff
 
 ### ICA
 
-The latent linear model versions of PCA and factor analysis assume the latent variables are normal.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).</span>
+The latent linear model versions of PCA and factor analysis assume the observed variables are normally distributed (even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).</span>
 
 
 
@@ -105,6 +107,8 @@ p2 = qplot(Xuni[,1], Xuni[,2], color=I('#ff550040')) +
 p3 = qplot(pc_res[,1], pc_res[,2], color=I('#ff550040')) +
   lims(x=c(-3,3), y=c(-3,3)) +
   labs(x='', y='', title='PCA') +
+  scale_x_reverse() +
+  coord_polar(theta = 'x') +
   theme_trueMinimal()
 p4 = qplot(ica_res$S[,1], ica_res$S[,2], color=I('#ff550040')) + 
   labs(x='', y='', title='ICA') +
@@ -167,12 +171,12 @@ h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k');
 
 Why do it? 
 
-- You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed.
-- You deal with images or sound, but haven't heard anything about deep learning.
+- You believe that truly independent sources of signal underly your data
+- You deal with images or sound.
 
 Issues
 
-- The ratio of where this isn't applicable to where it is strikes me as very large.
+- The ratio of where this isn't applicable to where it is strikes me as very large, but that may be discipline specific
 
 
 Other stuff
