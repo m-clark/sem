@@ -274,8 +274,8 @@ pars = parameterEstimates(famod, standardized=T)
 
 #### Suggested R packages
 
-- psych
-- lavaan
+- <span class="pack">psych</span>
+- <span class="pack">lavaan</span>
 
 ## As latent linear models
 
@@ -288,11 +288,11 @@ $\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
 
 ### Probabilistic PCA
 
-For probabilistic PCA $\Psi$ is $\sigma^2I$.
+$$\Psi = \sigma^2I$$
 
 ### PCA
 
-For standard PCA, $\sigma \rightarrow 0$,
+$$\sigma \rightarrow 0$$
 
 ## More techniques
 
@@ -343,7 +343,7 @@ LDA wouldn't be the best tool if your goal is prediction, and you don't care muc
 
 ### SEM
 
-<span class="emph">Structural Equation Modeling</span> is a very general technique that allows one to incorporate latent variables and observed variables within a single modeling framework, allowing for indirect effects and multiple outcomes.  We actually already did an SEM when we did the confirmatory factor analysis.
+<span class="emph">Structural Equation Modeling</span> is a very general technique that allows one to incorporate latent variables and observed variables within a single modeling framework, allowing for indirect effects and multiple outcomes.  Practically any standard model you've conducted can be seen as a special case. We actually already did an SEM when we did the confirmatory factor analysis.
 
 ```{r sem_graph, echo=FALSE}
 # the sigh that comes with this can be heard round the world.  Diagrammer can't
@@ -409,15 +409,26 @@ DiagrammeR::grViz(test, width='100%', height='400px')
 
 #### Suggested R packages
 
-- lavaan
-- semTools
+- <span class="pack">lavaan</span>
+- <span class="pack">semTools</span>
 
 ### IRT
 
-Item response theory can be seen as latent variable modeling for categorical data.  It is especially applied to testing environments where the items are binary correct vs. not outcomes.  An underlying logistic model relates the latent variable, which can be seen as 'ability' in the testing context, to the observed items.  The conceptual latent variable model is identical to confirmatory factor analysis.
+Item response theory can be seen as latent variable modeling for categorical data.  It is especially applied to testing environments where the items are binary correct vs. not outcomes.  An underlying logistic model relates the latent variable, which can be seen as 'ability' in the testing context, to the observed items which have unique difficulty.  The conceptual latent variable model is identical to confirmatory factor analysis.
+
+As an example, the one-parameter, a.k.a. *Rasch*, model (1PM) can be expressed as follows:
+
+$$P(y=1|\theta, \delta) = \mathrm{logis}(\theta_i-\delta_j)$$
+
+
+In this setting, the probability of endorsement (or getting an item correct), $\pi_{ij}$, is a function of the <span class="emph">difficulty</span> of item $j$, $\delta_j$ above, and the latent trait (<span class="emph">ability</span>) of person $i$, $\theta_i$.  In other words, it's a specific type of logistic regression model. In the  testing context, a person with more 'ability' relative to the item difficulty will answer correctly.  In terms of the logit:
+
+$$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j$$
+
 
 #### Suggested R packages
-- ltm
+
+- <span class="pack">ltm</span>
 
 ### ICA
 
@@ -515,7 +526,7 @@ Why do it? You believe that truly independent sources of signal underly your dat
 
 #### Suggested R packages
 
-- fastICA
+- <span class="pack"></span>
 
 
 ### Multidimensional Scaling
@@ -554,12 +565,23 @@ We can use MDS to obtain a 2-dimensional map preserving distances as well as pos
 
 #### Suggested R packages
 
-- Base R 
+- <span class="pack">Base R</span>
 
-### Collaborative Filtering
+### Recommender Systems
+
+Practically everyone has been exposed to <span class="emph">recommender systems</span> such as <span class="emph">collaborative filtering</span> and related models.  That's how Netflix, Amazon and others make their recommendations to you given the information you've provided about likes and dislikes, what other similar people have provided, and how similar the object of interest is to others.
+
+The following image, taken from wikipedia, conceptually shows how a *user-based* collaborative filtering method would work, where a recommendation is given based on what other similar users have given.
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif" style="display:block; margin: 0 auto;" width:50%>
+
+Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories, one can recommend something from a similar genre of movies that you like that people in the same demographic category seem to like.
+
+If you think of genres as latent categories of movies, well now we can employ the techniques we've talked about[^netflix]. Similarly we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.
 
 #### Suggested R packages
-- recommenderlab
+
+- <span class="pack">recommenderlab</span>
 
 ### Time-based
 
@@ -637,8 +659,9 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 - <span class="pack">HiddenMarkov</span>
 
 
+### Bayesian
 
-
+Dirichlet Process, CRP, IB
 
 ## Latent classes
 
@@ -679,12 +702,12 @@ graphics::layout(1)
 We can see that things break out more or less as we might expect, though there is a bit more uncertainty with observations in the middle.
 
 
-The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, mclust does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC.
+The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, mclust does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].
 
 ```{r clus_mclust2, echo=1}
 mod = Mclust(faithful, verbose=F)
 par(mfrow=c(1,2))
-plot(mod, what='BIC')
+plot(mod, what='BIC', legendArgs = list(x = "bottomright", ncol = 2, cex = .5, inset = 0.01))
 plot(mod, what='classification')
 graphics::layout(1)
 ```
@@ -724,7 +747,7 @@ Aside from mixture models, when people use the term 'cluster analysis' they are 
 
 #### K-means
 
-<span class="emph">K-means</span>K-means cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
+<span class="emph">K-means</span> cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
 
 K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape).  It also has connections to PCA and ICA. The general issue is tryin
 
@@ -754,17 +777,20 @@ Practically every decision one has to make (distance, linkage method, cluster de
  
 ### Predictive Modeling
 
-### Issues
+### Issues with Mixture Models
 
 #### Model Selection
 
-Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered and in typical settings they will rarely agree.
+Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they will rarely agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
 
 #### Latent Expressivity
 
 You are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
 
-Now ask, why would you do it with latent variables?  Unless there is very strong theory or an actual physical aspect involved (e.g. )
+Now ask, why would you do it with latent variables?  Unless there is very strong theory or an actual physical aspect involved (e.g. seizure occurence), you should think hard before assuming a hard classification of observations.
+
+#### Sometimes one cluster is the best answer
+
 
 #### Suggested R packages
 
@@ -773,13 +799,7 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
 - kmeanspp
 - Base R
 
-## Other
 
- - ICA
- - Recommender systems
- - Time-based (e.g. HMM)
- - Bayesian
- 
  
 ## Issues
 
@@ -800,3 +820,7 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
 [^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/).
 
 [^deepimage]: These days one would probably be more likely to use deep learning techniques for audio and images, at least if prediction was the primary concern.
+
+[^netflix]: Indeed, straight up singular value decomposition, as that used for PCA, was the hot machine learning tool used by Netflix back in the day.
+
+[^mclustbic]: For whatever reason, <span class="pack">mclust</span> displays BIC in higher is better format, in contrast to practically every other modeling context I've come across.
