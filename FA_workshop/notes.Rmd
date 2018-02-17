@@ -382,11 +382,19 @@ The key idea is as before, that the response is from two distributions, e.g. two
  
 #### K-means
 
-K-means is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
+K-means cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
+
+K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape.  It also has connections to PCA and ICA. 
 
 #### Hierarchical
 
-Hierarchical methods can be thought of as a clustering 
+Other methods can be thought of as a clustering the data in a hierarchical.  These can start at the bottom of the hierarchy (<span class="emph">agglomerative</span>), allowing every observation into its own cluster, and successively combining them. For example, first choose a measure of dissimilarity, and combine the two observations that are most alike, then add one to those or if another pair are closer, make a new cluster.  Conversely, one can start with every observation in one cluster, and take the most dissimilar and split it off, continuing on until every observation is in its own cluster.
+
+```{r hclust_dendrogram, echo=FALSE}
+heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_colorbar=T, colors=viridis::plasma)
+```
+
+Practically every decision one has to make (distance, linkage method, cluster determination, general approach) is arbitrary.  While these are actually still not uncommonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
  
 ### Predictive Modeling
 
