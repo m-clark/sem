@@ -70,10 +70,7 @@ pre .r {
 
 #TOC{
   font-size: 75%;
-}
-
-.table {
-  margin: 0 auto;
+  background-color: #fffff8;
 }
 
 
@@ -88,7 +85,8 @@ pre .r {
 }
 
 li.tocify-item.list-group-item.active {
-  background-color: rgb(97,151,213);             /* background of current section in toc */
+  color: #fff;
+  background-color: #990024;             /* background of current section in toc */
 }
 
 h1, h2, h3, h4, h5 {
@@ -128,6 +126,7 @@ div.datatables {
   max-width: 100%;
 }
 
-table {
-  margin: auto;
+
+.table {
+  margin: 0 auto;
 }

@@ -36,12 +36,12 @@ library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); libr
 Why do it? 
 
 - Reduce the dimensions of the data
-- Retain as much variance as possible with each factor
+- Retain as much variance as possible
 
 Issues
 
 - It might not be the best choice with some data types
-- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do) more than the variance
+- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do)
 - Non-numeric or mixed data types
 
 
@@ -49,8 +49,6 @@ Other stuff
 
 - Scale the variables
 - Biplots are ugly
-
-
 
 ### FA Summary
 
@@ -171,12 +169,12 @@ h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k');
 
 Why do it? 
 
-- You believe that truly independent sources of signal underly your data
-- You deal with images or sound.
+- You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed.
+- You deal with images or sound, but haven't heard anything about deep learning.
 
 Issues
 
-- The ratio of where this isn't applicable to where it is strikes me as very large, but that may be discipline specific
+- The ratio of where this isn't applicable to where it is strikes me as very large, but I come from a %>% %>% %>% %>% %>% %>% %>% %>% %>% %>% %>% %>% %>% %>% 
 
 
 Other stuff

@@ -1,0 +1,52 @@
+digraph test {
+
+ # Intialization of graph attributes
+ graph [rankdir=TB bgcolor=transparent splines=false]
+ 
+ #### Node statements
+ ## Intialization of node attributes
+ node [style=filled, color=gray75,  fontcolor=gray50];
+ 
+ ## latent variables and associated variances
+    SES [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#1b4d9e', fontcolor=white]; 
+    SESvar[shape='none' color='none' fillcolor='none' label='' width=0];
+
+
+ subgraph {
+    rank = same;
+    Alien67 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#9e911b', fontcolor=white];
+    Alien71 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#9E1B34', fontcolor=white];
+ }
+
+ subgraph {
+    rank = same;
+    Alien67;
+    Alien67var[shape='none' color='none' fillcolor='none' label='', width=0];
+    Alien71var[shape='none' color='none' fillcolor='none' label='', width=0];
+ }
+ 
+
+ #### Edge statements
+ 
+ ## Initialization of edge attributes
+
+ edge [color = gray80 rel = yields dir=forward fontsize=12  penwidth=4 len=2]
+ 
+ ## latent to latent
+
+ edge [label='' fontcolor=gray25 minlen=1 ] # set min to 1 made it centered
+ SES -> Alien67 [label='-.56' fontcolor='#8B00008F' color='#8B00008F' alpha=.5];   # the alpha attribute is utterly ignored for the edge so use alpha func; still will be ignored for fontcolor
+ SES -> Alien71 [label='-.21' fontcolor='#8B000036' color='#8B000036'];
+
+ edge [label='' fontcolor=gray25 dir=forward ]
+ Alien67 -> Alien71 [label='.57' fontcolor='#00640091' color='#00640091' minlen=3 ];
+
+
+ ## variances
+
+ edge [penwidth=1 len=1]
+ SESvar -> SES[label='&nbsp; 1.0'];
+ Alien67var -> Alien67[label='.68'];
+ Alien71 -> Alien71var[label='.50' dir=back];
+
+ }

@@ -1,0 +1,108 @@
+digraph alienation {
+
+ # Intialization of graph attributes
+ graph [rankdir=TB layout=dot bgcolor=transparent]
+ 
+ #### Node statements
+ ## Intialization of node attributes
+ node [style=filled, color=gray75,  fontcolor=gray50];
+ 
+ ## latent variables and associated variances
+ subgraph {
+    rank = same;
+    Alien67 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#9e911b', fontcolor=white];
+    Alien71 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#9E1B34', fontcolor=white];
+ }
+
+ subgraph {
+    rank = same;
+    Alien67;
+    Alien67var[shape='none' color='none' fillcolor='none' label='' minlen=1];
+    Alien71var[shape='none' color='none' fillcolor='none' label='' minlen=1];
+ }
+ 
+ subgraph{
+    rank=same;
+    SES [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#1b4d9e', fontcolor=white]; 
+    SESvar[shape='none' color='none' fillcolor='none' label=''];
+ }
+
+ ## observed variables
+ node [width=1, height=1, fixedsize=true, shape=square, style='']
+
+ subgraph {
+    rank=same;
+    node [color='#9e911b']
+    anomie_67[label='Anomie\n1967'] powerless_67[label='Powerless\n1967'];
+    node [color='#9E1B34']
+    anomie_71[label='Anomie\n1971'] powerless_71[label='Powerless\n1971']; 
+ }
+
+ node [color='#1b4d9e']
+ Edu SEI;
+
+
+ ## variances
+ subgraph {
+    rank=same;
+    node [height=0, shape=none, color=gray80]
+    U1 [label='']; 
+    U2 [label='']; 
+    
+    U3 [label='']; 
+    U4 [label='']; 
+ }
+
+ subgraph {
+    rank=same;
+    node [height=0, shape=none, color=gray80]
+    U5 [label='']; 
+    U6 [label='']; 
+ }
+
+ #### Edge statements
+ 
+ ## Initialization of edge attributes
+
+ edge [color = gray50, rel = yields dir=forward fontsize=12]
+ 
+ ## latent to latent
+
+ edge [label='' fontcolor=gray25 minlen=1] # set min to 1 made it centered
+ SES -> Alien67 [color='#5bc6cc'];
+ SES -> Alien71 [color='#8c88b8'];
+
+ edge [label='' fontcolor=gray25 dir=forward]
+ Alien67 -> Alien71 [color='#c9be85' minlen=6];
+
+ ## latent to observed
+
+ edge [label='' fontcolor=gray25 ]
+ {Edu SEI} -> SES [dir=back color='#1b4d9e' minlen=2];
+
+ edge [label='' fontcolor=gray25 minlen=2 dir=forward]
+ Alien67 -> {anomie_67 powerless_67} [color='#9e911b']; 
+
+ edge [label='' fontcolor=gray25 minlen=2]
+ Alien71 -> {anomie_71 powerless_71} [color='#9E1B34']; 
+
+ ## variances
+
+ SESvar -> SES[angle=45];
+ Alien67var -> Alien67[angle=45];
+ Alien71 -> Alien71var[angle=45 dir=back];
+ 
+ U5 -> SEI [label='' minlen=.5];
+ U6 -> Edu [label='' minlen=.5];
+ 
+ 
+ edge [dir=back fontsize=8 fontcolor=gray25 minlen=.5] 
+ anomie_67  -> U1 [label=''];
+ powerless_67 -> U2 [label=''];
+ 
+ anomie_71 -> U3 [label=''];
+ powerless_71 -> U4 [label=''];
+ 
+ U1 -> U3[dir=both color=gray80];
+ U2 -> U4[dir=both color=gray80];
+ }

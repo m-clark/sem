@@ -1,5 +1,5 @@
 ---
-title: "FA Talk"
+title: "Thinking about Factor Analysis"
 author:  |
   <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
   <!-- <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br> -->
@@ -7,9 +7,12 @@ author:  |
 date: "`r Sys.Date()`"
 output: 
   html_document: 
+    css: standard_html_fa.css
+    df_print: kable
     highlight: pygments
     theme: sandstone
-css: standard_html.css
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -17,16 +20,22 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, message = FALSE, warning=FALSE, R
                       cache.rebuild=F, cache=TRUE,
                       fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
 knitr::opts_knit$set(root.dir = '../')
-library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan)
+library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan);
 ```
 
 
-## Thinking about FA
+## Introduction
+
+
+Key ideas
 
 - Dimension Reduction
 - Matrix Factorization
 - Latent Linear Models
 - Measurement error
+
+
+Each section will provide some suggested packages to serve as starting points for standard implementations.  Just note that there will likely be several packages providing enhancements in a variety of fashion.
 
 
 ## PCA
@@ -120,10 +129,20 @@ heatmaply::heatmaply(pc$loadings, dendrogram='none',
 
 <br>
 
+Many would use what's called a <span class="emph">biplot</span>, which shows the components on the axes, the component scores of the data, and the loadings as vectors whose length and direction specify the strength of the loading on a particular component.
+
 ```{r biplot, echo=FALSE}
 # spider(1:8, data=cor(cog_ability[,1:8], use='pair'), cex.lab=.5, scale=1)
-biplot.psych(pc, col = viridis::viridis(3, alpha = .5), hist.col = '#00aaff80')
+psych::biplot.psych(pc, choose = 1:2, 
+                    col = viridis::viridis(3, alpha = c(.1,.75)), 
+                    main = 'PCA Biplot',
+                    hist.col = '#00aaff80',
+                    bty='n')
+```
 
+Biplots take a bit to figure out just for two components, and one can't really get a sense of more than two at time. However, using a graphical model makes clear what's going on for all retained components. Low loadings have been suppressed for additional clarity.
+
+```{r pca_graph, echo=FALSE}
 # fa.graph(pc, out.file = 'FA_workshop/pc_cog_graph.gv',
 #          node.font = 'Roboto',
 #          edge.font = 'Roboto',
@@ -133,10 +152,10 @@ biplot.psych(pc, col = viridis::viridis(3, alpha = .5), hist.col = '#00aaff80')
 #          bgcolor=transparent,
 #          arrowhead=none)
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
-         DiagrammeR::grViz('FA_workshop/pc_cog_graph.gv', width='100%', height='400px')
+         DiagrammeR::grViz('FA_workshop/pc_cog_graph.gv', width='100%', height='600px')
 )
+br()
 ```
-
 
 
 Interpretation is the fun, but commonly difficult, part. In this case, the variables don't appear to be grouping like we'd expect, except for some of the reasoning scores[^badfactor].  It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. In addition, for PCA the goal is not interpretation, but to reduce the data while retaining as much of the variance as possible.
@@ -161,7 +180,10 @@ Other stuff
 - Scale the variables
 - Biplots are ugly
 
+#### Suggested R packages
 
+- psych
+- pcaMethods (Biocondudctor)
 
 ## FA
 
@@ -227,6 +249,10 @@ heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
 
 ### "Confirmatory" Factor Analysis
 
+Some needlessly distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings to be zero.  Otherwise they are identical techniques.
+
+Why would you set loadings to zero? Theory would suggest it.  For example if we truly to be four latent constructs in this cognitive ability data, we can set things up to 'confirm' this.
+
 
 ```{r eval=FALSE}
 modelCode = "
@@ -246,9 +272,10 @@ pars = parameterEstimates(famod, standardized=T)
 ```
 
 
+#### Suggested R packages
 
-### SEM
-### IRT
+- psych
+- lavaan
 
 ## As latent linear models
 
@@ -267,28 +294,33 @@ For probabilistic PCA $\Psi$ is $\sigma^2I$.
 
 For standard PCA, $\sigma \rightarrow 0$,
 
-## Count-based Matrix Factorization
+## More techniques
+
+
+
+
+### Count-based Matrix Factorization
 
 Commonly our data regards counts or otherwise compositional data.  In this case we can use techniques that are better suited to such data.
  
-### NMF
+#### NMF
 
 Non-negative matrix factorization is similar to PCA, just with the constraint that scores and weights be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
 
 <img src="../img/nmf_recon10.png" style="display:block; margin: 0 auto;">
 
-### LDA
+#### LDA
 
-<span class="emph">Latent Dirichlet Allocation</span> takes a different approach to deal with count data. The classic example regards text analysis, where LDA is applied to word frequencies across topics.  Consider a document-term matrix where each row regards a document, and each column a word or term.  LDA looks for latent *topics* that are probability distributions over the *terms*.    There is a probability distribution for the topics as well as the terms, and given both, we will see some occurrence of the term in each document. Each *document* can be seen a mix of topics.
+<span class="emph">Latent Dirichlet Allocation</span> takes a different approach to deal with count data. The classic example regards text analysis, where LDA is applied to word frequencies across documents.  Consider a <span class="emph">document-term</span> matrix where each row regards a document, and each column a word or term.  LDA looks for latent *topics* that are probability distributions over the *terms*.    There is a probability distribution for the topics as well as the terms, and given both, we will see some occurrence of the term in each document. Each *document* can be seen a mixture of topics, though some will be more probable than others.
 
-In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
+In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. latent factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
 
 
 Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a mulinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times given some probability.
 
 ```{r multinom_ex, echo=-1}
-set.seed(1234)
-t(rmultinom(1, size = 20, prob=5:1)) # first term is most likely, 5th term is least likely
+set.seed(123)
+t(rmultinom(1, size = 20, prob=c(.5, .2, .15, .1, .05))) # first term is most likely, 5th term is least likely
 ```
 
 Those are the counts we see for a given observation. 
@@ -296,10 +328,317 @@ Those are the counts we see for a given observation.
 
 LDA wouldn't be the best tool if your goal is prediction, and you don't care much about interpretation.
 
-LDA is basically NMF with Dirichlet priors on the topics.  
-
 
 <img src="../img/lda_recon.png" style="display:block; margin: 0 auto;">
+
+
+#### Suggested R packages
+
+- NMF
+- lda
+- quanteda
+- text2vec
+
+
+
+### SEM
+
+<span class="emph">Structural Equation Modeling</span> is a very general technique that allows one to incorporate latent variables and observed variables within a single modeling framework, allowing for indirect effects and multiple outcomes.  We actually already did an SEM when we did the confirmatory factor analysis.
+
+```{r sem_graph, echo=FALSE}
+# the sigh that comes with this can be heard round the world.  Diagrammer can't
+# read the file with the syntax, but can read object with the same syntax
+
+test = "digraph test {
+ graph [rankdir=TB bgcolor=transparent splines=false]
+ 
+ #### Node statements
+ ## Intialization of node attributes
+ node [style=filled, color=gray75,  fontcolor=gray50];
+ 
+ ## latent variables and associated variances
+    SES [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#1b4d9e', fontcolor=white]; 
+    SESvar[shape='none' color='none' fillcolor='none' label='' width=0];
+
+
+ subgraph {
+    rank = same;
+    Alien67 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#9e911b', fontcolor=white];
+    Alien71 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor='#9E1B34', fontcolor=white];
+ }
+
+ subgraph {
+    rank = same;
+    Alien67;
+    Alien67var[shape='none' color='none' fillcolor='none' label='', width=0];
+    Alien71var[shape='none' color='none' fillcolor='none' label='', width=0];
+ }
+ #### Edge statements
+ 
+ ## Initialization of edge attributes
+
+ edge [color = gray80 rel = yields dir=forward fontsize=12  penwidth=4 len=2]
+ 
+ ## latent to latent
+
+ edge [label='' fontcolor=gray25 minlen=1 ] # set min to 1 made it centered
+ SES -> Alien67 [label='-.56' fontcolor='#8B00008F' color='#8B00008F' alpha=.5];   # the alpha attribute is utterly ignored for the edge so use alpha func; still will be ignored for fontcolor
+ SES -> Alien71 [label='-.21' fontcolor='#8B000036' color='#8B000036'];
+
+ edge [label='' fontcolor=gray25 dir=forward ]
+ Alien67 -> Alien71 [label='.57' fontcolor='#00640091' color='#00640091' minlen=3 ];
+
+
+ ## variances
+
+ edge [penwidth=1 len=1]
+ SESvar -> SES[label='&nbsp; 1.0'];
+ Alien67var -> Alien67[label='.68'];
+ Alien71 -> Alien71var[label='.50' dir=back];
+
+ }
+
+}
+ "
+
+# DiagrammeR::grViz(test, width='100%', height='400px')
+tags$div(style="width:100%; margin:auto auto; ",
+DiagrammeR::grViz(test, width='100%', height='400px')
+)
+```
+
+#### Suggested R packages
+
+- lavaan
+- semTools
+
+### IRT
+
+Item response theory can be seen as latent variable modeling for categorical data.  It is especially applied to testing environments where the items are binary correct vs. not outcomes.  An underlying logistic model relates the latent variable, which can be seen as 'ability' in the testing context, to the observed items.  The conceptual latent variable model is identical to confirmatory factor analysis.
+
+#### Suggested R packages
+- ltm
+
+### ICA
+
+The latent linear model versions of PCA and factor analysis assume the observed variables are normally distributed (even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not. This visualization duplicates that seen in Murphy (2012) where we have two (uniform) independent sources.  We can see that the ICA correctly recovers those components.
+
+```{r ica, echo=FALSE, results='hide', cache=FALSE}
+set.seed(2)
+N = 1000
+
+A = matrix(c(2,3,2,1), 2)*.3
+Suni = matrix(runif(2*N, min = -1), ncol = 2)*sqrt(3)
+Xuni = Suni %*% A
+
+ica_res = fastICA::fastICA(Xuni, 2)
+ica_res$A
+A
+
+pc_res = psych::principal(Xuni, 2)$scores 
+```
+
+```{r ica_plot, echo=FALSE, cache=FALSE}
+p1 = qplot(Suni[,1], Suni[,2], color=I('#ff550040')) + 
+  labs(x='', y='', title='Sources') +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  theme_trueMinimal()
+p2 = qplot(Xuni[,1], Xuni[,2], color=I('#ff550040')) +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  labs(x='', y='', title='Observed Data') +
+  theme_trueMinimal()
+p3 = qplot(pc_res[,1], pc_res[,2], color=I('#ff550040')) +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  labs(x='', y='', title='PCA') +
+  scale_x_reverse() +
+  theme_trueMinimal()
+p4 = qplot(ica_res$S[,1], ica_res$S[,2], color=I('#ff550040')) + 
+  labs(x='', y='', title='ICA') +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  theme_trueMinimal()
+cowplot::plot_grid(p1, p2, p3, p4)
+```
+
+
+```{matlab ica_matlab, echo=F, eval=F}
+setSeed(2);
+%Number of data points
+N=100;
+%Choose a nice mixing matrix
+A=[2,3;2,1]*.3;
+
+
+%% Uniform data
+
+%Create data with uniform distribution
+Suni=(rand(2,N)*2-1)*sqrt(3);
+Xuni=A*Suni;
+Vuni = fastica(Xuni,'only','white');
+Shat = fastica(Xuni,'g','tanh','approach','symm');
+cmax=3; 
+
+h1=plot(Suni(1,:),Suni(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+%just cosmetics:
+set(h1,'LineWidth',2);
+set(h1,'MarkerSize',16);
+axis equal;
+title('uniform data')
+printPmtkFigure('icaUniformSource')
+
+%Plot uniform mixed data
+figure;
+h1=plot(Xuni(1,:),Xuni(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+axis equal;
+set(h1,'LineWidth',2);
+set(h1,'MarkerSize',16);
+title('uniform data after linear mixing')
+printPmtkFigure('icaUniformMixed')
+
+
+%Plot uniformly distributed data after PCA whitening
+figure;
+h1=plot(Vuni(1,:),Vuni(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+axis equal;
+set(h1,'LineWidth',2);
+set(h1,'MarkerSize',16);
+title('PCA applied to mixed data from uniform source')
+printPmtkFigure('icaUniformPCA')
+
+
+%Plot estimated ICs from uniformly distributed data
+figure
+h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k'); 
+```
+
+
+Why do it? You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed. You deal with images or sound[^deepimage].
+
+#### Suggested R packages
+
+- fastICA
+
+
+### Multidimensional Scaling
+
+Multidimensional scaling[^mds] is a technique for converting a matrix of observation dissimilarities into a low-dimensional map that preserves those distances as well as possible.
+
+The first step in any MDS is choosing a similarity measure. Often this will be a metric or distance, i.e.:
+- Euclidean Distance for continuous variables
+- Manhattan distance or Jacaard dissimilarity for binary variables
+- Similarity measures can often become dissimilarity measures by inverting (x → 1/x) or subtracting from 1 (x → 1−x).  
+
+The basic idea is to come up with what we might call components or factors that minimize the difference in factor scores for two observations from the actual distance.
+
+```{r mds, echo=1:2}
+data(UScitiesD)
+UScitiesMDS <- cmdscale(UScitiesD)
+mat <- as.matrix(UScitiesD)
+colnames(mat) <- c('Atl','Chi','Den','Hou','LA','Mia','NY','SF','Sea','DC')
+knitr::kable(mat,format='html') %>% kableExtra::kable_styling(bootstrap_options=c('striped','bordered'),font_size=14)
+```
+
+<br>
+
+We can use MDS to obtain a 2-dimensional map preserving distances as well as possible.
+
+```{r mds_plot, echo=FALSE}
+(-1*UScitiesMDS) %>% 
+  as_data_frame() %>% 
+  rename(`Factor 1` = V1, `Factor 2` = V2) %>% 
+  mutate(city=attr(UScitiesD,'Labels')) %>% 
+  ggplot(aes(x=`Factor 1`, y=`Factor 2`)) +
+  geom_text(aes(label=city)) +
+  lims(x=c(-1750,1250)) +
+  theme_trueMinimal()
+```
+
+#### Suggested R packages
+
+- Base R 
+
+### Collaborative Filtering
+
+#### Suggested R packages
+- recommenderlab
+
+### Time-based
+
+Hidden markov models can be used to model latent discrete states. In terms of a graphical model, we can depcit it as follows:
+
+```{r hmm_graph, echo=FALSE}
+hmm = "
+digraph Factor  {
+  
+ graph [rankdir=TB  bgcolor=transparent]
+ node [fontname='Roboto' fontsize=10 shape=circle, width=.5];
+   z1  [label = <z<sub>1</sub>>];
+   z2  [label = <z<sub>2</sub>>];
+   z3  [label = <z<sub>3</sub>>];
+
+   # because diagrammer can't maintain order  ; 
+   x1  [label = ☻];
+   x2  [label = ♥];
+   x3  [label = ☺];
+   x4  [label = §];
+
+ node [shape=box width=1];
+ edge [fontname='Roboto' fontsize=10 minlen=5 penwidth=2 color='#00aaff'];
+  z1 -> z2 [label = ''  arrowhead=''];
+  z1 -> z3 [label = ''  arrowhead='' penwidth= 1];
+  z2 ->  z2 [label = '' arrowhead='' penwidth=1.5];
+  z2 ->  z3 [label = '' arrowhead='' penwidth=.5];
+  z3 ->  z1 [label = '' arrowhead='' penwidth=2];
+
+
+ edge [fontname='Roboto' fontsize=10 minlen=1 penwidth=.5 color='#ff5500'];
+  z1 ->  x1 [label = '' arrowhead='' penwidth=.05];
+  z1 ->  x2 [label = '' arrowhead='' penwidth=.25];
+  z1 ->  x3 [label = '' arrowhead='' penwidth=.45];
+  z1 ->  x4 [label = '' arrowhead='' penwidth=.25];
+
+  z2 ->  x1 [label = '' arrowhead='' penwidth=.25];
+  z2 ->  x2 [label = '' arrowhead='' penwidth=.05];
+  z2 ->  x3 [label = '' arrowhead='' penwidth=.15];
+  z2 ->  x4 [label = '' arrowhead='' penwidth=.50];
+
+  z3 ->  x1 [label = '' arrowhead='' penwidth=.5];
+  z3 ->  x2 [label = '' arrowhead='' penwidth=.15];
+  z3 ->  x3 [label = '' arrowhead='' penwidth=.15];
+  z3 ->  x4 [label = '' arrowhead='' penwidth=.20];
+
+
+
+
+ { rank=same;
+  z1; z2; z3; }
+ { rank=same;
+  x1; x2; x3; x4;}
+
+}
+"
+
+DiagrammeR::grViz(hmm, width='100%', height='400px')
+# tags$div(style="width:100%; margin:auto auto; ",
+# DiagrammeR::grViz(hmm, width='100%', height='400px')
+# )
+```
+
+In this sense we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The $x$ are the categories of observations we can potentially observe, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
+
+We start in state 1 where the heart and yellow smiley are most probable. Let's say we observe ♥.  The second state is most likely so we get there, and because it has some probability of staying in that state, we observe § and §. We finally get to state 3 and see <span class="" style='color:black'>☻</span>, where we go back to state 1, where we see ☺, jump to latent state 3 etc.  And such a process continues for the length of sequence we see.
+
+This can be seen as a mixture model/latent class situation that we'll talk about more later.  The outcomes could also be continuous, such that the latent state determines the likelihood of the observation in a manner more directly akin to the latent linear model for standard factor analysis. 
+
+
+#### Suggested R packages
+
+- <span class="pack">msm</span>
+- <span class="pack">HMM</span>
+- <span class="pack">HiddenMarkov</span>
+
+
+
+
 
 ## Latent classes
 
@@ -308,12 +647,11 @@ Take a look at the following data. It regards the waiting time between eruptions
 ```{r faithfulPlot, echo=F}
 data("faithful")
 library(plotly)
-plot_ly(data=faithful, x=~eruptions, y=~waiting) %>% 
-  lazerhawk::theme_plotly()
+plot_ly(data=faithful, x=~waiting, y=~eruptions) %>% 
+  theme_plotly()
 ```
 
 In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In this case, the dimension reduction occurs along the *rows* rather than the columns.  We'll talk about two types.
-
  
 ### Mixture models
 
@@ -379,12 +717,30 @@ The key idea is as before, that the response is from two distributions, e.g. two
 
  
 ### "Cluster analysis"
- 
+
+Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods, where given a distance matrix that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one nother.
+
+
+
 #### K-means
 
-K-means cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
+<span class="emph">K-means</span>K-means cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
 
-K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape.  It also has connections to PCA and ICA. 
+K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape).  It also has connections to PCA and ICA. The general issue is tryin
+
+
+```{r kmeans, out.width='90%'}
+clus2 = factor(kmeans(faithful, 2)$cluster)
+c2 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
+  geom_point(aes(color=clus2)) +
+  theme_trueMinimal()
+
+clus3 = factor(kmeans(faithful, 3)$cluster)
+c3 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
+  geom_point(aes(color=clus3)) +
+  theme_trueMinimal()
+cowplot::plot_grid(c2, c3)
+```
 
 #### Hierarchical
 
@@ -410,7 +766,12 @@ You are never going to have it recommended that you take continuous outcomes or 
 
 Now ask, why would you do it with latent variables?  Unless there is very strong theory or an actual physical aspect involved (e.g. )
 
+#### Suggested R packages
 
+- mclust
+- flexmix
+- kmeanspp
+- Base R
 
 ## Other
 
@@ -423,6 +784,7 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
 ## Issues
 
 - how many latent factors/classes/
+- Interpretation
 - two step models vs. simultaneous estimation for prediction
 
 
@@ -432,3 +794,9 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
 [^rotated]: These results have been rotated, something practically no one using PCA actually does.  
 
 [^badfactor]: Results like this are more the rule than the exception in my experience. Not enough initial development is typically done with scales, and when other people use them in other settings, it often ends with disappointment.  Just think, many psychological scales are developed on freshman psychology students.  How well do you think that will generalize?
+
+[^pca_normal]: even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).
+
+[^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/).
+
+[^deepimage]: These days one would probably be more likely to use deep learning techniques for audio and images, at least if prediction was the primary concern.

@@ -1,0 +1,30 @@
+digraph Factor  {
+  
+ graph [rankdir=RL  bgcolor=transparent]
+ node [fontname="Roboto" fontsize=10 shape=box, width=2];
+ edge [fontname="Roboto" fontsize=10];
+ z_1_  [label = ""];
+ z_2_  [label = ""];
+ z_3_  [label = ""];
+ z_4_  [label = ""];
+
+
+ node [shape=ellipse width=1];
+  z_1_ -> z_2_ [label = ''  arrowhead=''];
+  z_2_ ->  z_3_ [label = '' arrowhead=''];
+  z_3_ ->  z_4_ [label = '' arrowhead=''];
+
+
+
+  z_1_ ->  x_1_ [label = '' arrowhead=''];
+  z_2_ ->  x_2_ [label = '' arrowhead=''];
+  z_3_ ->  x_3_ [label = '' arrowhead=''];
+  z_4_ ->  x_4_ [label = '' arrowhead=''];
+
+
+ { rank=same;
+  z_1_; z_2_; z_3_; z_4_;}
+ { rank=same;
+  x_1_; x_2_; x_3_; x_4_;}
+
+}

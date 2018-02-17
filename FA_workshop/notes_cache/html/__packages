@@ -8,12 +8,12 @@ purrr
 dplyr
 stringr
 forcats
-psych
 htmltools
 lazerhawk
 heatR
 pander
 lavaan
+psych
 plotly
 bindrcpp
 mclust
