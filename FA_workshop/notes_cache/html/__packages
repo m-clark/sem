@@ -14,8 +14,13 @@ heatR
 pander
 lavaan
 psych
-plotly
+lda
+MASS
+msm
+polycor
+ltm
 bindrcpp
+plotly
 mclust
 lattice
 flexmix

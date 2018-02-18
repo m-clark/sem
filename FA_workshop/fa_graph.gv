@@ -1,0 +1,36 @@
+digraph Factor  {
+ graph [rankdir=LR  bgcolor=transparent]
+ node [fontname="Roboto" fontsize=10 fontcolor=gray50 shape=box width=2 color='#ff5500'];
+ edge [fontname="Roboto" fontsize=10 fontcolor=gray50 color='#00aaff'];
+ A1  [label = "A1"];
+ A2  [label = "A2"];
+ A3  [label = "A3"];
+ A4  [label = "A4"];
+ A5  [label = "A5"];
+ N1  [label = "N1"];
+ N2  [label = "N2"];
+ N3  [label = "N3"];
+ N4  [label = "N4"];
+ N5  [label = "N5"];
+
+ node [shape=ellipse width=1];
+   Agree -> A1  [label = -0.5];
+   Agree -> A2  [label = 0.8];
+   Agree -> A3  [label = 0.8];
+   Agree -> A4  [label = 0.6];
+   Agree -> A5  [label = 0.7];
+   Neuro -> N1  [label = 0.8];
+   Neuro -> N2  [label = 0.8];
+   Neuro -> N3  [label = 0.7];
+   Neuro -> N4  [label = 0.7];
+   Neuro -> N5  [label = 0.5];
+ 
+ Agree -> Neuro [label=-.22 arrowhead='both']
+ 
+ { rank=same;
+ A1; A2; A3; A4; A5; 
+ N1; N2; N3; N4; N5; }
+ { rank=same;
+ Neuro; Agree; 
+ }
+}

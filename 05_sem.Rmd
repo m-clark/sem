@@ -123,45 +123,45 @@ semPlot::semPaths(alienation, layout='tree2', style='lisrel', whatLabels = 'path
 # as.hexmode(round(greenpink))
 
 tags$div(style="width:100%; margin:auto auto;",
-grViz('scripts/alienation.gv', width='100%')
-)
-```
-
-
-<br>
-
-The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically.  Note that the disturbances for the endogenous latent variables reflect only unobserved causes, not measurement error, which is captured via the uniquenesses for the indicators.   In other words, the path coefficients from one latent variable to another have been adjusted for measurement error.
-
-Here we see that higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive vs. negative weights, and the closer to zero the more faded they are.
-
-```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
-semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
-                  residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1, 
-                  structural=T, borders=F, color='#ff5503', label.color='#ffffff')
-```
-
-
-```{r wheatonStructural2, echo=FALSE, dev='svglite'}
-tags$div(style="width:100%; margin:auto auto; ",
-grViz('scripts/alienation_structural.gv', width='100%', height='400px')
-)
-```
-
-<br>
-
-
-```{r wheatonResults, echo=FALSE}
-summary(alienation, fit=T, rsq=T, std=T)
-```
-
-To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
-
-## Issues in SEM
-
-### Identification
-
-Identification generally refers to the problem of finding a unique estimate of the value for each parameter in the model. Consider the following:
-$$ a + b = 2$$
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% grViz('scripts/alienation.gv', width='100%')
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% )
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% <br>
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% paths are statistically significant, as is the indirect effect specifically.  Note that the disturbances for the endogenous latent %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% variables reflect only unobserved causes, not measurement error, which is captured via the uniquenesses for the indicators.   In other %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% words, the path coefficients from one latent variable to another have been adjusted for measurement error.
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% Here we see that higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% vs. negative weights, and the closer to zero the more faded they are.
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>%                   residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1, 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>%                   structural=T, borders=F, color='#ff5503', label.color='#ffffff')
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```{r wheatonStructural2, echo=FALSE, dev='svglite'}
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% tags$div(style="width:100%; margin:auto auto; ",
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% grViz('scripts/alienation_structural.gv', width='100%', height='400px')
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% )
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% <br>
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```{r wheatonResults, echo=FALSE}
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% summary(alienation, fit=T, rsq=T, std=T)
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ## Issues in SEM
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ### Identification
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% Identification generally refers to the problem of finding a unique estimate of the value for each parameter in the model. Consider the %>% %>% %>% %>% %>% %>% %>% %>%  %>%>% % %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% following:
+%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% $$ a + %>% %>% %>% %>% %>% %>% b = 2$$
 
 There is no way for us to determine a unique solution for $a$ and $b$, e.g. the values of 1 and 1 work just as well as -1052 and 1054 and infinite other combinations.  We can talk about 3 basic scenarios, and the problem generally regards how much information we have (in terms of (co)variances) vs. how many parameters we want to estimate in the model.
 

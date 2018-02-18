@@ -15,4 +15,4 @@ These are other topics that may be covered in varying detail in the future. With
 Extensions to current content that might be added in the future:
 
 - To SEM chapter: regression with latent variable scores comparison
-- To Growth chapter: why not to do cross-lagged models.
+- To Growth chapter: why not to do cross-lagged models. (vs. bn, quickly unweildy (3 time points = potentially 19 parameters with no covariates in the model), is 'stability' actually a key question? suggests scale is unreliable)

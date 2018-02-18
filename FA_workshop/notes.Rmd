@@ -1,9 +1,9 @@
 ---
-title: "Thinking about Factor Analysis"
+title: "Thinking about Latent Variables"
 author:  |
   <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
-  <!-- <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br> -->
-  <!-- <img src="img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div> -->
+  <!-- <img src="../img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br> -->
+  <!-- <img src="../img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div> -->
 date: "`r Sys.Date()`"
 output: 
   html_document: 
@@ -26,48 +26,59 @@ library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); libr
 
 ## Introduction
 
+Not everything we want to measure comes with an obvious yardstick.  If one wants to measure something like a person's happiness, what would they have at their disposal? 
 
-Key ideas
+- Are they smiling?
+- Did they just get a pay raise?
+- Are they interacting well with others?
+- Are they relatively healthy?
 
-- Dimension Reduction
-- Matrix Factorization
-- Latent Linear Models
-- Measurement error
 
+Any of these might be useful as an *indicator* of their current state of happiness, but of course none of them would tell us whether they truly are happy or not. At best, they can be considered imperfect measures. If we consider those and other indicators collectively, perhaps we can get an underlying measure of something we might call happiness, contentment, or some other arbitrary but descriptive name.
+
+The above decribes a <span class="emph">latent variable</span>, and gives at least one sense of at least one way in which we can think of them. However, models incorporating latent variables are seen all over, and incorporated in many ways.  Broadly speaking, <span class='emph'>factor analysis</span> can be seen as a dimension reduction technique, or as an approach to  modeling measurement error and understanding underlying constructs, a means to understand large amounts of text, a way to make movie recommendations, and more.  
+
+
+Some key ideas:
+
+- **Dimension Reduction/Data compression**: Many times we simply have the goal of taking a whole lot of variables, reducing them to much fewer, but while retaining as much information about the originals as possible. 
+- **Matrix Factorization**: Many techniques discussed below fall under the broad heading of <span class='emph'>matrix factorization</span>, which is a way to start with a matrix and decompose it into a product of multiple matrices.
+- **Latent Linear Models**: Many if not all of those we discuss can be easily expressed as a (multivariate) linear model
+- **Measurement error**: Some techniques can be used to tell us how well a group of items measure what they are supposed to measure
 
 Each section will provide some suggested packages to serve as starting points for standard implementations.  Just note that there will likely be several packages providing enhancements in a variety of fashion.
 
 
 ## PCA
 
-Seek to find orthogonal factors to minimize reconstruction error.
+Seek to find orthogonal (i.e. uncorrelatd) factors to maximize the variance accounted for by each factor.  For some data, X is the $NxD$ matrix of $N$ observations of $D$ variables.  We decompose X into two matrices - $Z$ are the $N x L$ component scores where $L <= D$, while $W$ are the $DxL$ weights, typically referred to as the <span class="emph">factor loading</span> matrix.
 
-$$\mathscr{Loss} = X - ZW^T$$
+Each component, or factor, created accounts for less of the variance in the original data.  So while PCA returns the same number of components as there are columns in the original data, they big idea is that we want to use far fewer.  However, with all components, 
 
-X is the $NxD$ matrix of $N$ observations of $D$ variables, $Z$ are the $N x L$ component scores where L < D, while $W$ are the $DxL$ weights, typically referred to as the <span class="emph">factor loading</span> matrix.
+$$X = ZW'$$
 
-Each component, or factor, created accounts for less of the variance in the original data.  With all components, 
-
-$$X = ZW^T$$
-
-The MNIST data contains 28 by 28 pixel images of digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit.  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components the reconstruction is perfect.
+Take for example, the MNIST data, which contains 28 by 28 pixel images of the digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit.  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components the reconstruction is perfect.
 
 <img src="../img/pca_recon.png" style="display:block; margin: 0 auto;">
-<!-- I guess html ignores working directory -->
+
 
 ### Example
 
-Let's see an example with more digestible results.  The following data are 16 multiple choice ability items taken from the Synthetic Aperture Personality Assessment (SAPA) web based personality assessment project. There are 1525 total subjects, and four categories of questions.
+Let's see an example with more digestible results.  The following data contain 25 personality items regarding the [Big 5](https://en.wikipedia.org/wiki/Big_Five_personality_traits) scales. There are 2800 total subjects, and five categories of questions[^big5].
 
-- reason: verbal reasoning questions
-- letter: In the following alphanumeric series, what letter comes next?
-- matrix: A matrix reasoning task
-- rotate: spatial rotation task
+- agreeableness: a tendency to be compassionate and cooperative rather than suspicious and antagonistic towards others
+- conscientiousness: a tendency to be organized and dependable, show self-discipline, planning
+- openness to experience: appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety of experience.
+- extraversion:  energy, assertiveness, sociability and the tendency to seek stimulation in the company of others, and talkativeness.
+- neuroticisim:  prone to physiological stress, tendency to experience unpleasant emotions easily, such as anger, anxiety, depression, and vulnerability
+
+We'll just look at part of this to keep things simple, namely the agreeableness and neuroticism items.
 
 ```{r data_cogab, echo=1:2}
 library(psych)
-cog_ability = psych::iqitems
-DT::datatable(cog_ability[1:10,],
+bfi_trim = bfi %>% 
+  select(matches('A[1-5]|N[1-5]'))
+DT::datatable(bfi_trim[1:10,],
               rownames = F,
               options = list(dom='t', 
                              scrollX=T,
@@ -80,12 +91,12 @@ DT::datatable(cog_ability[1:10,],
 <br>
 
 
-Let's do a PCA.  We'll look at four components, though remember that PCA technically returns as many components as there are variables. You're just seeing part of the results. Note that PCA almost universally requires you to <span class="emph">standardize</span> the data,  so that each variable has the same variance.  Otherwise you'll just get components reflecting the relative variances. In what follows the PCA is done on the correlation matrix, which amounts to the same thing.
+So let's do a PCA.  We'll look at two components, though remember that PCA technically returns as many components as there are variables. You're just seeing part of the results. Note that PCA almost universally requires you to <span class="emph">standardize</span> the data,  so that each variable has the same variance.  Otherwise you'll just get components reflecting the relative variances. In what follows the PCA is done on the correlation matrix, which amounts to the same thing.
 
 ```{r pc_cog, echo=-3}
-pc = principal(cog_ability, 4)
+pc = principal(bfi_trim, 2)
 pc
-p = ncol(cog_ability)
+p = ncol(bfi_trim)
 ```
 
 First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix as the basis, summing across all `r p` possible components would equal the value of `r p`). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', p, ' = ', round(print(pc)$Vaccounted[1]/p, 2))`).  The `Cumulative Var` tells us that `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r p` variables (i.e. the cumulative explained variance would = 1). We can see that the second component accounts for less variance, and this would continue with additional components, where each accounts for a decreasing amount of variance.
@@ -95,18 +106,18 @@ Some explanation of the other parts of the output:
 - `h2`: the amount of variance in the item/variable explained by the (retained) components. It is the sum of the squared loadings, a.k.a. <span class="emph">communality</span>. For example, the first reasoning item shares only 38% of its variance with these components.
 - `u2`: 1 - h2
 - `com`: A measure of complexity. A value of 1 might be seen for something that loaded on only one component, and zero otherwise (a.k.a. perfect simple structure).
-
+- `RC`: these factors are called RC to denote these are rotated components. They've been rotated to aid interpretability of the loadings.
 
 <span class='emph'>Loadings</span>, also referred to as the <span class="emph">pattern matrix</span>, in this scenario represent the estimated correlation of an item with its component, and provide the key way in which we interpret the factors. As an example, we can reproduce the loadings by correlating the observed variables with the estimated component scores[^rotated].
 
 ```{r pc_LoadingsReproduced, dependson=-1}
-cor(cog_ability, pc$scores, use = 'pair') %>% round(2)
+cor(bfi_trim, pc$scores, use = 'pair') %>% round(2)
 ```
 
 
-It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger loadings are indicated by blue, and we can see the different variables associated with different components. 
+It can be difficult to sort it out just by looking at the values, so we'll look at it visually. In the following plot, stronger and more positive loadings are indicated by blue (negative are indicated by red), and we can see the different variables associated with different components. 
 
-```{r pc_LoadingsVis, echo=F, cache=FALSE}
+```{r pc_LoadingsVis, echo=F}
 library(htmltools)
 # tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
 #          d3heatmap::d3heatmap(pc$loadings, dendrogram='none',
@@ -129,20 +140,24 @@ heatmaply::heatmaply(pc$loadings, dendrogram='none',
 
 <br>
 
-Many would use what's called a <span class="emph">biplot</span>, which shows the components on the axes, the component scores of the data, and the loadings as vectors whose length and direction specify the strength of the loading on a particular component.
+Many would use what's called a <span class="emph">biplot</span>, which shows the both observations and variables on the same plot, in with components/loadings on the axes, the component scores of the data, and the loadings as vectors whose length and direction specify the strength of the loading on a particular component.  
 
 ```{r biplot, echo=FALSE}
-# spider(1:8, data=cor(cog_ability[,1:8], use='pair'), cex.lab=.5, scale=1)
+# spider(1:8, data=cor(bfi_trim[,1:8], use='pair'), cex.lab=.5, scale=1)
 psych::biplot.psych(pc, choose = 1:2, 
                     col = viridis::viridis(3, alpha = c(.1,.75)), 
-                    main = 'PCA Biplot',
+                    cex=c(.75,1),
                     hist.col = '#00aaff80',
-                    bty='n')
+                    pch=19,
+                    bty='n',
+                    arrow.len = .05,
+                    main = 'PCA Biplot',
+                    col.main='gray50')
 ```
 
-Biplots take a bit to figure out just for two components, and one can't really get a sense of more than two at time. However, using a graphical model makes clear what's going on for all retained components. Low loadings have been suppressed for additional clarity.
+The sheering of the data here is just due to the fact we have variables that only take on 6 values and are looking at them in terms of continuous PC scores.  Biplots often take a bit to figure out just for two components, especially when one doesn't have a clean result, and one can't really get a sense of more than two at time. However, using a graphical model makes clear what's going on for all retained components. Low loadings have been suppressed for additional clarity.
 
-```{r pca_graph, echo=FALSE}
+```{r pca_graph, echo=FALSE, cache=T}
 # fa.graph(pc, out.file = 'FA_workshop/pc_cog_graph.gv',
 #          node.font = 'Roboto',
 #          edge.font = 'Roboto',
@@ -152,13 +167,15 @@ Biplots take a bit to figure out just for two components, and one can't really g
 #          bgcolor=transparent,
 #          arrowhead=none)
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
-         DiagrammeR::grViz('FA_workshop/pc_cog_graph.gv', width='100%', height='600px')
+         DiagrammeR::grViz('FA_workshop/pc_cog_graph.gv', width='100%', height='400px')
 )
 br()
 ```
 
 
-Interpretation is the fun, but commonly difficult, part. In this case, the variables don't appear to be grouping like we'd expect, except for some of the reasoning scores[^badfactor].  It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. In addition, for PCA the goal is not interpretation, but to reduce the data while retaining as much of the variance as possible.
+Interpretation is the fun, but commonly difficult, part. In this case, the variables group like we'd expect[^badfactor].  So we have one component that represents agreeableness and one that represents neuroticism.  Note that the smaller negative loading comes from a reverse scored item ('I am indifferent to the feelings of others')[^reverse].
+
+It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. In addition, for PCA the goal is not interpretation, but to reduce the data while retaining as much of the variance as possible.
 
 
 ### PCA Summary
@@ -182,35 +199,34 @@ Other stuff
 
 #### Suggested R packages
 
-- psych
-- pcaMethods (Biocondudctor)
+- <span class="pack">psych</span>
+- <span class="pack">pcaMethods</span> (Biocondudctor)
 
-## FA
+## Factor Analysis
 
-Now let's examine what is sometimes called *common* factor analysis, and also sometimes *exploratory* factor analysis in the social sciences, and even 'classical' or 'traditional', but typically just <span class="emph">factor analysis</span> (FA) everywhere else.  While we can use both PCA and FA for similar reasons (dimension reduction) and even have similar interpretations (in terms of loadings), there are some underlying subtleties between the two that provide unique distinctions.  Noting these distinctions with some detail will require some matrix notation, but for readers not so keen on such presentation they may note the images and concluding points.
+Now let's examine what is sometimes called *common* factor analysis, and also sometimes *exploratory* factor analysis in the social sciences, and even 'classical' or 'traditional', but typically just <span class="emph">factor analysis</span> (FA) everywhere else.  While we can use both PCA and FA for similar reasons (dimension reduction) and even have similar interpretations (in terms of loadings), there are some underlying subtleties between the two that provide unique distinctions.  
 
-$$X \approx ZW^T$$
 
-First let's revisit PCA, where we can depict it conceptually as an approach where we attempt to approximate the correlation matrix in terms of the product of components, represented by our loading matrix $L$.
+First let's revisit PCA, where we can depict it conceptually as an approach where we attempt to reproduce the correlation matrix $R$ in terms of the product of components, represented by our loading matrix $W$.
 
-$$R = LL'$$
+$$R = WW'$$
 and
 
-$$C = XW$$
+$$C = XV$$
 
-In other words, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $p$ observed variables $X$, the weights (with weight/loading matrix $W$) of which are determined by the loadings, but yet do not say anything about the correlations between the variables.
+In other words, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $D$ observed variables $X$, the weights (with weight matrix $V$) of which are determined by the loadings[^weights].
 
 Things are different with factor analysis. Now the causal flow is in the other direction, originating with the latent variables. 
 
-$$X \approx FW$$
+$$X \approx ZW$$
 
 Each observed variable $x$ is a function of the latent variables that it is associated with.  In addition, we also take into account the uniquenesses $\Psi$, or that part which the factors do not explain.
 
 
 And to reproduce the correlation matrix:
 
-$$R \approx LL'$$
-$$R = LL' + \Psi$$
+$$R \approx WW'$$
+$$R = WW' + \Psi$$
 
 So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well.
 
@@ -220,19 +236,24 @@ What this amounts to conceptually are a few key ideas:
 - Factors are the cause of the observed variables, variables are the cause of components.
 - Factor analysis does not assume perfect measurement of observed variables.
 
+### Example
+
+Now let's do a factor analysis using the same data as we did for the PCA.
 
 ```{r fa_res}
-fa_model = fa(cog_ability, 4, rotate='oblimin')
+fa_model = fa(bfi_trim, 2)
 fa_model
 ```
 
-
+The results in terms of loadings are similar to the PCA. But we can see some differences. The PCA components accounted for `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance, while here we only account for `r round(sum(colSums(fa_model$loadings^2))/p, 2)*100`%.  In addition, we have an estimate of the factor correlations, `r round(fa_model$Phi[2], 2)`, where the PCA components are uncorrelated by definition.  In addition there are measures of 'fit' that come from the structural equation modeling context. See [this](https://m-clark.github.io/sem/structural-equation-modeling.html#fit) for more detail on those measures.  I will note that BIC is provided, which allows for a way to compare different factor solutions.
 
 ```{r fa_LoadingsVis, echo=F, cache=FALSE}
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
 heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
-                     colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(pc$loadings)),
-                     hide_colorbar=T, 
+                     colors=scales::col_bin(RColorBrewer::brewer.pal(11, "RdBu"), domain=c(-1,1), bins=50)(sort(fa_model$loadings)),
+                     hide_colorbar=T,
+                     labRow=colnames(bfi_trim),
+                     labCol=c('Neuro', 'Agree'),
                      plot_method='ggplot'
                      ) %>% 
   plotly::layout(yaxis = list(showline = F),
@@ -249,27 +270,36 @@ heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
 
 ### "Confirmatory" Factor Analysis
 
-Some needlessly distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings to be zero.  Otherwise they are identical techniques.
+Some distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings/paths to be zero.  Otherwise they are identical techniques.
 
-Why would you set loadings to zero? Theory would suggest it.  For example if we truly to be four latent constructs in this cognitive ability data, we can set things up to 'confirm' this.
+Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after acounting for the correlation of the factors, we can set things up to coincide with our substantive assumptions.
 
 
-```{r eval=FALSE}
+```{r cfa, eval=FALSE}
 modelCode = "
-  verbal =~ reason.4 + reason.16 + reason.17 + reason.19
-  spatial =~ rotate.3 + rotate.4 + rotate.6 + rotate.8
+  agree =~ A1 + A2 + A3 + A4 + A5
+  neurot =~ N1 + N2 + N3 + N4 + N5
 
   # not necessary
-  # verbal ~~ spatial
+  # agree ~~ neurot
 
   # if you don't want them correlated
-  # verbal ~~ 0*spatial
+  # agree ~~ 0*neurot
 "
 
-famod = cfa(modelCode, data=cog_ability)
-summary(famod, standardized=T, rsq=T, nd=2)
-pars = parameterEstimates(famod, standardized=T)
+cfa_model = cfa(modelCode, data=bfi_trim)
+summary(cfa_model, standardized=T, rsq=T, nd=2)
 ```
+
+```{r cfa_graph, echo=FALSE, cache=FALSE}
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
+         DiagrammeR::grViz('FA_workshop/fa_graph.gv', width='100%', height='400px')
+)
+br()
+```
+
+
+Note that if we only had a single factor, the results from 'confirmatory' and 'exploratory' FA are identical.
 
 
 #### Suggested R packages
@@ -279,10 +309,11 @@ pars = parameterEstimates(famod, standardized=T)
 
 ## As latent linear models
 
+In the following we compare PCA and FA from a probabilistic modeling perspective.  This further highlights their differences and similarities.
 
 ### FA
 
-$$ X \sim \mathcal{N}(ZW^T + \mu, \Psi) $$
+$$ X \sim \mathcal{N}(ZW' + \mu, \Psi) $$
 $\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
 
 
@@ -292,12 +323,12 @@ $$\Psi = \sigma^2I$$
 
 ### PCA
 
-$$\sigma \rightarrow 0$$
+$$\sigma^2 \rightarrow 0$$
+
+
+
 
 ## More techniques
-
-
-
 
 ### Count-based Matrix Factorization
 
@@ -305,7 +336,7 @@ Commonly our data regards counts or otherwise compositional data.  In this case 
  
 #### NMF
 
-Non-negative matrix factorization is similar to PCA, just with the constraint that scores and weights be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
+<span class="emph">Non-negative matrix factorization</span> is similar to PCA, just with the constraint that scores and weights be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
 
 <img src="../img/nmf_recon10.png" style="display:block; margin: 0 auto;">
 
@@ -316,28 +347,83 @@ Non-negative matrix factorization is similar to PCA, just with the constraint th
 In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. latent factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
 
 
-Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a mulinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times given some probability.
+Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a mulinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times for a given document, given some probability of each term.
 
 ```{r multinom_ex, echo=-1}
 set.seed(123)
 t(rmultinom(1, size = 20, prob=c(.5, .2, .15, .1, .05))) # first term is most likely, 5th term is least likely
 ```
 
-Those are the counts we see for a given observation. 
+Those are the counts we see for a given observation. This treats documents as a 'bag of words', where we don't care about ordering.  Suprisingly though, simply using the document term matrix and this bag of words approach does very well to uncover latent topics that make sense.  
+
+The following shows a text analysis of political blogs using the <span class="pack">lda</span> package. As in other factor analysis we've discussed, one must choose the number of latent 'topics'.
 
 
-LDA wouldn't be the best tool if your goal is prediction, and you don't care much about interpretation.
 
+```{r lda_example}
+library(lda)
+data(poliblog.documents)
+data(poliblog.vocab)
+
+set.seed(8675309)
+
+K <- 10 ## Num topics
+
+# this will take at least a few seconds to run
+result <- lda.collapsed.gibbs.sampler(poliblog.documents,
+                                       K,  ## Num topics
+                                       poliblog.vocab,
+                                       2000,  ## Num iterations
+                                       0.1,
+                                       0.1) 
+
+## Get the top words in the cluster
+top.words <- top.topic.words(result$topics, 5)
+```
+
+This shows the topics (identified by their top 5 words)  topics and their probability of occurrence in a sample of 10 blogs.  For example, blog 1 is more about McCain while blog 6 is more democratic leaning.
+
+```{r lda_plot, echo=FALSE, out.width='100%'}
+## Number of documents to display
+N <- 10
+
+topic.proportions <- t(result$document_sums) / colSums(result$document_sums)
+topic.proportions <-
+   topic.proportions[sample(1:dim(topic.proportions)[1], N),]
+topic.proportions[is.na(topic.proportions)] <-  1 / K
+colnames(topic.proportions) <- apply(top.words, 2, paste, collapse=" ")
+
+topic.proportions.df <- gather(data.frame(data.frame(topic.proportions),
+                                          document=factor(1:N)),
+                               key="topic",
+                               value=probability,
+                               -document)  
+ggplot(aes(x=topic, y=probability), fill=document, ylab="proportion",
+       data=topic.proportions.df) +
+  geom_col(color=NA, fill='#ff5500', width = .5) +
+  theme(axis.text.x = element_text(angle=-45, hjust=0, size=5),
+        axis.text.y = element_text(size=6)) +
+  coord_flip() +
+  facet_wrap(~ document, ncol=5) +
+  theme_trueMinimal()
+```
+
+
+See my [text analysis document](http://m-clark.github.io/text-analysis-with-R/) for more details and examples. In my experience, this kind of data comes up quite often, and one should have LDA in their Factor Analysis Toolkit (FAT)™ and as readily available as PCA and FA.  LDA wouldn't be the best tool if your goal is prediction and you don't care as much about interpretation. But when you do, it can be rewarding to use.  Futhermore, there is <span class="emph">supervised LDA</span> where one can use the topics to make predictions on outcomes of interest, and <span class="emph">structured topic modeling</span> where one can use covariates to model the topic probabilities.  In short, you have plenty to play with here.
+
+
+Here is the number 3 reconstructed with LDA.
 
 <img src="../img/lda_recon.png" style="display:block; margin: 0 auto;">
 
 
 #### Suggested R packages
 
-- NMF
-- lda
-- quanteda
-- text2vec
+- <span class="pack">NMF</span>
+- <span class="pack">lda</span>
+- <span class="pack">topicmodels</span>
+- <span class="pack">quanteda</span>
+- <span class="pack">text2vec</span>
 
 
 
@@ -407,6 +493,9 @@ DiagrammeR::grViz(test, width='100%', height='400px')
 )
 ```
 
+
+We can use factor analysis in the SEM context as a way to assess <span class="emph">measurement error</span>.  Whatever variance a factor doesn't explain is a combination of measurement error and random variation. Thus we can use factor analysis as a means to assess a group of variables' ability to measure the underlying construct they are supposed to measure.
+
 #### Suggested R packages
 
 - <span class="pack">lavaan</span>
@@ -425,10 +514,44 @@ In this setting, the probability of endorsement (or getting an item correct), $\
 
 $$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j$$
 
+The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm.</span>  While the parameterizations are different, they come to the same conclusions about 'ability'. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
+
+```{r irt}
+data("ability", package = 'psych') 
+verbal = ability %>% 
+  data.frame() %>% 
+  dplyr::select(contains('reason')) %>% 
+  drop_na()
+
+library(psych); library(ltm)
+irt_fa = fa2irt(fa(verbal, fm='ml'), rho=tetrachoric(verbal), plot = F)
+irt_model = ltm(verbal ~ z1)
+# irt_fa$fa  # to compare to the standard fa output
+irt_fa$irt
+summary(irt_model)
+
+# get scores; ltm only has scores for unique patterns
+fa_scores = irt_fa$fa$scores %>% unique() %>% na.omit()
+fa_scores = data.frame(fa_scores, verbal[rownames(fa_scores),]) 
+ltm_scores = ltm::factor.scores(irt_model)[['score.dat']]
+score_data = left_join(fa_scores, ltm_scores)
+```
+
+```{r irt_plot, echo=FALSE}
+ggplot(aes(ML1, z1), data=score_data) +
+  geom_point(color='#ff5500') +
+  lims(x=c(-2,1), y=c(-2,1)) +
+  labs(x='FA', y='IRT') +
+  theme_trueMinimal()
+```
+
+
+
 
 #### Suggested R packages
 
 - <span class="pack">ltm</span>
+- <span class="pack">psych</span>
 
 ### ICA
 
@@ -526,7 +649,7 @@ Why do it? You believe that truly independent sources of signal underly your dat
 
 #### Suggested R packages
 
-- <span class="pack"></span>
+- <span class="pack">fastICA</span>
 
 
 ### Multidimensional Scaling
@@ -534,6 +657,7 @@ Why do it? You believe that truly independent sources of signal underly your dat
 Multidimensional scaling[^mds] is a technique for converting a matrix of observation dissimilarities into a low-dimensional map that preserves those distances as well as possible.
 
 The first step in any MDS is choosing a similarity measure. Often this will be a metric or distance, i.e.:
+
 - Euclidean Distance for continuous variables
 - Manhattan distance or Jacaard dissimilarity for binary variables
 - Similarity measures can often become dissimilarity measures by inverting (x → 1/x) or subtracting from 1 (x → 1−x).  
@@ -571,21 +695,49 @@ We can use MDS to obtain a 2-dimensional map preserving distances as well as pos
 
 Practically everyone has been exposed to <span class="emph">recommender systems</span> such as <span class="emph">collaborative filtering</span> and related models.  That's how Netflix, Amazon and others make their recommendations to you given the information you've provided about likes and dislikes, what other similar people have provided, and how similar the object of interest is to others.
 
-The following image, taken from wikipedia, conceptually shows how a *user-based* collaborative filtering method would work, where a recommendation is given based on what other similar users have given.
+The following image, taken from Wikipedia (click the image to go there), conceptually shows how a *user-based* collaborative filtering method would work, where a recommendation is given based on what other similar users have given.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif" style="display:block; margin: 0 auto;" width:50%>
+<a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a>
 
 Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories, one can recommend something from a similar genre of movies that you like that people in the same demographic category seem to like.
 
 If you think of genres as latent categories of movies, well now we can employ the techniques we've talked about[^netflix]. Similarly we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.
 
+```{r eval=FALSE, echo=FALSE}
+library(recommenderlab)
+data("MovieLense")
+MovieLense
+barplot(table(getRatings(MovieLense)), col = '#ff5500', border='#00aaff')
+recommenderRegistry$get_entries(dataType = "realRatingMatrix")
+r <- Recommender(MovieLense, method = "SVDF")
+r
+getModel(r)$topN
+recom <- predict(r, MovieLense[1], n=5)
+recom
+
+as(recom, "list")
+recom3 <- bestN(recom, n = 3)
+recom3
+
+
+recom <- predict(r, MovieLense[1:2], type="ratings")
+recom
+as(recom, "matrix")[,1:10]
+
+recom <- predict(r, MovieLense[1:2], type="ratingMatrix")
+recom
+as(recom, "matrix")[,1:10]
+```
+
+
 #### Suggested R packages
 
 - <span class="pack">recommenderlab</span>
+- See also, <span class="func">svd</span> or <span class="func">prcomp</span> in <span class="pack">base R</span>
 
 ### Time-based
 
-Hidden markov models can be used to model latent discrete states. In terms of a graphical model, we can depcit it as follows:
+<span class="emph">Hidden markov models</span> can be used to model latent discrete states that result in a sequence of observations over time. In terms of a graphical model, we can depict it as follows:
 
 ```{r hmm_graph, echo=FALSE}
 hmm = "
@@ -672,13 +824,16 @@ data("faithful")
 library(plotly)
 plot_ly(data=faithful, x=~waiting, y=~eruptions) %>% 
   theme_plotly()
+br()
 ```
 
-In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In this case, the dimension reduction occurs along the *rows* rather than the columns.  We'll talk about two types.
+The visualization suggests probably two clusters- less waiting time results in shorter eruptions, and longer waits mean longer eruptions. However, it seems the observations more or less come from only those two possibilities.  
+
+In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In this case, we can think of the dimension reduction occurring along the *rows* rather than the columns.  We'll talk about two types.
  
 ### Mixture models
 
-A basic approach for categorical latent variable analysis from a model based perspective[^cluster] could be seen as follows:
+A basic approach for categorical latent variable analysis from a model-based perspective could be seen as follows:
 
 1. Posit the number of clusters you believe there to be
 2. For each observation, estimate those probability of coming from either cluster assuming some underlying distribution
@@ -702,7 +857,7 @@ graphics::layout(1)
 We can see that things break out more or less as we might expect, though there is a bit more uncertainty with observations in the middle.
 
 
-The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, mclust does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].
+The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, mclust does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].  Interestingly, the result here suggests three clusters for the Old Faithful data.
 
 ```{r clus_mclust2, echo=1}
 mod = Mclust(faithful, verbose=F)
@@ -794,10 +949,10 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
 
 #### Suggested R packages
 
-- mclust
-- flexmix
-- kmeanspp
-- Base R
+- <span class="pack">mclust</span>
+- <span class="pack">flexmix</span>
+- <span class="pack">kmeanspp</span>
+- <span class="pack">Base R</span>
 
 
  
@@ -806,21 +961,29 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
 - how many latent factors/classes/
 - Interpretation
 - two step models vs. simultaneous estimation for prediction
+- how to treat the data (e.g. numeric vs. categorical)
 
 
 
-[^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the crossproduct of the loading matrix.
+[^big5]: These descriptions come from the wikipedia page.
 
-[^rotated]: These results have been rotated, something practically no one using PCA actually does.  
+[^rotated]: These results have been rotated, something rarely practiced with PCA and almost always done with FA.  
 
-[^badfactor]: Results like this are more the rule than the exception in my experience. Not enough initial development is typically done with scales, and when other people use them in other settings, it often ends with disappointment.  Just think, many psychological scales are developed on freshman psychology students.  How well do you think that will generalize?
+[^badfactor]: Muddier results are more the rule than the exception in my experience. Not enough initial development is typically done with scales, and when other people use them in other settings, it often ends with disappointment.  Just think, many psychological scales are developed on specific clinical samples or freshman psychology students.  How well do you think that will generalize?
+
+[^reverse]: In almost every case I've come across, reverse-scored items are simply poorer items.
 
 [^pca_normal]: even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).
 
-[^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/).
+[^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/). I personally have never once needed to use this technique, nor was much interested beyond what I knew about it already, so I decided to lift it from him. I can say that <span class="pack">ldaVis</span> shows topic relations from LDA using it, so there's that. James' [workshop on dimension reduction](https://jbhender.github.io/DimensionReduction-06June2017.html) provides a more technical detail and additional examples for PCA, FA and MDS, for those inclined.
 
 [^deepimage]: These days one would probably be more likely to use deep learning techniques for audio and images, at least if prediction was the primary concern.
 
 [^netflix]: Indeed, straight up singular value decomposition, as that used for PCA, was the hot machine learning tool used by Netflix back in the day.
 
 [^mclustbic]: For whatever reason, <span class="pack">mclust</span> displays BIC in higher is better format, in contrast to practically every other modeling context I've come across.
+
+
+[^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the crossproduct of the loading matrix, i.e. $W'W$.
+
+[^weights]: My description here is a bit loose. For the technically inclined, $V$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, the psych package uses weights base on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.
