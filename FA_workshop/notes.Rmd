@@ -844,7 +844,7 @@ Typical methods are assuming an underlying normal distribution, such that each o
 
 As an example, we'll use <span class="pack">mclust</span> on the old faithful data, positing 2 clusters.
 
-```{r clus_mclust, echo=1:3}
+```{r clus_mclust, echo=1:3, out.width='100%'}
 library(mclust)
 mod = Mclust(faithful, G = 2)
 summary(mod)
@@ -860,7 +860,7 @@ We can see that things break out more or less as we might expect, though there i
 
 The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, mclust does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].  Interestingly, the result here suggests three clusters for the Old Faithful data.
 
-```{r clus_mclust2, echo=1}
+```{r clus_mclust2, echo=1, out.width='100%'}
 mod = Mclust(faithful, verbose=F)
 par(mfrow=c(1,2))
 plot(mod, what='BIC', legendArgs = list(x = "bottomright", ncol = 2, cex = .5, inset = 0.01))
@@ -903,20 +903,24 @@ Aside from mixture models, when people use the term 'cluster analysis' they are 
 
 <span class="emph">K-means</span> cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
 
-K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape).  It also has connections to PCA and ICA. The general issue is tryin
+K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape).  It also has connections to PCA and ICA. The general issue is trying to determine just how many clusters one should retain. The following plot shows both a two and three cluster solution.
 
 
-```{r kmeans, out.width='90%'}
+```{r kmeans, echo=F, out.width='90%'}
+set.seed(1111)
 clus2 = factor(kmeans(faithful, 2)$cluster)
 c2 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
   geom_point(aes(color=clus2)) +
+  scale_color_manual(values = palettes$latvian_red$tetradic[1:2]) +
   theme_trueMinimal()
 
 clus3 = factor(kmeans(faithful, 3)$cluster)
 c3 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
   geom_point(aes(color=clus3)) +
+  scale_color_manual(values = palettes$latvian_red$tetradic) +
   theme_trueMinimal()
 cowplot::plot_grid(c2, c3)
+# gridExtra::grid.arrange(c2,c3, ncol=2)
 ```
 
 #### Hierarchical
@@ -964,7 +968,7 @@ While personally I'm less worried about this, using SEM or other approaches will
 There are many disciplines that will just do the two-step and not blink an eye, so you shouldn't feel bad just using factor analysis and related as an initial pre-processing dimension reduction step.
 
 
-### Mixture Models
+### Issues with Latent Classes
 
 #### Model Selection
 
