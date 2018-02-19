@@ -493,6 +493,7 @@ DiagrammeR::grViz(test, width='100%', height='400px')
 )
 ```
 
+<br>
 
 We can use factor analysis in the SEM context as a way to assess <span class="emph">measurement error</span>.  Whatever variance a factor doesn't explain is a combination of measurement error and random variation. Thus we can use factor analysis as a means to assess a group of variables' ability to measure the underlying construct they are supposed to measure.
 
@@ -529,19 +530,19 @@ irt_model = ltm(verbal ~ z1)
 # irt_fa$fa  # to compare to the standard fa output
 irt_fa$irt
 summary(irt_model)
+```
 
+```{r irt_plot, echo=FALSE}
 # get scores; ltm only has scores for unique patterns
 fa_scores = irt_fa$fa$scores %>% unique() %>% na.omit()
 fa_scores = data.frame(fa_scores, verbal[rownames(fa_scores),]) 
 ltm_scores = ltm::factor.scores(irt_model)[['score.dat']]
 score_data = left_join(fa_scores, ltm_scores)
-```
 
-```{r irt_plot, echo=FALSE}
 ggplot(aes(ML1, z1), data=score_data) +
   geom_point(color='#ff5500') +
   lims(x=c(-2,1), y=c(-2,1)) +
-  labs(x='FA', y='IRT') +
+  labs(x='FA Factor Scores', y='IRT Ability Scores') +
   theme_trueMinimal()
 ```
 
@@ -555,7 +556,7 @@ ggplot(aes(ML1, z1), data=score_data) +
 
 ### ICA
 
-The latent linear model versions of PCA and factor analysis assume the observed variables are normally distributed (even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not. This visualization duplicates that seen in Murphy (2012) where we have two (uniform) independent sources.  We can see that the ICA correctly recovers those components.
+The latent linear model versions of PCA and factor analysis assume the observed variables are normally distributed (even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span>, does not. This visualization duplicates that seen in Murphy (2012) where we have two (uniform) independent sources.  We can see that the ICA correctly recovers those components.
 
 ```{r ica, echo=FALSE, results='hide', cache=FALSE}
 set.seed(2)
@@ -665,7 +666,7 @@ The first step in any MDS is choosing a similarity measure. Often this will be a
 The basic idea is to come up with what we might call components or factors that minimize the difference in factor scores for two observations from the actual distance.
 
 ```{r mds, echo=1:2}
-data(UScitiesD)
+data(UScitiesD)  # base R data set
 UScitiesMDS <- cmdscale(UScitiesD)
 mat <- as.matrix(UScitiesD)
 colnames(mat) <- c('Atl','Chi','Den','Hou','LA','Mia','NY','SF','Sea','DC')
@@ -701,33 +702,32 @@ The following image, taken from Wikipedia (click the image to go there), concept
 
 Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories, one can recommend something from a similar genre of movies that you like that people in the same demographic category seem to like.
 
-If you think of genres as latent categories of movies, well now we can employ the techniques we've talked about[^netflix]. Similarly we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.
+If you think of genres as latent categories of movies, now you can employ the techniques we've talked about[^netflix]. Similarly we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
 
-```{r eval=FALSE, echo=FALSE}
+```{r recomend, eval=F, echo=TRUE}
 library(recommenderlab)
 data("MovieLense")
 MovieLense
 barplot(table(getRatings(MovieLense)), col = '#ff5500', border='#00aaff')
 recommenderRegistry$get_entries(dataType = "realRatingMatrix")
-r <- Recommender(MovieLense, method = "SVDF")
-r
-getModel(r)$topN
-recom <- predict(r, MovieLense[1], n=5)
-recom
+recom_svd <- Recommender(MovieLense, method = "SVD")
+recom_svd
+getModel(recom_svd)$topN
 
-as(recom, "list")
-recom3 <- bestN(recom, n = 3)
-recom3
+recom_top_3 <- bestN(recom, n = 3)
+recom_top_3
+as(recom_top_3, 'list')
+```
 
+After running it try some predictions.
 
-recom <- predict(r, MovieLense[1:2], type="ratings")
-recom
-as(recom, "matrix")[,1:10]
-
-recom <- predict(r, MovieLense[1:2], type="ratingMatrix")
+```{r recommend_pred, eval=FALSE}
+# predicted ratings
+recom <- predict(recom_svd, MovieLense[2:3], type="ratings")
 recom
 as(recom, "matrix")[,1:10]
 ```
+
 
 
 #### Suggested R packages
@@ -739,12 +739,12 @@ as(recom, "matrix")[,1:10]
 
 <span class="emph">Hidden markov models</span> can be used to model latent discrete states that result in a sequence of observations over time. In terms of a graphical model, we can depict it as follows:
 
-```{r hmm_graph, echo=FALSE}
+```{r hmm_graph, echo=FALSE, cache=T}
 hmm = "
 digraph Factor  {
   
  graph [rankdir=TB  bgcolor=transparent]
- node [fontname='Roboto' fontsize=10 shape=circle, width=.5];
+ node [fontname='Roboto' fontsize=10 shape=circle width=.5 color=gray75 fontcolor=gray25];
    z1  [label = <z<sub>1</sub>>];
    z2  [label = <z<sub>2</sub>>];
    z3  [label = <z<sub>3</sub>>];
@@ -755,7 +755,6 @@ digraph Factor  {
    x3  [label = ☺];
    x4  [label = §];
 
- node [shape=box width=1];
  edge [fontname='Roboto' fontsize=10 minlen=5 penwidth=2 color='#00aaff'];
   z1 -> z2 [label = ''  arrowhead=''];
   z1 -> z3 [label = ''  arrowhead='' penwidth= 1];
@@ -791,13 +790,13 @@ digraph Factor  {
 }
 "
 
-DiagrammeR::grViz(hmm, width='100%', height='400px')
-# tags$div(style="width:100%; margin:auto auto; ",
 # DiagrammeR::grViz(hmm, width='100%', height='400px')
-# )
+tags$div(style="margin:auto auto; width:75%",
+DiagrammeR::grViz(hmm, width='100%', height='300px')
+)
 ```
 
-In this sense we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The $x$ are the categories of observations we can potentially observe, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
+In this sense we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The icons are the categories of observations we can potentially see, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
 
 We start in state 1 where the heart and yellow smiley are most probable. Let's say we observe ♥.  The second state is most likely so we get there, and because it has some probability of staying in that state, we observe § and §. We finally get to state 3 and see <span class="" style='color:black'>☻</span>, where we go back to state 1, where we see ☺, jump to latent state 3 etc.  And such a process continues for the length of sequence we see.
 
@@ -813,7 +812,9 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 
 ### Bayesian
 
-Dirichlet Process, CRP, IB
+There are Bayesian versions for any of the model-based techniques we've discussed, essentially just adding priors for the parameters of interest.  As mentioned, LDA can be seen as latent semantic analysis with priors for the topics. With standard factor analysis, one can actually estimate the factor scores directly as additional parameters in the model.  In other approaches, it can require a bit of finagling to estimate the factor analytic result, as it is inherently unidentified and requires constraints.
+
+Beyond that <span class="emph">Bayesian non-parametric</span> techniques such as <span class="emph">Dirichlet process</span> approaches, allow for the possibility of not having to specify the number of clusters or latent variables in advance.  Instead number is allowed to grow as the data grows according to the prior, and so can be applied to online learning situations as well.  See [my chapter](https://m-clark.github.io/sem/bayesian-nonparametric-models.html) on this for some examples.
 
 ## Latent classes
 
@@ -829,7 +830,7 @@ br()
 
 The visualization suggests probably two clusters- less waiting time results in shorter eruptions, and longer waits mean longer eruptions. However, it seems the observations more or less come from only those two possibilities.  
 
-In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In this case, we can think of the dimension reduction occurring along the *rows* rather than the columns.  We'll talk about two types.
+In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In this case, we can think of the dimension reduction occurring along the *rows* rather than the columns.  We'll talk about two approaches, what we might call model-based vs. algorithmic or distance-based.
  
 ### Mixture models
 
@@ -881,24 +882,22 @@ mod = flexmix(eruptions~waiting,  data=faithful, k = 2)
 summary(mod)
 ```
 
-We can see from the summary about 2/3 are classified to one group. We also get the estimated means and standard deviations for each group, as well as note respective probabilities of each observation for each class.  Note that the group labels are completely arbitrary.
+We can see from the summary it's a fairly even split as far as group membership. We also get the estimated coefficients for each group, as well as note respective probabilities of each observation for each class.  Note that the group labels are completely arbitrary.
 
 ```{r flexmixEruptions2_workshop, echo=-2}
 parameters(mod)    # means (Intercept) and std dev (sigma) for each group
-head(mod@posterior$scaled, 10) %>% round(3) %>% data.frame() %>% pander::pander()  # show some estimated probabilities
+head(mod@posterior$scaled, 10) %>% round(3) %>% data.frame() %>% pander::pander(keep.trailing.zeros=T)  # show some estimated probabilities
 ```
 
 <br>
 
-The key idea is as before, that the response is from two distributions, e.g. two normal distributions, each with their own mean, modeled by covariates, and some variance.  This very commonly applied in cases where there are many zeros in the data, leading to <span class="emph">zero-inflated</span>, <span class="emph">hurdle</span> and similar models, where the zeros are modeled by a logistic regression and the counts by Poisson or negative binomial, but the approach is much more general.
+The key idea is as before, that the response is a mixture of $k$ distributions, e.g. two normal distributions, each with their own mean, modeled by covariates, and some variance.  This very commonly applied in cases where there are many zeros in the data, leading to <span class="emph">zero-inflated</span>, <span class="emph">hurdle</span> and similar models, where the zeros are modeled by a logistic regression and the counts by Poisson or negative binomial, but the approach is much more general.
 
 
  
 ### "Cluster analysis"
 
 Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods, where given a distance matrix that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one nother.
-
-
 
 #### K-means
 
@@ -922,29 +921,17 @@ cowplot::plot_grid(c2, c3)
 
 #### Hierarchical
 
-Other methods can be thought of as a clustering the data in a hierarchical.  These can start at the bottom of the hierarchy (<span class="emph">agglomerative</span>), allowing every observation into its own cluster, and successively combining them. For example, first choose a measure of dissimilarity, and combine the two observations that are most alike, then add one to those or if another pair are closer, make a new cluster.  Conversely, one can start with every observation in one cluster, and take the most dissimilar and split it off, continuing on until every observation is in its own cluster.
+Other methods can be thought of as a clustering the data in a hierarchical.  These can start at the bottom of the hierarchy (<span class="emph">agglomerative</span>), allowing every observation into its own cluster, and successively combining them. For example, first choose a measure of dissimilarity, and combine the two observations that are most alike, then add one to those or if another pair are closer, make a new cluster.  Conversely, one can start with every observation in one cluster (<span class="emph">divisive</span>), and take the most dissimilar and split it off, continuing on until every observation is in its own cluster.
+
+<br>
 
 ```{r hclust_dendrogram, echo=FALSE}
-heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_colorbar=T, colors=viridis::plasma)
+heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_colorbar=T, colors=viridis::plasma) %>% 
+  theme_plotly()
 ```
 
-Practically every decision one has to make (distance, linkage method, cluster determination, general approach) is arbitrary.  While these are actually still not uncommonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
- 
-### Predictive Modeling
+Practically every decision one has to make with this approach is arbitrary (distance, linkage method, cluster determination, general approach).  While these are actually still commonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
 
-### Issues with Mixture Models
-
-#### Model Selection
-
-Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they will rarely agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
-
-#### Latent Expressivity
-
-You are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
-
-Now ask, why would you do it with latent variables?  Unless there is very strong theory or an actual physical aspect involved (e.g. seizure occurence), you should think hard before assuming a hard classification of observations.
-
-#### Sometimes one cluster is the best answer
 
 
 #### Suggested R packages
@@ -958,10 +945,40 @@ Now ask, why would you do it with latent variables?  Unless there is very strong
  
 ## Issues
 
-- how many latent factors/classes/
-- Interpretation
-- two step models vs. simultaneous estimation for prediction
-- how to treat the data (e.g. numeric vs. categorical)
+### How many latent factors/classes?
+
+> "Solving the number of factors problem is easy, I do it everyday before breakfast. But knowing the right solution is harder" 
+~ H. F. Kaiser
+
+The only rule you have to follow is to never use a scree plot. Elbows indeed.
+
+
+### Interpretation
+### how to treat the data (e.g. numeric vs. categorical)
+### Predictive Modeling
+
+Many often use the clusters or factor scores obtained obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately this ignores the uncertainty in those   Essentially your standard errors will be a bit optimistic.
+
+While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.
+
+There are many disciplines that will just do the two-step and not blink an eye, so you shouldn't feel bad just using factor analysis and related as an initial pre-processing dimension reduction step.
+
+
+### Mixture Models
+
+#### Model Selection
+
+Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they will rarely agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
+
+#### Latent Expressivity
+
+You are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
+
+Now ask, why would you do it with latent variables?  Unless there is very strong theory or an actual physical aspect involved (e.g. seizure occurence), you should think hard before assuming a hard classification of observations.
+
+#### Sometimes one cluster is the best answer
+
+When you see cluster analysis conducted as part of some attempt to answer a research or other question, you almost never see someone test whether there is only one cluster.  Despite the obvious possibility otherwise, it's just assumed there are latent classes.  The techniques that aren't model-based don't even have a way to test whether a single class is best. Model-based ones do however, just like they have a straightforward way to compare other cluster numbers. That's reason enough alone to use them when possible.
 
 
 
