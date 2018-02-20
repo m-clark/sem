@@ -840,7 +840,8 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 
 ### Random effects models
 
-For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just [different ways of doing the same thing](http://m-clark.github.io/mixed-growth-comparison/).  Thinking about random effects as latent variables possibly opens the door for other interpretive opportunties when dealing with them in other contexts.
+For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just [different ways of doing the same thing](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent constuct that represents an unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunties when dealing with them in other contexts.
+
 
 ### Bayesian
 
