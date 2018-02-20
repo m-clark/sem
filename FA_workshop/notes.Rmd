@@ -23,6 +23,12 @@ knitr::opts_knit$set(root.dir = '../')
 library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan);
 ```
 
+```{r echo=FALSE, results='hide'}
+mapply(function(o, v) panderOptions(o, v),
+       c('keep.trailing.zeros', 'round', 'table.split.table', 'table.split.cells'), 
+       c(TRUE, 2, Inf, Inf))
+```
+
 
 ## Introduction
 
@@ -336,7 +342,30 @@ Commonly our data regards counts or otherwise compositional data.  In this case 
  
 #### NMF
 
-<span class="emph">Non-negative matrix factorization</span> is similar to PCA, just with the constraint that scores and weights be positive.  It is (in the usual implementation) identical to probabilistic latent semantic analysis.
+<span class="emph">Non-negative matrix factorization</span> is similar to PCA, just with the constraint that scores and weights be non-negative.  
+
+$$X \approx ZW$$
+
+It is (in the usual implementation) identical to what's called <span class="emph">probabilistic latent semantic analysis</span>.  The following shows how to conduct a NMF using the package of the same name.
+
+
+```{r nmf_demo, eval=FALSE}
+load('data/threes_mnist.RData')
+
+# many of the columns are useless
+zero_idx = colSums(threes) == 0
+
+library(NMF)
+# nmf_50 = nmf(threes[,!zero_idx], rank = 50) # if you don't mind waiting
+nmf_10 = nmf(threes[,!zero_idx], rank = 10)
+
+# a current bug may cause these from displaying in RStudio
+coefmap(nmf_10)   
+basismap(nmf_10) 
+```
+
+
+Here are the reconstruction results using a 10 component solution.
 
 <img src="../img/nmf_recon10.png" style="display:block; margin: 0 auto;">
 
@@ -809,6 +838,9 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 - <span class="pack">HMM</span>
 - <span class="pack">HiddenMarkov</span>
 
+### Random effects models
+
+For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just [different ways of doing the same thing](http://m-clark.github.io/mixed-growth-comparison/).  Thinking about random effects as latent variables possibly opens the door for other interpretive opportunties when dealing with them in other contexts.
 
 ### Bayesian
 
@@ -840,25 +872,26 @@ A basic approach for categorical latent variable analysis from a model-based per
 2. For each observation, estimate those probability of coming from either cluster assuming some underlying distribution
 3. Assign observations to the most likely class (i.e. the one with the highest probability)
 
-Typical methods are assuming an underlying normal distribution, such that each observation is the weighted some of its likelihood under the parameters for each proposed cluster with their respective estimated parameters.  For example with two clusters, each with an estimated mean and variance, we get the likelihood for a particular observation for each cluster.  We weight them by its estimated probability of membership in that cluster.
+Typical methods are assuming an underlying normal distribution, such that each observation is the weighted combination of its likelihood under the parameters for each proposed cluster with their respective estimated parameters.  For example with two clusters, each with an estimated mean and variance, we get the likelihood for a particular observation for each cluster.  We weight them by its estimated probability of membership in that cluster.  The parameters of interest are the means and (co-)variances of the two variable.
 
-As an example, we'll use <span class="pack">mclust</span> on the old faithful data, positing 2 clusters.
+As an example, we'll use <span class="pack">mclust</span> on the old faithful data, positing 2 clusters.  As such we'll get the proportion of observations classified to each cluster, and the means and covariance matrix (not shown) for each cluster.
 
-```{r clus_mclust, echo=1:3, out.width='100%'}
+```{r clus_mclust, echo=1:3, eval=-3, out.width='100%'}
 library(mclust)
 mod = Mclust(faithful, G = 2)
-summary(mod)
+summary(mod, parameters=TRUE)  # more detail
+broom::tidy(mod) %>% round(2) %>%  pander()
 
 par(mfrow=c(1,2))
 plot(mod, what='classification')
 plot(mod, what='uncertainty')
+# plot(mod, what='density', type='image', col='#ff5500')
 graphics::layout(1)
 ```
 
 We can see that things break out more or less as we might expect, though there is a bit more uncertainty with observations in the middle.
 
-
-The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, mclust does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].  Interestingly, the result here suggests three clusters for the Old Faithful data.
+The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, <span class="pack">mclust</span>  does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].  Interestingly, the result here suggests three clusters for the Old Faithful data.
 
 ```{r clus_mclust2, echo=1, out.width='100%'}
 mod = Mclust(faithful, verbose=F)
@@ -869,29 +902,56 @@ graphics::layout(1)
 ```
 
 
-
 #### For regression
 
 Mixture models are often used in the regression setting, similar to the latent class setting that we've been describing.  One approach regards the outcome of interest, which you think has latent categories, and you model it as such. In a standard regression setting you would get two sets of output, one for each class, along with estimated probabilities of class membership for each observation.
 
+As a starting point, we'll rerun <span class="pack">mclust</span>  models for just eruption times.  With<span class="pack">flexmix</span>, we'll run a model without any covariates.
+
+```{r compare_mclust_flexmix0, echo=1:3, eval=FALSE}
+library(flexmix)
+flexmix(eruptions ~ 1,  data=faithful, k = 2) %>% parameters()
+Mclust(faithful$eruptions, G=2, verbose=F) %>% summary(parameters=T)
+```
+
+```{r compare_mclust_flexmix, echo=F, eval=T}
+library(flexmix)
+flexmix(eruptions ~ 1,  data=faithful, k = 2) %>% 
+  parameters() %>% 
+  t() %>% 
+  pander(justify='lrr', caption='flexmix')
+Mclust(faithful$eruptions, G=2, verbose=F) %>% 
+  broom::tidy(mod) %>% 
+  select(component, mean , variance) %>%  
+  pander(caption='mclust')
+```
+
+Note that theoutput shows the standard deviation, and so are the square root of the<span class="pack">mclust</span>  values. The cluster names are arbitrary.  The point is it's the same result.
+
+What <span class="pack">flexmix</span> will allow is to model the mean with covariates of interest. To keep things simple we'll stick to this data and model eruption time by waiting time.
 
 ```{r flexmixEruptions_workshop, echo=-1}
 set.seed(1234)
-library(flexmix)
-mod = flexmix(eruptions~waiting,  data=faithful, k = 2)
+mod = flexmix(eruptions ~ waiting,  data=faithful, k = 2)
 summary(mod)
 ```
 
-We can see from the summary it's a fairly even split as far as group membership. We also get the estimated coefficients for each group, as well as note respective probabilities of each observation for each class.  Note that the group labels are completely arbitrary.
+We can see from the summary it's a fairly even split as far as group membership (54% vs. 46%). We also get the estimated coefficients for each group, as well as note respective probabilities of each observation for each class.  Note again that the group labels are completely arbitrary, even rerunning it might flip-flop the labels.  In this case, we'd probably conclude that maybe they only differ in intercepts, as the relationship of waiting time with eruptions appears to be the same for both groups.
 
 ```{r flexmixEruptions2_workshop, echo=-2}
 parameters(mod)    # means (Intercept) and std dev (sigma) for each group
-head(mod@posterior$scaled, 10) %>% round(3) %>% data.frame() %>% pander::pander(keep.trailing.zeros=T)  # show some estimated probabilities
+head(mod@posterior$scaled, 10) %>% 
+  round(3) %>% 
+  data.frame() %>% 
+  pander::pander(keep.trailing.zeros=T)  # show some estimated probabilities
 ```
 
 <br>
 
-The key idea is as before, that the response is a mixture of $k$ distributions, e.g. two normal distributions, each with their own mean, modeled by covariates, and some variance.  This very commonly applied in cases where there are many zeros in the data, leading to <span class="emph">zero-inflated</span>, <span class="emph">hurdle</span> and similar models, where the zeros are modeled by a logistic regression and the counts by Poisson or negative binomial, but the approach is much more general.
+The key idea is as before, that the response is a mixture of $k$ distributions, e.g. two normal distributions, each with their own mean, modeled by covariates, and some variance.  Each observation has some probability of belonging to the clusters, and their likelihood is weighted by that.  Thus each observation is a weighted combination of the clusters.
+
+Such a technique is very commonly applied in cases where there are many zeros in the data, leading to <span class="emph">zero-inflated</span>, <span class="emph">hurdle</span> and similar models, where the zeros are modeled by a logistic regression and the counts by Poisson or negative binomial. However, the approach is much more general, and many settings/distributions may arise.
+
 
 
  
@@ -937,12 +997,94 @@ heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_color
 Practically every decision one has to make with this approach is arbitrary (distance, linkage method, cluster determination, general approach).  While these are actually still commonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
 
 
+### Latent Class Analysis
+
+The term <span class="emph">latent class analysis</span> (LCA) refers to the case where we assume a latent categorical variable, but is commonly applied to the observed data being categorical as well (usually binary).  In fact, some disciplines have a name for every categorical continuous combination you can have.
+
+```{r latclass_term_table, echo=FALSE}
+tab = data_frame(`Indicator Categorical`=c('Latent Class', 'Latent Trait'),
+                 `Indicator Continuous`=c('Latent Profile', 'Factor Analysis'))
+rownames(tab) = c("Latent Categorical", 'Latent Continuous')
+DT::datatable(tab, 
+              autoHideNavigation=T, 
+              options=list(dom='t', 
+                           ordering=F, 
+                           columnDefs = list(list(className = 'dt-left', targets = 0:2))) )
+```
+
+We could simply call them by the names we have already, mixture models in the case of categorical latent variables, and factor analysis otherwise.  The IRT demonstrated above can be seen as an example of latent trait analysis.
+
+The following example comes from survey data from the 2000 American National Election Study. Two sets of six questions with four responses each, asking respondents' opinions of how well various traits (moral, caring, knowledgable, good leader, dishonest, intelligent) describe presidential candidates Al Gore and George W. Bush. The responses are (1) Extremely well; (2) Quite well; (3) Not too well; (4) Not well at all.  We are assuming 3 latent classes can explain these responses. We can also model the latent class as an outcome. Which we do here by likely vote cast (the respondent's 2000 vote choice when asked).
+
+```{r lca_example}
+library(poLCA)
+data("election")
+# ?election  # for details
+f <- cbind(MORALG,CARESG,KNOWG,LEADG,DISHONG,INTELG,
+           MORALB,CARESB,KNOWB,LEADB,DISHONB,INTELB) ~ VOTE3
+lca_mod <- poLCA(f, election, nclass=3, verbose = F)
+# lca_mod
+```
+
+The problem with LCA, and this is regardless of tool used, is that the output is ridiculously messy, because you get estimated proportions of response for every latent class (3) for every observed class (4), for every variable (8).  So we'll just plot the result instead.
+
+```{r lca_plot, echo=FALSE, out.width='100%', fig.asp=.8}
+init = lca_mod$probs %>% 
+  bind_rows() %>% 
+  mutate(`latent class` = rep(1:3, times=4),
+         category = ordered(rep(c('extr well', 'quite well', 'not too well', 'not at all'), t=3),
+                            levels=c('extr well', 'quite well', 'not too well', 'not at all'))) %>% 
+  gather(key=variable, value=probability, -`latent class`, -category)
+# 
+# init %>%
+#   ggplot(aes(category, y=probability)) + 
+#   geom_col(aes(fill=category), show.legend = F, width=.1) +
+#   facet_grid(variable~`latent class`) +
+#   scale_y_continuous(breaks = c(.25,.5,.75)) +
+#   theme_trueMinimal() +
+#   theme_light() +
+#   theme(axis.text.x = element_text(angle=-45, hjust=0),
+#         axis.text.y = element_text(size=6),
+#         plot.background = element_rect(fill='transparent'),
+#         strip.text.y = element_text(size=4))
+init %>%
+  ggplot(aes(category, y=variable)) + 
+  geom_tile(aes(fill=probability), show.legend = F) +
+  facet_grid(~`latent class`) +
+  scale_fill_gradient2(high=scales::muted("#990024")) +
+  # viridis::scale_fill_viridis(begin = 0, end=1, option='plasma', alpha = .5) +
+  # scale_y_continuous(breaks = c(.25,.5,.75)) +
+  theme_trueMinimal() +
+  # theme_light() +
+  theme(axis.text.x = element_text(angle=-45, hjust=0),
+        axis.text.y = element_text(size=6),
+        plot.background = element_rect(fill='transparent'),
+        strip.text.y = element_text(size=4))
+```
+
+
+Darker colors represent higher probability of response. In general we have naysayers, more positive responders, and those with a more mixed response (these would also be known as low, high and moderate scores if we'd just left the latent variable continuous).  The following shows the proportions for each latent class by vote type.
+
+```{r lca_vote_table, echo=FALSE}
+prop.table(table(election$VOTE3[as.numeric(rownames(lca_mod$x))], lca_mod$predclass)) %>%
+  round(2) %>% 
+  broom::tidy() %>%  
+  mutate(Var1 = rep(c('Gore', 'Bush', 'Other'), t=3)) %>% 
+  rename(`Probable Vote`=Var1,
+         `latent class` = Var2) %>% 
+  spread(key = `latent class`, value=Freq)
+br()
+```
+
+So the more negative responding types were also those likely to vote for Bush, while the other two more more likely to vote for Gore.
+
 
 #### Suggested R packages
 
 - <span class="pack">mclust</span>
 - <span class="pack">flexmix</span>
 - <span class="pack">kmeanspp</span>
+- <span class="pack">poLCA</span>  (for latent class analysis)
 - <span class="pack">Base R</span>
 
 
@@ -954,11 +1096,21 @@ Practically every decision one has to make with this approach is arbitrary (dist
 > "Solving the number of factors problem is easy, I do it everyday before breakfast. But knowing the right solution is harder" 
 ~ H. F. Kaiser
 
-The only rule you have to follow is to never use a scree plot. Elbows indeed.
+The only rule you have to follow is to never use a scree plot make your decision. Elbows indeed.
 
+If you're using a latent variable or factor analysis approach for interpretative purposes, theory should be a strong, but not overwhelming guide.  If your data suggest three are clearly better than two, then go with that, because that may just be how it is for your sample.  For measurement models, some get hung up on 'validated' scales, and are reluctant to even explore other possibilities. But if the scale was validated on different types of people than your sample, you should probably be more exploratory.
+
+If prediction is the primary goal, you should actually be wary of dimension reduction techniques.  Having more columns than rows or mountains of data is commonly dealt with by using other techniques that can handle it, not by reducing the data so you can do a regression.  Dimension reduction would still perhaps be useful in *small* data settings though.  Allowing you to retain information from multiple sources without making the ultimate model overly complex.
 
 ### Interpretation
-### how to treat the data (e.g. numeric vs. categorical)
+
+Interpretation comes largely from the weights/loadings or related coefficients.  With PCA and common FA, rotation goes a long way to improving interpretability.  I will say that if you interpret latent clusters in an ordinal fashion, you should strongly consider simply leaving the latent variable continuous.  Even a mixture of two continuous latent variables (and/or their interaction) may uncover the latent classes you would have found, but leave the data in a more expressive context.
+
+
+### How to treat the data
+
+In many situations you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarly be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
+
 ### Predictive Modeling
 
 Many often use the clusters or factor scores obtained obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately this ignores the uncertainty in those   Essentially your standard errors will be a bit optimistic.
@@ -972,7 +1124,7 @@ There are many disciplines that will just do the two-step and not blink an eye, 
 
 #### Model Selection
 
-Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they will rarely agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
+Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
 
 #### Latent Expressivity
 

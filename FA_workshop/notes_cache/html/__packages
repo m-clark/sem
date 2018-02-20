@@ -24,3 +24,5 @@ plotly
 mclust
 lattice
 flexmix
+scatterplot3d
+poLCA
