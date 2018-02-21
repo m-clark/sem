@@ -58,16 +58,19 @@ which_digit = 10
 show_digit(threes[which_digit,])
 
 # many of the columns are useless
-test_pca = princomp(threes)
+test_pca = prcomp(threes)
 
 
 ncomp  = c(0,2, 25, 100, 250, 784)
 par(mfrow=c(2,3))
 for(i in 1:length(ncomp)) {
-  if(i == 1) show_digit(threes[which_digit,], main='Original', col = viridis::viridis(500))
+  if(i == 1) show_digit(threes[which_digit,], main='Original', col = viridis::viridis(500),
+                        xaxt='n',
+                        yaxt='n')
   else {
-    recon = tcrossprod(test_pca$scores[,1:ncomp[i]], test_pca$loadings[,1:ncomp[i]])
-    # scores = sweep(recon, 2, FUN = '*', test_pca$sdev)
+    # recon = tcrossprod(test_pca$scores[,1:ncomp[i]], test_pca$loadings[,1:ncomp[i]]) # princomp
+    recon = tcrossprod(test_pca$x[,1:ncomp[i]], test_pca$rotation[,1:ncomp[i]]) # prcomp
+    # scores = sweep(recon, 2, FUN = '*', test_pca$sdev)  # not scaled by default
     scores = sweep(recon, 2, FUN = '+', test_pca$center)
     show_digit(scores[which_digit, ], main = paste0('N factors = ', ncomp[i]), 
                col = viridis::viridis(500, begin = 0, end = 1),
