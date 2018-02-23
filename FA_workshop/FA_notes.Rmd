@@ -1226,7 +1226,7 @@ In many situations you may be able to treat the observed data as discrete or con
 
 ### Predictive Modeling
 
-Many often use the clusters or factor scores obtained obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately this ignores the uncertainty in those   Essentially your standard errors will be a bit optimistic.
+Many often use the clusters or factor scores obtained obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately this ignores the uncertainty in those estimates of the class membership. Essentially your standard errors will be a bit optimistic.
 
 While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.  I would also recommend looking at the help file for the <span class="func">factor.scores</span> function in <span class="pack">psych</span>.
 
@@ -1237,17 +1237,20 @@ There are many disciplines that will just do the two-step and not blink an eye, 
 
 #### Model Selection
 
-Non-model based methods provide no non-arbitrary way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
+Non-model based methods provide no clear cut way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
 
 #### Latent Expressivity
 
-You are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
+In standard statistical settings, you are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
 
-Now ask, why would you do it with latent variables?  Unless there is very strong theory or an actual physical aspect involved (e.g. seizure occurence), you should think hard before assuming a hard classification of observations.
+Now ask, why would you do it with latent variables?  Unless there is very strong theory, an actual physical aspect involved (e.g. seizure occurence), or the data demand it (extreme zero-inflation in an outcome) you should think hard before assuming a hard classification of observations.
 
 #### Sometimes one cluster is the best answer
 
 When you see cluster analysis conducted as part of some attempt to answer a research or other question, you almost never see someone test whether there is only one cluster.  Despite the obvious possibility otherwise, it's just assumed there are latent classes.  The techniques that aren't model-based don't even have a way to test whether a single class is best. Model-based ones do however, just like they have a straightforward way to compare other cluster numbers. That's reason enough alone to use them when possible.
+
+
+## Summary
 
 
 
