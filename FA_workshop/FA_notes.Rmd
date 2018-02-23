@@ -42,7 +42,7 @@ Not everything we want to measure comes with an obvious yardstick.  If one wants
 
 Any of these might be useful as an *indicator* of their current state of happiness, but of course none of them would tell us whether they truly are happy or not. At best, they can be considered imperfect measures. If we consider those and other indicators collectively, perhaps we can get an underlying measure of something we might call happiness, contentment, or some other arbitrary but descriptive name.
 
-The above decribes a <span class="emph">latent variable</span>, and gives at least one sense of at least one way in which we can think of them. However, models incorporating latent variables are seen all over, and incorporated in many ways.  Broadly speaking, <span class='emph'>factor analysis</span> can be seen as a dimension reduction technique, or as an approach to  modeling measurement error and understanding underlying constructs, a means to understand large amounts of text, a way to make movie recommendations, and more.  
+The above describes a <span class="emph">latent variable</span>, and gives at least one sense of at least one way in which we can think of them. However, models incorporating latent variables are seen all over, and incorporated in many ways.  Broadly speaking, <span class='emph'>factor analysis</span> can be seen as a dimension reduction technique, or as an approach to  modeling measurement error and understanding underlying constructs, a means to understand large amounts of text, a way to make movie recommendations, and more.  
 
 
 Some key ideas:
@@ -78,7 +78,7 @@ Let's see an example with more digestible results.  The following data contain 2
 - conscientiousness: a tendency to be organized and dependable, show self-discipline, planning
 - openness to experience: appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety of experience.
 - extraversion:  energy, assertiveness, sociability and the tendency to seek stimulation in the company of others, and talkativeness.
-- neuroticisim:  prone to physiological stress, tendency to experience unpleasant emotions easily, such as anger, anxiety, depression, and vulnerability
+- neuroticism:  prone to physiological stress, tendency to experience unpleasant emotions easily, such as anger, anxiety, depression, and vulnerability
 
 We'll just look at part of this to keep things simple, namely the agreeableness and neuroticism items.
 
@@ -192,7 +192,7 @@ It's worth mentioning the <span class="emph">naming fallacy</span> at this point
 #### Suggested R packages
 
 - <span class="pack">psych</span>
-- <span class="pack">pcaMethods</span> (Biocondudctor)
+- <span class="pack">pcaMethods</span> (Bioconductor)
 
 ## Factor Analysis
 
@@ -264,7 +264,7 @@ heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
 
 Some distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings/paths to be zero.  Otherwise they are identical techniques.  For example, if we only had a single factor, the results from 'confirmatory' and 'exploratory' FA are identical if they use the same estimation techniques (e.g. maximum likelihood).
 
-Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after acounting for the correlation of the factors, we can set things up to coincide with our substantive assumptions.  In other cases, theory might be available, but it might just also be a simplifying assumption.  
+Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after accounting for the correlation of the factors, we can set things up to coincide with our substantive assumptions.  In other cases, theory might be available, but it might just also be a simplifying assumption.  
 
 
 The following shows how to do this with the structural equation modeling package <span class="pack">lavaan</span>.  One just has to specify each latent variable and the corresponding observed indicators that go with it.
@@ -444,7 +444,7 @@ $$\sigma^2 \rightarrow 0$$
 
 ### Count-based Matrix Factorization
 
-Commonly our data regards counts or otherwise compositional data.  For example, we might have counts of species seen at different sites, data regarding genetic expression, or the numer of times words are seen in various documents. In this case we can use techniques that are better suited to such data, and provide a more interpretable solution.
+Commonly our data regards counts or otherwise compositional data.  For example, we might have counts of species seen at different sites, data regarding genetic expression, or the number of times words are seen in various documents. In this case we can use techniques that are better suited to such data, and provide a more interpretable solution.
  
 #### NMF
 
@@ -481,14 +481,14 @@ Here are the reconstruction results of the MNIST digits using a 10 component sol
 
 In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. latent factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
 
-Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a mulinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times for a given document, given some probability of each term.
+Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a multinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times for a given document, given some probability of each term.
 
 ```{r multinom_ex, echo=-1}
 set.seed(123)
 t(rmultinom(1, size = 20, prob=c(.5, .2, .15, .1, .05))) # first term is most likely, 5th term is least likely
 ```
 
-Those are the counts we see for a given observation. This treats documents as a <span class="emph">bag of words</span>, where we don't care about ordering.  Suprisingly though, simply using the document term matrix and this bag of words approach does very well to uncover latent topics that make sense.  
+Those are the counts we see for a given observation. This treats documents as a <span class="emph">bag of words</span>, where we don't care about ordering.  Surprisingly though, simply using the document term matrix and this bag of words approach does very well to uncover latent topics that make sense.  
 
 The following shows a text analysis of political blogs using the <span class="pack">lda</span> package. As in other factor analysis we've discussed, one must choose the number of latent topics.
 
@@ -541,7 +541,7 @@ ggplot(aes(x=topic, y=probability), fill=document, ylab="proportion",
 ```
 
 
-See my [text analysis document](http://m-clark.github.io/text-analysis-with-R/) for more details and examples. In my experience, this kind of data comes up quite often, and one should have LDA in their Factor Analysis Toolkit (FAT)™, and as readily available as PCA and FA.  LDA wouldn't be the best tool if your goal is prediction and you don't care as much about interpretation. But when you do, it can be rewarding to use.  Futhermore, there is <span class="emph">supervised LDA</span> where one can use the topics to simultaneously make predictions on outcomes of interest, and <span class="emph">structured topic modeling</span> where one can use covariates to model the topic probabilities.  In short, you have plenty to play with here.
+See my [text analysis document](http://m-clark.github.io/text-analysis-with-R/) for more details and examples. In my experience, this kind of data comes up quite often, and one should have LDA in their Factor Analysis Toolkit (FAT)™, and as readily available as PCA and FA.  LDA wouldn't be the best tool if your goal is prediction and you don't care as much about interpretation. But when you do, it can be rewarding to use.  Furthermore, there is <span class="emph">supervised LDA</span> where one can use the topics to simultaneously make predictions on outcomes of interest, and <span class="emph">structured topic modeling</span> where one can use covariates to model the topic probabilities.  In short, you have plenty to play with here.
 
 
 Here is the number 3 reconstructed with LDA.
@@ -650,7 +650,7 @@ In this setting, the probability of endorsement (or getting an item correct), $\
 
 $$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j$$
 
-The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm.</span>  While the parameterizations are different, they come to the same conclusions about 'ability', as can be see in the plot. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
+The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm</span>.  While the parameterizations are different, they come to the same conclusions about 'ability', as can be see in the plot. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
 
 ```{r irt}
 data("ability", package = 'psych') 
@@ -781,7 +781,7 @@ h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k');
 ```
 
 
-When would use ICA? If You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
+When would use ICA? If You believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
 
 #### Suggested R packages
 
@@ -875,7 +875,7 @@ All in all, thinking about your data in terms of a recommendation system might n
 
 ### Time-based
 
-<span class="emph">Hidden markov models</span> can be used to model latent discrete states that result in a sequence of observations over time. In terms of a graphical model, we can depict it as follows:
+<span class="emph">Hidden Markov models</span> can be used to model latent discrete states that result in a sequence of observations over time. In terms of a graphical model, we can depict it as follows:
 
 ```{r hmm_graph, echo=FALSE, cache=T}
 hmm = "
@@ -949,7 +949,7 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 
 ### Random effects models
 
-For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just a [different way to run a mixed model](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent constuct that represents unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunties when dealing with them in other contexts.
+For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just a [different way to run a mixed model](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent construct that represents unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in Gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunities when dealing with them in other contexts.
 
 
 ### Bayesian
@@ -1068,7 +1068,7 @@ Such a technique is very commonly applied in cases where there are many zeros in
  
 ### "Cluster analysis"
 
-Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods. Given a <span class="emph">distance matrix</span> that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one nother.
+Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods. Given a <span class="emph">distance matrix</span> that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one another.
 
 #### K-means
 
@@ -1127,7 +1127,7 @@ DT::datatable(tab,
 
 We could simply call them by the names we have already, mixture models in the case of categorical latent variables, and factor analysis otherwise.  The IRT demonstrated above can be seen as an example of latent trait analysis.
 
-The following example comes from survey data from the 2000 American National Election Study. Two sets of six questions with four responses each, asking respondents' opinions of how well various traits (moral, caring, knowledgable, good leader, dishonest, intelligent) describe presidential candidates Al Gore and George W. Bush. The responses are measured on a four point scale from 'Extremely well' to 'Not well at all'.  In what follows, we are assuming three latent classes can explain these responses. We can also model the latent class as an outcome. Which we do here by likely vote cast (the respondent's 2000 vote choice when asked).
+The following example comes from survey data from the 2000 American National Election Study. Two sets of six questions with four responses each, asking respondents' opinions of how well various traits (moral, caring, knowledgeable, good leader, dishonest, intelligent) describe presidential candidates Al Gore and George W. Bush. The responses are measured on a four point scale from 'Extremely well' to 'Not well at all'.  In what follows, we are assuming three latent classes can explain these responses. We can also model the latent class as an outcome. Which we do here by likely vote cast (the respondent's 2000 vote choice when asked).
 
 ```{r lca_example}
 library(poLCA)
@@ -1222,7 +1222,7 @@ Interpretation comes largely from the weights/loadings or related coefficients. 
 
 ### How to treat the data
 
-In many situations you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarly be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
+In many situations you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarily be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
 
 ### Predictive Modeling
 
@@ -1237,13 +1237,13 @@ There are many disciplines that will just do the two-step and not blink an eye, 
 
 #### Model Selection
 
-Non-model based methods provide no clear cut way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhoutte score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
+Non-model based methods provide no clear cut way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhouette score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
 
 #### Latent Expressivity
 
 In standard statistical settings, you are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
 
-Now ask, why would you do it with latent variables?  Unless there is very strong theory, an actual physical aspect involved (e.g. seizure occurence), or the data demand it (extreme zero-inflation in an outcome) you should think hard before assuming a hard classification of observations.
+Now ask, why would you do it with latent variables?  Unless there is very strong theory, an actual physical aspect involved (e.g. seizure occurrence), or the data demand it (extreme zero-inflation in an outcome) you should think hard before assuming a hard classification of observations.
 
 #### Sometimes one cluster is the best answer
 
@@ -1276,7 +1276,7 @@ psych::describe(nlsy)
 
 
 
-[^big5]: These descriptions come from the wikipedia page.
+[^big5]: These descriptions come from the Wikipedia page.
 
 [^rotated]: These results have been rotated, something rarely practiced with PCA and almost always done with FA.  
 
@@ -1284,7 +1284,7 @@ psych::describe(nlsy)
 
 [^reverse]: In almost every case I've come across, reverse-scored items are simply poorer items.
 
-[^pca_normal]: even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).
+[^pca_normal]: even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not. The visualization duplicates that seen in Murphy (2012).
 
 [^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/). As with ICA, I personally have never had a need to use this technique, nor was much interested beyond what I knew about it already, so I decided to lift it from him. I can say that <span class="pack">ldaVis</span> shows topic relations from LDA using it, so there's that. James' [workshop on dimension reduction](https://jbhender.github.io/DimensionReduction-06June2017.html) provides a more technical detail and additional examples for PCA, FA and MDS, for those inclined.
 
@@ -1295,6 +1295,6 @@ psych::describe(nlsy)
 [^mclustbic]: For whatever reason, <span class="pack">mclust</span> displays BIC in higher is better format, in contrast to practically every other modeling context I've come across.
 
 
-[^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the crossproduct of the loading matrix, i.e. $W'W$.
+[^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the cross-product of the loading matrix, i.e. $W'W$.
 
 [^weights]: My description here is a bit loose, but mostly for reasons that allow me to say similar things across techniques. For the technically inclined, $V$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, the psych package uses weights base on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.
