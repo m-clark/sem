@@ -225,7 +225,7 @@ and
 
 $$C = XV$$
 
-In other words, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $D$ observed variables $X$, the weights (with weight matrix $V$) of which are determined by the loadings[^weights].
+In other words, with the complete component result we can exactly reproduce the correlation matrix.  Furthermore, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $D$ observed variables $X$, the weights (with weight matrix $V$) of which are determined by the loadings[^weights].
 
 Things are different with factor analysis. Now the causal/philosophical flow is in the other direction, originating with the latent variables. 
 
@@ -243,7 +243,7 @@ So if we just use the loadings from the FA, we cannot reproduce the correlation 
 
 What this amounts to conceptually are a few key ideas:
 
-- Factor analysis focuses on covariance. PCA focuses on variance.
+- Factor analysis focuses on explaining covariance. PCA focuses on extracting variance.
 - Factors are the cause of the observed variables, components are linear combinations of the observed variables.
 - Factor analysis does not assume perfect measurement of observed variables.
 
@@ -256,7 +256,7 @@ fa_model = fa(bfi_trim, 2)
 fa_model
 ```
 
-The results in terms of loadings are similar to the PCA. But we can see some differences. The PCA components accounted for `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance, while here we only account for `r round(sum(colSums(fa_model$loadings^2))/p, 2)*100`%.  In addition, we have an estimate of the factor correlations, `r round(fa_model$Phi[2], 2)`, where the PCA components are uncorrelated by definition.  In addition there are measures of 'fit' that come from the structural equation modeling context. See [this](https://m-clark.github.io/sem/structural-equation-modeling.html#fit) for more detail on those measures.  I will note that BIC is provided, which allows for a way to compare different factor solutions.
+The results in terms of loadings are similar to the PCA. But we can see some differences. The PCA components accounted for `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance, while here we only account for `r round(sum(colSums(fa_model$loadings^2))/p, 2)*100`%.  In addition, we have an estimate of the correlation of the latent factors, `r round(fa_model$Phi[2], 2)`, where the PCA components are uncorrelated by definition.  In addition there are measures of 'fit' that come from the structural equation modeling context. See [this](https://m-clark.github.io/sem/structural-equation-modeling.html#fit) for more detail on those measures.  I will note however that BIC is provided, which allows for a way to compare different factor solutions.
 
 ```{r fa_LoadingsVis, echo=F, cache=FALSE}
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
@@ -281,9 +281,12 @@ heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
 
 ### "Confirmatory" Factor Analysis
 
-Some distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings/paths to be zero.  Otherwise they are identical techniques.
+Some distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings/paths to be zero.  Otherwise they are identical techniques.  For example, if we only had a single factor, the results from 'confirmatory' and 'exploratory' FA are identical if they use the same estimation techniques (e.g. maximum likelihood).
 
-Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after acounting for the correlation of the factors, we can set things up to coincide with our substantive assumptions.
+Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after acounting for the correlation of the factors, we can set things up to coincide with our substantive assumptions.  In other cases, theory might be available, but it might just also be a simplifying assumption.  
+
+
+The following shows how to do this with the structural equation modeling package <span class="pack">lavaan</span>.  One just has to specify each latent variable and the corresponding observed indicators that go with it.
 
 
 ```{r cfa, eval=FALSE}
@@ -302,6 +305,8 @@ cfa_model = cfa(modelCode, data=bfi_trim)
 summary(cfa_model, standardized=T, rsq=T, nd=2)
 ```
 
+Here is a visualization of the results.  Note how the arrows flow from the factor *to* the observed variables.
+
 ```{r cfa_graph, echo=FALSE, cache=FALSE}
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
          DiagrammeR::grViz('FA_workshop/fa_graph.gv', width='100%', height='400px')
@@ -309,8 +314,9 @@ tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:50%",
 br()
 ```
 
+<br>
 
-Note that if we only had a single factor, the results from 'confirmatory' and 'exploratory' FA are identical.
+In general our results are very similar, but we didn't have to estimate all the cross loadings, so this approach is a simpler model.  For more on confirmatory factor analysis, take a look [here](https://m-clark.github.io/sem/latent-variables-1.html#constructs-and-measurement-models).
 
 
 #### Suggested R packages
@@ -332,7 +338,121 @@ $\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
 
 $$\Psi = \sigma^2I$$
 
+The following plot shows the projection of original data onto the principal component, where we have two variable and one component. By default, PCA results in an orthogonal projection, where PPCA does not, and shrinks estimates to the overall mean.
+
+```{r ppca, echo=FALSE, out.width='100%', fig.asp=.5}
+PPCAEM = function(X, nComp=2, tol=.00001, maxits=100, showits=F){
+  # Arguments X: numeric data, nComp: number of components
+  # tol = tolerance level, maxits: maximum iterations, showits: show iterations
+  require(pracma) # for orthonormal basis of W; pcaMethods package has also
+  require(psych)  # for tr
+  
+  # starting points and other initializations
+  N = nrow(X)
+  D = ncol(X)
+  L = nComp
+  
+  S = (1/N) * t(X)%*%X
+  evals = eigen(S)$values
+  evecs = eigen(S)$vectors
+  
+  V = evecs[,1:L]
+  Lambda = pracma::Diag(evals[1:L])
+  
+  Z = t(replicate(L, rnorm(N)))                                    # latent variables
+  sigma2 = 1/(D-L) * sum(evals[(L+1):D])                           # variance; average variance associated with discarded dimensions
+  W = V %*% chol(Lambda-sigma2*diag(L)) %*% diag(L)                # loadings; this and sigma2 starting points will be near final estimate
+  
+  it = 0
+  converged = FALSE
+  ll = 0
+  
+  if (showits)                                                     # Show iterations
+    cat(paste("Iterations of EM:", "\n"))
+  while ((!converged) & (it < maxits)) {                           
+    # create 'old' values for comparison
+    if(exists('W.new')){
+      W.old = W.new
+    }
+    else {
+      W.old = W
+    }
+    
+    ll.old = ll
+    
+    Psi = sigma2*diag(L)
+    M = t(W.old) %*% W.old + Psi
+    
+    W.new = S%*%W.old%*%solve(Psi + solve(M)%*%t(W.old)%*%S%*%W.old)   # E and M 
+    sigma2 = 1/D * tr(S - S%*%W.old%*%solve(M)%*%t(W.new))
+    
+    Z = solve(M)%*%t(W.new)%*%t(X)
+    ZZ = sigma2*solve(M) + Z%*%t(Z)
+    
+    # log likelihood as in paper
+    #     ll = .5*sigma2*D + .5*tr(ZZ) + .5*sigma2 * X%*%t(X) -
+    #          1/sigma2 * t(Z)%*%t(W.new)%*%t(X) + .5*sigma2 * tr(t(W.new)%*%W.new%*%ZZ)
+    #     ll = -sum(ll)
+    
+    # more straightforward
+    ll = dnorm(X, mean=t(W.new%*%Z), sd=sqrt(sigma2), log=T)
+    ll = -sum(ll)
+    
+    it = it + 1
+    if (showits & (it == 1 | it%%5 == 0))                          # if showits, show first and every 5th iteration
+      cat(paste(format(it), "...", "\n", sep = ""))
+    converged = max(abs(ll.old-ll)) <= tol
+  }
+  
+  # W = orth(W.new)  # for this demo don't do ortho transform otherwise there isn't much difference
+  W = W.new
+  evs = eigen(cov(X %*% W))
+  evecs = evs$vectors
+  
+  W = W %*% evecs
+  Z = X %*% W
+  Xrecon = Z %*% t(W)
+  reconerr = sum((Xrecon-X)^2)
+  
+  if (showits)                                                     # Show last iteration
+    cat(paste0(format(it), "...", "\n"))
+  
+  return(list(scores=Z, loadings=W, Xrecon=Xrecon, reconerr=reconerr, ll=ll, sigma2=sigma2))
+}
+
+set.seed(12345)
+N = 20
+# X = cars %>% scale()
+X = matrix(c(rnorm(N, 2, 1), rnorm(N, -2, 1)), ncol = 2) %>% scale()
+colnames(X)[1:2] = c('X1', 'X2')
+# X = scale(mtcars)
+cars_ppca = PPCAEM(X=X, nComp=1, tol=1e-12, maxit=100, showits = F)
+# cars_pca = princomp(X, 1)
+cars_pca = prcomp(X, 1, center = T, scale. = T); cars_pca$scores=cars_pca$x; cars_pca$loadings = cars_pca$rotation
+Xrecon = cars_pca$scores[,1] %*% t(cars_pca$loadings[,1])
+g1 = ggplot(aes(x=X1, y=X2), data = X %>% data.frame()) +
+  geom_point(color='#ff5500') +
+  geom_point(x=mean(X[,1]), y=mean(X[,2])) +
+  geom_line(aes(x=cars_ppca$Xrecon[,1], y=cars_ppca$Xrecon[,2]), color='#00aaff') +
+  geom_segment(aes(x=cars_ppca$Xrecon[,1], xend=X1, y=cars_ppca$Xrecon[,2], yend=X2), color='#00aaff40') +
+  lims(x=c(-2.25,2.25), y=c(-2.25,2.25)) +
+  ggtitle('PPCA') +
+  theme_trueMinimal()
+g2 = ggplot(aes(x=X1, y=X2), data = X %>% data.frame()) +
+  geom_point(color='#ff5500') +
+  geom_line(aes(x=Xrecon[,1], y=Xrecon[,2]), color='#00aaff') +
+  geom_segment(aes(x=Xrecon[,1], xend=X1, y=Xrecon[,2], yend=X2), color='#00aaff40', data = X %>% data.frame()) +
+  lims(x=c(-2.25,2.25), y=c(-2.25,2.25)) +
+  ggtitle('PCA') +
+  theme_trueMinimal()
+gridExtra::grid.arrange(g2, g1, ncol=2)
+```
+
+
+
 ### PCA
+
+With PCA we are assuming a noiseless process, and constraining $W$ to be orthogonal.
 
 $$\sigma^2 \rightarrow 0$$
 
@@ -343,7 +463,7 @@ $$\sigma^2 \rightarrow 0$$
 
 ### Count-based Matrix Factorization
 
-Commonly our data regards counts or otherwise compositional data.  In this case we can use techniques that are better suited to such data.
+Commonly our data regards counts or otherwise compositional data.  For example, we might have counts of species seen at different sites, data regarding genetic expression, or the numer of times words are seen in various documents. In this case we can use techniques that are better suited to such data, and provide a more interpretable solution.
  
 #### NMF
 
@@ -370,16 +490,15 @@ basismap(nmf_10)
 ```
 
 
-Here are the reconstruction results using a 10 component solution.
+Here are the reconstruction results of the MNIST digits using a 10 component solution.
 
 <img src="../img/nmf_recon10.png" style="display:block; margin: 0 auto;">
 
 #### LDA
 
-<span class="emph">Latent Dirichlet Allocation</span> takes a different approach to deal with count data. The classic example regards text analysis, where LDA is applied to word frequencies across documents.  Consider a <span class="emph">document-term</span> matrix where each row regards a document, and each column a word or term.  LDA looks for latent *topics* that are probability distributions over the *terms*.    There is a probability distribution for the topics as well as the terms, and given both, we will see some occurrence of the term in each document. Each *document* can be seen a mixture of topics, though some will be more probable than others.
+<span class="emph">Latent Dirichlet Allocation</span> takes a different approach to deal with count data. The classic example regards text analysis, where LDA is applied to word frequencies across documents.  Consider a <span class="emph">document-term</span> matrix where each row regards a document, and each column a word or term.  LDA looks for <span class="emph">latent topics</span> that are probability distributions over the <span class="emph">terms</span>.    There is a probability distribution for the topics as well as the terms, and given both, we will see some occurrence of the term in each document. Each <span class="emph">document</span> can be seen a mixture of topics, though some will be more probable than others.
 
 In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. latent factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
-
 
 Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a mulinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times for a given document, given some probability of each term.
 
@@ -388,11 +507,9 @@ set.seed(123)
 t(rmultinom(1, size = 20, prob=c(.5, .2, .15, .1, .05))) # first term is most likely, 5th term is least likely
 ```
 
-Those are the counts we see for a given observation. This treats documents as a 'bag of words', where we don't care about ordering.  Suprisingly though, simply using the document term matrix and this bag of words approach does very well to uncover latent topics that make sense.  
+Those are the counts we see for a given observation. This treats documents as a <span class="emph">bag of words</span>, where we don't care about ordering.  Suprisingly though, simply using the document term matrix and this bag of words approach does very well to uncover latent topics that make sense.  
 
-The following shows a text analysis of political blogs using the <span class="pack">lda</span> package. As in other factor analysis we've discussed, one must choose the number of latent 'topics'.
-
-
+The following shows a text analysis of political blogs using the <span class="pack">lda</span> package. As in other factor analysis we've discussed, one must choose the number of latent topics.
 
 ```{r lda_example}
 library(lda)
@@ -443,7 +560,7 @@ ggplot(aes(x=topic, y=probability), fill=document, ylab="proportion",
 ```
 
 
-See my [text analysis document](http://m-clark.github.io/text-analysis-with-R/) for more details and examples. In my experience, this kind of data comes up quite often, and one should have LDA in their Factor Analysis Toolkit (FAT)™ and as readily available as PCA and FA.  LDA wouldn't be the best tool if your goal is prediction and you don't care as much about interpretation. But when you do, it can be rewarding to use.  Futhermore, there is <span class="emph">supervised LDA</span> where one can use the topics to make predictions on outcomes of interest, and <span class="emph">structured topic modeling</span> where one can use covariates to model the topic probabilities.  In short, you have plenty to play with here.
+See my [text analysis document](http://m-clark.github.io/text-analysis-with-R/) for more details and examples. In my experience, this kind of data comes up quite often, and one should have LDA in their Factor Analysis Toolkit (FAT)™, and as readily available as PCA and FA.  LDA wouldn't be the best tool if your goal is prediction and you don't care as much about interpretation. But when you do, it can be rewarding to use.  Futhermore, there is <span class="emph">supervised LDA</span> where one can use the topics to simultaneously make predictions on outcomes of interest, and <span class="emph">structured topic modeling</span> where one can use covariates to model the topic probabilities.  In short, you have plenty to play with here.
 
 
 Here is the number 3 reconstructed with LDA.
@@ -1121,9 +1238,9 @@ In many situations you may be able to treat the observed data as discrete or con
 
 Many often use the clusters or factor scores obtained obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately this ignores the uncertainty in those   Essentially your standard errors will be a bit optimistic.
 
-While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.
+While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.  I would also recommend looking at the help file for the <span class="func">factor.scores</span> function in <span class="pack">psych</span>.
 
-There are many disciplines that will just do the two-step and not blink an eye, so you shouldn't feel bad just using factor analysis and related as an initial pre-processing dimension reduction step.
+There are many disciplines that will just do the two-step and not blink an eye, so you shouldn't feel bad just using factor analysis and related as an initial pre-processing dimension reduction step.  
 
 
 ### Issues with Latent Classes
@@ -1165,4 +1282,4 @@ When you see cluster analysis conducted as part of some attempt to answer a rese
 
 [^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the crossproduct of the loading matrix, i.e. $W'W$.
 
-[^weights]: My description here is a bit loose. For the technically inclined, $V$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, the psych package uses weights base on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.
+[^weights]: My description here is a bit loose, but mostly for reasons that allow me to say similar things across techniques. For the technically inclined, $V$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, the psych package uses weights base on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.
