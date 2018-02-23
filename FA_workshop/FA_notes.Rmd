@@ -189,25 +189,6 @@ Interpretation is the fun, but commonly difficult, part. In this case, the varia
 It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. In addition, for PCA the goal is not interpretation, but to reduce the data while retaining as much of the variance as possible.
 
 
-### PCA Summary
-
-Why do it? 
-
-- Reduce the dimensions of the data
-- Retain as much variance as possible
-
-Issues
-
-- It might not be the best choice with some data types
-- It is not the choice to make if you are wanting to understand the *co*variance in the data (though it will often agree with methods that do)
-- Non-numeric or mixed data types
-
-
-Other stuff
-
-- Scale the variables
-- Biplots are ugly
-
 #### Suggested R packages
 
 - <span class="pack">psych</span>
@@ -580,7 +561,7 @@ Here is the number 3 reconstructed with LDA.
 
 ### SEM
 
-<span class="emph">Structural Equation Modeling</span> is a very general technique that allows one to incorporate latent variables and observed variables within a single modeling framework, allowing for indirect effects and multiple outcomes.  Practically any standard model you've conducted can be seen as a special case. We actually already did an SEM when we did the confirmatory factor analysis.
+<span class="emph">Structural Equation Modeling</span> is a very general technique that allows one to incorporate latent variables and observed variables within a single modeling framework, allowing for indirect effects and multiple outcomes.  Practically any standard model you've conducted can be seen as a special case. We actually already did an SEM when we did the confirmatory factor analysis.  Consider the following depiction of a mediation model with three latent variables, each of which would have their respective observed variables (not shown).
 
 ```{r sem_graph, echo=FALSE}
 # the sigh that comes with this can be heard round the world.  Diagrammer can't
@@ -648,14 +629,17 @@ DiagrammeR::grViz(test, width='100%', height='400px')
 
 We can use factor analysis in the SEM context as a way to assess <span class="emph">measurement error</span>.  Whatever variance a factor doesn't explain is a combination of measurement error and random variation. Thus we can use factor analysis as a means to assess a group of variables' ability to measure the underlying construct they are supposed to measure.
 
+This document is actually a subset of the [SEM document](https://m-clark.github.io/sem/). Check it out for lots more detail and examples.
+
 #### Suggested R packages
 
 - <span class="pack">lavaan</span>
+- <span class="pack">psych</span>
 - <span class="pack">semTools</span>
 
 ### IRT
 
-Item response theory can be seen as latent variable modeling for categorical data.  It is especially applied to testing environments where the items are binary correct vs. not outcomes.  An underlying logistic model relates the latent variable, which can be seen as 'ability' in the testing context, to the observed items which have unique difficulty.  The conceptual latent variable model is identical to confirmatory factor analysis.
+Item response theory can be seen as latent variable modeling for categorical data, and with specific parameters with theoretical underpinnings.  It is especially applied to testing environments where the items are binary correct vs. not outcomes.  An underlying logistic model relates the latent variable, which can be seen as **ability** in the testing context, to the observed items which have unique **difficulty**.  The conceptual latent variable model is identical to confirmatory factor analysis.
 
 As an example, the one-parameter, a.k.a. *Rasch*, model (1PM) can be expressed as follows:
 
@@ -666,7 +650,7 @@ In this setting, the probability of endorsement (or getting an item correct), $\
 
 $$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j$$
 
-The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm.</span>  While the parameterizations are different, they come to the same conclusions about 'ability'. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
+The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm.</span>  While the parameterizations are different, they come to the same conclusions about 'ability', as can be see in the plot. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
 
 ```{r irt}
 data("ability", package = 'psych') 
@@ -797,7 +781,7 @@ h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k');
 ```
 
 
-Why do it? You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed. You deal with images or sound[^deepimage].
+When would use ICA? If You believe that truly independent sources of signal underly your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
 
 #### Suggested R packages
 
@@ -849,9 +833,9 @@ Practically everyone has been exposed to <span class="emph">recommender systems<
 
 The following image, taken from Wikipedia (click the image to go there), conceptually shows how a *user-based* collaborative filtering method would work, where a recommendation is given based on what other similar users have given.
 
-<a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a>
+<a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="../img/collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a>
 
-Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories, one can recommend something from a similar genre of movies that you like that people in the same demographic category seem to like.
+Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.
 
 If you think of genres as latent categories of movies, now you can employ the techniques we've talked about[^netflix]. Similarly we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
 
@@ -859,27 +843,30 @@ If you think of genres as latent categories of movies, now you can employ the te
 library(recommenderlab)
 data("MovieLense")
 MovieLense
-barplot(table(getRatings(MovieLense)), col = '#ff5500', border='#00aaff')
-recommenderRegistry$get_entries(dataType = "realRatingMatrix")
+barplot(table(getRatings(MovieLense)), col = '#ff5500', border='#00aaff') # rating frequencies
+recommenderRegistry$get_entries(dataType = "realRatingMatrix")  # the methods available
 recom_svd <- Recommender(MovieLense, method = "SVD")
 recom_svd
-getModel(recom_svd)$topN
-
-recom_top_3 <- bestN(recom, n = 3)
-recom_top_3
-as(recom_top_3, 'list')
 ```
 
 After running it try some predictions.
 
 ```{r recommend_pred, eval=FALSE}
-# predicted ratings
+# predicted ratings for two users
 recom <- predict(recom_svd, MovieLense[2:3], type="ratings")
 recom
 as(recom, "matrix")[,1:10]
+
+
+# comparison model
+recom_popular <- Recommender(MovieLense, method = "POPULAR")
+getModel(recom_popular)$topN
+recom <- predict(recom_popular, MovieLense[2:3], type="topNList")
+recom
+as(recom, "list")
 ```
 
-
+All in all, thinking about your data in terms of a recommendation system might not be too far-fetched, especially if you're already considering factor analysis of some sort.
 
 #### Suggested R packages
 
@@ -947,7 +934,7 @@ DiagrammeR::grViz(hmm, width='100%', height='300px')
 )
 ```
 
-In this sense we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The icons are the categories of observations we can potentially see, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
+In this sense we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states above, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The icons are the categories of observations we can potentially see, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
 
 We start in state 1 where the heart and yellow smiley are most probable. Let's say we observe ♥.  The second state is most likely so we get there, and because it has some probability of staying in that state, we observe § and §. We finally get to state 3 and see <span class="" style='color:black'>☻</span>, where we go back to state 1, where we see ☺, jump to latent state 3 etc.  And such a process continues for the length of sequence we see.
 
@@ -962,14 +949,14 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 
 ### Random effects models
 
-For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just [different ways of doing the same thing](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent constuct that represents an unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunties when dealing with them in other contexts.
+For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just a [different way to run a mixed model](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent constuct that represents unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunties when dealing with them in other contexts.
 
 
 ### Bayesian
 
 There are Bayesian versions for any of the model-based techniques we've discussed, essentially just adding priors for the parameters of interest.  As mentioned, LDA can be seen as latent semantic analysis with priors for the topics. With standard factor analysis, one can actually estimate the factor scores directly as additional parameters in the model.  In other approaches, it can require a bit of finagling to estimate the factor analytic result, as it is inherently unidentified and requires constraints.
 
-Beyond that <span class="emph">Bayesian non-parametric</span> techniques such as <span class="emph">Dirichlet process</span> approaches, allow for the possibility of not having to specify the number of clusters or latent variables in advance.  Instead number is allowed to grow as the data grows according to the prior, and so can be applied to online learning situations as well.  See [my chapter](https://m-clark.github.io/sem/bayesian-nonparametric-models.html) on this for some examples.
+Beyond that, <span class="emph">Bayesian non-parametric</span> techniques, such as <span class="emph">Dirichlet process</span> approaches, allow for the possibility of not having to specify the number of clusters or latent variables in advance.  Instead number is allowed to grow as the data grows according to the prior, and so can be applied to online learning situations as well.  See [my chapter](https://m-clark.github.io/sem/bayesian-nonparametric-models.html) on this for some examples.
 
 ## Latent classes
 
@@ -1261,6 +1248,26 @@ When you see cluster analysis conducted as part of some attempt to answer a rese
 
 
 
+
+## Exercises
+
+Data: National Longitudinal Survey of Youth (1997, NLSY97), which investigates the transition from youth to adulthood. For this example, a series of questions asked to the participants in 2006 pertaining to the government's role in promoting well-being will be investigated. Questions regarded the government's responsibility for following issues: provide jobs for everyone, keep prices under control, provide health care, provide for elderly, help industry, provide for unemployed, reduce income differences, provide college financial aid, provide decent housing, protect environment.  They have four values 1:4, which range from 'definitely should be' to 'definitely should not be'.
+
+There are several things you could run here. For example, use the <span class="pack">psych</span> package to run PCA, FA, or even IRT. You could also use <span class="pack">poLCA</span> to run a latent class analysis, or <span class="pack">mclust</span> if you just want to treat the data as numeric to run a standard mixture model.  Given the nature of the variables, you could even see what a recommender system would come up with.  Note that there is an ID variable that you don't want to include in your analyses.
+
+```{r eval=FALSE}
+library(dplyr)
+nlsy = read.csv('https://raw.githubusercontent.com/m-clark/sem/master/data/nlsy97_governmentNumeric.csv')
+nlsy = nlsy %>% 
+  select(-ID) %>% 
+  drop_na()
+nlsy_mat = as.matrix(nlsy) # in case you need it
+psych::describe(nlsy)
+```
+
+
+
+
 [^big5]: These descriptions come from the wikipedia page.
 
 [^rotated]: These results have been rotated, something rarely practiced with PCA and almost always done with FA.  
@@ -1271,7 +1278,7 @@ When you see cluster analysis conducted as part of some attempt to answer a rese
 
 [^pca_normal]: even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not.<span class="marginnote">The visualization duplicates that seen in Murphy (2012).
 
-[^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/). I personally have never once needed to use this technique, nor was much interested beyond what I knew about it already, so I decided to lift it from him. I can say that <span class="pack">ldaVis</span> shows topic relations from LDA using it, so there's that. James' [workshop on dimension reduction](https://jbhender.github.io/DimensionReduction-06June2017.html) provides a more technical detail and additional examples for PCA, FA and MDS, for those inclined.
+[^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/). As with ICA, I personally have never had a need to use this technique, nor was much interested beyond what I knew about it already, so I decided to lift it from him. I can say that <span class="pack">ldaVis</span> shows topic relations from LDA using it, so there's that. James' [workshop on dimension reduction](https://jbhender.github.io/DimensionReduction-06June2017.html) provides a more technical detail and additional examples for PCA, FA and MDS, for those inclined.
 
 [^deepimage]: These days one would probably be more likely to use deep learning techniques for audio and images, at least if prediction was the primary concern.
 
