@@ -966,13 +966,14 @@ Take a look at the following data. It regards the waiting time between eruptions
 data("faithful")
 library(plotly)
 plot_ly(data=faithful, x=~waiting, y=~eruptions) %>% 
+  add_markers(color=I('#ff5500')) %>% 
   theme_plotly()
 br()
 ```
 
 The visualization suggests probably two clusters- less waiting time results in shorter eruptions, and longer waits mean longer eruptions. However, it seems the observations more or less come from only those two possibilities.  
 
-In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In this case, we can think of the dimension reduction occurring along the *rows* rather than the columns.  We'll talk about two approaches, what we might call model-based vs. algorithmic or distance-based.
+In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In such cases, we can think of the dimension reduction occurring along the *rows* rather than the columns.  We'll talk about two approaches, what we might call model-based vs. algorithmic or distance-based.
  
 ### Mixture models
 
@@ -982,7 +983,7 @@ A basic approach for categorical latent variable analysis from a model-based per
 2. For each observation, estimate those probability of coming from either cluster assuming some underlying distribution
 3. Assign observations to the most likely class (i.e. the one with the highest probability)
 
-Typical methods are assuming an underlying normal distribution, such that each observation is the weighted combination of its likelihood under the parameters for each proposed cluster with their respective estimated parameters.  For example with two clusters, each with an estimated mean and variance, we get the likelihood for a particular observation for each cluster.  We weight them by its estimated probability of membership in that cluster.  The parameters of interest are the means and (co-)variances of the two variable.
+Typical methods are assuming an underlying normal distribution, such that each observation is the weighted combination of its likelihood under the parameters for each proposed cluster with their respective estimated parameters.  For example with two clusters, each with an estimated mean and variance, we get the likelihood for a particular observation for each cluster.  We weight them by its estimated probability of membership in that cluster, which are also estimated.  The parameters of interest are those of the assumed distribution (e.g. means and (co-)variances with a normal distribution).
 
 As an example, we'll use <span class="pack">mclust</span> on the old faithful data, positing 2 clusters.  As such we'll get the proportion of observations classified to each cluster, and the means and covariance matrix (not shown) for each cluster.
 
@@ -993,30 +994,30 @@ summary(mod, parameters=TRUE)  # more detail
 broom::tidy(mod) %>% round(2) %>%  pander()
 
 par(mfrow=c(1,2))
-plot(mod, what='classification')
-plot(mod, what='uncertainty')
+plot(mod, what='classification', col=sapply(palettes$orange$tetradic, scales::alpha, .5))
+plot(mod, what='uncertainty', col=sapply(palettes$orange$tetradic, scales::alpha, .5))
 # plot(mod, what='density', type='image', col='#ff5500')
 graphics::layout(1)
 ```
 
-We can see that things break out more or less as we might expect, though there is a bit more uncertainty with observations in the middle.
+We can see that things come out more or less as we might expect, though there is a bit more uncertainty with observations in the middle.
 
-The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, <span class="pack">mclust</span>  does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].  Interestingly, the result here suggests three clusters for the Old Faithful data.
+The nice thing about model based approaches is that if we want to compare different solutions we can use the same tools we do in regression settings.  Here, <span class="pack">mclust</span> does a search over many models (not just differences in cluster sizes, but also things like equal variances, shape, etc.)  and selects the 'best' model according to BIC[^mclustbic].  Interestingly, the result here suggests three clusters for the Old Faithful data.
 
 ```{r clus_mclust2, echo=1, out.width='100%'}
 mod = Mclust(faithful, verbose=F)
 par(mfrow=c(1,2))
 plot(mod, what='BIC', legendArgs = list(x = "bottomright", ncol = 2, cex = .5, inset = 0.01))
-plot(mod, what='classification')
+plot(mod, what='classification', col=sapply(palettes$orange$tetradic, scales::alpha, .5), pch=19, cex=.25)
 graphics::layout(1)
 ```
 
 
 #### For regression
 
-Mixture models are often used in the regression setting, similar to the latent class setting that we've been describing.  One approach regards the outcome of interest, which you think has latent categories, and you model it as such. In a standard regression setting you would get two sets of output, one for each class, along with estimated probabilities of class membership for each observation.
+Mixture models are often used in the regression setting, similar to the latent class setting that we've been describing.  One approach regards the outcome of interest, whose observations you believe to be the result of hidden category membership, and you model it as such. In a standard regression setting you would get two sets of output, one for each class, along with estimated probabilities of class membership for each observation.
 
-As a starting point, we'll rerun <span class="pack">mclust</span>  models for just eruption times.  With<span class="pack">flexmix</span>, we'll run a model without any covariates.
+As a starting point, we'll rerun <span class="pack">mclust</span>  models for just eruption times.  With <span class="pack">flexmix</span>, we'll run a model without any covariates as an initial demonstration.
 
 ```{r compare_mclust_flexmix0, echo=1:3, eval=FALSE}
 library(flexmix)
@@ -1036,7 +1037,7 @@ Mclust(faithful$eruptions, G=2, verbose=F) %>%
   pander(caption='mclust')
 ```
 
-Note that theoutput shows the standard deviation, and so are the square root of the<span class="pack">mclust</span>  values. The cluster names are arbitrary.  The point is it's the same result.
+Note that the output shows the standard deviation, and so are the square root of the <span class="pack">mclust</span> values. The cluster names are arbitrary.  The point is it's the same result.
 
 What <span class="pack">flexmix</span> will allow is to model the mean with covariates of interest. To keep things simple we'll stick to this data and model eruption time by waiting time.
 
@@ -1067,27 +1068,27 @@ Such a technique is very commonly applied in cases where there are many zeros in
  
 ### "Cluster analysis"
 
-Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods, where given a distance matrix that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one nother.
+Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods. Given a <span class="emph">distance matrix</span> that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one nother.
 
 #### K-means
 
 <span class="emph">K-means</span> cluster analysis is hands-down the most commonly used clustering method.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
 
-K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape).  It also has connections to PCA and ICA. The general issue is trying to determine just how many clusters one should retain. The following plot shows both a two and three cluster solution.
+K-means can actually be seen as a special case of the Gaussian mixture model above (similar to EII in the BIC plot, which is an attempt to find spherical clusters of equal size and shape).  It also has connections to PCA and ICA. The general issue is trying to determine just how many clusters one should retain. The following plot shows both a two and three cluster solution using the <span class="func">kmeans</span> function in base R, e.g. `kmeans(faithful, 2)`.
 
 
 ```{r kmeans, echo=F, out.width='90%'}
 set.seed(1111)
-clus2 = factor(kmeans(faithful, 2)$cluster)
+clus_2 = factor(kmeans(faithful, 2)$cluster)
 c2 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
-  geom_point(aes(color=clus2)) +
-  scale_color_manual(values = palettes$latvian_red$tetradic[1:2]) +
+  geom_point(aes(color=clus_2)) +
+  scale_color_manual(values = scales::alpha(palettes$orange$tetradic[2:1], .5)) +
   theme_trueMinimal()
 
-clus3 = factor(kmeans(faithful, 3)$cluster)
+clus_3 = factor(kmeans(faithful, 3)$cluster)
 c3 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
-  geom_point(aes(color=clus3)) +
-  scale_color_manual(values = palettes$latvian_red$tetradic) +
+  geom_point(aes(color=clus_3)) +
+  scale_color_manual(values = scales::alpha(palettes$orange$tetradic[c(2,3,1)], .5)) +
   theme_trueMinimal()
 cowplot::plot_grid(c2, c3)
 # gridExtra::grid.arrange(c2,c3, ncol=2)
@@ -1104,7 +1105,7 @@ heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_color
   theme_plotly()
 ```
 
-Practically every decision one has to make with this approach is arbitrary (distance, linkage method, cluster determination, general approach).  While these are actually still commonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
+Practically at every turn you're faced with multiple options for settings to choose (distance, linkage method, cluster determination, general approach), and most decisions will be arbitrary .  While these are actually still commonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
 
 
 ### Latent Class Analysis
@@ -1122,9 +1123,11 @@ DT::datatable(tab,
                            columnDefs = list(list(className = 'dt-left', targets = 0:2))) )
 ```
 
+<br>
+
 We could simply call them by the names we have already, mixture models in the case of categorical latent variables, and factor analysis otherwise.  The IRT demonstrated above can be seen as an example of latent trait analysis.
 
-The following example comes from survey data from the 2000 American National Election Study. Two sets of six questions with four responses each, asking respondents' opinions of how well various traits (moral, caring, knowledgable, good leader, dishonest, intelligent) describe presidential candidates Al Gore and George W. Bush. The responses are (1) Extremely well; (2) Quite well; (3) Not too well; (4) Not well at all.  We are assuming 3 latent classes can explain these responses. We can also model the latent class as an outcome. Which we do here by likely vote cast (the respondent's 2000 vote choice when asked).
+The following example comes from survey data from the 2000 American National Election Study. Two sets of six questions with four responses each, asking respondents' opinions of how well various traits (moral, caring, knowledgable, good leader, dishonest, intelligent) describe presidential candidates Al Gore and George W. Bush. The responses are measured on a four point scale from 'Extremely well' to 'Not well at all'.  In what follows, we are assuming three latent classes can explain these responses. We can also model the latent class as an outcome. Which we do here by likely vote cast (the respondent's 2000 vote choice when asked).
 
 ```{r lca_example}
 library(poLCA)
@@ -1173,7 +1176,7 @@ init %>%
 ```
 
 
-Darker colors represent higher probability of response. In general we have naysayers, more positive responders, and those with a more mixed response (these would also be known as low, high and moderate scores if we'd just left the latent variable continuous).  The following shows the proportions for each latent class by vote type.
+Darker colors represent higher probability of response. In general we have classes representing naysayers, more positive responders, and those with a more mixed response (these would also be known as low, high and moderate scores if we'd just left the latent variable continuous).  The following shows the proportions for each latent class by vote type.
 
 ```{r lca_vote_table, echo=FALSE}
 prop.table(table(election$VOTE3[as.numeric(rownames(lca_mod$x))], lca_mod$predclass)) %>%
