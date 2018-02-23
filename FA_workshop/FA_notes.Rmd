@@ -61,11 +61,11 @@ We'll start with one of the most widely used techniques for dimension reduction.
 
 $$X = ZW'$$
 
-Each component, or factor, created accounts for less of the variance in the original data.  So while PCA returns the same number of components as there are columns in the original data, they big idea is that we want to use far fewer.  However, with all components, 
+Each component, or factor, created accounts for less of the variance in the original data.  So, while PCA returns the same number of components as there are columns in the original data, they big idea is that we want to use far fewer.  However, with all components, 
 
 
 
-Take for example, the [MNIST data](http://yann.lecun.com/exdb/mnist/), which contains 28 by 28 pixel images of the digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit, with each entry the [grayscale value](https://en.wikipedia.org/wiki/Grayscale).  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components the reconstruction is perfect.
+Take for example, the [MNIST data](http://yann.lecun.com/exdb/mnist/), which contains 28 by 28 pixel images of the digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit, with each entry the [grayscale value](https://en.wikipedia.org/wiki/Grayscale).  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components, the reconstruction is perfect.
 
 <img src="../img/pca_recon.png" style="display:block; margin: 0 auto;">
 
@@ -107,7 +107,7 @@ pc
 p = ncol(bfi_trim)
 ```
 
-First focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix as the basis, summing across all `r p` possible components would equal the value of `r p`). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', p, ' = ', round(print(pc)$Vaccounted[1]/p, 2))`).  The `Cumulative Var` tells us that `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r p` variables (i.e. the cumulative explained variance would = 1). We can see that the second component accounts for less variance, and this would continue with additional components, where each accounts for a decreasing amount of variance.
+First, focus on the portion of the output where it says `SS loadings` . The first line is the sum of the squared loadings[^eigen] for each  component (in this case where we are using a correlation matrix as the basis, summing across all `r p` possible components would equal the value of `r p`). The `Proportion Var` tells us how much of the overall variance the component accounts for out of all the variables (e.g. `r paste(round(print(pc)$Vaccounted[1], 2), '/', p, ' = ', round(print(pc)$Vaccounted[1]/p, 2))`).  The `Cumulative Var` tells us that `r pc$factors` components make up over `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance. The others are the same thing just based on the `r pc$factors` retained components rather than all `r p` variables (i.e. the cumulative explained variance would = 1). We can see that the second component accounts for less variance, and this would continue with additional components, where each accounts for a decreasing amount of variance.
 
 Some explanation of the other parts of the output:
 
@@ -184,7 +184,7 @@ br()
 ```
 
 
-Interpretation is the fun, but commonly difficult, part. In this case, the variables group like we'd expect[^badfactor].  So we have one component that represents agreeableness and one that represents neuroticism.  
+Interpretation is the fun, but commonly difficult, part. In this case, the variables group like we'd expect[^badfactor].  So, we have one component that represents agreeableness, and one that represents neuroticism.  
 
 It's worth mentioning the <span class="emph">naming fallacy</span> at this point.  Just because we associate a factor with some concept, doesn't make it so. In addition, for PCA the goal is not interpretation, but to reduce the data while retaining as much of the variance as possible.
 
@@ -237,7 +237,7 @@ fa_model = fa(bfi_trim, 2)
 fa_model
 ```
 
-The results in terms of loadings are similar to the PCA. But we can see some differences. The PCA components accounted for `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance, while here we only account for `r round(sum(colSums(fa_model$loadings^2))/p, 2)*100`%.  In addition, we have an estimate of the correlation of the latent factors, `r round(fa_model$Phi[2], 2)`, where the PCA components are uncorrelated by definition.  In addition there are measures of 'fit' that come from the structural equation modeling context. See [this](https://m-clark.github.io/sem/structural-equation-modeling.html#fit) for more detail on those measures.  I will note however that BIC is provided, which allows for a way to compare different factor solutions.
+The results in terms of loadings are similar to the PCA. But we can see some differences. The PCA components accounted for `r round(sum(colSums(pc$loadings^2))/p, 2)*100`% the variance, while here we only account for `r round(sum(colSums(fa_model$loadings^2))/p, 2)*100`%.  In addition, we have an estimate of the correlation of the latent factors, `r round(fa_model$Phi[2], 2)`, where the PCA components are uncorrelated by definition.  And finally, there are measures of 'fit' that come from the structural equation modeling context. See [this](https://m-clark.github.io/sem/structural-equation-modeling.html#fit) for more detail on those measures.  I will note however that BIC is provided, which allows for a way to compare different factor solutions.
 
 ```{r fa_LoadingsVis, echo=F, cache=FALSE}
 tags$div(style="width:50%; margin-left:auto;  margin-right:auto",
@@ -297,7 +297,7 @@ br()
 
 <br>
 
-In general our results are very similar, but we didn't have to estimate all the cross loadings, so this approach is a simpler model.  For more on confirmatory factor analysis, take a look [here](https://m-clark.github.io/sem/latent-variables-1.html#constructs-and-measurement-models).
+In general, our results are very similar to the previous factor analysis, but we didn't have to estimate all the cross loadings, so this approach is a simpler model.  For more on confirmatory factor analysis, take a look [here](https://m-clark.github.io/sem/latent-variables-1.html#constructs-and-measurement-models).
 
 
 #### Suggested R packages
@@ -319,7 +319,7 @@ $\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
 
 $$\Psi = \sigma^2I$$
 
-The following plot shows the projection of original data onto the principal component, where we have two variable and one component. By default, PCA results in an orthogonal projection, where PPCA does not, and shrinks estimates to the overall mean.
+The following plot shows the projection of original data onto the principal component, where we have two variables and one component. By default, PCA results in an orthogonal projection, where PPCA does not, and shrinks estimates to the overall mean.
 
 ```{r ppca, echo=FALSE, out.width='100%', fig.asp=.5}
 PPCAEM = function(X, nComp=2, tol=.00001, maxits=100, showits=F){
@@ -481,7 +481,7 @@ Here are the reconstruction results of the MNIST digits using a 10 component sol
 
 In the factor analysis sense, each variable (the term) will have some probability of occurring for a given topic, i.e. latent factor. One can think of the term/variable probabilities for a specific topic similar to how we did loadings in the factor analysis sense.  Every variable will have some non-zero probability of occurrence for a given factor, but often they are essentially zero. Factor scores are the document topic probabilities.
 
-Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However we can simulate a multinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times for a given document, given some probability of each term.
+Given the probabilities of topics and terms within topics, there is a multinomial draw of counts for an observation.  With this probabilistic result, there isn't a 'reconstruction' connotation with LDA.  However, we can simulate a multinomial draw based on the total counts we see.  For example, let's assume 5 terms seen a total of 20 times for a given document, given some probability of each term.
 
 ```{r multinom_ex, echo=-1}
 set.seed(123)
@@ -627,7 +627,7 @@ DiagrammeR::grViz(test, width='100%', height='400px')
 
 <br>
 
-We can use factor analysis in the SEM context as a way to assess <span class="emph">measurement error</span>.  Whatever variance a factor doesn't explain is a combination of measurement error and random variation. Thus we can use factor analysis as a means to assess a group of variables' ability to measure the underlying construct they are supposed to measure.
+We can use factor analysis in the SEM context as a way to assess <span class="emph">measurement error</span>.  Whatever variance a factor doesn't explain is a combination of measurement error and random variation. Thus, we can use factor analysis as a means to assess a group of variables' ability to measure the underlying construct they are supposed to measure.
 
 This document is actually a subset of the [SEM document](https://m-clark.github.io/sem/). Check it out for lots more detail and examples.
 
@@ -650,7 +650,7 @@ In this setting, the probability of endorsement (or getting an item correct), $\
 
 $$\mathrm{logit_{ij}} = \mathrm{log}(\frac{\pi_{ij}}{1-\pi_{ij}}) = \theta_i-\delta_j$$
 
-The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm</span>.  While the parameterizations are different, they come to the same conclusions about 'ability', as can be see in the plot. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
+The following shows an example.  With the <span class="pack">psych</span> package a factor analysis is done on the tetrachoric correlation matrix of the binary verbal reasoning items.  Compare with the standard IRT 'two parameter' model from <span class="pack">ltm</span>.  While the parameterizations are different, they come to the same conclusions about 'ability', as can be seen in the plot. See my [IRT chapter](https://m-clark.github.io/sem/item-response-theory.html) for more details.
 
 ```{r irt}
 data("ability", package = 'psych') 
@@ -837,7 +837,7 @@ The following image, taken from Wikipedia (click the image to go there), concept
 
 Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.
 
-If you think of genres as latent categories of movies, now you can employ the techniques we've talked about[^netflix]. Similarly we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
+If you think of genres as latent categories of movies, now you can employ the techniques we've talked about[^netflix]. Similarly, we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
 
 ```{r recomend, eval=F, echo=TRUE}
 library(recommenderlab)
@@ -934,7 +934,7 @@ DiagrammeR::grViz(hmm, width='100%', height='300px')
 )
 ```
 
-In this sense we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states above, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The icons are the categories of observations we can potentially see, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
+In this sense, we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states above, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The icons are the categories of observations we can potentially see, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
 
 We start in state 1 where the heart and yellow smiley are most probable. Let's say we observe ♥.  The second state is most likely so we get there, and because it has some probability of staying in that state, we observe § and §. We finally get to state 3 and see <span class="" style='color:black'>☻</span>, where we go back to state 1, where we see ☺, jump to latent state 3 etc.  And such a process continues for the length of sequence we see.
 
@@ -983,7 +983,7 @@ A basic approach for categorical latent variable analysis from a model-based per
 2. For each observation, estimate those probability of coming from either cluster assuming some underlying distribution
 3. Assign observations to the most likely class (i.e. the one with the highest probability)
 
-Typical methods are assuming an underlying normal distribution, such that each observation is the weighted combination of its likelihood under the parameters for each proposed cluster with their respective estimated parameters.  For example with two clusters, each with an estimated mean and variance, we get the likelihood for a particular observation for each cluster.  We weight them by its estimated probability of membership in that cluster, which are also estimated.  The parameters of interest are those of the assumed distribution (e.g. means and (co-)variances with a normal distribution).
+Typical methods are assuming an underlying normal distribution, such that each observation is the weighted combination of its likelihood under the parameters for each proposed cluster with their respective estimated parameters.  For example, with two clusters, each with an estimated mean and variance, we get the likelihood for a particular observation for each cluster.  We weight them by its estimated probability of membership in that cluster, which are also estimated.  The parameters of interest are those of the assumed distribution (e.g. means and (co-)variances with a normal distribution).
 
 As an example, we'll use <span class="pack">mclust</span> on the old faithful data, positing 2 clusters.  As such we'll get the proportion of observations classified to each cluster, and the means and covariance matrix (not shown) for each cluster.
 
@@ -1176,7 +1176,7 @@ init %>%
 ```
 
 
-Darker colors represent higher probability of response. In general we have classes representing naysayers, more positive responders, and those with a more mixed response (these would also be known as low, high and moderate scores if we'd just left the latent variable continuous).  The following shows the proportions for each latent class by vote type.
+Darker colors represent higher probability of response. In general, we have classes representing naysayers, more positive responders, and those with a more mixed response (these would also be known as low, high and moderate scores if we'd just left the latent variable continuous).  The following shows the proportions for each latent class by vote type.
 
 ```{r lca_vote_table, echo=FALSE}
 prop.table(table(election$VOTE3[as.numeric(rownames(lca_mod$x))], lca_mod$predclass)) %>%
@@ -1189,7 +1189,7 @@ prop.table(table(election$VOTE3[as.numeric(rownames(lca_mod$x))], lca_mod$predcl
 br()
 ```
 
-So the more negative responding types were also those likely to vote for Bush, while the other two more more likely to vote for Gore.
+So the more negative responding types were also those likely to vote for Bush, while the other two are more likely to vote for Gore.
 
 
 #### Suggested R packages
@@ -1222,13 +1222,13 @@ Interpretation comes largely from the weights/loadings or related coefficients. 
 
 ### How to treat the data
 
-In many situations you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarily be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
+In many situations, you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarily be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
 
 ### Predictive Modeling
 
-Many often use the clusters or factor scores obtained obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately this ignores the uncertainty in those estimates of the class membership. Essentially your standard errors will be a bit optimistic.
+Many often use the clusters or factor scores obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately, this ignores the uncertainty in those estimates of the class membership. Essentially your standard errors will be a bit optimistic.
 
-While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.  I would also recommend looking at the help file for the <span class="func">factor.scores</span> function in <span class="pack">psych</span>.
+While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example, several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.  I would also recommend looking at the help file for the <span class="func">factor.scores</span> function in <span class="pack">psych</span>.
 
 There are many disciplines that will just do the two-step and not blink an eye, so you shouldn't feel bad just using factor analysis and related as an initial pre-processing dimension reduction step.  
 
@@ -1237,7 +1237,7 @@ There are many disciplines that will just do the two-step and not blink an eye, 
 
 #### Model Selection
 
-Non-model based methods provide no clear cut way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhouette score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
+Non-model based methods provide no clear-cut way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhouette score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
 
 #### Latent Expressivity
 

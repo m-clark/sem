@@ -14,6 +14,7 @@ heatR
 pander
 lavaan
 psych
+pracma
 lda
 MASS
 msm
@@ -26,4 +27,3 @@ lattice
 flexmix
 scatterplot3d
 poLCA
-pracma
