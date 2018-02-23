@@ -1252,6 +1252,8 @@ When you see cluster analysis conducted as part of some attempt to answer a rese
 
 ## Summary
 
+Factor Analytic techniques, and latent variable methods more generally, have a history that's now over a century old.  As such, much is available to choose from, and though some approaches may be more common in some disciplines relative to others, all those discussed above are in fact common techniques.  You should feel comfortable trying them out, and using them to help you find the hidden, unobserved meaning within your data!
+
 
 
 
