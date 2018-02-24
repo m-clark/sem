@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-02-17">
+<meta name="date" content="2018-02-24">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -123,9 +123,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://m-clark.github.io/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#990024; font-family:Roboto">Structural Equation Modeling</span></a></li>
-
-<li class="divider"></li>
 <li><a href="index.html#section"></a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a><ul>
@@ -338,10 +335,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="other-3.html"><a href="other-3.html"><i class="fa fa-check"></i>Other</a></li>
 <li><a href="section-1.html#section-1"></a></li>
-<li class="divider"></li>
-<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png" /></a></li>
-
 </ul>
 
       </nav>
@@ -361,7 +354,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="structural-equation-modeling" class="section level1">
 <h1>Structural Equation Modeling</h1>
-<p>Structural equation modeling combines the path analytic and latent variable techniques together to allow for regression models among latent and observed variables. Any model, even the SLiM, can be seen as some form of SEM, or graphical model more generally. However, the term is typically reserved for the combination of latent and observed variables in a model, often with causal implications<a href="#fn41" class="footnoteRef" id="fnref41"><sup>41</sup></a>.</p>
+<p>Structural equation modeling combines the path analytic and latent variable techniques together to allow for regression models among latent and observed variables. Any model, even the SLiM, can be seen as some form of SEM, or graphical model more generally. However, the term is typically reserved for the combination of latent and observed variables in a model, often with causal implications<a href="#fn42" class="footnoteRef" id="fnref42"><sup>42</sup></a>.</p>
 <div id="measurement-model" class="section level2">
 <h2>Measurement Model</h2>
 <p>The <span class="emph">measurement model</span> refers to the latent variable models, i.e. factor analysis, and typical practice in SEM is to investigate these separately and first. The reason is that one wants to make sure that the measurement model holds before going any further with the underlying constructs. For example, for one’s sample of data one might detect two latent variables work better for a set of indicators, or might find that some indicators are performing poorly. Adjustments might then be made before moving on to the final model.</p>
@@ -379,7 +372,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span style="font-variant: small-caps;">SEM is a large sample technique</span></p>
 </blockquote>
 <p>You will even with simple models likely be estimating a couple dozen parameters, and it’s assumed that there are noisy measures and generally small effects when present. As a comparison, if you were running a standard regression in similar scenarios, how much data would you feel comfortable with if you were using a model with 20+ predictors? In SEM it can be even more difficult, where latent variables with less than ideal loadings on few items might require a couple hundred observations for just a single measurement model. In addition, as noted previously, less reliable measures will only hurt your ability to detect the relationships among variables. If you are conducting multigroup analysis, you must consider an SEM from the standpoint of the sample size for the smallest group.</p>
-<p>Because of the inherent complexity of SEM, many run SEM models that are overly simple, and actually misspecified, due to the fact that key variables, even ones that were collected and available in the data, are left out<a href="#fn42" class="footnoteRef" id="fnref42"><sup>42</sup></a>. Sometimes models are so complex they are left out because it would be difficult to even know what all should be pointing to what. In other cases I’ve seen almost a hundred parameters estimated with maybe only 200 observations<a href="#fn43" class="footnoteRef" id="fnref43"><sup>43</sup></a>. The gist is that SEM is not always the right tool, even if conceptually it may be considered for a model. As flexible as it is, it is also quite restrictive in other respects, and may simply be impractical to model key aspects of the data.</p>
+<p>Because of the inherent complexity of SEM, many run SEM models that are overly simple, and actually misspecified, due to the fact that key variables, even ones that were collected and available in the data, are left out<a href="#fn43" class="footnoteRef" id="fnref43"><sup>43</sup></a>. Sometimes models are so complex they are left out because it would be difficult to even know what all should be pointing to what. In other cases I’ve seen almost a hundred parameters estimated with maybe only 200 observations<a href="#fn44" class="footnoteRef" id="fnref44"><sup>44</sup></a>. The gist is that SEM is not always the right tool, even if conceptually it may be considered for a model. As flexible as it is, it is also quite restrictive in other respects, and may simply be impractical to model key aspects of the data.</p>
 </div>
 <div id="steps-to-take" class="section level3">
 <h3>Steps to Take</h3>
@@ -658,10 +651,10 @@ Variances:
     4.735     4.000     0.316     1.000     0.014     0.007 30460.548 </code></pre>
 <div id="chi-square-test" class="section level4">
 <h4>Chi-square test</h4>
-<pre><code>  Estimator                                         ML
-  Minimum Function Test Statistic                4.735
-  Degrees of freedom                                 4
-  P-value (Chi-square)                           0.316</code></pre>
+<pre><code>  Estimator     ML
+  Minimum Function Test Statistic    4.735
+  Degrees of freedom         4
+  P-value (Chi-square)   0.316</code></pre>
 <p>Conceptually, the <span class="math inline">\(\chi^2\)</span> test measures the discrepancy between the observed correlations and those implied by the model. In the <a href="graphical-models-1.html#path-analysis">graphical model section</a>, we actually gave an example of reproducing a correlation from a path analysis. In general, the model goal is to reproduce them as closely as we can. This test compares the fitted model with a (saturated) model that does not have any degrees of freedom. The degrees of freedom for this test are equal to the data (variances + covariances) minus the number of parameters estimated, and that is why when you have df=0 in a just-identified situation, you get no fit statistics. A non-significant <span class="math inline">\(\chi^2\)</span> suggests our model-implied correlations are not statistically different from those we observe, so yay!</p>
 <p><strong>Or not</strong>. Those familiar with null-hypothesis testing know that one cannot accept a null hypothesis, and attempting to do so is fundamentally illogical. Other things that affect this measure specifically include multivariate non-normality, the size of the correlations (larger ones are typically related to larger predicted vs. observed discrepancies), unreliable measures (can actually make this test fail to reject), and sample size (same as with any other model scenario and statistical significance).</p>
 <p>So if it worries you that a core measure of model fit in SEM is fundamentally problematic, good. As has been said before, no single measure will be good enough on its own, so gather as much info as you can. Some suggest to pay more attention to the <span class="math inline">\(\chi^2\)</span> result, but to me, even if useful in some sense, the flawed logic is something that can’t really be overcome. If you use it with appropriate null hypothesis testing logic, a significant <span class="math inline">\(\chi^2\)</span> test can tell you that something is potentially wrong with the model.</p>
@@ -671,24 +664,24 @@ Variances:
 <h4>CFI etc.</h4>
 <pre><code>User model versus baseline model:
 
-  Comparative Fit Index (CFI)                    1.000
-  Tucker-Lewis Index (TLI)                       0.999</code></pre>
+  Comparative Fit Index (CFI)        1.000
+  Tucker-Lewis Index (TLI)           0.999</code></pre>
 <p>The <span class="emph">Comparative Fit Index</span> compares the fitted model to a null model that assumes there is no relationship among the measured items. It ranges from 0 to 1, or rather it is rounded to fall between 0 and 1, and CFI values larger than .9 or especially .95 are typically desired, but like other completely arbitrary cutoffs those values guarantee nothing. Others include the <span class="emph">Tucker-Lewis Fit Index</span>, which is provided in standard <span class="pack">lavaan</span> output, but there are more <span class="emph">incremental fit indices</span> where those come from. Both of these are sensitive to the average correlations, to the point that adding meaningful covariates could actually worsen fit if they aren’t notably correlated with other variables in the model. You only need to report one, as they are generally notably correlated.</p>
 </div>
 <div id="rmsea" class="section level4">
 <h4>RMSEA</h4>
 <pre><code>Root Mean Square Error of Approximation:
 
-  RMSEA                                          0.014
+  RMSEA      0.014
   90 Percent Confidence Interval          0.000  0.053
-  P-value RMSEA &lt;= 0.05                          0.930</code></pre>
+  P-value RMSEA &lt;= 0.05  0.930</code></pre>
 <p>The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don’t be rigid with this. <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is <span class="math inline">\(\leq .05\)</span>, or ‘test of close fit’, which ideally would be high. The confidence interval is enough for reporting purposes.</p>
 </div>
 <div id="srmr" class="section level4">
 <h4>SRMR</h4>
 <pre><code>Standardized Root Mean Square Residual:
 
-  SRMR                                           0.007</code></pre>
+  SRMR       0.007</code></pre>
 <p>The standardized root mean squared residual is the mean absolute correlation residual, i.e. the difference between the observed and model-implied correlations. Historical suggestions are to also look for values less than .05, but it is better to simply inspect the residuals and note where there are large discrepancies.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">residuals</span>(alienation, <span class="dt">type=</span><span class="st">&#39;cor&#39;</span>)<span class="op">$</span>cor</code></pre></div>
 <pre><code>            eductn sei    anom67 pwrl67 anom71 pwrl71
@@ -702,7 +695,7 @@ powerless71 -0.001  0.001 -0.001  0.000  0.000  0.000</code></pre>
 </div>
 <div id="fit-summarized" class="section level4">
 <h4>Fit Summarized</h4>
-<p>A brief summary of these and other old/typical measures of fit are described <a href="https://en.wikipedia.org/wiki/Confirmatory_factor_analysis#Evaluating_model_fit">here</a><a href="#fn44" class="footnoteRef" id="fnref44"><sup>44</sup></a>. However they all have issues, and one should <em>never</em> use cutoffs as a basis for your ultimate thinking about model performance. Studies have been done and all the fit indices can potentially have problems in various scenarios, and the cutoffs commonly used by applied researchers do not hold up under scrutiny. While they can provide some assistance in the process, they are not meant to replace a global assessment of theory-result compatibility.</p>
+<p>A brief summary of these and other old/typical measures of fit are described <a href="https://en.wikipedia.org/wiki/Confirmatory_factor_analysis#Evaluating_model_fit">here</a><a href="#fn45" class="footnoteRef" id="fnref45"><sup>45</sup></a>. However they all have issues, and one should <em>never</em> use cutoffs as a basis for your ultimate thinking about model performance. Studies have been done and all the fit indices can potentially have problems in various scenarios, and the cutoffs commonly used by applied researchers do not hold up under scrutiny. While they can provide some assistance in the process, they are not meant to replace a global assessment of theory-result compatibility.</p>
 </div>
 </div>
 <div id="model-comparison" class="section level3">
@@ -719,15 +712,15 @@ powerless71 -0.001  0.001 -0.001  0.000  0.000  0.000</code></pre>
 </div>
 <div id="model-comparison-example" class="section level4">
 <h4>Model Comparison Example</h4>
-<p>Let’s compare the previous model to one without the indirect effect and in which the SES and Alienation contributions are independent (i.e. just make the previous code change to <code>alien67 ~ 0*ses</code>). We’ll use the <span class="pack">semTools</span> package for easy side by side comparison via the <span class="func">compareFit</span> function<a href="#fn45" class="footnoteRef" id="fnref45"><sup>45</sup></a>.</p>
+<p>Let’s compare the previous model to one without the indirect effect and in which the SES and Alienation contributions are independent (i.e. just make the previous code change to <code>alien67 ~ 0*ses</code>). We’ll use the <span class="pack">semTools</span> package for easy side by side comparison via the <span class="func">compareFit</span> function<a href="#fn46" class="footnoteRef" id="fnref46"><sup>46</sup></a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(semTools)
 ## compareFit(alienation, alienationNoInd)</code></pre></div>
 <pre><code>################### Nested Model Comparison #########################
-                                chi df      p delta.cfi
+        chi df      p delta.cfi
 alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DT<span class="op">::</span><span class="kw">datatable</span>(compfit, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">dom=</span><span class="st">&#39;t&#39;</span>, <span class="dt">scrollX=</span><span class="ot">TRUE</span>))</code></pre></div>
-<div id="htmlwidget-d025e3a178c97eedd252" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d025e3a178c97eedd252">{"x":{"filter":"none","data":[["alienation","alienationNoInd"],["4.735","205.017"],["4","5"],[".316†",".000 "],[".000†",".906 "],[".999†",".717 "],["30460.548†","30658.830 "],["30542.783†","30736.227 "],[".014†",".207 "],[".007†",".173 "]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>chisq<\/th>\n      <th>df<\/th>\n      <th>pvalue<\/th>\n      <th>cfi<\/th>\n      <th>tli<\/th>\n      <th>aic<\/th>\n      <th>bic<\/th>\n      <th>rmsea<\/th>\n      <th>srmr<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-d62cff6aceee5f4f4785" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d62cff6aceee5f4f4785">{"x":{"filter":"none","data":[["alienation","alienationNoInd"],["4.735","205.017"],["4","5"],[".316†",".000 "],[".000†",".906 "],[".999†",".717 "],["30460.548†","30658.830 "],["30542.783†","30736.227 "],[".014†",".207 "],[".007†",".173 "]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>chisq<\/th>\n      <th>df<\/th>\n      <th>pvalue<\/th>\n      <th>cfi<\/th>\n      <th>tli<\/th>\n      <th>aic<\/th>\n      <th>bic<\/th>\n      <th>rmsea<\/th>\n      <th>srmr<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <p>The first result is a likelihood ratio test. The model with no indirect path is nested within the model with a path and so this is a viable option. It tells us essentially that adding the indirect path results in a statistically significantly better model. AIC measures would suggest the indirect path would result in a better model as well. In terms of internal fit indices, the model including the indirect effect appears to fit the data well (note that the .000 is actually 1.00), while the other model does not. So now we can say that not only does our model appear to fit the data well, but is better than a plausible competitor.</p>
 </div>
 </div>
@@ -760,7 +753,7 @@ alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
 <li><strong>ULS</strong>: unweighted least squares parameter estimates</li>
 <li><strong>ULSMV</strong>: unweighted least squares parameter estimates with standard errors and a mean- and variance-adjusted chi-square test statistic that use a full weight matrix</li>
 <li><strong>GLS</strong>: generalized least square parameter estimates with conventional standard errors and chi-square test statistic that use a normal-theory based weight matrix</li>
-<li><strong>Bayes</strong>: Bayesian posterior parameter estimates with credibility intervals and posterior predictive checking<a href="#fn46" class="footnoteRef" id="fnref46"><sup>46</sup></a></li>
+<li><strong>Bayes</strong>: Bayesian posterior parameter estimates with credibility intervals and posterior predictive checking<a href="#fn47" class="footnoteRef" id="fnref47"><sup>47</sup></a></li>
 </ul>
 </div>
 <div id="missing-data" class="section level3">
@@ -788,7 +781,7 @@ alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
 <div id="naming-a-latent-variable-doesnt-mean-it-exists" class="section level3">
 <h3>Naming a latent variable doesn’t mean it exists</h3>
 <p>We discussed the naming fallacy in the section on <a href="latent-variables-1.html#latent-variables-1">latent variables</a>, and it continues to exist when exploring structural relations among them. While everything may turn out well for one’s measurement model, and the results in keeping with theory, this doesn’t make it so. This is especially the case with less reliable measures. Latent constructs require operational definitions and other considerations in order to be useful, and rule out that one isn’t simply measuring something else, or that it makes sense that such a construct has real (physical ties).</p>
-<p>As an example, many diagnoses in the Diagnostic and Statistical Manual of Mental Disorders have not even been shown to exist via a statistical approach like SEM<a href="#fn47" class="footnoteRef" id="fnref47"><sup>47</sup></a>, while others are simply assumed to exist, and even presumably (subsequently) supported by measurement models (often with low N), only to be shown to have no ties to any underlying physiology.</p>
+<p>As an example, many diagnoses in the Diagnostic and Statistical Manual of Mental Disorders have not even been shown to exist via a statistical approach like SEM<a href="#fn48" class="footnoteRef" id="fnref48"><sup>48</sup></a>, while others are simply assumed to exist, and even presumably (subsequently) supported by measurement models (often with low N), only to be shown to have no ties to any underlying physiology.</p>
 </div>
 <div id="ignoring-diagnostics" class="section level3">
 <h3>Ignoring diagnostics</h3>
@@ -801,7 +794,7 @@ alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
 </div>
 <div id="summary-4" class="section level2">
 <h2>Summary</h2>
-<p>SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Unfortunately, you cannot look much to how SEM is typically practiced to find out how to do SEM well<a href="#fn48" class="footnoteRef" id="fnref48"><sup>48</sup></a>. The usual issues are poor underlying theory, small samples, poor samples, use of post-hoc ‘theory correction’, and lack of competition among plausible alternatives. The vast majority of the situations I’ve come across would have benefitted from the model search paradigm described in the section on [Bayesian networks][Baysian Networks].</p>
+<p>SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Unfortunately, you cannot look much to how SEM is typically practiced to find out how to do SEM well<a href="#fn49" class="footnoteRef" id="fnref49"><sup>49</sup></a>. The usual issues are poor underlying theory, small samples, poor samples, use of post-hoc ‘theory correction’, and lack of competition among plausible alternatives. The vast majority of the situations I’ve come across would have benefitted from the model search paradigm described in the section on [Bayesian networks][Baysian Networks].</p>
 <p>On the other hand, strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest. While it doesn’t have to be restricted to such, SEM works best for models with explicit causal motivations. Go into it cautiously, prepare to spend a lot of time in model building and inspection, and allow for competing ideas to have their say, and you may find success.</p>
 </div>
 <div id="terminology-1" class="section level2">
@@ -834,15 +827,15 @@ alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="41">
-<li id="fn41"><p>Bollen &amp; Pearl (2013) put the causal aspect this way: ‘SEM is an inference engine that takes in two inputs, qualitative causal assumptions and empirical data, and derives two logical consequences of these inputs: quantitative causal conclusions and statistical measures of fit for the testable implications of the assumptions. Failure to fit the data casts doubt on the strong causal assumptions of zero coefficients or zero covariances and guides the researcher to diagnose, or repair the structural misspecifications. Fitting the data does not “prove” the causal assumptions, but it makes them tentatively more plausible. Any such positive results need to be replicated and to withstand the criticisms of researchers who suggest other models for the same data.’.<a href="structural-equation-modeling.html#fnref41">↩</a></p></li>
-<li id="fn42"><p>For example, practically every growth curve model I’ve ever come across. I cringe every time I see one that doesn’t include time-varying covariates, though I know why they aren’t there.<a href="structural-equation-modeling.html#fnref42">↩</a></p></li>
-<li id="fn43"><p>And not in a Bayesian approach where it might be more viable.<a href="structural-equation-modeling.html#fnref43">↩</a></p></li>
-<li id="fn44"><p>See also this <a href="http://davidakenny.net/cm/fit.htm">site</a>, which seems to somehow have escaped the dissolution of GeoCities webpages.<a href="structural-equation-modeling.html#fnref44">↩</a></p></li>
-<li id="fn45"><p>This function, while very useful, incorrectly notes which fit is ‘better’ in terms of fit indices that cannot be used to compare models, and furthermore provides no way to turn the flag off.<a href="structural-equation-modeling.html#fnref45">↩</a></p></li>
-<li id="fn46"><p>See the <span class="pack">blavaan</span> package.<a href="structural-equation-modeling.html#fnref46">↩</a></p></li>
-<li id="fn47"><p>Despite the name, there is nothing inherently ‘statistical’ about the DSM.<a href="structural-equation-modeling.html#fnref47">↩</a></p></li>
-<li id="fn48"><p>I’m not sure why this is, but usually it is due to a lack of communication. According to Google scholar, Rex Kline’s applied text on SEM, which did not even have a chapter on graphical models until the most recent edition (which came out 17 years after the first), has been cited 10000 times more than any specific work Pearl has put out, who has several works cited well over 1000 times each. I would hazard a guess that most of the people doing SEM in psychology and education are not citing Pearl, despite his having provided many non-technical summaries that most could follow. There is certainly a disconnect somewhere.<a href="structural-equation-modeling.html#fnref48">↩</a></p></li>
+<ol start="42">
+<li id="fn42"><p>Bollen &amp; Pearl (2013) put the causal aspect this way: ‘SEM is an inference engine that takes in two inputs, qualitative causal assumptions and empirical data, and derives two logical consequences of these inputs: quantitative causal conclusions and statistical measures of fit for the testable implications of the assumptions. Failure to fit the data casts doubt on the strong causal assumptions of zero coefficients or zero covariances and guides the researcher to diagnose, or repair the structural misspecifications. Fitting the data does not “prove” the causal assumptions, but it makes them tentatively more plausible. Any such positive results need to be replicated and to withstand the criticisms of researchers who suggest other models for the same data.’.<a href="structural-equation-modeling.html#fnref42">↩</a></p></li>
+<li id="fn43"><p>For example, practically every growth curve model I’ve ever come across. I cringe every time I see one that doesn’t include time-varying covariates, though I know why they aren’t there.<a href="structural-equation-modeling.html#fnref43">↩</a></p></li>
+<li id="fn44"><p>And not in a Bayesian approach where it might be more viable.<a href="structural-equation-modeling.html#fnref44">↩</a></p></li>
+<li id="fn45"><p>See also this <a href="http://davidakenny.net/cm/fit.htm">site</a>, which seems to somehow have escaped the dissolution of GeoCities webpages.<a href="structural-equation-modeling.html#fnref45">↩</a></p></li>
+<li id="fn46"><p>This function, while very useful, incorrectly notes which fit is ‘better’ in terms of fit indices that cannot be used to compare models, and furthermore provides no way to turn the flag off.<a href="structural-equation-modeling.html#fnref46">↩</a></p></li>
+<li id="fn47"><p>See the <span class="pack">blavaan</span> package.<a href="structural-equation-modeling.html#fnref47">↩</a></p></li>
+<li id="fn48"><p>Despite the name, there is nothing inherently ‘statistical’ about the DSM.<a href="structural-equation-modeling.html#fnref48">↩</a></p></li>
+<li id="fn49"><p>I’m not sure why this is, but usually it is due to a lack of communication. According to Google scholar, Rex Kline’s applied text on SEM, which did not even have a chapter on graphical models until the most recent edition (which came out 17 years after the first), has been cited 10000 times more than any specific work Pearl has put out, who has several works cited well over 1000 times each. I would hazard a guess that most of the people doing SEM in psychology and education are not citing Pearl, despite his having provided many non-technical summaries that most could follow. There is certainly a disconnect somewhere.<a href="structural-equation-modeling.html#fnref49">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -885,9 +878,8 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section",
-"depth": 1,
-"scroll_highlight": true
+"collapse": "chapter",
+"depth": 3
 },
 "highlight": "pygments",
 "search": true

@@ -1,6 +1,6 @@
 # Latent Variables
 
-```{r include=FALSE}
+```{r lv_setup, include=FALSE}
 # if diagrammer starts randomly pulling visuals from other scripts, rebuild all here
 knitr::opts_chunk$set(cache.rebuild=F, cache=TRUE)
 ```
@@ -132,11 +132,11 @@ Now let's examine what is sometimes called *common* factor analysis, and also so
 
 First let's revisit PCA, where we can depict it conceptually as an approach where we attempt to approximate the correlation matrix in terms of the product of components, represented by our loading matrix $L$[^revref].
 
-$$R \approx LL'$$
+$$R = LL'$$
 and
 
 $$C = XW$$
-In other words, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $p$ observed variables $X$, the weights (with weight/loading matrix $W$) of which are determined by the loadings, but yet do not say anything about the correlations between the variables.  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following demonstrates this.
+In other words, each component *score* $C$, i.e. the score for a particular observation with regard to the component, is a weighted combination of the $p$ observed variables $X$, with weight matrix $W$[^weights].  We can use those component loadings to approximate the correlation matrix, or reproduce it exactly if we retain all the components possible.  The following demonstrates this.
 
 ```{r pca_preproduce_cormat}
 pc_all = principal(Harman.5, nfactors=5,  rotate='none', covar = F)
@@ -171,7 +171,8 @@ DiagrammeR::grViz('scripts/fa_gm.gv', width='100%', height='50%')
 
 And to reproduce the correlation matrix:
 
-$$R \approx LL' + \Psi$$
+$$R \approx LL'$$
+$$R = LL' + \Psi$$
 So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well[^fm]. If you look at the <span class="objclass">pc_all</span> results, you'll note that the uniquenesses are all zero, but this is not the case with factor analysis.
 
 ```{r fa_preproduce_cormat, echo=-1}
@@ -422,30 +423,38 @@ DiagrammeR::grViz('scripts/depression_fa_std.gv', width='100%', height='50%')
 
 When we move to multiple factors, not much changes relative to what we saw in the non-SEM setting and with the one factor case in the SEM.  We still specify specific paths, and we are now interested in the correlation between the two latent variables.
 
-The following data example regards a random sample of items from a test of cognitive ability.  Specifically we are looking at both verbal and spatial reasoning, and we assume them to be correlated.  Note that by default, most if not all SEM programs assume you want the latent variables to be correlated.  In general it would be useful to compare the fit of a model with and without the correlation regardless of what theory dictates.
+The following data from the <span class="pack">psych</span> package contain 25 personality items regarding the [Big 5](https://en.wikipedia.org/wiki/Big_Five_personality_traits) scales. There are 2800 total subjects, and five categories of questions[^big5].
 
-```{r multifactor, echo=-7, eval=T}
-cog_ability = psych::iqitems
+- agreeableness: a tendency to be compassionate and cooperative rather than suspicious and antagonistic towards others
+- conscientiousness: a tendency to be organized and dependable, show self-discipline, planning
+- openness to experience: appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety of experience.
+- extraversion:  energy, assertiveness, sociability and the tendency to seek stimulation in the company of others, and talkativeness.
+- neuroticism:  prone to physiological stress, tendency to experience unpleasant emotions easily, such as anger, anxiety, depression, and vulnerability
 
+We'll just look at part of this to keep things simple, namely the agreeableness and neuroticism items.  We'll posit two latent constructs, and we assume them to be correlated.  Note that by default, most if not all SEM programs assume you want the latent variables to be correlated.  In general it would be useful to compare the fit of a model with and without the correlation regardless of what theory dictates. Since item A1 is reverse scored, I make A2 the scaling variable to keep the loadings mostly positive.
+
+```{r multifactor, echo=-6, eval=T}
+bfi_trim = bfi %>% 
+  select(matches('A[1-5]|N[1-5]'))
 modelCode = "
-  verbal =~ reason.4 + reason.16 + reason.17 + reason.19
-  spatial =~ rotate.3 + rotate.4 + rotate.6 + rotate.8
+  agree =~ A2 + A1 + A3 + A4 + A5
+  neurot =~ N1 + N2 + N3 + N4 + N5
 
   # not necessary
-  # verbal ~~ spatial
+  # agree ~~ neurot
 
   # if you don't want them correlated
-  # verbal ~~ 0*spatial
+  # agree ~~ 0*neurot
 "
 
-famod = cfa(modelCode, data=cog_ability)
-summary(famod, standardized=T, rsq=T, nd=2)
-pars = parameterEstimates(famod, standardized=T)
+cfa_model = cfa(modelCode, data=bfi_trim)
+summary(cfa_model, standardized=T, rsq=T, nd=2)
+pars = parameterEstimates(cfa_model, standardized=T)
 ```
 
-To begin, we do see that the factors are notably correlated at roughly `r round(pars[nrow(pars),'std.all'],2)`, but in general these aren't the most spectacular results, as some items are not loading too highly on their respective construct, and some R-squares reinforce that notion. Remember also our distinction between pattern and structure coefficients though. Just because we don't have paths from some items to the other factor doesn't mean they aren't correlated with that factor.
+To begin, we do see that the factors are correlated at roughly `r round(pars[nrow(pars),'std.all'],2)`, but some items are not loading too highly on their respective construct, at least for Agreeableness, and some R-squares reinforce that notion. Remember also our distinction between pattern and structure coefficients though. Just because we don't have paths from some items to the other factor doesn't mean they aren't correlated with that factor.
 
-```{r plotMultiFactor, echo=F, eval=T}
+```{r plotMultiFactor, echo=F, eval=T, cache.rebuild=F}
 tags$div(style="width:100%; margin:auto auto;",
 grViz('scripts/multifactor.gv', width='100%')
 )
@@ -808,3 +817,6 @@ Latent variable approaches are a necessary tool to have in your statistical tool
 [^psychstudents]: Note that this is similar to the vast majority of psychological research, which is typically conducted on what isn't even a random sample of college attendees.
 
 [^mmpi]: The Minnesota Multiphasic Personality Inventory, or MMPI, was left unchanged for *45 years* before a second version, the MMPI-2, came  along in 1989.  Since then one more has been released, the MMPI-2-RF. That's like going from version 1 to 2 to 2.5 in 65 years (plus the almost 10 since the last version).  Other versions have been constructed for adolescents (soon to be updated for the first time since 1992), and other languages.  This slow development has occurred despite known issues for certain segments of the population, to which it continues to be applied.  
+
+
+[^weights]: For the technically inclined, $W$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, <span class="pack">psych</span> uses weights based on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.

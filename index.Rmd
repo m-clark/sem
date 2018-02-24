@@ -12,9 +12,9 @@ output:
       number_sections: false
       config:
         toc:
-          depth: 1
-          collapse: section  # ignored for reasons unknown; see output.yml
-          scroll_highlight: yes
+          depth: 3
+          collapse: chapter  # ignored for reasons unknown; see output.yml
+          # scroll_highlight: yes
         search: yes
         fontsettings:
           family: san-serif

@@ -1,6 +1,6 @@
 # Structural Equation Modeling
 
-```{r include=FALSE}
+```{r sem_setup, include=FALSE}
 # if diagrammer starts randomly pulling visuals from other scripts, rebuild all here
 knitr::opts_chunk$set(cache.rebuild=F, cache=TRUE)
 ```
@@ -73,7 +73,7 @@ The following model is a classic example from Wheaton et al. (1977), which used 
 #  
 # # convert to a full symmetric covariance matrix with names
 # wheaton.cov = getCov(lower, names=c("anomia67","powerless67", "anomia71",
-#                                      "powerless71","education","sei"))
+#  "powerless71","education","sei"))
 # 
 # write.csv(wheaton.cov, file='data/wheaton_cov.csv') 
 # write.csv(cov2cor(wheaton.cov), file='data/wheaton_cor.csv')
@@ -107,9 +107,9 @@ alienation <- sem(wheaton.model, sample.cov=wheaton.cov, sample.nobs=932)
 ```{r wheatonPlot, eval=F, echo=FALSE, dev='svglite'}
 # keep this
 semPlot::semPaths(alienation, layout='tree2', style='lisrel', whatLabels = 'path', groups=c('latent', 'man'), 
-                  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
-                  sizeMan=5, sizeLat=10, edge.label.cex=.75, borders=F, #edge.color='#1e90ff',
-                  label.color='#ffffff', residScale=10, curve=1, nCharNodes=6, exoVar=T, covAtResiduals=T, residuals=T) 
+      color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
+      sizeMan=5, sizeLat=10, edge.label.cex=.75, borders=F, #edge.color='#1e90ff',
+      label.color='#ffffff', residScale=10, curve=1, nCharNodes=6, exoVar=T, covAtResiduals=T, residuals=T) 
 # semPlot::semPaths(alienation, residuals=T, style='lisrel', edgeLabels='', residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1)
 ```
 
@@ -123,45 +123,45 @@ semPlot::semPaths(alienation, layout='tree2', style='lisrel', whatLabels = 'path
 # as.hexmode(round(greenpink))
 
 tags$div(style="width:100%; margin:auto auto;",
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% grViz('scripts/alienation.gv', width='100%')
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% )
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% <br>
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% paths are statistically significant, as is the indirect effect specifically.  Note that the disturbances for the endogenous latent %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% variables reflect only unobserved causes, not measurement error, which is captured via the uniquenesses for the indicators.   In other %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% words, the path coefficients from one latent variable to another have been adjusted for measurement error.
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% Here we see that higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% vs. negative weights, and the closer to zero the more faded they are.
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>%                   residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1, 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>%                   structural=T, borders=F, color='#ff5503', label.color='#ffffff')
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```{r wheatonStructural2, echo=FALSE, dev='svglite'}
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% tags$div(style="width:100%; margin:auto auto; ",
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% grViz('scripts/alienation_structural.gv', width='100%', height='400px')
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% )
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% <br>
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```{r wheatonResults, echo=FALSE}
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% summary(alienation, fit=T, rsq=T, std=T)
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ```
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just %>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ## Issues in SEM
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% ### Identification
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% 
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% Identification generally refers to the problem of finding a unique estimate of the value for each parameter in the model. Consider the %>% %>% %>% %>% %>% %>% %>% %>%  %>%>% % %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% following:
-%>% %>% %>%  %>% %>% %>% %>% %>% %>% %>% %>% $$ a + %>% %>% %>% %>% %>% %>% b = 2$$
+grViz('scripts/alienation.gv', width='100%')
+)
+```
+
+
+<br>
+
+The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically.  Note that the disturbances for the endogenous latent variables reflect only unobserved causes, not measurement error, which is captured via the uniquenesses for the indicators.   In other words, the path coefficients from one latent variable to another have been adjusted for measurement error.
+
+Here we see that higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation.  We are also accounting for roughly 50% of the variance in 1971 alienation.  Colors represent positive vs. negative weights, and the closer to zero the more faded they are.
+
+```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
+semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
+      residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1, 
+      structural=T, borders=F, color='#ff5503', label.color='#ffffff')
+```
+
+
+```{r wheatonStructural2, echo=FALSE, dev='svglite'}
+tags$div(style="width:100%; margin:auto auto; ",
+grViz('scripts/alienation_structural.gv', width='100%', height='400px')
+)
+```
+
+<br>
+
+
+```{r wheatonResults, echo=FALSE}
+summary(alienation, fit=T, rsq=T, std=T)
+```
+
+To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret each endogenous variable individually as its own model, then move toward the big picture.  Regression with latent variables is the same as regression with observed variables which is the same as a mixture of them.  Correlations, i.e. undirected paths, are still just correlations just like anywhere else.  As for the model fit indices, I will discuss them momentarily and in turn.
+
+## Issues in SEM
+
+### Identification
+
+Identification generally refers to the problem of finding a unique estimate of the value for each parameter in the model. Consider the following:
+$$ a + b = 2$$
 
 There is no way for us to determine a unique solution for $a$ and $b$, e.g. the values of 1 and 1 work just as well as -1052 and 1054 and infinite other combinations.  We can talk about 3 basic scenarios, and the problem generally regards how much information we have (in terms of (co)variances) vs. how many parameters we want to estimate in the model.
 
@@ -233,10 +233,10 @@ fitMeasures(alienation, c('chisq', 'df', 'pvalue', 'cfi', 'rmsea', 'srmr', 'AIC'
 
 ```{r chisqOutput, echo=F}
 cat(
-'  Estimator                                         ML
-  Minimum Function Test Statistic                4.735
-  Degrees of freedom                                 4
-  P-value (Chi-square)                           0.316
+'  Estimator     ML
+  Minimum Function Test Statistic    4.735
+  Degrees of freedom         4
+  P-value (Chi-square)   0.316
 '
 )
 ```
@@ -255,8 +255,8 @@ Note that <span class="pack">lavaan</span> also provides a Chi-square test which
 ```{r cfioutput, echo=FALSE}
 cat('User model versus baseline model:
 
-  Comparative Fit Index (CFI)                    1.000
-  Tucker-Lewis Index (TLI)                       0.999'
+  Comparative Fit Index (CFI)        1.000
+  Tucker-Lewis Index (TLI)           0.999'
 )
 ```
 
@@ -268,9 +268,9 @@ The <span class="emph">Comparative Fit Index</span> compares the fitted model to
 ```{r rmseaoutput, echo=FALSE}
 cat('Root Mean Square Error of Approximation:
 
-  RMSEA                                          0.014
+  RMSEA      0.014
   90 Percent Confidence Interval          0.000  0.053
-  P-value RMSEA <= 0.05                          0.930
+  P-value RMSEA <= 0.05  0.930
 ')
 ```
 
@@ -281,7 +281,7 @@ The root mean squared error of approximation is a measure that also centers on t
 ```{r srmroutput, echo=F}
 cat('Standardized Root Mean Square Residual:
 
-  SRMR                                           0.007')
+  SRMR       0.007')
 ```
 
 The standardized root mean squared residual is the mean absolute correlation residual, i.e. the difference between the observed and model-implied correlations. Historical suggestions are to also look for values less than .05, but it is better to simply inspect the residuals and note where there are large discrepancies.
@@ -347,7 +347,7 @@ compfit = summary(compareFit(alienation, alienationNoInd))
 library(semTools)
 compareFit(alienation, alienationNoInd)
 cat('################### Nested Model Comparison #########################
-                                chi df      p delta.cfi
+        chi df      p delta.cfi
 alienation - alienationNoInd 200.28  1  <.001    0.0941')
 
 # pander::pander(compfit, split.table=Inf) # now chokes on encoding?

@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-02-17">
+<meta name="date" content="2018-02-24">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -123,9 +123,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://m-clark.github.io/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#990024; font-family:Roboto">Structural Equation Modeling</span></a></li>
-
-<li class="divider"></li>
 <li><a href="index.html#section"></a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a><ul>
@@ -338,10 +335,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="other-3.html"><a href="other-3.html"><i class="fa fa-check"></i>Other</a></li>
 <li><a href="section-1.html#section-1"></a></li>
-<li class="divider"></li>
-<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png" /></a></li>
-
 </ul>
 
       </nav>
@@ -361,12 +354,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="bayesian-nonparametric-models" class="section level1">
 <h1>Bayesian Nonparametric Models</h1>
-<p>In mixture models and factor analysis we must set the number of clusters or factors respectively in order to run the models. The natural question is obviously <em>how many clusters</em> or <em>how many factors</em>? There is no answer<a href="#fn67" class="footnoteRef" id="fnref67"><sup>67</sup></a>. For standard cluster analyses like k-means and standard factor analysis, crude measures may be provided but they are not very satisfactory. Model based approaches like mixture models and SEM may allow for information-based model comparison or similar, but are still problematic.</p>
+<p>In mixture models and factor analysis we must set the number of clusters or factors respectively in order to run the models. The natural question is obviously <em>how many clusters</em> or <em>how many factors</em>? There is no answer<a href="#fn68" class="footnoteRef" id="fnref68"><sup>68</sup></a>. For standard cluster analyses like k-means and standard factor analysis, crude measures may be provided but they are not very satisfactory. Model based approaches like mixture models and SEM may allow for information-based model comparison or similar, but are still problematic.</p>
 <p><span class="emph">Bayesian nonparametric models</span> allow for a different approach. Instead of predetermining the number of clusters or latent variables, their numbers are allowed to grow with the data itself, or rather, the number is assumed infinite and the addition of latent classes/variables grows with the data. The section provides a very brief overview of the techniques, and essentially summarizes the Gershman &amp; Blei tutorial (2011).</p>
 <div id="chinese-restaurant-process" class="section level2">
 <h2>Chinese Restaurant Process</h2>
-<p>The <span class="emph">Chinese Restaurant Process</span> (CRP) regards the extension of (finite) <a href="mixture-models.html#mixture-models">mixture models</a> previously discussed, but where we now consider infinite capacity models. The idea is to imagine a restaurant<a href="#fn68" class="footnoteRef" id="fnref68"><sup>68</sup></a> with an infinite number of tables, where the tables represent our clusters. Now come the customers. The first sits at the first table. The next sits at that table with probability <span class="math inline">\(1/(1+\alpha)\)</span>, or the next table with <span class="math inline">\(\alpha/(1+\alpha)\)</span>. The process continues for the n<sup>th</sup> person, who sits at any occupied table with probability <span class="math inline">\(m_k/(n-1+\alpha)\)</span> where <span class="math inline">\(m_k\)</span> is the number of people sitting at table <span class="math inline">\(k\)</span>, and at a new table <span class="math inline">\(\alpha/(n - 1+\alpha)\)</span>. In other words, a person sits at the occupied tables with some probability proportional to the number of people already sitting there, and the unoccupied table at some probability proportional to <span class="math inline">\(\alpha\)</span>. The choice of the parameter determines how likely new customers are to join an occupied or new table.</p>
-<p>It is perhaps instructive, at least for those more familiar with R or other programming, to see some code for this process<a href="#fn69" class="footnoteRef" id="fnref69"><sup>69</sup></a>. The following code is in no way optimized, and serves only for demonstration. One can set the alpha parameter and number of observations.</p>
+<p>The <span class="emph">Chinese Restaurant Process</span> (CRP) regards the extension of (finite) <a href="mixture-models.html#mixture-models">mixture models</a> previously discussed, but where we now consider infinite capacity models. The idea is to imagine a restaurant<a href="#fn69" class="footnoteRef" id="fnref69"><sup>69</sup></a> with an infinite number of tables, where the tables represent our clusters. Now come the customers. The first sits at the first table. The next sits at that table with probability <span class="math inline">\(1/(1+\alpha)\)</span>, or the next table with <span class="math inline">\(\alpha/(1+\alpha)\)</span>. The process continues for the n<sup>th</sup> person, who sits at any occupied table with probability <span class="math inline">\(m_k/(n-1+\alpha)\)</span> where <span class="math inline">\(m_k\)</span> is the number of people sitting at table <span class="math inline">\(k\)</span>, and at a new table <span class="math inline">\(\alpha/(n - 1+\alpha)\)</span>. In other words, a person sits at the occupied tables with some probability proportional to the number of people already sitting there, and the unoccupied table at some probability proportional to <span class="math inline">\(\alpha\)</span>. The choice of the parameter determines how likely new customers are to join an occupied or new table.</p>
+<p>It is perhaps instructive, at least for those more familiar with R or other programming, to see some code for this process<a href="#fn70" class="footnoteRef" id="fnref70"><sup>70</sup></a>. The following code is in no way optimized, and serves only for demonstration. One can set the alpha parameter and number of observations.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crp &lt;-<span class="st"> </span><span class="cf">function</span>(alpha, n) {
   table_assignments =<span class="st"> </span><span class="dv">1</span>
   
@@ -445,7 +438,7 @@ ibp_<span class="dv">4</span> =<span class="st"> </span><span class="kw">ibp</sp
 </div>
 <p><br></p>
 <p>In both cases, the result of the IBP is a binary matrix where rows represent the measures and columns the latent factors. However, we see that with the initial result, most stick only to one or two factors, while in the latter they are more likely to sample additional ‘dishes’.</p>
-<p>So now that we have the binary, on-off, switch, <span class="math inline">\(Z\)</span>, that results from the IBP, we can think of the usual factor loading matrix <span class="math inline">\(\Lambda\)</span> as decomposed into the <span class="math inline">\(Z\)</span> and weight matrix <span class="math inline">\(w\)</span>, and then we are <a href="latent-variables-1.html#constructs-and-measurement-models">as we were before</a> with observed variables X as a weighted combination of the latent factors<a href="#fn70" class="footnoteRef" id="fnref70"><sup>70</sup></a>.</p>
+<p>So now that we have the binary, on-off, switch, <span class="math inline">\(Z\)</span>, that results from the IBP, we can think of the usual factor loading matrix <span class="math inline">\(\Lambda\)</span> as decomposed into the <span class="math inline">\(Z\)</span> and weight matrix <span class="math inline">\(w\)</span>, and then we are <a href="latent-variables-1.html#constructs-and-measurement-models">as we were before</a> with observed variables X as a weighted combination of the latent factors<a href="#fn71" class="footnoteRef" id="fnref71"><sup>71</sup></a>.</p>
 <p><span class="math display">\[Z \odot w = \Lambda\]</span> <span class="math display">\[X_n =  \Lambda F_n + \epsilon_n\]</span></p>
 <p>The above assumes an observed data matrix <span class="math inline">\(X\)</span>, where each <span class="math inline">\(n\)</span> observations is of some dimension <span class="math inline">\(m\)</span>. <span class="math inline">\(\Lambda\)</span> is our <span class="math inline">\(m\)</span> by <span class="math inline">\(k\)</span> loading matrix, where <span class="math inline">\(k\)</span> is the number of latent factors, and is created by the elementwise product of <span class="math inline">\(Z\)</span> and <span class="math inline">\(w\)</span>. <span class="math inline">\(F\)</span> represents our factors, and <span class="math inline">\(\epsilon\)</span> the noise.</p>
 <p>The main take home point regarding the IBP is that, like with the CRP, we do not have to prespecify a number of latent factors. In addition, it has a regularizing effect to keep the number of factors low, depending on the prior setting (<span class="math inline">\(\alpha\)</span>).</p>
@@ -462,11 +455,11 @@ ibp_<span class="dv">4</span> =<span class="st"> </span><span class="kw">ibp</sp
 </div>
 <div class="footnotes">
 <hr />
-<ol start="67">
-<li id="fn67"><p>There is no answer because they aren’t real.<a href="bayesian-nonparametric-models.html#fnref67">↩</a></p></li>
-<li id="fn68"><p>The name comes from an early paper whose authors were referencing restaurants in San Francisco.<a href="bayesian-nonparametric-models.html#fnref68">↩</a></p></li>
-<li id="fn69"><p>The code the CRP and IBP above is based partly on some R code I found on <a href="https://github.com/mcdickenson/shinyapps">GitHub</a>, which has a nice shiny app you can explore.<a href="bayesian-nonparametric-models.html#fnref69">↩</a></p></li>
-<li id="fn70"><p>This follows the presentation in Gershman &amp; Blei tutorial (2011) and Knowles &amp; Ghahramani (2011). In other instances, it is depicted similar to the CRP, where the binary mask matrix Z regards the latent factors (e.g. Knowles &amp; Ghahramani (2007)), i.e. it focuses on the data observations rather than the data dimensions <span class="math inline">\(\Lambda(Z\odot F)\)</span>.<a href="bayesian-nonparametric-models.html#fnref70">↩</a></p></li>
+<ol start="68">
+<li id="fn68"><p>There is no answer because they aren’t real.<a href="bayesian-nonparametric-models.html#fnref68">↩</a></p></li>
+<li id="fn69"><p>The name comes from an early paper whose authors were referencing restaurants in San Francisco.<a href="bayesian-nonparametric-models.html#fnref69">↩</a></p></li>
+<li id="fn70"><p>The code the CRP and IBP above is based partly on some R code I found on <a href="https://github.com/mcdickenson/shinyapps">GitHub</a>, which has a nice shiny app you can explore.<a href="bayesian-nonparametric-models.html#fnref70">↩</a></p></li>
+<li id="fn71"><p>This follows the presentation in Gershman &amp; Blei tutorial (2011) and Knowles &amp; Ghahramani (2011). In other instances, it is depicted similar to the CRP, where the binary mask matrix Z regards the latent factors (e.g. Knowles &amp; Ghahramani (2007)), i.e. it focuses on the data observations rather than the data dimensions <span class="math inline">\(\Lambda(Z\odot F)\)</span>.<a href="bayesian-nonparametric-models.html#fnref71">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -509,9 +502,8 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section",
-"depth": 1,
-"scroll_highlight": true
+"collapse": "chapter",
+"depth": 3
 },
 "highlight": "pygments",
 "search": true
