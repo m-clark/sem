@@ -319,7 +319,7 @@ $\mu$ are the intercepts, $\Psi$ is a $DxD$ covariance matrix.
 
 $$\Psi = \sigma^2I$$
 
-The following plot shows the projection of original data onto the principal component, where we have two variables and one component. By default, PCA results in an orthogonal projection, where PPCA does not, and shrinks estimates to the overall mean.
+The following plot shows the projection of original data onto the principal component, where we have two variables and one component. By default, PCA results in an orthogonal projection, where PPCA does not require this, and shrinks estimates to the overall mean.
 
 ```{r ppca, echo=FALSE, out.width='100%', fig.asp=.5}
 PPCAEM = function(X, nComp=2, tol=.00001, maxits=100, showits=F){
