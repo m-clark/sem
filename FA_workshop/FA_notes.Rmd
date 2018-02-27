@@ -220,7 +220,7 @@ And to reproduce the correlation matrix:
 $$R \approx WW'$$
 $$R = WW' + \Psi$$
 
-So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well.
+So if we just use the loadings from the FA, we cannot reproduce the correlation matrix exactly, we need to add the uniquenesses as well[^fareprod].
 
 What this amounts to conceptually are a few key ideas:
 
@@ -1212,12 +1212,12 @@ So the more negative responding types were also those likely to vote for Bush, w
 > "Solving the number of factors problem is easy, I do it everyday before breakfast. But knowing the right solution is harder." 
 ~ H. F. Kaiser
 
-The only rule you have to follow is to never use a scree plot make your decision. Elbows indeed.
+> The only rule you have to follow is to never use a scree plot to make your decision. Elbows indeed.
+~ Anonymous
 
-If you're using a latent variable or factor analysis approach for interpretative purposes, theory should be a strong, but not overwhelming guide.  If your data suggest three are clearly better than two (e.g. via AIC comparison), then go with that, because that may just be how it is for your sample.  For measurement models, some get hung up on 'validated' scales, and are reluctant to even explore other possibilities. But if the scale was validated on different types of people than your sample, you should probably be more exploratory. Many tools have been offered to assist with this, and if one were able to definitively say how many factors were 'best', you'd have heard about it by now. For common factor analysis, see the help file for the <span class="func">nfactors</span>
- in <span class="pack">psych</span>
+Many tools have been offered to assist with this, and if one were able to definitively say how many factors were 'best', you'd have heard about it by now. For FA and PCA, see the help file for the <span class="func">nfactors</span> in <span class="pack">psych</span> (also <span class="func">unidim</span>), which will provide eight or so metrics, and probably cause confusion more than clarity.
 
-If prediction is the primary goal, you should actually be wary of dimension reduction techniques.  Having more columns than rows or mountains of data is commonly dealt with by using other techniques that can handle it, not by reducing the data so you can do a regression.  Dimension reduction would still perhaps be useful in *small* data settings though.  Allowing you to retain information from multiple sources without making the ultimate model overly complex.
+In general, if you're using a latent variable or factor analysis approach for interpretative purposes, theory should be a strong, but not overwhelming guide.  If your data suggest three are clearly better than two (e.g. via AIC comparison), then go with that, because that may just be how it is for your sample.  For measurement models, some get hung up on 'validated' scales, and are reluctant to even explore other possibilities. But if the scale was validated on different types of people than your sample, you should probably be more exploratory. I can also mention that scales have been used for decades that were never adequately shown to be very reliable in the first place.
 
 ### Interpretation
 
@@ -1228,14 +1228,16 @@ Interpretation comes largely from the weights/loadings or related coefficients. 
 
 In many situations, you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarily be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
 
+
 ### Predictive Modeling
 
-Many often use the clusters or factor scores obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately, this ignores the uncertainty in those estimates of the class membership. Essentially your standard errors will be a bit optimistic.
+Many often use the clusters or factor scores obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately, this ignores the uncertainty in those estimates of the class membership or factor score. Essentially your standard errors will be a bit optimistic.
 
-While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example, several suggestions have been made for doing so with latent classes in the SEM context, and they generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about sample size, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.  I would also recommend looking at the help file for the <span class="func">factor.scores</span> function in <span class="pack">psych</span>.
+While personally I'm less worried about this, using SEM or other approaches will allow for simultaneous estimation, and should be employed if not too much trouble.  Even then it might not be straightforward.  For example, several suggestions have been made for doing so with latent classes in the SEM context to keep the latent class determination free of contamination by the predictive model.  They generally just find a different issue arising with each, and using the 'appropriate' technique may mean other standard post-processing is not available.  When the latent variables are continuous, there are concerns about smaller sample sizes with SEM, but you can use <span class="func">fsr</span> (factor score regression) in <span class="pack">lavaan</span> to correct the standard errors.  I would also recommend looking at the help file for the <span class="func">factor.scores</span> function in <span class="pack">psych</span>.
 
 There are many disciplines that will just do the two-step and not blink an eye, so you shouldn't feel bad just using factor analysis and related as an initial pre-processing dimension reduction step.  
 
+If prediction is the *primary* goal of the analysis however, you should actually be wary of dimension reduction techniques.  Having more columns than rows or mountains of data is commonly dealt with by using other techniques that can handle it, not by reducing the data so you can do a regression.  Dimension reduction would still perhaps be useful in *small* data settings though, allowing you to retain information from multiple sources without making the ultimate model overly complex.
 
 ### Issues with Latent Classes
 
@@ -1267,7 +1269,7 @@ Data: National Longitudinal Survey of Youth (1997, NLSY97), which investigates t
 
 There are several things you could run here. For example, use the <span class="pack">psych</span> package to run PCA, FA, or even IRT. You could also use <span class="pack">poLCA</span> to run a latent class analysis, or <span class="pack">mclust</span> if you just want to treat the data as numeric to run a standard mixture model.  Given the nature of the variables, you could even see what a recommender system would come up with.  Note that there is an ID variable that you don't want to include in your analyses.
 
-```{r eval=FALSE}
+```{r exercise, eval=FALSE}
 library(dplyr)
 nlsy = read.csv('https://raw.githubusercontent.com/m-clark/sem/master/data/nlsy97_governmentNumeric.csv')
 nlsy = nlsy %>% 
@@ -1302,3 +1304,5 @@ psych::describe(nlsy)
 [^eigen]: They are the <span class="emph">eigenvalues</span> of the correlation matrix.  In addition, they are the diagonal of the cross-product of the loading matrix, i.e. $W'W$.
 
 [^weights]: My description here is a bit loose, but mostly for reasons that allow me to say similar things across techniques. For the technically inclined, $V$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, <span class="pack">psych</span> uses weights based on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.
+
+[^fareprod]: Note that your actual factor solution will still only approximate the observed correlation matrix, except under certain settings that would make it similar to PCA.
