@@ -1206,12 +1206,16 @@ So the more negative responding types were also those likely to vote for Bush, w
 
 ### How many latent factors/classes?
 
-> "Solving the number of factors problem is easy, I do it everyday before breakfast. But knowing the right solution is harder" 
+> Determining the most interpretable number of factors from a factor analysis is perhaps one of the greatest challenges in factor analysis. There are many solutions to this problem, none of which is uniformly the best.
+~ W. Revelle
+
+> "Solving the number of factors problem is easy, I do it everyday before breakfast. But knowing the right solution is harder." 
 ~ H. F. Kaiser
 
 The only rule you have to follow is to never use a scree plot make your decision. Elbows indeed.
 
-If you're using a latent variable or factor analysis approach for interpretative purposes, theory should be a strong, but not overwhelming guide.  If your data suggest three are clearly better than two, then go with that, because that may just be how it is for your sample.  For measurement models, some get hung up on 'validated' scales, and are reluctant to even explore other possibilities. But if the scale was validated on different types of people than your sample, you should probably be more exploratory.
+If you're using a latent variable or factor analysis approach for interpretative purposes, theory should be a strong, but not overwhelming guide.  If your data suggest three are clearly better than two (e.g. via AIC comparison), then go with that, because that may just be how it is for your sample.  For measurement models, some get hung up on 'validated' scales, and are reluctant to even explore other possibilities. But if the scale was validated on different types of people than your sample, you should probably be more exploratory. Many tools have been offered to assist with this, and if one were able to definitively say how many factors were 'best', you'd have heard about it by now. For common factor analysis, see the help file for the <span class="func">nfactors</span>
+ in <span class="pack">psych</span>
 
 If prediction is the primary goal, you should actually be wary of dimension reduction techniques.  Having more columns than rows or mountains of data is commonly dealt with by using other techniques that can handle it, not by reducing the data so you can do a regression.  Dimension reduction would still perhaps be useful in *small* data settings though.  Allowing you to retain information from multiple sources without making the ultimate model overly complex.
 
