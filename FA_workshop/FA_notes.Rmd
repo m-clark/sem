@@ -10,7 +10,7 @@ output:
     css: standard_html_fa.css
     df_print: kable
     highlight: pygments
-    theme: sandstone
+    #theme: sandstone
     toc: yes
     toc_float: yes
 ---
@@ -52,7 +52,24 @@ Some key ideas:
 - **Latent Linear Models**: Many if not all of those we discuss can be expressed as a (multivariate) linear model.
 - **Measurement error**: Some techniques can be used to tell us how well a group of items measure what they are supposed to measure.
 
-Each section will provide some suggested packages to serve as starting points for standard implementations, most with code demonstrations.  Just note that there will likely be several packages beyond those suggested that provide enhancements in a variety of fashion.
+Each section will provide some suggested packages to serve as starting points for standard implementations, most with code demonstrations.  Just note that there will likely be several packages beyond those suggested that provide enhancements in a variety of fashion.  Almost all the data is available from R packages (`package::data`):
+
+- `psych::bfi`
+- `psych::ability`
+- `lda::poliblog.documents`
+- `datasets::UScitiesD`
+- `datasets::faithful`
+- `recommenderlab::MovieLense`
+- `poLCA::election`
+
+To load them load the package and type `data('datasetname')`, or otherwise `data('datasetname', package='pack')`. 
+
+And while the MNIST data is available in various places, you can download the processed threes used in the demos [here](https://github.com/m-clark/sem/raw/master/data/threes_mnist.RData).
+
+This document also makes use of the <span class="pack">tidyverse</span> family of packages, so you'll want to have at least <span class="pack">dplyr</span> loaded.  
+
+This document is meant to be high level.  For more details preuse my document on [Graphical & Latent Variable Models](http://m-clark.github.io/sem/).  See also, fellow CSCAR consultant James Henderson's [recent slides](https://jbhender.github.io/DimensionReduction-06June2017.html) regarding PCA, factor analysis, and multidimensional scaling for a bit more technical detail and additional examples regarding those techniques.
+
 
 
 ## Principal Components Analysis
@@ -61,9 +78,7 @@ We'll start with one of the most widely used techniques for dimension reduction.
 
 $$X = ZW'$$
 
-Each component, or factor, created accounts for less of the variance in the original data.  So, while PCA returns the same number of components as there are columns in the original data, they big idea is that we want to use far fewer.  However, with all components, 
-
-
+Each created component, or factor, accounts for respectively less of the variance in the original data.  So, while PCA returns the same number of components as there are columns in the original data, they big idea is that we want to use far fewer.  However, with all components, we could reconstruct the data exactly.
 
 Take for example, the [MNIST data](http://yann.lecun.com/exdb/mnist/), which contains 28 by 28 pixel images of the digits 0-9.  If we unroll the data to 784 columns, each row represents a single digit, with each entry the [grayscale value](https://en.wikipedia.org/wiki/Grayscale).  We can see in the following how well we can reconstruct a digit via PCA.  Even with only two components we can get a sense of what we're looking at.  With all components, the reconstruction is perfect.
 
@@ -140,9 +155,10 @@ heatmaply::heatmaply(pc$loadings, dendrogram='none',
                      hide_colorbar=T, 
                      plot_method='ggplot'
                      ) %>% 
+  theme_plotly() %>% 
   plotly::layout(yaxis = list(showline = F),
          xaxis = list(showline = F)
-         )
+         ) 
 , width=500
 )
 ```
@@ -248,9 +264,10 @@ heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
                      labCol=c('Neuro', 'Agree'),
                      plot_method='ggplot'
                      ) %>% 
+  theme_plotly() %>% 
   plotly::layout(yaxis = list(showline = F),
          xaxis = list(showline = F)
-         )
+         ) 
 , width=500
 )
 ```
@@ -262,10 +279,9 @@ heatmaply::heatmaply(fa_model$loadings, dendrogram='none',
 
 ### "Confirmatory" Factor Analysis
 
-Some distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings/paths to be zero.  Otherwise they are identical techniques.  For example, if we only had a single factor, the results from 'confirmatory' and 'exploratory' FA are identical if they use the same estimation techniques (e.g. maximum likelihood).
+Some distinguish between <span class="emph">exploratory</span> factor analysis and <span class="emph">confirmatory</span> factor analysis, but all the latter is doing is constraining some loadings/paths to be zero.  Otherwise they are identical techniques, or can be made to be.  For example, if we only had a single factor, the results from 'confirmatory' and 'exploratory' FA are identical if they use the same estimation techniques (e.g. maximum likelihood).
 
-Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after accounting for the correlation of the factors, we can set things up to coincide with our substantive assumptions.  In other cases, theory might be available, but it might just also be a simplifying assumption.  
-
+Why would you set loadings or factor correlations to zero? Theory would suggest it.  For example, the agreeableness items shouldn't be a measure of neuroticism after accounting for the correlation of the factors, so we can set things up to coincide with our substantive assumptions.  In other cases, theory might be available, but it might just also be a simplifying assumption.  
 
 The following shows how to do this with the structural equation modeling package <span class="pack">lavaan</span>.  One just has to specify each latent variable and the corresponding observed indicators that go with it.
 
@@ -297,7 +313,7 @@ br()
 
 <br>
 
-In general, our results are very similar to the previous factor analysis, but we didn't have to estimate all the cross loadings, so this approach is a simpler model.  For more on confirmatory factor analysis, take a look [here](https://m-clark.github.io/sem/latent-variables-1.html#constructs-and-measurement-models).
+In general, our results are very similar to the previous factor analysis, but we didn't have to estimate all the cross loadings, so this approach is a simpler model.  As before, the factor explains what the items have in common, and what they do not explain is partly due to measurement error, or in other words, a lack of reliability of measurement.  For more on confirmatory factor analysis, take a look [here](https://m-clark.github.io/sem/latent-variables-1.html#constructs-and-measurement-models).
 
 
 #### Suggested R packages
@@ -1284,13 +1300,11 @@ psych::describe(nlsy)
 
 [^big5]: These descriptions come from the Wikipedia page.
 
-[^rotated]: These results have been rotated, something rarely practiced with PCA and almost always done with FA.  
+[^rotated]: These results have been rotated, something not often practiced with PCA, yet almost always done with FA.  
 
 [^badfactor]: Muddier results are more the rule than the exception in my experience. Not enough initial development is typically done with scales, and when other people use them in other settings, it often ends with disappointment.  Just think, many psychological scales are developed on specific clinical samples or freshman psychology students.  How well do you think that will generalize?
 
 [^reverse]: In almost every case I've come across, reverse-scored items are simply poorer items.
-
-[^pca_normal]: even standard PCA won't work nearly as well if the data aren't.  This is not required, and ICA, <span class="emph">independent components analysis</span> does not. The visualization duplicates that seen in Murphy (2012).
 
 [^mds]: This section has been gracefully stolen from [James Henderson](https://github.com/jbhender/Workshops/). As with ICA, I personally have never had a need to use this technique, nor was much interested beyond what I knew about it already, so I decided to lift it from him. I can say that <span class="pack">ldaVis</span> shows topic relations from LDA using it, so there's that. James' [workshop on dimension reduction](https://jbhender.github.io/DimensionReduction-06June2017.html) provides a more technical detail and additional examples for PCA, FA and MDS, for those inclined.
 

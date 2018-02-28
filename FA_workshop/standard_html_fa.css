@@ -1,4 +1,4 @@
-/* @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Roboto+Condensed');
+@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Open+Sans|Open+Sans+Condensed');
 /*@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 /*@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300');
 /*@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
@@ -27,12 +27,13 @@
 }
 
 a {
-  color: #1e90ff;  /*dodgerblue*/
+  color: #00aaff; 
 }
 
 body {
   color: #585858; /*#595959 (i.e. gray35) provides recommended contrast ratio 7:1 on white; change 9s to 8s for offwhite;*/
   background-color: #fffff8;
+  font-family: Roboto;
 }
 
 p {
@@ -49,23 +50,29 @@ code {
   /* padding: 10px 0 10px 60px; /* Change the last value here to move the text left or right */
   position: relative;
   width: 100%; /* This changes where the code chunk box ends on the right side */
-  font-family: 'Roboto Mono' 'Lucida Sans' Consolas monospace;
-  font-size: 100%; /*changes output size; and comments*/
+  font-family: 'Roboto Mono', 'Lucida Sans', Consolas, monospace;
+  font-size: 90%; /*changes output size; and comments*/
   /*border: 10px solid #ff5500;*/  /*code block and results border*/
   /*background-color:#ff5500;*/   /* results background*/
+  background-size: 90%;
 
 }
-pre .r {
+pre, pre .r {
   box-sizing: border-box;
   left: 0; /* This changes where the code chunk box actually starts */
   /* padding: 10px 0 10px 60px; /* Change the last value here to move the text left or right */
   position: relative;
   /*width: 100%; /* This changes where the code chunk box ends on the right side */
-  font-family: 'Roboto Mono' 'Lucida Sans' Consolas monospace;
-  /*font-size: 100%; /*changes output size; and comments*/
+  font-family: 'Roboto Mono', 'Lucida Sans', Consolas, monospace;
+  font-size: 90%; /*changes output size; and comments*/
   /*border: 10px solid #ff5500;*/  /*code block and results border*/
-  /*background-color:#ff5500;*/   /* results background*/
+  /*background-color: #f5f5f5;*/
+}
 
+/*seriously, wtf*/
+pre:not([class]) {
+    background-color: #fafafa;
+    font-size: 90%;
 }
 
 #TOC{
@@ -130,3 +137,25 @@ div.datatables {
 .table {
   margin: 0 auto;
 }
+
+
+p a {
+    background-image: linear-gradient(180deg,transparent 90%, #00aaff 0); /*#fcf113*/
+    background-size: 0 100%;
+    background-repeat: no-repeat;
+    text-decoration: none;
+    -webkit-transition: background-size .4s ease;
+    -moz-transition: background-size .4s ease;
+    -ms-transition: background-size .4s ease;
+    -o-transition: background-size .4s ease;
+    transition: background-size .4s ease;
+    border-bottom: 0px solid;
+}
+
+p a:focus, p a:hover {
+    background-size: 100% 100%;
+    cursor: pointer;
+    color: #ff5500;
+    text-decoration: none;
+}
+
