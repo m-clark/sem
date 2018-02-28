@@ -50,7 +50,7 @@ code {
   /* padding: 10px 0 10px 60px; /* Change the last value here to move the text left or right */
   position: relative;
   width: 100%; /* This changes where the code chunk box ends on the right side */
-  font-family: 'Roboto Mono', 'Lucida Sans', Consolas, monospace;
+  font-family: 'Roboto Mono', Consolas, monospace;
   font-size: 90%; /*changes output size; and comments*/
   /*border: 10px solid #ff5500;*/  /*code block and results border*/
   /*background-color:#ff5500;*/   /* results background*/
@@ -63,7 +63,7 @@ pre, pre .r {
   /* padding: 10px 0 10px 60px; /* Change the last value here to move the text left or right */
   position: relative;
   /*width: 100%; /* This changes where the code chunk box ends on the right side */
-  font-family: 'Roboto Mono', 'Lucida Sans', Consolas, monospace;
+  font-family: 'Roboto Mono', Consolas, monospace;
   font-size: 90%; /*changes output size; and comments*/
   /*border: 10px solid #ff5500;*/  /*code block and results border*/
   /*background-color: #f5f5f5;*/
