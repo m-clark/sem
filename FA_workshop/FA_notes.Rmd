@@ -23,7 +23,7 @@ knitr::opts_knit$set(root.dir = '../')
 library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan);
 ```
 
-```{r echo=FALSE, results='hide'}
+```{r pander_opts, echo=FALSE, results='hide'}
 mapply(function(o, v) panderOptions(o, v),
        c('keep.trailing.zeros', 'round', 'table.split.table', 'table.split.cells'), 
        c(TRUE, 2, Inf, Inf))
@@ -68,7 +68,7 @@ And while the MNIST data is available in various places, you can download the pr
 
 This document also makes use of the <span class="pack">tidyverse</span> family of packages, so you'll want to have at least <span class="pack">dplyr</span> loaded.  
 
-This document is meant to be high level.  For more details preuse my document on [Graphical & Latent Variable Models](http://m-clark.github.io/sem/).  See also, fellow CSCAR consultant James Henderson's [recent slides](https://jbhender.github.io/DimensionReduction-06June2017.html) regarding PCA, factor analysis, and multidimensional scaling for a bit more technical detail and additional examples regarding those techniques.
+This document is meant to be high level.  For more details preuse my document on [Graphical & Latent Variable Models](http://m-clark.github.io/sem/).  See also, fellow CSCAR consultant James Henderson's [recent slides](https://jbhender.github.io/DimensionReduction-06June2017.html) regarding PCA, factor analysis, and multidimensional scaling for a bit more technical detail and additional examples regarding those techniques.  For a more technical overview of many matrix factorization techniques, but with nice summary tables, see Singh & Gordon, [*A Unified View of Matrix Factorization Models*](http://www.cs.cmu.edu/~ggordon/singh-gordon-unified-factorization-ecml.pdf).
 
 
 
@@ -321,7 +321,7 @@ In general, our results are very similar to the previous factor analysis, but we
 - <span class="pack">psych</span>
 - <span class="pack">lavaan</span>
 
-## As latent linear models
+## Latent Linear Models
 
 In the following we compare PCA and FA from a probabilistic modeling perspective.  This further highlights their differences and similarities.
 
@@ -456,7 +456,7 @@ $$\sigma^2 \rightarrow 0$$
 
 
 
-## More techniques
+## More Techniques
 
 ### Count-based Matrix Factorization
 
@@ -797,7 +797,7 @@ h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k');
 ```
 
 
-When would use ICA? If You believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
+When would use ICA? If you believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
 
 #### Suggested R packages
 
@@ -963,9 +963,9 @@ This can be seen as a mixture model/latent class situation that we'll talk about
 - <span class="pack">HMM</span>
 - <span class="pack">HiddenMarkov</span>
 
-### Random effects models
+### Random Effects Models
 
-For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just a [different way to run a mixed model](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent construct that represents unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in Gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunities when dealing with them in other contexts.
+For those familiar with <span class="emph">mixed effects models</span> that incorporate random effects, the random effects can be seen as a latent variable in the same manner as we have been discussing here.  In fact, with latent growth curve models widely use in the SEM context, they are explicitly modeled as such, but it turns out these are just a [different way to run a mixed model](http://m-clark.github.io/mixed-growth-comparison/).  For typical mixed models, they are essentially a latent construct that represents unknown sources of variance that aren't captured by the model.  In addition, the residual covariance structures in mixed models, and covariance functions in Gaussian process models more generally, can actually be modeled with a factor analytic approach where loadings are estimated to produce the covariances. And finally, certain IRT models can be reformulated as mixed models. Thinking about random effects as latent variables possibly opens the door for other interpretive opportunities when dealing with them in other contexts.
 
 
 ### Bayesian
@@ -991,7 +991,7 @@ The visualization suggests probably two clusters- less waiting time results in s
 
 In some contexts, possibly way too many, some assume the latent variables are discrete in nature rather than continuous.  In such cases, we can think of the dimension reduction occurring along the *rows* rather than the columns.  We'll talk about two approaches, what we might call model-based vs. algorithmic or distance-based.
  
-### Mixture models
+### Mixture Models
 
 A basic approach for categorical latent variable analysis from a model-based perspective could be seen as follows:
 
@@ -1029,7 +1029,7 @@ graphics::layout(1)
 ```
 
 
-#### For regression
+#### For Regression
 
 Mixture models are often used in the regression setting, similar to the latent class setting that we've been describing.  One approach regards the outcome of interest, whose observations you believe to be the result of hidden category membership, and you model it as such. In a standard regression setting you would get two sets of output, one for each class, along with estimated probabilities of class membership for each observation.
 
@@ -1235,7 +1235,7 @@ Many tools have been offered to assist with this, and if one were able to defini
 
 In general, if you're using a latent variable or factor analysis approach for interpretative purposes, theory should be a strong, but not overwhelming guide.  If your data suggest three are clearly better than two (e.g. via AIC comparison), then go with that, because that may just be how it is for your sample.  For measurement models, some get hung up on 'validated' scales, and are reluctant to even explore other possibilities. But if the scale was validated on different types of people than your sample, you should probably be more exploratory. I can also mention that scales have been used for decades that were never adequately shown to be very reliable in the first place.
 
-### Interpretation
+### Interpretation of latent constructs
 
 Interpretation comes largely from the weights/loadings or related coefficients.  With PCA and common FA, rotation goes a long way to improving interpretability.  I will say that if you interpret latent clusters in an ordinal fashion, you should strongly consider simply leaving the latent variable continuous.  Even a mixture of two continuous latent variables (and/or their interaction) may uncover the latent classes you would have found, but leave the data in a more expressive context.
 
@@ -1245,7 +1245,7 @@ Interpretation comes largely from the weights/loadings or related coefficients. 
 In many situations, you may be able to treat the observed data as discrete or continuous.  Unless there is a strong need otherwise, I would suggest leaving continuous, even for Likert type scales.  The issue is that categorical outcome models are generally harder to estimate, and often without providing much interpretability benefit.  PCA wouldn't be your best option, but it wouldn't necessarily be wrong to use it on binary data. Remember also, that even if your data is binary that doesn't mean the latent variables have to be discrete (think IRT).
 
 
-### Predictive Modeling
+### Predictive modeling
 
 Many often use the clusters or factor scores obtained from an initial analysis for prediction.  As such, they perform a two-step process, one where they obtain the cluster membership or scores, and then perform some other model using it, say standard regression.  Unfortunately, this ignores the uncertainty in those estimates of the class membership or factor score. Essentially your standard errors will be a bit optimistic.
 
@@ -1257,11 +1257,11 @@ If prediction is the *primary* goal of the analysis however, you should actually
 
 ### Issues with Latent Classes
 
-#### Model Selection
+#### Model selection
 
 Non-model based methods provide no clear-cut way of selecting the number of clusters within a particular method, or comparing different approaches to the same solution.  Many have been offered, but even in typical settings they often not agree.  For example, let's say you want to choose among k-means, k-medoids, and two hierarchical techniques. You'll need to look at 2:4 clusters, across 4 techniques, based on 3 methods of 'best' (e.g. silhouette score), 2 distance measures, 3 linkage methods (where appropriate), etc. So just starting out you get to run over a hundred models and probably still won't know which to choose.  At least <span class="pack">clusterSim</span> will automate it for you.
 
-#### Latent Expressivity
+#### Latent expressivity
 
 In standard statistical settings, you are never going to have it recommended that you take continuous outcomes or predictors and categorize them.  It is sometimes done as a computational convenience, but if you're interested in interpretability and inference, it's almost always the wrong choice.
 
