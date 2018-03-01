@@ -843,6 +843,15 @@ We can use MDS to obtain a 2-dimensional map preserving distances as well as pos
 
 - <span class="pack">Base R</span>
 
+
+### t-SNE
+
+<span class="emph">t-Distributed Stochastic Neighbor Embedding</span> (t-SNE) is a newer technique in dimension reduction
+
+#### Suggested R packages
+
+- <span class="pack">tsne</span>
+
 ### Recommender Systems
 
 Practically everyone has been exposed to <span class="emph">recommender systems</span> such as <span class="emph">collaborative filtering</span> and related models.  That's how Netflix, Amazon and others make their recommendations to you given the information you've provided about likes and dislikes, what other similar people have provided, and how similar the object of interest is to others.
