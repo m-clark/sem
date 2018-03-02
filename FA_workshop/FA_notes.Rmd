@@ -846,7 +846,46 @@ We can use MDS to obtain a 2-dimensional map preserving distances as well as pos
 
 ### t-SNE
 
-<span class="emph">t-Distributed Stochastic Neighbor Embedding</span> (t-SNE) is a newer technique in dimension reduction
+<span class="emph">t-Distributed Stochastic Neighbor Embedding</span> (t-SNE) is a newer technique in dimension reduction, one that can be seen as a modern version of multidimensional scaling, that tries to put similar rows of data together.  Similar in this case can be thought of as follows. If you had a single variable, similarity to data point $x_i$ would be defined as points with high probability under a normal distribution with mean of the value $x_i$. However, with several variables we'd be thinking of a multivariate normal distribution with a mean vector.  t-SNE will then try to create a new coordinate system of points (call them components or factors if you like) that tries to maintain those similarities.  It is particularly well suited to high-dimensional data, or at least some implementations of it are[^tsneR].  People have used it well for visualization purposes, but it's no different than what people have been doing to visualize the results of MDS and PCA for decades, just that the underlying technique is different.
+
+The t-SNE approach is more difficult to implement, as there are particular parameters to set beyond just the number of components, and they will definitely affect the visual result.  For example, I could only duplicate the MDS result for the US cities data with some fiddling and luck.  In addition, there is some randomness in the process, so you can get slightly different results each time.  None of this really matters, as the only real stated goal with this technique is good visualization.  You might also could use it as a prelude to determining the number of clusters before cluster analysis.
+
+```{r tsne_demo, echo=2:3}
+set.seed(12345)
+library(tsne)
+tsne_result_us = tsne(UScitiesD, k = 2, initial_dims=6, max_iter = 2000, perplexity = 4, epoch = 250)
+# tsne_result_us = tsne(cbind(USArrests, state.x77), k = 2, max_iter = 1000, perplexity = 5)
+# tsne_result_us = tsne(state.x77, k = 2, max_iter = 1000, perplexity = 5)
+
+# tsne_result = tsne(bfi_trim %>% drop_na(), k = 2)
+# tsne_result %>% 
+#   data.frame() %>% 
+#   ggplot(aes(-X1, X2))
+# 
+# tsne_result_2 = tsne(bfi_trim %>% drop_na() %>% t(), k = 2, perplexity = 1)
+# tsne_result_2 %>% 
+#   data.frame() %>% 
+#   ggplot(aes(-X1, X2)) + 
+#   geom_text(aes(label=colnames(bfi_trim)))
+
+tsne_result_us %>% 
+  data.frame() %>% 
+  ggplot(aes(X1, -X2)) + 
+  geom_text(aes(label=attr(UScitiesD, 'Labels')), size=3) +
+  # geom_text(aes(label=rownames(USArrests))) +
+  labs(x='Component 1', y='Component 2') +
+  coord_flip() +
+  theme_trueMinimal()
+```
+
+<br>
+
+Here's what it came up with for the MNIST data set.
+
+<br>
+
+<img src="../img/mnist_tsne.jpeg" style="display:block; margin: 0 auto;" width=50%>
+
 
 #### Suggested R packages
 
@@ -1329,3 +1368,5 @@ psych::describe(nlsy)
 [^weights]: My description here is a bit loose, but mostly for reasons that allow me to say similar things across techniques. For the technically inclined, $V$ are the eigenvectors of $X'X$, or if the data is standardized, this is the same as the eigenvector of the covariance/correlation matrix of $X$.  Technically, <span class="pack">psych</span> uses weights based on the loadings and covariance matrix via `solve(cov(bfi_trim), pc$loadings)`, which amounts to an equivalent result (even if different in sign/value).  For factor analysis this becomes more nuanced. There is no unique way to create a factor score, but the common ones use weights that are a function of the loadings and correlation matrix.  For example, the most commonly used ('Thurstone' or 'regression') are constructed via $V = R^{-1}W$, where $R$ is the correlation matrix and $W$ are the loadings as before.
 
 [^fareprod]: Note that your actual factor solution will still only approximate the observed correlation matrix, except under certain settings that would make it similar to PCA.
+
+[^tsneR]: The R package for t-SNE is written entirely in R code, and not optimized, and so it's notably slow with large data. And, though it suggests otherwise in the helpfile, it does not return the probabilities.

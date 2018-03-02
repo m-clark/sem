@@ -21,6 +21,7 @@ msm
 polycor
 ltm
 bindrcpp
+tsne
 plotly
 mclust
 lattice
