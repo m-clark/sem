@@ -54,7 +54,7 @@ hmm = "
 digraph Factor  {
   
  graph [rankdir=TB  bgcolor=transparent]
- node [fontname=Roboto fontsize=32 shape=circle width=.5 color=gray75 fontcolor=gray25];
+ node [fontname=Roboto shape=circle width=.5 color=gray75 fontcolor=gray25];
    z1  [label = <z<sub>1</sub>>];
    z2  [label = <z<sub>2</sub>>];
    z3  [label = <z<sub>3</sub>>];
@@ -101,7 +101,7 @@ digraph Factor  {
 "
 
 # DiagrammeR::grViz(hmm, width='100%', height='400px')
-tags$div(style="margin:auto auto; width:75%",
+tags$div(style="margin:auto auto; width:75%; font-size: 50%",
 DiagrammeR::grViz(hmm, width='100%', height='300px')
 )
 ```
@@ -149,8 +149,15 @@ Other methods can be thought of as a clustering the data in a hierarchical fashi
 <br>
 
 ```{r hclust_dendrogram, echo=FALSE}
-heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_colorbar=T, colors=viridis::plasma) %>% 
-  theme_plotly()
+tags$div(style="width:66%; margin:auto auto; font-size:50%;",
+         heatmaply::heatmaply(iris[,1:4], 
+                              Colv=F, 
+                              labRow=NA, 
+                              showticklabels=F, 
+                              hide_colorbar=T, 
+                              colors=viridis::plasma) %>% 
+           theme_plotly()
+)
 ```
 
 Practically at every turn you're faced with multiple options for settings to choose (distance, linkage method, cluster determination, general approach), and most decisions will be arbitrary .  While these are actually still commonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
@@ -197,7 +204,7 @@ cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
 
-When would you use ICA? If you believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound.
+If you believe that truly independent sources of signal underlie your data, ICA would be an option. It is commonly applied to deal with images or sound.
 
 
 

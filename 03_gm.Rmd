@@ -97,6 +97,8 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%;",
 DiagrammeR::DiagrammeR("scripts/SLiM.gv", type='grViz', width=500, height=250))
 ```
 
+<br>
+
 <!-- <img src="img/regasgraph.png" style="display:block; margin: 0 auto; width:50%"> -->
 
 While we start simpler, we can use much of the same sort of thinking with more complex models later.  In what follows, we'll show that whether we use a standard R modeling approach (via the <span class="func">lm</span> function), or an SEM approach (via the <span class="func">sem</span> function in <span class="pack">lavaan</span>), the results are identical aside from the fact that sem is using maximum likelihood (so the variances will be slightly different).  First, we'll with the standard <span class="func">lm</span> approach.
@@ -335,6 +337,8 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
 DiagrammeR::DiagrammeR("scripts/counterfact.gv", type='grViz', width=500, height=250))
 ```
 
+<br>
+
 In addition, we'll consider just a single individual, whose observed values are 'control', i.e. 0, 3 for the mediator, and 2 for the target.  We define the unique values $\epsilon_*$ that represent invariant characteristics that exist regardless of changes to interventions or counterfactual hypotheses and set them to the following:
 
 $\epsilon_1 = 0$
@@ -430,7 +434,7 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/iv.gv', width=500, height=250))
 ```
 
-<img src="img/iv.png" style="display:block; margin: 0 auto;" width=50%>
+<img src="img/iv.png" style="display:block; margin: 0 auto;" width=40%>
 
 In the graph, $\mathcal{Y}$ is our target variable, $\mathcal{X}$ is the causal variable of interest, and $\mathcal{Z}$ the instrument. The instrumental variable must not be correlated with disturbance of the target variable (later depicted as $\mathcal{U}$), and only has an indirect relation to $\mathcal{Y}$ through $\mathcal{X}$.  Neither target nor causal variable are allowed to effect the instrument directly or indirectly.  In graph theory, this involves the notion of conditional independence we've mentioned before, where $\mathcal{Z}$ is conditionally independent of Y given X, or in other words, if we remove the $\mathcal{X} \rightarrow \mathcal{Y}$ path, $\mathcal{Z}$ and $\mathcal{Y}$ are independent.  Furthermore, $\mathcal{Z}$ is *not* conditionally independent of $\mathcal{X}$ with the removal of that path[^direct].
 
@@ -441,22 +445,30 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/ivxyu.gv', width=500, height=250))
 ```
 
+<br>
+
 When $\mathcal{X}$ is endogenous, that is not the case. Changes in $\mathcal{X}$ are associated with $\mathcal{Y}$, but also $\mathcal{U}$.
+
+<br>
 
 ```{r ivxyu2, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='center'}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/ivxyu2.gv', width=500, height=250))
 ```
 
+<br>
 
 There are now multiple effects of $\mathcal{X}$ on $\mathcal{Y}$, both directly from $\mathcal{X}$ and indirectly from $\mathcal{U}$.  We can measure the association between $\mathcal{X}$ and $\mathcal{Y}$, but not the causal relationship.
 
 An attempt can be made to remedy the problem by using an instrument, leading the following graph.
+<br>
 
 ```{r ivxyzu, echo=FALSE, eval=TRUE, cache=FALSE, fig.align='center'}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/ivxyzu.gv', width=500, height=250))
 ```
+
+<br>
 
 The instrument $\mathcal{Z}$ affects $\mathcal{X}$ and thus is correlated with $\mathcal{Y}$ indirectly.  However, unlike $\mathcal{X}$, it is uncorrelated with $\mathcal{U}$.  This assumption excludes $\mathcal{Z}$ from having a direct effect in the
 model for $\mathcal{Y}$. If instead $\mathcal{Y}$ depended on both $\mathcal{X}$ and $\mathcal{Z}$ but only $\mathcal{X}$ has a direct path to $\mathcal{Y}$, then $\mathcal{Z}$ is basically absorbed into the error so would be correlated with it. With the direct path from $\mathcal{Z}$ to $\mathcal{Y}$ not allowed, we are left with only its influence on $\mathcal{X}$ .
@@ -609,6 +621,7 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          )
 ```
 
+<br>
 
 Such models are notoriously difficult to specify in terms of *identification*, which we will talk more about later.  For now, we can simply say the above model would not even be estimated as there are more parameters to estimate (two paths, two variances) than there is information in the data (two variances and one covariance).
 
@@ -633,6 +646,8 @@ tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/nonrecursive2.gv', width=500, height=250)
          )
 ```
+
+<br>
 
 Many instances of nonrecursive models might better be represented by a correlation.  One must have a very strong theoretical motivation for such models, which is probably why they aren't seen as often in the SEM literature, though they are actually quite common in some areas such as economics, where theory is assumed to be stronger (by economists).
 

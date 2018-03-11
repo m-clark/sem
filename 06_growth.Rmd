@@ -123,7 +123,6 @@ Specifically, we'll have a latent variable representing the random intercepts, a
 tags$div(style="width:50%; margin:auto auto; font-size:50%",
          grViz('scripts/growth.gv', width='100%', height='25%')
 )
-
 ```
 
 <br>
@@ -440,9 +439,13 @@ In the [appendix][Parallel Process Example] I provide an example of a parallel p
 
 Sometimes you'll come across what are called cross-lagged models. These are path models applied to longitudinal data.  Here's an example regarding two variables and three time points.
 
-```{r crosslagged}
-grViz('scripts/crosslag.gv')
+```{r crosslagged, echo=FALSE}
+tags$div(style="width:50%; margin:auto auto; font-size:50%",
+         grViz('scripts/crosslag.gv', width='100%', height='25%')
+)
 ```
+
+<br>
 
 To be honest, the only reason I can think of to do something like this is if one isn't familiar with mixed models, growth curves, or bayesian networks.  You can imagine what this would look like if we allow for lingering effects from earlier times to later ones (i.e. more lags), have more time points, have residual correlations at specific time points, and more obviously, several more variables as would be typical in any plausible modeling setting.  The result would be unwieldy at best. Some using these models are interested in the *stability* of a measure over time.  However, if this in question, one should probably be using factor analytic techniques to assess the reliability of the measure.  In general, you'd always have a better option than a cross-lagged model in my opinion.
 

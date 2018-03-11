@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-03-10">
+<meta name="date" content="2018-03-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -305,6 +305,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
 </ul></li>
+<li><a href="section-1.html#section-1"></a></li>
 <li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
@@ -348,7 +349,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
 </ul></li>
 </ul></li>
-<li><a href="section-1.html#section-1"></a></li>
 <li class="divider"></li>
 <li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
 <li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
@@ -387,6 +387,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="htmlwidget-47da598bce3f5754eb29" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-47da598bce3f5754eb29">{"x":{"diagram":"digraph DAG {\n\ngraph [rankdir = LR bgcolor=transparent]\n\nnode [shape = circle, fontcolor=gray25 color=gray80]\n\nnode [fontname=\"Helvetica\"]\nx1 [label=<x<sub>1<\/sub>>]; x2 [label=<x<sub>2<\/sub>>]; x3 [label=<x<sub>3<\/sub>>]; \n\nnode [fillcolor=gray90 style=filled]\ny;\n\nedge [color=gray50 style=filled]\nx1 -> y; x2 -> y; x3 -> y;\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <!-- <img src="img/regasgraph.png" style="display:block; margin: 0 auto; width:50%"> -->
 <p>While we start simpler, we can use much of the same sort of thinking with more complex models later. In what follows, we’ll show that whether we use a standard R modeling approach (via the <span class="func">lm</span> function), or an SEM approach (via the <span class="func">sem</span> function in <span class="pack">lavaan</span>), the results are identical aside from the fact that sem is using maximum likelihood (so the variances will be slightly different). First, we’ll with the standard <span class="func">lm</span> approach.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mcclelland =<span class="st"> </span>haven<span class="op">::</span><span class="kw">read_dta</span>(<span class="st">&#39;data/path_analysis_data.dta&#39;</span>)
@@ -759,6 +760,7 @@ Simulations: 1000 </code></pre>
 <div id="htmlwidget-ad8fe2cabb7af11d214a" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-ad8fe2cabb7af11d214a">{"x":{"diagram":"digraph mediation {\ngraph [rankdir = LR bgcolor=transparent]\n\nnode [shape = rectangle, style=filled, fillcolor=\"#1f65b780\", color=gray80, width=.75]\n\nnode [fontcolor=white, fontname=Roboto, fixedsize=true, fontsize=\"5%\"]\nTreatment; Mediator; Target;\n\nnode [shape=circle, width=.1, fixedsize=F, fontsize=8]\n# \"3\";\n\n\nedge [color=gray50, fontcolor=gray50]\n\n# subgraph{\n#   rankdir = TB;\n#   edge [dir=none]\n#   3 -> Mediator;\n#   rank = same; {Mediator; 3}; \n# }\n\nedge [label=\".3\"]\nTreatment -> Mediator;\n\nedge [label=\".2\"]\nMediator -> Target;\n\n\n\ngraph [rankdir = BT]\n  edge [minlen=5, label=\".5\"]\n  Treatment -> Target;\n\nsubgraph {\n   rank = same; {Treatment; Target}; \n}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <p>In addition, we’ll consider just a single individual, whose observed values are ‘control’, i.e. 0, 3 for the mediator, and 2 for the target. We define the unique values <span class="math inline">\(\epsilon_*\)</span> that represent invariant characteristics that exist regardless of changes to interventions or counterfactual hypotheses and set them to the following:</p>
 <p><span class="math inline">\(\epsilon_1 = 0\)</span></p>
 <p><span class="math inline">\(\epsilon_2 = 3 - 0*.3 = 3\)</span></p>
@@ -796,24 +798,28 @@ Recently I have also heard the phrase " spotlight="" analysis'="" to="" refer=""
 <div id="aside-instrumental-variables" class="section level4">
 <h4>Aside: Instrumental variables</h4>
 <p>Path analysis of a different sort has a long history in econometrics. A very common approach one may see utilized is <span class="emph">instrumental variable</span> analysis. The model can be depicted graphically as follows:</p>
-<p><img src="img/iv.png" style="display:block; margin: 0 auto;" width=50%></p>
+<p><img src="img/iv.png" style="display:block; margin: 0 auto;" width=40%></p>
 <p>In the graph, <span class="math inline">\(\mathcal{Y}\)</span> is our target variable, <span class="math inline">\(\mathcal{X}\)</span> is the causal variable of interest, and <span class="math inline">\(\mathcal{Z}\)</span> the instrument. The instrumental variable must not be correlated with disturbance of the target variable (later depicted as <span class="math inline">\(\mathcal{U}\)</span>), and only has an indirect relation to <span class="math inline">\(\mathcal{Y}\)</span> through <span class="math inline">\(\mathcal{X}\)</span>. Neither target nor causal variable are allowed to effect the instrument directly or indirectly. In graph theory, this involves the notion of conditional independence we’ve mentioned before, where <span class="math inline">\(\mathcal{Z}\)</span> is conditionally independent of Y given X, or in other words, if we remove the <span class="math inline">\(\mathcal{X} \rightarrow \mathcal{Y}\)</span> path, <span class="math inline">\(\mathcal{Z}\)</span> and <span class="math inline">\(\mathcal{Y}\)</span> are independent. Furthermore, <span class="math inline">\(\mathcal{Z}\)</span> is <em>not</em> conditionally independent of <span class="math inline">\(\mathcal{X}\)</span> with the removal of that path<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>.</p>
 <p>The motivating factor for such a model is that the simple <span class="math inline">\(\mathcal{X} \rightarrow \mathcal{Y}\)</span> path may not provide a means for determining a causal relationship, particularly if <span class="math inline">\(\mathcal{X}\)</span> is correlated with the error. As an example<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>, if we look at the relationship of earnings with education, the unspecified causes of earnings might include things, e.g. some general ‘ability’, that would be correlated with the potential causal variable of education attained. With error <span class="math inline">\(\mathcal{U}\)</span> we can show the following diagram that depicts the problem.</p>
 <div style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%">
 <div id="htmlwidget-285c1912edb0fd50d8c1" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-285c1912edb0fd50d8c1">{"x":{"diagram":"digraph iv {\ngraph [rankdir=LR  bgcolor=transparent]\n\nnode [shape = rectangle, style=filled, fillcolor=\"#1f65b780\", color=gray80, width=.25, height=.25,\n      fontcolor=white, fontname=Roboto, fixedsize=true, fontsize=\"5%\"]\n\nX; Y;\n\nnode [shape = circle, alpha=.5, color=gray75 style=filled, fillcolor=gray90]\nU;\n\nedge [color=gray50, penwidth=.5, arrowsize=.5]\nX -> Y;\nU -> Y;\n\nsubgraph {\n   rank = same; U; Y;\n}\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <p>When <span class="math inline">\(\mathcal{X}\)</span> is endogenous, that is not the case. Changes in <span class="math inline">\(\mathcal{X}\)</span> are associated with <span class="math inline">\(\mathcal{Y}\)</span>, but also <span class="math inline">\(\mathcal{U}\)</span>.</p>
+<p><br></p>
 <div style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%">
 <div id="htmlwidget-feaa6a64c8da0b253a48" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-feaa6a64c8da0b253a48">{"x":{"diagram":"digraph iv {\ngraph [rankdir=BT bgcolor=transparent]\n\nnode [shape = rectangle, style=filled, fillcolor=\"#1f65b780\", color=gray80, width=.25, height=.25,\n      fontcolor=white, fontname=Roboto, fixedsize=true, fontsize=\"5%\"]\n\nX; Y;\n\nnode [shape = circle, alpha=.5, color=gray75 style=filled, fillcolor=gray90]\nU;\n\nedge [color=gray50, penwidth=.5, arrowsize=.5]\nX -> Y;\nU -> {X Y};\n\nsubgraph {\n   rank = same; X; Y;\n}\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <p>There are now multiple effects of <span class="math inline">\(\mathcal{X}\)</span> on <span class="math inline">\(\mathcal{Y}\)</span>, both directly from <span class="math inline">\(\mathcal{X}\)</span> and indirectly from <span class="math inline">\(\mathcal{U}\)</span>. We can measure the association between <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{Y}\)</span>, but not the causal relationship.</p>
-<p>An attempt can be made to remedy the problem by using an instrument, leading the following graph.</p>
+<p>An attempt can be made to remedy the problem by using an instrument, leading the following graph. <br></p>
 <div style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%">
 <div id="htmlwidget-0a071e29a63d5e2dc853" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-0a071e29a63d5e2dc853">{"x":{"diagram":"digraph iv {\ngraph [rankdir=BT bgcolor=transparent]\n\nnode [shape = rectangle, style=filled, fillcolor=\"#1f65b780\", color=gray80, width=.25, height=.25,\n      fontcolor=white, fontname=Roboto, fixedsize=true, fontsize=\"5%\"]\n\nX; Y; Z;\n\nnode [shape = circle, alpha=.5, color=gray75 style=filled, fillcolor=gray90]\nU;\n\nedge [color=gray50, penwidth=.5, arrowsize=.5]\nX -> Y;\nU -> {X Y};\nZ -> X;\n\nsubgraph {\n   rank = same; {X Y Z};\n}\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <p>The instrument <span class="math inline">\(\mathcal{Z}\)</span> affects <span class="math inline">\(\mathcal{X}\)</span> and thus is correlated with <span class="math inline">\(\mathcal{Y}\)</span> indirectly. However, unlike <span class="math inline">\(\mathcal{X}\)</span>, it is uncorrelated with <span class="math inline">\(\mathcal{U}\)</span>. This assumption excludes <span class="math inline">\(\mathcal{Z}\)</span> from having a direct effect in the model for <span class="math inline">\(\mathcal{Y}\)</span>. If instead <span class="math inline">\(\mathcal{Y}\)</span> depended on both <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{Z}\)</span> but only <span class="math inline">\(\mathcal{X}\)</span> has a direct path to <span class="math inline">\(\mathcal{Y}\)</span>, then <span class="math inline">\(\mathcal{Z}\)</span> is basically absorbed into the error so would be correlated with it. With the direct path from <span class="math inline">\(\mathcal{Z}\)</span> to <span class="math inline">\(\mathcal{Y}\)</span> not allowed, we are left with only its influence on <span class="math inline">\(\mathcal{X}\)</span> .</p>
 <p>Such models were commonly fit with a technique known two-stage least squares, which is demonstrated here. I use a subset of the <span class="objclass">CigarettesSW</span> data set and <span class="func">ivreg</span> function from the <span class="pack">AER</span> package for comparison. The data concerns cigarette consumption for the 48 continental US States from 1985–1995, though only the last year is used for our purposes. Here we examine the effect on packs per capita (packs) of price (<code>rprice</code>), using state level income (<code>rincome</code>) as the instrumental variable. See the help file for the <span class="objclass">CigarettesSW</span> for more on this data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(Cigarettes)  <span class="co"># raw, logged values actually used in models</span></code></pre></div>
@@ -1027,12 +1033,14 @@ F-statistic:   173 on 3 and 1339 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div id="htmlwidget-c6e1d8b3698ab3dfae75" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-c6e1d8b3698ab3dfae75">{"x":{"diagram":"digraph iv {\n  graph [rankdir=LR bgcolor=transparent]\n  \n  node [shape = rectangle, style=filled, fillcolor=\"#ff5500\", color=gray80, \n        fontcolor=white, fontname=Roboto, fixedsize=true, fontsize=\"10%\"]\n  \n  H [label=\"Hus.\\n Satis\"]; \n  W [label=\"Wife\\n Satis\"];\n  \n  edge [shape = circle, alpha=.5 color=gray50 style=filled penwidth=.75 arrowsize=.75 minlen=4]\n  H -> W;\n  W -> H;\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <p>Such models are notoriously difficult to specify in terms of <em>identification</em>, which we will talk more about later. For now, we can simply say the above model would not even be estimated as there are more parameters to estimate (two paths, two variances) than there is information in the data (two variances and one covariance).</p>
 <p>To make this model identified, we use <span class="emph">instrumental variables</span> as we did before. In this scenario, instrumental variables directly influence one of the variables in a recursive relationship, but not the other. For example, a wife’s education can influence her satisfaction directly and a husband’s education can influence his satisfaction directly, but a husband’s education cannot directly impact a wife’s satisfaction and vice versa (at least for this demonstration). These instrumental variables can indirectly impact a spouses’ satisfaction. In the following model family income is also included. The dashed line represents an unanalyzed correlation.</p>
 <div style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%">
 <div id="htmlwidget-6595b799d8fdc008d1fe" style="width:500px;height:250px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-6595b799d8fdc008d1fe">{"x":{"diagram":"digraph iv {\n  graph [rankdir=LR splines=true bgcolor=transparent]\n  \n  node [shape = rectangle, style=filled, fillcolor=\"#ff5500\", color=gray80, \n        fontcolor=white, fontname=Roboto, fixedsize=true, fontsize=\"10%\"]\n  subgraph {\n    rank = same;\n    H [label=\"Hus.\\n Satis\"]; \n    Inc [label=\"Family\\n Income\"]; \n    W [label=\"Wife\\n Satis\"];\n  }\n  subgraph {\n    rank = same;\n    Hed [label=\"Hus.\\n Edu\"]; \n    Wed [label=\"Wife\\n Edu\"];\n  }\n\n  subgraph {  \n    #rank = same;\n    stupid [style=invisible  width=0 height=0 shape=none];\n    #Inc;\n  }\n  \n  edge [shape = circle, alpha=.5 color=gray50 style=filled penwidth=.75 arrowsize=.75 minlen=2]\n  Hed -> Inc [minlen=2];\n  Wed -> Inc [minlen=2];\n  Hed -> Wed [style=dashed dir=both headport=\"w\" tailport=\"w\"];\n  #Inc -> W;\n  W -> Inc [dir=back];\n  Inc -> H [];\n  #H -> W [dir=both];\n  stupid -> Inc [style=invisible arrowhead=none minlen=1 ];\n  H -> stupid [style=curved dir=back tailport=\"e\" minlen=0];\n  W -> stupid [style=curved dir=back tailport=\"e\" minlen=0];\n  #W -> H [style=curved dir=both headport=\"ne\" tailport=\"se\"  minlen=1];  # unfucking believable\n  #H -> W [style=curved dir=both];\n  \n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
+<p><br></p>
 <p>Many instances of nonrecursive models might better be represented by a correlation. One must have a very strong theoretical motivation for such models, which is probably why they aren’t seen as often in the SEM literature, though they are actually quite common in some areas such as economics, where theory is assumed to be stronger (by economists).</p>
 </div>
 <div id="aside-tracing-rule" class="section level4">

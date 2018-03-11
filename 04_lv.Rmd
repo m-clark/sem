@@ -149,6 +149,7 @@ tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
 )
 ```
 
+<br>
 
 If we return to our causal thinking from before, the causal flow originates with the observed variables to the components. Perhaps now it is clearer as to the interpretation of the loadings we had before, as correlations with components. In fact, we see now that the loadings are used to create the estimated component scores in the first place.
 
@@ -168,6 +169,8 @@ tags$div(style="width:50%; margin:0 auto; text-align='center'",
 DiagrammeR::grViz('scripts/fa_gm.gv', width='100%', height='50%')
 )
 ```
+
+<br>
 
 And to reproduce the correlation matrix:
 
@@ -383,11 +386,12 @@ semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F,
 ```
 
 ```{r plotFARaw, echo=F, eval=T}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:75%",
          DiagrammeR::grViz('scripts/depression_fa.gv', width='100%', height='50%')
 )
 ```
 
+<br>
 
 ```{r showVarCalculation}
 var(depressed$FeltDown, na.rm=T)  # .29 + .15
@@ -412,7 +416,7 @@ semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F,
 ```
 
 ```{r plotFAStd, echo=F, eval=T}
-tags$div(style="width:50%; margin-left:auto;  margin-right:auto;",
+tags$div(style="width:50%; margin-left:auto;  margin-right:auto; font-size:75%;",
 DiagrammeR::grViz('scripts/depression_fa_std.gv', width='100%', height='50%')
 )
 ```
@@ -505,6 +509,7 @@ DiagrammeR::grViz('scripts/bifactor.gv', width='100%', height='45%')
 )
 ```
 
+<br>
 
 The gist is that now the general factor has no correlation to the others, and the specific factors $F_1$, $F_2$ and $F_3$ account for whatever it does not.  Disturbances for the factors 1-3 in the hierarchical model are now the latent factors 1-3 in the bifactor model.  For more on these models and reliability statistics based on them, I highly recommend taking a look at the <span class="func">omega</span> function in the <span class="pack">psych</span> package.  It may surprise some that there are actually measures of reliability that are not called Cronbach's alpha that have been developed since 1950.  Speaking of which, see the [scale development][Scale development] section below.
 

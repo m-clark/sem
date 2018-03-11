@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-03-10">
+<meta name="date" content="2018-03-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -305,6 +305,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
 </ul></li>
+<li><a href="section-1.html#section-1"></a></li>
 <li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
@@ -348,7 +349,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
 </ul></li>
 </ul></li>
-<li><a href="section-1.html#section-1"></a></li>
 <li class="divider"></li>
 <li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
 <li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
@@ -914,7 +914,7 @@ Defined Parameters:
 <li id="fn61"><p>The 1.7 is not arbitrary and has a long history in IRT. The basic idea is that the variance of the logistic is <span class="math inline">\(\pi^2/3\)</span>, or in terms of standard deviation, 1.814. However, it turns out that 1.702 actually minimizes the difference between the two approaches. You can see it noted in the <span class="pack">ltm</span> vignette, but see this article for some historical context <a href="https://www.jstor.org/stable/1165298?seq=1#page_scan_tab_contents">Origin of the Scaling Constant d = 1.7 in Item Response Theory, Gregory Camilli</a>.<a href="item-response-theory.html#fnref61">↩</a></p></li>
 <li id="fn62"><p>These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT. As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package. Also see the code here for the text on latent variable modeling in R- <a href="https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models">link</a>.<a href="item-response-theory.html#fnref62">↩</a></p></li>
 <li id="fn63"><p>Note that we can actually calculate the thresholds as follows: <code>-qnorm(colMeans(Abortion))</code> = 0.156, -0.237, -0.347, -0.299<a href="item-response-theory.html#fnref63">↩</a></p></li>
-<li id="fn64"><p>Note that the 2PM has no generalized linear mixed model complement as it uses products of parameters. Others extend the 2PM and so the story is the same for those. See Boeck et al. (2011) The Estimation of Item Response Models with the lmer Function from the lme4 Package in R.<a href="item-response-theory.html#fnref64">↩</a></p></li>
+<li id="fn64"><p>Note that the 2PM has no generalized linear mixed model complement as it uses products of parameters. The other models discussed extend the 2PM and so the story is the same for those. See Boeck et al. (2011) The Estimation of Item Response Models with the lmer Function from the lme4 Package in R. However, <span class="pack">brms</span>, which uses <span class="pack">lme4</span> style syntax, does have functionality for such models in the Bayesian context.<a href="item-response-theory.html#fnref64">↩</a></p></li>
 <li id="fn65"><p>The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.<a href="item-response-theory.html#fnref65">↩</a></p></li>
 </ol>
 </div>

@@ -121,7 +121,7 @@ The conceptual model is still the same, except that we are thinking of the laten
 
 
 ```{r lca_diagram, eval=TRUE, echo=FALSE}
-tags$div(style="width:50%; margin:auto auto;",
+tags$div(style="width:50%; margin:auto auto; font-size:50%",
 grViz('scripts/latent_class.gv', width='100%')
 )
 ```

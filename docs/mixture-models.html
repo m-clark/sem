@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-03-10">
+<meta name="date" content="2018-03-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -305,6 +305,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
 </ul></li>
+<li><a href="section-1.html#section-1"></a></li>
 <li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
@@ -348,7 +349,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
 </ul></li>
 </ul></li>
-<li><a href="section-1.html#section-1"></a></li>
 <li class="divider"></li>
 <li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
 <li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
@@ -461,9 +461,9 @@ sigma            0.4376169 0.2363539</code></pre>
 <!-- ``` -->
 <p>Recall the depression data from the section on latent variable models. We have three items regarding emotional well-being (depression)- how often the person felt down or blue, how often they’ve been a happy person, and how often they’ve been depressed in the last month. These are four point scales and range from ‘all of the time’ (1) to ‘none of the time’ (4) (i.e. reversed).</p>
 <p>The conceptual model is still the same, except that we are thinking of the latent variable as categorical, and thus people will fall under depression types rather than have a continuous score that reflects ‘depression’.</p>
-<div style="width:50%; margin:auto auto;">
-<div id="htmlwidget-77c1c468e3eda3d3df17" style="width:100%;height:500px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-77c1c468e3eda3d3df17">{"x":{"diagram":"digraph {\n # Intialization of graph attributes\n graph [overlap=false rankdir=TB bgcolor=transparent]\n \n # Node statements\n node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];\n # U0 [width=.25 height=.25 style=\"\" label=\"\"];\n DepressionCat [fontsize=10, width=1.25, height=1];\n \n node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style=\"\"]\n subgraph {\n    rank=same;\n    node [label=\"Felt\\n\\nDown\" fontcolor=gray50 fontsize=6]    \n    FD; \n    node [label=\"Been\\n\\nHappy\" fontcolor=gray50 fontsize=6]    \n    BH; \n    node [label=\"Depressed\\n\\nLast Month\" fontcolor=gray50 fontsize=6]    \n    DLM; \n }\n # Initialization of edge attributes\n edge [color = gray50, rel = yields]\n \n # Edge statements\n edge [style=dashed label=\"\" fontcolor=gray25 fontsize=10 minlen=2]\n DepressionCat -> FD \n edge [style=\"\" label=\"\" fontcolor=gray25 fontsize=10 minlen=2];\n DepressionCat -> BH ;\n edge [label=\"\" fontcolor=gray25 fontsize=10 minlen=2]\n DepressionCat -> DLM ;\n\n subgraph {\n    rank=same;\n    node [width=.25, height=.25, shape=circle, color=gray80]\n    # U1 [label=\"\"]; \n    # U2 [label=\"\"]; \n    # U3 [label=\"\"]; \n }\n\n  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] \n  # FD -> U1 [label=\"\"];\n  # BH -> U2 [label=\"\"];\n  # DLM -> U3 [label=\"\"];\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div style="width:50%; margin:auto auto; font-size:50%">
+<div id="htmlwidget-7d25a01e79af4da17528" style="width:100%;height:500px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7d25a01e79af4da17528">{"x":{"diagram":"digraph {\n # Intialization of graph attributes\n graph [overlap=false rankdir=TB bgcolor=transparent]\n \n # Node statements\n node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];\n # U0 [width=.25 height=.25 style=\"\" label=\"\"];\n DepressionCat [fontsize=10, width=1.25, height=1];\n \n node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style=\"\"]\n subgraph {\n    rank=same;\n    node [label=\"Felt\\n\\nDown\" fontcolor=gray50 fontsize=6]    \n    FD; \n    node [label=\"Been\\n\\nHappy\" fontcolor=gray50 fontsize=6]    \n    BH; \n    node [label=\"Depressed\\n\\nLast Month\" fontcolor=gray50 fontsize=6]    \n    DLM; \n }\n # Initialization of edge attributes\n edge [color = gray50, rel = yields]\n \n # Edge statements\n edge [style=dashed label=\"\" fontcolor=gray25 fontsize=10 minlen=2]\n DepressionCat -> FD \n edge [style=\"\" label=\"\" fontcolor=gray25 fontsize=10 minlen=2];\n DepressionCat -> BH ;\n edge [label=\"\" fontcolor=gray25 fontsize=10 minlen=2]\n DepressionCat -> DLM ;\n\n subgraph {\n    rank=same;\n    node [width=.25, height=.25, shape=circle, color=gray80]\n    # U1 [label=\"\"]; \n    # U2 [label=\"\"]; \n    # U3 [label=\"\"]; \n }\n\n  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] \n  # FD -> U1 [label=\"\"];\n  # BH -> U2 [label=\"\"];\n  # DLM -> U3 [label=\"\"];\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <p>We now run the model. As with mixture models before, and to be clear we are still conducting a finite mixture model, one of our primary goals is to assign individuals to a latent class. In addition, we can obtain probabilities of each item category according to latent class. If we had covariates, we could also look at their relationship to the latent classes</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(poLCA)

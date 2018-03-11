@@ -515,7 +515,11 @@ ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T, alpha=.75) + 
   scale_color_manual(values=palettes$orange$tetradic) +
-  annotate(x=-2,y=.15, label=sprintf('\U2193'), geom='text', size=8, color='#ff5500') +
+  # annotate(x=-2,y=.15, label="↓", geom='text', size=8, color='#ff5500') +
+  annotate("segment", x = -2, xend = -2, y = .075, yend = .25, 
+           colour = "#ff5500", 
+           size=1, 
+           arrow=arrow(ends='first', length = unit(.1, "inches"))) +
   xlab('Individual Latent Score') +
   theme_trueMinimal() +
   theme(legend.position=c(.85,.4),
@@ -604,6 +608,6 @@ Others noted but not demonstrated include <span class="pack">mirt</span> and <sp
 [^sem2irt]: These transformations are standard and you will see them in most discussions of the connection between factor analysis and IRT.  As a starting point, see the help file for the <span class="func">irt.fa</span> function in the <span class="pack">psych</span> package.  Also see the code here for the text on latent variable modeling in R- [link](https://blogs.baylor.edu/rlatentvariable/sample-page/r-syntax/#Item_response_theory_models).
 
 
-[^nomixed]: Note that the 2PM has no generalized linear mixed model complement as it uses products of parameters.  Others extend the 2PM and so the story is the same for those.  See Boeck et al. (2011) The Estimation of Item Response Models with the lmer Function from the lme4 Package in R.
+[^nomixed]: Note that the 2PM has no generalized linear mixed model complement as it uses products of parameters.  The other models discussed extend the 2PM and so the story is the same for those.  See Boeck et al. (2011) The Estimation of Item Response Models with the lmer Function from the lme4 Package in R.  However, <span class="pack">brms</span>, which uses <span class="pack">lme4</span> style syntax, does have functionality for such models in the Bayesian context.
 
 [^grm_as_ord]: The graded response model is akin to the cumulative probability model, while the partial credit and rating scale models go with the adjacent category approach, which itself can be seen a special case of the multinomial logistic model.
