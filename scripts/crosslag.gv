@@ -1,0 +1,29 @@
+digraph mediation {
+graph [rankdir = LR  bgcolor=transparent]
+
+node [shape = rectangle style=filled fillcolor='#1f65b780' color=gray80 width=.75]
+
+node [fontcolor=white fontname=Roboto fixedsize=true fontsize='5%']
+var1_t1; 
+var2_t1; 
+var1_t2; 
+var2_t2; 
+var1_t3; 
+var2_t3; 
+
+
+edge [color=gray75 style=filled arrowsize=.25]
+
+var1_t1 -> var1_t2;
+var1_t1 -> var2_t2;
+var2_t1 -> var1_t2;
+var2_t1 -> var2_t2;
+var1_t2 -> var1_t3;
+var1_t2 -> var2_t3;
+var2_t2 -> var1_t3;
+var2_t2 -> var2_t3;
+
+# var1_t1 -> var1_t3;
+# var1_t2 -> var2_t2;
+
+}

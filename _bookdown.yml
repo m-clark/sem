@@ -1,3 +1,6 @@
-book_filename: "sem"
-chapter_name: "Chapter "
+book_filename: "book"
+language:
+  ui:
+    chapter_name: "Chapter "
 output_dir: "docs"
+delete_merged_file: true

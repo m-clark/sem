@@ -6,31 +6,31 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Graphical and Latent Variable Modeling</title>
-  <meta name="description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc.">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="Graphical and Latent Variable Modeling" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://m-clark.github.io/docs/sem/" />
-  <meta property="og:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png" />
-  <meta property="og:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc." />
+  <meta property="og:url" content="https://m-clark.github.io/sem/" />
+  <meta property="og:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
+  <meta property="og:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
   <meta name="github-repo" content="m-clark/sem/" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Graphical and Latent Variable Modeling" />
   
-  <meta name="twitter:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc." />
-  <meta name="twitter:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png" />
+  <meta name="twitter:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
+  <meta name="twitter:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
 
 
 
-<meta name="date" content="2018-02-27">
+<meta name="date" content="2018-03-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
-  
+  <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
 <link rel="prev" href="mixture-models.html">
 <link rel="next" href="topic-models.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -123,7 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://m-clark.github.io/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#990024; font-family:Roboto">Structural Equation Modeling</span></a></li>
+<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li><a href="index.html#section"></a></li>
@@ -248,7 +248,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#balance"><i class="fa fa-check"></i>Balance</a></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a><ul>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#parallel-processes"><i class="fa fa-check"></i>Parallel Processes</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#cross-lagged-models"><i class="fa fa-check"></i>Cross-lagged Models</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
@@ -293,6 +296,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html"><i class="fa fa-check"></i>Other Techniques</a><ul>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#recommender-systems"><i class="fa fa-check"></i>Recommender Systems</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hidden-markov-models"><i class="fa fa-check"></i>Hidden Markov Models</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#cluster-analysis"><i class="fa fa-check"></i>“Cluster analysis”</a><ul>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#k-means"><i class="fa fa-check"></i>K-means</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hierarchical"><i class="fa fa-check"></i>Hierarchical</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
@@ -336,11 +348,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-3.html"><a href="other-3.html"><i class="fa fa-check"></i>Other</a></li>
 <li><a href="section-1.html#section-1"></a></li>
 <li class="divider"></li>
-<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
+<li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
+<li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
 
 </ul>
 
@@ -478,16 +489,16 @@ Dffclt.Item 1  Dffclt.Item 2  Dffclt.Item 3  Dffclt.Item 4         Dscrmn
 Log.Lik: -708.55</code></pre>
 <p>Again, the parameterization used doesn’t matter (note the identical log likelihoods and discrimination). Though setting <code>IRT.param=T</code> is perhaps more common in the IRT world, the other is more in keeping with standard logistic models elsewhere. The gist is, that the first item is ‘more difficult’, i.e. less likely to be endorsed by default, <em>relative to the other items</em>. In the second parameterization, we can think of it as requiring a latent trait score above average (i.e. 0) for endorsement. We can see this even by just looking at the proportion of endorsements via <span class="func">colMeans</span>.</p>
 <p>Now let’s look at some of the individual latent trait scores. By default, <span class="pack">ltm</span> will only provide scores for the unique response <em>patterns</em>, and in fact for the standard estimation only the response patterns are required rather than all the observations. With only items and no other individual information, multiple response patterns of the same type are redundant in estimating the latent trait. These are obtained with the <span class="func"></span>factor.scores function. Other information includes standard errors, and observed and expected frequencies.</p>
-<div id="htmlwidget-a64d1676a04d153e7466" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a64d1676a04d153e7466">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],[0,0,0,0,0,0,0,0,1,1,1,1,1,1],[0,0,0,0,1,1,1,1,0,0,1,1,1,1],[0,0,1,1,0,0,1,1,0,1,0,0,1,1],[0,1,0,1,0,1,0,1,0,1,0,1,0,1],[103,13,10,21,9,6,7,44,1,6,3,3,12,141],[103.58,11.71,14.92,14.08,8.68,8.19,10.43,41.57,1.46,6.98,1.02,4.06,5.17,144.02],[-0.9,-0.44,-0.44,-0.19,-0.44,-0.19,-0.19,0.1,-0.44,0.1,-0.19,0.1,0.1,0.65],[0.46,0.25,0.25,0.24,0.25,0.24,0.24,0.27,0.25,0.27,0.24,0.27,0.27,0.52]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Item.1<\/th>\n      <th>Item.2<\/th>\n      <th>Item.3<\/th>\n      <th>Item.4<\/th>\n      <th>Obs<\/th>\n      <th>Exp<\/th>\n      <th>z1<\/th>\n      <th>se.z1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","pageLength":14,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,14,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a5d4af873e16017b9a27" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a5d4af873e16017b9a27">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],[0,0,0,0,0,0,0,0,1,1,1,1,1,1],[0,0,0,0,1,1,1,1,0,0,1,1,1,1],[0,0,1,1,0,0,1,1,0,1,0,0,1,1],[0,1,0,1,0,1,0,1,0,1,0,1,0,1],[103,13,10,21,9,6,7,44,1,6,3,3,12,141],[103.58,11.71,14.92,14.08,8.68,8.19,10.43,41.57,1.46,6.98,1.02,4.06,5.17,144.02],[-0.9,-0.44,-0.44,-0.19,-0.44,-0.19,-0.19,0.1,-0.44,0.1,-0.19,0.1,0.1,0.65],[0.46,0.25,0.25,0.24,0.25,0.24,0.24,0.27,0.25,0.27,0.24,0.27,0.27,0.52]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Item.1<\/th>\n      <th>Item.2<\/th>\n      <th>Item.3<\/th>\n      <th>Item.4<\/th>\n      <th>Obs<\/th>\n      <th>Exp<\/th>\n      <th>z1<\/th>\n      <th>se.z1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","pageLength":14,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,14,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <div id="item-analysis" class="section level4">
 <h4>Item Analysis</h4>
 <p>We can obtain some additional results to aid our understanding, as well as distinguish some of the different IRT models we’ll discuss. We’ll start with the <span class="emph">item characteristic curve</span> (ICC). It plots the probability of endorsement as a function of the latent person trait, and takes on the familiar sigmoid shape due to the underlying logistic function.</p>
-<p><img src="sem_files/figure-html/1pm_ICC-1.svg" width="432" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/1pm_ICC-1.svg" width="432" style="display: block; margin: auto;" /></p>
 <p>In this case we can see that three of the items essentially behave identically, and in general distinguish (slightly less than average) individuals. The first item would however would take more ‘ability’ before endorsement, i.e. it is more ‘difficult’ in test taking terms, but even then it is not too different from the others. We can now start to think of the latent trait as representing a pro-choice stance, where at the average score the person would likely be endorsing all but the first item.</p>
 <p>Another way to look at this is in terms of <span class="emph">item information</span><a href="#fn58" class="footnoteRef" id="fnref58"><sup>58</sup></a>. The way one can interpret this is that it tells us how individuals, in terms of the latent trait, are distinguished best by the items. The item information curves (IIC) are the derivative of the item characteristic curve, and so tell us the rate of change in that probability. It is a maximum at the inflection point of the ICC, i.e. when the probability of endorsement/correct vs. not is equal. In addition, the peak of the IIC is at point of item difficulty on the latent trait scale. In other words, in the IRT parameterization, the estimate of an item’s difficulty is that point on the latent scale where half the subjects endorse (get correct) the item, or where the information for that item is at a maximum.</p>
 <p>Because we don’t estimate separate item discrimination, all items have the same information and the same distribution. In this case, items 2-4 have more information for those scoring below average on the latent trait, while item 1 has most for those slightly above.</p>
-<p><img src="sem_files/figure-html/1pm_IIC-1.svg" width="432" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/1pm_IIC-1.svg" width="432" style="display: block; margin: auto;" /></p>
 <p>For further interpretation, consider a worst case scenario. Individuals would have the same chance of getting the answer correct regardless of ability. In other words the ICC would be flat, i.e. a constant. The derivative of a constant is zero, meaning the item has no information at all.</p>
 <p>One final interpretation of item information- had we done a standard factor analysis, it would be equivalent to the ratio of the communality, i.e. the squared loading (or sum of for multiple factors) for that item to its uniqueness. So item information can be seen as the reciprocal of the error of measurement for that item.</p>
 <p>Furthermore, we can get total <span class="emph">test information</span> by simply summing the item information scores. This allows us to take a specific strategies when designing a test or scale, e.g. to provide maximum information at particular points of difficulty or be more or less uniform across a wide range of ability. We can see that the bulk of the test’s information is for those individuals between -1 and 1 on the latent trait.</p>
@@ -507,7 +518,7 @@ Total Information = 4.46
 Information in (-1, 1) = 4.33 (97.1%)
 Based on items 1</code></pre>
 <p>Finally we can look at the density plot of the latent scores. Dots reflect the difficulty estimates from the IRT parameterization.</p>
-<p><img src="sem_files/figure-html/1pm_traitscores-1.svg" width="432" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/1pm_traitscores-1.svg" width="432" style="display: block; margin: auto;" /></p>
 <p>At this point we’ll take a moment to summarize things. IRT models can be seen as a specific type of logistic regression model. The 1PM assumes a latent individual score as well as item-specific difficulty, and from the model, we can gain information about person performance as well as item characteristics. With extensions we’ll gain even more information about how the items and individuals function.</p>
 </div>
 <div id="pm-as-a-mixed-model" class="section level4">
@@ -690,11 +701,11 @@ Defined Parameters:
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## lme_rasch_probit = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, 
 ##                          family=binomial(link=&#39;probit&#39;))</code></pre></div>
 <p>Logistic link comparison.</p>
-<div id="htmlwidget-c4ee6b3bd6deb5491911" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c4ee6b3bd6deb5491911">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.73,1.05,1.6,1.35],[-0.67,1.02,1.5,1.29],[-0.75,1.14,1.66,1.43],[4.46,4.46,4.46,4.46],[3.73,3.73,3.73,3.73],[4.48,4.48,4.48,4.48]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lme_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lme_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4078a5666d5861308e8d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4078a5666d5861308e8d">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.73,1.05,1.6,1.35],[-0.67,1.02,1.5,1.29],[-0.75,1.14,1.66,1.43],[4.46,4.46,4.46,4.46],[3.73,3.73,3.73,3.73],[4.48,4.48,4.48,4.48]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lme_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lme_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <p>Probit link comparison<a href="#fn63" class="footnoteRef" id="fnref63"><sup>63</sup></a>.</p>
-<div id="htmlwidget-698a7a6623aef72d10db" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-698a7a6623aef72d10db">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.43,0.62,0.94,0.8],[-0.44,0.59,0.87,0.73],[-0.44,0.67,0.98,0.84],[2.62,2.62,2.62,2.62],[2.04,2.04,2.04,2.04],[2.63,2.63,2.63,2.63]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lme_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lme_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a0a1e1b6d74a30643b7f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a0a1e1b6d74a30643b7f">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.43,0.62,0.94,0.8],[-0.44,0.59,0.87,0.73],[-0.44,0.67,0.98,0.84],[2.62,2.62,2.62,2.62],[2.04,2.04,2.04,2.04],[2.63,2.63,2.63,2.63]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lme_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lme_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <p>For the second IRT parameterization, <code>IRT.param=T</code> in the <span class="func">ltm</span> function, we just use the initial results. This time I multiply the estimated loading, i.e. the discrimination, from <span class="pack">lavaan</span> by 1.7.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sem_irt_raschel =<span class="st"> &#39;</span>
 <span class="st"># loadings</span>
@@ -713,8 +724,8 @@ Defined Parameters:
 sem_rasch &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_irt_raschel, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)
 
 <span class="co"># summary(sem_rasch) # not shown as is identical to previous</span></code></pre></div>
-<div id="htmlwidget-ba975dd582f86daf67b5" style="width:75%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ba975dd582f86daf67b5">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[0.16,-0.24,-0.36,-0.3],[0.16,-0.24,-0.35,-0.3],[4.46,4.46,4.46,4.46],[4.48,4.48,4.48,4.48]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4f3d5b801929fb8b1958" style="width:75%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4f3d5b801929fb8b1958">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[0.16,-0.24,-0.36,-0.3],[0.16,-0.24,-0.35,-0.3],[4.46,4.46,4.46,4.46],[4.48,4.48,4.48,4.48]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <p>In both scenarios the IRT and SEM results are quite close, and the mixed model is not far off, though it estimates less variance for the latent trait, which results in the rest of the estimates being slightly different since the latent trait scores are slightly different. Again though, the correlation of the IRT latent trait and random effects from the mixed model are 1.0, so we are not coming to different conclusions.</p>
 </div>
 </div>
@@ -726,7 +737,7 @@ sem_rasch &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_irt_rasc
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">irt_2pm_par1 =<span class="st"> </span><span class="kw">ltm</span>(Abortion <span class="op">~</span><span class="st"> </span>z1, <span class="dt">IRT.param=</span>F)
 irt_2pm_par2 =<span class="st"> </span><span class="kw">ltm</span>(Abortion <span class="op">~</span><span class="st"> </span>z1, <span class="dt">IRT.param=</span>T)</code></pre></div>
 <p>We start to see a lack of parallelism in the item characteristic curves, as well as differences in the item information curves.</p>
-<p><img src="sem_files/figure-html/2pm_ICC-1.svg" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/2pm_ICC-1.svg" width="576" style="display: block; margin: auto;" /></p>
 <p>Above, we see that Item 3, ‘The woman is not married and does not wish to marry the man.’, has the most information, and as before distinguishes well those individuals lower than average score on the latent trait. In the testing interpretation, it is a relatively ‘easy’ item, though not too different from items, 2 and 4. Item 1 on the other hand, ‘The woman decides on her own that she does not.’, doesn’t discriminate well those who are low-scoring on the latent trait, but does for those on the high end. In the testing interpretation, this would be a relatively difficult item.</p>
 <div id="pm-as-sem-1" class="section level4">
 <h4>2PM as SEM</h4>
@@ -824,11 +835,11 @@ Defined Parameters:
     discrm_3          3.623    1.012    3.580    0.000
     discrm_4          2.122    0.329    6.454    0.000</code></pre>
 <p>Logistic link comparison.</p>
-<div id="htmlwidget-9532d7bed38232704c29" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9532d7bed38232704c29">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.76,1.02,1.94,1.15],[-0.68,1.18,2.22,1.19],[4.45,4.32,5.66,3.63],[4.03,4.68,6.16,3.61]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-411daa9985fdf9a04ce1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-411daa9985fdf9a04ce1">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.76,1.02,1.94,1.15],[-0.68,1.18,2.22,1.19],[4.45,4.32,5.66,3.63],[4.03,4.68,6.16,3.61]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <p>Probit link comparison.</p>
-<div id="htmlwidget-afd11882902e5dd616ba" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-afd11882902e5dd616ba">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.44,0.6,1.14,0.67],[-0.4,0.69,1.31,0.7],[2.62,2.54,3.33,2.13],[2.37,2.75,3.62,2.12]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-0768023eac049def0888" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0768023eac049def0888">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.44,0.6,1.14,0.67],[-0.4,0.69,1.31,0.7],[2.62,2.54,3.33,2.13],[2.37,2.75,3.62,2.12]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="three-parameter-model" class="section level3">
@@ -836,7 +847,7 @@ Defined Parameters:
 <p>The 3PM will add a guessing parameter to the 2PM model. As an example, in most testing situations one can get a correct response on an item just by guessing. However, individuals do not necessarily guess randomly, such that if there are 4 choices, they’d not just have a .25 chance of getting something correct.</p>
 <p><span class="math display">\[P(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + (1-\gamma_j) \cdot \mathrm{logis}(\alpha_j(\theta_i-\delta_j))\]</span></p>
 <p>The model has the effect of including a lower bound on responding to the 2PM, and could vary by item as well. While it probably isn’t as applicable to the Abortion data, one can think of it as an offset or propensity/bias to endorse, and such a model in general might be suited to more imbalanced data response. We can use the <span class="func">tpm</span> function in <span class="pack">ltm</span> to estimate such a model.</p>
-<p><img src="sem_files/figure-html/3pm_ICC-1.svg" width="432" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/3pm_ICC-1.svg" width="432" style="display: block; margin: auto;" /></p>
 <p>Here we can see item 2, ‘The couple agree that they do not wish to have a child.’, does have an asymptote slightly above 0, where the others are estimated to be zero. This is perhaps not surprising as this is not a testing scenario, and less amenable to guessing.</p>
 </div>
 <div id="four-parameter-model" class="section level3">
@@ -931,10 +942,11 @@ gitbook.start({
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -947,8 +959,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "chapter",
-"depth": 3
+"collapse": "section"
 },
 "highlight": "pygments",
 "search": true
@@ -961,9 +972,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

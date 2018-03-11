@@ -515,7 +515,7 @@ ggplot(aes(x=z, y=Probability), data=iccdat) +
   geom_vline(xintercept=0, color='black', alpha=.2) +
   geom_line(aes(group=Item, color=Item), lwd=1, show.legend=T, alpha=.75) + 
   scale_color_manual(values=palettes$orange$tetradic) +
-  annotate(x=-2,y=.15, label=sprintf('\U2193'), geom='text', size=8, color='#ff5503') +
+  annotate(x=-2,y=.15, label=sprintf('\U2193'), geom='text', size=8, color='#ff5500') +
   xlab('Individual Latent Score') +
   theme_trueMinimal() +
   theme(legend.position=c(.85,.4),

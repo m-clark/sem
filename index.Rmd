@@ -11,10 +11,6 @@ output:
       highlight: pygments
       number_sections: false
       config:
-        toc:
-          depth: 3
-          collapse: chapter  # ignored for reasons unknown; see output.yml
-          # scroll_highlight: yes
         search: yes
         fontsettings:
           family: san-serif
@@ -22,16 +18,17 @@ output:
           facebook: true
           twitter: true
 always_allow_html: yes
-# font-import: http://fonts.googleapis.com/css?family=Roboto|Open+Sans
+font-import: http://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Open+Sans|Alex+Brush|Stalemate
 font-family: 'Roboto'
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-description: "Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and 'factor analysis', measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc."
-cover-image: img/198R_1.png
-url: 'https\://m-clark.github.io/docs/sem/'  # evidently the \: is required or you'll get text in the title/toc area
-github-repo:  m-clark/sem/
+description: "This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and 'factor analysis', measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more."
+cover-image: 'img/198R_1.png'
+favicon: 'img/R.ico'
+url: 'https\://m-clark.github.io/sem/'  # evidently the \: is required or you'll get text in the title/toc area
+github-repo:  'm-clark/sem/'
 ---
 
 ```{r setup_chunkopts, include=FALSE, cache=FALSE}

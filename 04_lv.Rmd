@@ -377,7 +377,7 @@ In a standard measurement model such as this we must *scale the factor* by fixin
 
 ```{r plotFARaw_sempaths, echo=F, eval=F}
 semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F, 
-                  whatLabels = 'par', groups=c('latent', 'man'),  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
+                  whatLabels = 'par', groups=c('latent', 'man'),  color=list(latent='#ff5500', man=scales::alpha('#ff5500',.5)),
                   sizeMan=5, sizeLat=10, edge.label.cex=1.5, borders=F, #edge.color='#1e90ff',
                   label.color='#ffffff', edge.width=2.5) 
 ```
@@ -405,7 +405,7 @@ With both standardized (using the <span class="func">summary</span> function, se
 
 ```{r plotFAStd_semplot, echo=F, eval=F}
 semPlot::semPaths(famod, layout='tree2', style='lisrel', covAtResiduals=F, 
-                  whatLabels = 'std', groups=c('latent', 'man'),  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
+                  whatLabels = 'std', groups=c('latent', 'man'),  color=list(latent='#ff5500', man=scales::alpha('#ff5500',.5)),
                   sizeMan=5, sizeLat=10, edge.label.cex=1.5, borders=F, #edge.color='#1e90ff',
                   nCharNodes=6, exoVar=T,
                   label.color='#ffffff', edge.width=2.5) 

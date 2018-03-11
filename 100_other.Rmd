@@ -1,0 +1,203 @@
+# Other Techniques
+
+This chapter is a grab-bag of various techniques that have a latent variable interpretation to the models.  Only brief descriptions are provided at present, though more may be added in the future. In addition, you can see some more techniques in the associated notes that were used to give a workshop on factor analysis and related techniques, though the bulk of it is covered in this document
+
+## Recommender Systems
+
+Practically everyone has been exposed to <span class="emph">recommender systems</span> such as <span class="emph">collaborative filtering</span> and related models.  That's how Netflix, Amazon and others make their recommendations to you given the information you've provided about likes and dislikes, what other similar people have provided, and how similar the object of interest is to others.
+
+The following image, taken from Wikipedia (click the image to go there), conceptually shows how a *user-based* collaborative filtering method would work, where a recommendation is given based on what other similar users have given.
+
+<a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="../img/collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a>
+
+Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.
+
+If you think of genres as latent variables for movies, you can employ the factor analytic techniques we've talked about. Similarly, we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and additional information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
+
+```{r recomend, eval=F, echo=TRUE}
+library(recommenderlab)
+data("MovieLense")
+MovieLense
+barplot(table(getRatings(MovieLense)), col = '#ff5500', border='#00aaff') # rating frequencies
+recommenderRegistry$get_entries(dataType = "realRatingMatrix")  # the methods available
+recom_svd <- Recommender(MovieLense, method = "SVD")
+recom_svd
+```
+
+After running it try some predictions.
+
+```{r recommend_pred, eval=FALSE}
+# predicted ratings for two users
+recom <- predict(recom_svd, MovieLense[2:3], type="ratings")
+recom
+as(recom, "matrix")[,1:10]
+
+
+# comparison model
+recom_popular <- Recommender(MovieLense, method = "POPULAR")
+getModel(recom_popular)$topN
+recom <- predict(recom_popular, MovieLense[2:3], type="topNList")
+recom
+as(recom, "list")
+```
+
+All in all, thinking about your data in terms of a recommendation system might not be too far-fetched, especially if you're already considering factor analysis of some sort.
+
+
+## Hidden Markov Models
+
+<span class="emph">Hidden Markov models</span> can be used to model latent discrete states that result in a sequence of observations over time. In terms of a graphical model, we can depict it as follows:
+
+```{r hmm_graph, echo=FALSE, cache=T}
+# making the fontsize bigger results in a more accurate web display, which is silly
+hmm = "
+digraph Factor  {
+  
+ graph [rankdir=TB  bgcolor=transparent]
+ node [fontname=Roboto fontsize=32 shape=circle width=.5 color=gray75 fontcolor=gray25];
+   z1  [label = <z<sub>1</sub>>];
+   z2  [label = <z<sub>2</sub>>];
+   z3  [label = <z<sub>3</sub>>];
+
+   # because diagrammer can't maintain order  ; 
+   x1  [label = ☻];
+   x2  [label = ♥];
+   x3  [label = ☺];
+   x4  [label = §];
+
+ edge [fontname='Roboto' fontsize=10 minlen=5 penwidth=2 color='#00aaff'];
+  z1 -> z2 [label = ''  arrowhead=''];
+  z1 -> z3 [label = ''  arrowhead='' penwidth= 1];
+  z2 ->  z2 [label = '' arrowhead='' penwidth=1.5];
+  z2 ->  z3 [label = '' arrowhead='' penwidth=.5];
+  z3 ->  z1 [label = '' arrowhead='' penwidth=2];
+
+
+ edge [fontname='Roboto' fontsize=10 minlen=1 penwidth=.5 color='#ff5500'];
+  z1 ->  x1 [label = '' arrowhead='' penwidth=.05];
+  z1 ->  x2 [label = '' arrowhead='' penwidth=.25];
+  z1 ->  x3 [label = '' arrowhead='' penwidth=.45];
+  z1 ->  x4 [label = '' arrowhead='' penwidth=.25];
+
+  z2 ->  x1 [label = '' arrowhead='' penwidth=.25];
+  z2 ->  x2 [label = '' arrowhead='' penwidth=.05];
+  z2 ->  x3 [label = '' arrowhead='' penwidth=.15];
+  z2 ->  x4 [label = '' arrowhead='' penwidth=.50];
+
+  z3 ->  x1 [label = '' arrowhead='' penwidth=.5];
+  z3 ->  x2 [label = '' arrowhead='' penwidth=.15];
+  z3 ->  x3 [label = '' arrowhead='' penwidth=.15];
+  z3 ->  x4 [label = '' arrowhead='' penwidth=.20];
+
+
+
+
+ { rank=same;
+  z1; z2; z3; }
+ { rank=same;
+  x1; x2; x3; x4;}
+
+}
+"
+
+# DiagrammeR::grViz(hmm, width='100%', height='400px')
+tags$div(style="margin:auto auto; width:75%",
+DiagrammeR::grViz(hmm, width='100%', height='300px')
+)
+```
+
+<br>
+
+In this sense, we have latent variable $z$ that represents the hidden state of a system, while the outcome is what we actually observe.  There are three latent states above, and the relative width of the edge reflects the <span class="emph">transition probability</span> of moving from one state to the other.  The icons are the categories of observations we can potentially see, and there is some probability, given a latent state of seeing a particular category.  Such a situation might lead to the following observed sequence of observations:
+
+We start in state 1 where the heart and yellow smiley are most probable. Let's say we observe ♥.  The second state is most likely so we get there, and because it has some probability of staying in that state, we observe § and §. We finally get to state 3 and see <span class="" style='color:black'>☻</span>, where we go back to state 1, where we see ☺, jump to latent state 3 etc.  And such a process continues for the length of sequence we see.
+
+This can be seen as a mixture model/latent class situation that we'll talk about more later.  The outcomes could also be continuous, such that the latent state determines the likelihood of the observation in a manner more directly akin to the latent linear model for standard factor analysis. 
+
+## "Cluster analysis"
+
+Aside from mixture models, when people use the term 'cluster analysis' they are typically referring to distance-based methods. Given a <span class="emph">distance matrix</span> that informs how dissimilar observations are from one another, the methods try to create clusters of observations that are similar to one another, and clusters that are more distinct from other clusters.
+
+### K-means
+
+<span class="emph">K-means</span> cluster analysis is probably the most commonly used clustering method out there.  Conceptually it's fairly straightforward- find $k$ clusters that minimize the variance of its members from the mean of its members.  As such it's easy to implement in standard data settings.
+
+K-means can actually be seen as a special case of the Gaussian mixture model described in a previous chapter, and it also has connections to PCA and ICA. The general issue is trying to determine just how many clusters one should retain. The following plot shows both a two and three cluster solution using the <span class="func">kmeans</span> function in base R, e.g. `kmeans(faithful, 2)`.
+
+
+```{r kmeans, echo=F, out.width='90%'}
+set.seed(1111)
+clus_2 = factor(kmeans(faithful, 2)$cluster)
+c2 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
+  geom_point(aes(color=clus_2)) +
+  scale_color_manual(values = scales::alpha(palettes$orange$tetradic[2:1], .5)) +
+  theme_trueMinimal()
+
+clus_3 = factor(kmeans(faithful, 3)$cluster)
+c3 = ggplot(aes(x=waiting, y=eruptions), data=faithful) +
+  geom_point(aes(color=clus_3)) +
+  scale_color_manual(values = scales::alpha(palettes$orange$tetradic[c(2,3,1)], .5)) +
+  theme_trueMinimal()
+cowplot::plot_grid(c2, c3)
+# gridExtra::grid.arrange(c2,c3, ncol=2)
+```
+
+### Hierarchical
+
+Other methods can be thought of as a clustering the data in a hierarchical fashion.  These can start at the bottom of the hierarchy (<span class="emph">agglomerative</span>), allowing every observation into its own cluster, and successively combining them. For example, first choose a measure of dissimilarity, and combine the two observations that are most alike, then add one to those or if another pair are closer, make a new cluster.  Conversely, one can start with every observation in one cluster (<span class="emph">divisive</span>), and take the most dissimilar and split it off, continuing on until every observation is in its own cluster.
+
+<br>
+
+```{r hclust_dendrogram, echo=FALSE}
+heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_colorbar=T, colors=viridis::plasma) %>% 
+  theme_plotly()
+```
+
+Practically at every turn you're faced with multiple options for settings to choose (distance, linkage method, cluster determination, general approach), and most decisions will be arbitrary .  While these are actually still commonly used, you always have better alternatives.  They are fine to use in a quick visualization to sort the data more meaningfully though, as above.
+
+
+## ICA
+
+The latent linear model versions of PCA and factor analysis assume the observed variables are normally distributed (even standard PCA won't work nearly as well if the data aren't.  This is not required, and <span class="emph">independent components analysis</span> (ICA) does not. This visualization duplicates that seen in Murphy (2012) where we have two (uniform) independent sources.  We can see that the ICA correctly recovers those components.
+
+```{r ica, echo=FALSE, results='hide', cache=FALSE}
+set.seed(2)
+N = 1000
+
+A = matrix(c(2,3,2,1), 2)*.3
+Suni = matrix(runif(2*N, min = -1), ncol = 2)*sqrt(3)
+Xuni = Suni %*% A
+
+ica_res = fastICA::fastICA(Xuni, 2)
+ica_res$A
+A
+
+pc_res = psych::principal(Xuni, 2)$scores 
+```
+
+```{r ica_plot, echo=FALSE, cache=FALSE}
+p1 = qplot(Suni[,1], Suni[,2], color=I('#ff550040')) + 
+  labs(x='', y='', title='Sources') +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  theme_trueMinimal()
+p2 = qplot(Xuni[,1], Xuni[,2], color=I('#ff550040')) +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  labs(x='', y='', title='Observed Data') +
+  theme_trueMinimal()
+p3 = qplot(pc_res[,1], pc_res[,2], color=I('#ff550040')) +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  labs(x='', y='', title='PCA') +
+  scale_x_reverse() +
+  theme_trueMinimal()
+p4 = qplot(ica_res$S[,1], ica_res$S[,2], color=I('#ff550040')) + 
+  labs(x='', y='', title='ICA') +
+  lims(x=c(-3,3), y=c(-3,3)) +
+  theme_trueMinimal()
+cowplot::plot_grid(p1, p2, p3, p4)
+```
+
+
+When would you use ICA? If you believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound.
+
+
+

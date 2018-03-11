@@ -13,6 +13,7 @@ output:
     #theme: sandstone
     toc: yes
     toc_float: yes
+font-import: http://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Open+Sans|Open+Sans+Condensed
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -797,7 +798,7 @@ h1=plot(Shat(1,:),Shat(2,:),'.',[-cmax,cmax],[0,0],'k',[0,0],[-cmax,cmax],'k');
 ```
 
 
-When would use ICA? If you believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
+When would you use ICA? If you believe that truly independent sources of signal underlie your data, and that those sources are not normally distributed. It is commonly applied to deal with images or sound[^deepimage].
 
 #### Suggested R packages
 
@@ -901,7 +902,7 @@ The following image, taken from Wikipedia (click the image to go there), concept
 
 Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.
 
-If you think of genres as latent categories of movies, now you can employ the techniques we've talked about[^netflix]. Similarly, we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and addition information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
+If you think of genres as latent categories of movies, now you can employ the techniques we've talked about[^netflix]. Similarly, we can find clusters of people using cluster analytic techniques.  In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and additional information.  The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R's default <span class="emph">prcomp</span> function for PCA.  You might compare it with `method = 'POPULAR'`.
 
 ```{r recomend, eval=F, echo=TRUE}
 library(recommenderlab)
@@ -1160,7 +1161,7 @@ cowplot::plot_grid(c2, c3)
 
 #### Hierarchical
 
-Other methods can be thought of as a clustering the data in a hierarchical.  These can start at the bottom of the hierarchy (<span class="emph">agglomerative</span>), allowing every observation into its own cluster, and successively combining them. For example, first choose a measure of dissimilarity, and combine the two observations that are most alike, then add one to those or if another pair are closer, make a new cluster.  Conversely, one can start with every observation in one cluster (<span class="emph">divisive</span>), and take the most dissimilar and split it off, continuing on until every observation is in its own cluster.
+Other methods can be thought of as a clustering the data in a hierarchical fashion.  These can start at the bottom of the hierarchy (<span class="emph">agglomerative</span>), allowing every observation into its own cluster, and successively combining them. For example, first choose a measure of dissimilarity, and combine the two observations that are most alike, then add one to those or if another pair are closer, make a new cluster.  Conversely, one can start with every observation in one cluster (<span class="emph">divisive</span>), and take the most dissimilar and split it off, continuing on until every observation is in its own cluster.
 
 <br>
 

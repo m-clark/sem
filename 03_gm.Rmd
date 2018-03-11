@@ -599,7 +599,7 @@ WifeSatisfaction ~~ 1*WifeSatisfaction
 m1 = sem(model1, data=data.frame(WifeSatisfaction, HusbandSatisfaction))
 semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=F, 
                   # whatLabels = 'par', 
-                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
+                  sizeMan=10, edge.label.cex=1.5, color='#ff5500', borders=F, 
                   label.color='#ffffff') # simply doesn't plot nonrecursive models correctly
 ```
 
@@ -624,7 +624,7 @@ HusbandSatisfaction ~ WifeSatisfaction + HusbandEdu
 
 m2 = sem(model2, data=data.frame(WifeSatisfaction, HusbandSatisfaction, WifeEdu, HusbandEdu, FamIncome))
 semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, nCharNodes=3,
-                  sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
+                  sizeMan=10, edge.label.cex=1.5, color='#ff5500', borders=F, 
                   label.color='#ffffff') # simply doesn't plot res cov
 ```
 
@@ -852,7 +852,7 @@ edges = tidyr::gather(data.frame(Source=rownames(adj), adj), key='Target', value
 g = graph_from_data_frame(edges, directed=F)
 E(g)$weight = edges$Value
 comm = as.vector(membership(cluster_fast_greedy(g)))   # cluster_edge_betweenness cluster_walktrap
-# V(g)$color = c('coral','#1e90ff0', 'rgba(102, 2, 60,.5)', '#ff550380', 'salmon', '#66023C')[comm]
+# V(g)$color = c('coral','#1e90ff0', 'rgba(102, 2, 60,.5)', '#ff550080', 'salmon', '#66023C')[comm]
 V(g)$group = comm
 V(g)$size = rep(20, 50)
 V(g)$label.cex = rep(.75, 50)

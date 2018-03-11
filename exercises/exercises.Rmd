@@ -115,7 +115,7 @@ semPaths(satistifaction_ModelResults, whatLabels='est', style='lisrel', rotation
 # or color based on direction, fade with size, using standardized estimates
 semPaths(satistifaction_ModelResults, what='est', style='lisrel', 
          layout='tree2', rotation=2, covAtResiduals=F, 
-         sizeMan=10, edge.label.cex=1.5, color='#ff5503', borders=F, 
+         sizeMan=10, edge.label.cex=1.5, color='#ff5500', borders=F, 
          label.color='#ffffff')
 ```
 
@@ -386,7 +386,7 @@ summary(peerRel_Results)
 # semPlot::semPaths(peerRel_Results, residuals=T, style='lisrel', edgeLabels='', 
 #                   residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1)
 semPlot::semPaths(peerRel_Results, layout='tree2', style='lisrel', covAtResiduals=F, residuals = T,
-                  groups=c('latent', 'man'),  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
+                  groups=c('latent', 'man'),  color=list(latent='#ff5500', man=scales::alpha('#ff5500',.5)),
                   sizeMan=5, sizeLat=10, edge.label.cex=1.5, borders=F, #edge.color='#1e90ff',
                   nCharNodes=6, exoVar=T,
                   label.color='#ffffff') 
@@ -398,7 +398,7 @@ Note below how you can detect the structure visually.  Physical appearance hangs
 <br>
 
 ```{r corplot, echo=FALSE, eval=T, message=F, warning=F}
-# corrplot::corrplot(cov2cor(marshCov), order='hclust', addrect=3, rect.col='#ff5503', tl.col='gray50')
+# corrplot::corrplot(cov2cor(marshCov), order='hclust', addrect=3, rect.col='#ff5500', tl.col='gray50')
 suppressMessages(heatR::corrheat(cov2cor(marshCov), width='100%') %>% 
   tags$div(style="width:75%; margin:auto auto;"))  # knitr won't ignore message otherwise
 ```
@@ -453,7 +453,7 @@ poldem_ModelCode = '
 '
 poldem_Results = sem(poldem_ModelCode, data=poldem)
 semPlot::semPaths(poldem_Results, layout='tree2', style='lisrel', covAtResiduals=F, residuals = T,
-                  groups=c('latent', 'man'),  color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
+                  groups=c('latent', 'man'),  color=list(latent='#ff5500', man=scales::alpha('#ff5500',.5)),
                   sizeMan=5, sizeLat=10, edge.label.cex=1.5, borders=F, #edge.color='#1e90ff',
                   nCharNodes=6, exoVar=T,
                   label.color='#ffffff') 
@@ -461,7 +461,7 @@ semPlot::semPaths(poldem_Results, layout='tree2', style='lisrel', covAtResiduals
 
 
 ```{r corplotsem2, echo=FALSE, eval=F}
-# corrplot::corrplot(cor(poldem), order='hclust', addrect=3, rect.col='#ff5503', tl.col='gray50')
+# corrplot::corrplot(cor(poldem), order='hclust', addrect=3, rect.col='#ff5500', tl.col='gray50')
 heatR::corrheat(cor(poldem))
 ```
 

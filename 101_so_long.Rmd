@@ -1,0 +1,19 @@
+#
+
+<img src="img/bob.jpg" style="display:block; margin: 0 auto;">
+
+<br>
+<br>
+<br>
+<br>
+
+
+After all that I think we've covered plenty of ground regarding graphical and latent variable models.  The attempt was made to provide a broader and more modern context with which to understand what are now very old, though still highly useful, techniques.  You definitely have a lot more things to play with now regarding your data, and I hope you found it useful.
+
+<br>
+<br>
+<br>
+
+<div  style="text-align: center;">
+<span class="" style="font-family: 'Alex Brush'; font-size: 200%;">Best of Luck with your Research!</span>
+</div>

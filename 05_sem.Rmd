@@ -107,7 +107,7 @@ alienation <- sem(wheaton.model, sample.cov=wheaton.cov, sample.nobs=932)
 ```{r wheatonPlot, eval=F, echo=FALSE, dev='svglite'}
 # keep this
 semPlot::semPaths(alienation, layout='tree2', style='lisrel', whatLabels = 'path', groups=c('latent', 'man'), 
-      color=list(latent='#ff5503', man=scales::alpha('#ff5503',.5)),
+      color=list(latent='#ff5500', man=scales::alpha('#ff5500',.5)),
       sizeMan=5, sizeLat=10, edge.label.cex=.75, borders=F, #edge.color='#1e90ff',
       label.color='#ffffff', residScale=10, curve=1, nCharNodes=6, exoVar=T, covAtResiduals=T, residuals=T) 
 # semPlot::semPaths(alienation, residuals=T, style='lisrel', edgeLabels='', residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1)
@@ -137,7 +137,7 @@ Here we see that higher socioeconomic status is affiliated with less alienation,
 ```{r wheatonStructural, eval=F, echo=F, dev='svglite'}
 semPlot::semPaths(alienation, residuals=T, style='lisrel', what='std', sizeLat=16,
       residScale=10, nCharNodes=6, exoVar=T, edge.label.cex=1, 
-      structural=T, borders=F, color='#ff5503', label.color='#ffffff')
+      structural=T, borders=F, color='#ff5500', label.color='#ffffff')
 ```
 
 
@@ -187,7 +187,7 @@ modelUnder = 'LV =~ x1 + x2'
 modelJust  = 'LV =~ x1 + x2 + x3'
 library(lavaan)
 underModel = cfa(modelUnder, data=cbind(x1,x2,x3))
-# semPlot::semPaths(underModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5503', label.color='#ffffff')
+# semPlot::semPaths(underModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5500', label.color='#ffffff')
 summary(underModel)
 ```
 
@@ -207,7 +207,7 @@ grViz('scripts/justidentified.gv', width='100%')
 
 ```{r justID, echo=-2}
 justModel = cfa(modelJust, data=cbind(x1,x2,x3))
-# semPlot::semPaths(justModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5503', label.color='#ffffff')
+# semPlot::semPaths(justModel, style='lisrel', exoVar=T, edge.label.cex=1, borders=F, color='#ff5500', label.color='#ffffff')
 summary(justModel, fit=T)
 ```
 

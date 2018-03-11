@@ -6,31 +6,31 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Graphical and Latent Variable Modeling</title>
-  <meta name="description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc.">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="Graphical and Latent Variable Modeling" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://m-clark.github.io/docs/sem/" />
-  <meta property="og:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png" />
-  <meta property="og:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc." />
+  <meta property="og:url" content="https://m-clark.github.io/sem/" />
+  <meta property="og:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
+  <meta property="og:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
   <meta name="github-repo" content="m-clark/sem/" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Graphical and Latent Variable Modeling" />
   
-  <meta name="twitter:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc." />
-  <meta name="twitter:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png" />
+  <meta name="twitter:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
+  <meta name="twitter:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
 
 
 
-<meta name="date" content="2018-02-27">
+<meta name="date" content="2018-03-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
-  
+  <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
 <link rel="prev" href="item-response-theory.html">
 <link rel="next" href="bayesian-nonparametric-models.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -123,7 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://m-clark.github.io/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#990024; font-family:Roboto">Structural Equation Modeling</span></a></li>
+<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li><a href="index.html#section"></a></li>
@@ -248,7 +248,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#balance"><i class="fa fa-check"></i>Balance</a></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a><ul>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#parallel-processes"><i class="fa fa-check"></i>Parallel Processes</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#cross-lagged-models"><i class="fa fa-check"></i>Cross-lagged Models</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
@@ -293,6 +296,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html"><i class="fa fa-check"></i>Other Techniques</a><ul>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#recommender-systems"><i class="fa fa-check"></i>Recommender Systems</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hidden-markov-models"><i class="fa fa-check"></i>Hidden Markov Models</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#cluster-analysis"><i class="fa fa-check"></i>“Cluster analysis”</a><ul>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#k-means"><i class="fa fa-check"></i>K-means</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hierarchical"><i class="fa fa-check"></i>Hierarchical</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
@@ -336,11 +348,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-3.html"><a href="other-3.html"><i class="fa fa-check"></i>Other</a></li>
 <li><a href="section-1.html#section-1"></a></li>
 <li class="divider"></li>
-<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
+<li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
+<li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
 
 </ul>
 
@@ -367,7 +378,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="latent-dirichlet-allocation" class="section level2">
 <h2>Latent Dirichlet Allocation</h2>
 <p>The most common approach to topic modeling is <span class="emph">latent dirichlet allocation</span> (LDA), which one can think of as discrete PCA. In my opinion, this should be as much a part of your toolbox as PCA and Factor Analysis, as ‘compositional’ data, where we have counts of occurrences (out of some total), are quite common. In the past PCA was applied to such data, but it is essentially a less performant approach with less intuitive results.</p>
-<p>I have gone into far more detailed demonstration elsewhere, and have no desire to duplicate it. I have <a href="http://m-clark.github.io/workshops/text_analysis/">workshop notes</a> devoted exclusively to it, as well as hands-on demos <a href="http://m-clark.github.io/docs/topic_models/topic-model-demo.html">here</a> and <a href="http://micl.shinyapps.io/texEx/texEx.Rmd">here</a>. However we can discuss a couple things, starting with the Dirichlet distribution. A draw from the Dirichlet distribution can be seen as a probability distribution for a k category event. It has one parameter, we’ll call <span class="math inline">\(\alpha\)</span>, which is often referred to as the concentration parameter. If the k <span class="math inline">\(\alpha\)</span> values are equal, the resulting k probabilities will be equal on average, and with larger <span class="math inline">\(\alpha\)</span>, there will be less variance around that probability. When they are unequal, the larger values will result in larger probabilities assigned. Consider the following for <code>k=5</code> topics.</p>
+<p>I have gone into far more detailed demonstration elsewhere, and have no desire to duplicate it. I have <a href="http://m-clark.github.io/text-analysis-with-R/">workshop notes</a> devoted exclusively to it, as well as hands-on demos <a href="http://m-clark.github.io/docs/topic_models/topic-model-demo.html">here</a> and <a href="http://micl.shinyapps.io/texEx/texEx.Rmd">here</a>. However we can discuss a couple things, starting with the Dirichlet distribution. A draw from the Dirichlet distribution can be seen as a probability distribution for a k category event. It has one parameter, we’ll call <span class="math inline">\(\alpha\)</span>, which is often referred to as the concentration parameter. If the k <span class="math inline">\(\alpha\)</span> values are equal, the resulting k probabilities will be equal on average, and with larger <span class="math inline">\(\alpha\)</span>, there will be less variance around that probability. When they are unequal, the larger values will result in larger probabilities assigned. Consider the following for <code>k=5</code> topics.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gtools)
 probs1 =<span class="st"> </span><span class="kw">rdirichlet</span>(<span class="dt">n=</span><span class="dv">1000</span>, <span class="dt">alpha=</span><span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>))
 probs2 =<span class="st"> </span><span class="kw">rdirichlet</span>(<span class="dt">n=</span><span class="dv">1000</span>, <span class="dt">alpha=</span><span class="kw">rep</span>(<span class="dv">100</span>,<span class="dv">5</span>))  <span class="co"># less variance</span>
@@ -390,8 +401,8 @@ probs3 =<span class="st"> </span><span class="kw">rdirichlet</span>(<span class=
 <p>In what follows we’ll start at the point of having the DTM in place and ready for analysis. For our needs we’ll use the <span class="pack">topicModels</span> package for the analysis, and mostly others for post-processing. As mentioned, one of the primary results of such an analysis are the probabilities of terms within topics, which like factor loadings, can aid in interpreting the topics. The other result is the probability that a topic will be present in a given document.</p>
 <p>The texts we’ll analyze are Dante’s Divine Comedy. Each canto within the three texts of Inferno, Purgatory, and Paradise will be treated as a document. I have already created the DTM where stopwords have been removed, but plenty more cleaning could have been applied. To get a sense of what’s going into the analysis, I show some of the more common terms, but note also, as in most text analysis, most terms are not present in most documents, leading to a notably sparse DTM.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;data/topic/divine_comedy_dtm.RData&#39;</span>)</code></pre></div>
-<div id="htmlwidget-899668de691c598f148e" style="width:500px;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-899668de691c598f148e">{"x":{"filter":"none","data":[["Inferno_5","Paradise_26","Paradise_27","Paradise_31","Paradise_32","Paradise_4","Purgatory_17","Purgatory_18","Purgatory_32","Paradise_10","Paradise_31","Paradise_7","Paradise_8","Inferno_26","Inferno_34","Paradise_14","Paradise_2","Paradise_2","Paradise_29","Paradise_33","Paradise_34","Purgatory_1","Purgatory_13","Purgatory_19","Purgatory_25","Purgatory_6","Inferno_11","Inferno_12","Inferno_13","Inferno_14","Inferno_16","Inferno_17","Inferno_21","Inferno_21","Inferno_25","Inferno_25","Inferno_26","Inferno_3","Inferno_3","Inferno_33","Inferno_34","Inferno_7","Inferno_8","Inferno_8","Paradise_1","Paradise_10","Paradise_10","Paradise_12","Paradise_15","Paradise_16","Paradise_2","Paradise_20","Paradise_21","Paradise_22","Paradise_24","Paradise_25","Paradise_27","Paradise_29","Paradise_33","Paradise_34","Paradise_6","Paradise_7","Purgatory_16","Purgatory_19","Purgatory_21","Purgatory_26","Purgatory_26","Purgatory_27","Purgatory_27","Purgatory_27","Purgatory_3","Purgatory_3","Purgatory_30","Purgatory_31","Purgatory_31","Purgatory_4","Purgatory_4","Purgatory_9","Inferno_1","Inferno_10","Inferno_11","Inferno_11","Inferno_11","Inferno_12","Inferno_12","Inferno_12","Inferno_12","Inferno_12","Inferno_13","Inferno_13","Inferno_13","Inferno_13","Inferno_13","Inferno_14","Inferno_14","Inferno_16","Inferno_17","Inferno_19","Inferno_19","Inferno_2"],["love","hope","love","light","eyes","truth","love","love","eyes","light","eyes","god","nature","flame","guide","light","body","light","circle","christ","light","heaven","eyes","eyes","virtue","behold","god","guide","speech","round","guide","round","bridge","rock","other's","serpent","time","god","pass","body","feet","race","cried","replied","fix'd","eye","love","mov'd","love","day","virtue","justice","eye","love","heav'n","faith","light","truth","grace","love","wrought","nature","world","earth","shade","love","time","eyes","heard","sun","beheld","ground","virgil","eyes","sight","sun","turn'd","steps","view","words","force","nature","round","blood","chiron","exclaim'd","spake","spirit","blood","hand","trunk","wood","words","sand","wood","feet","ill","rest","rock","fear"],[10,8,8,8,8,8,8,8,8,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>title_chapter<\/th>\n      <th>word<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"tp","autoWidth":true,"align":"center","columnDefs":[{"width":"100px","targets":0},{"width":"50px","targets":[1,2]},{"className":"dt-center","targets":[0,1,2]},{"className":"dt-right","targets":2}],"order":[],"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-d3eca4219e403bdf4f8d" style="width:500px;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d3eca4219e403bdf4f8d">{"x":{"filter":"none","data":[["Inferno_5","Paradise_26","Paradise_27","Paradise_31","Paradise_32","Paradise_4","Purgatory_17","Purgatory_18","Purgatory_32","Paradise_10","Paradise_31","Paradise_7","Paradise_8","Inferno_26","Inferno_34","Paradise_14","Paradise_2","Paradise_2","Paradise_29","Paradise_33","Paradise_34","Purgatory_1","Purgatory_13","Purgatory_19","Purgatory_25","Purgatory_6","Inferno_11","Inferno_12","Inferno_13","Inferno_14","Inferno_16","Inferno_17","Inferno_21","Inferno_21","Inferno_25","Inferno_25","Inferno_26","Inferno_3","Inferno_3","Inferno_33","Inferno_34","Inferno_7","Inferno_8","Inferno_8","Paradise_1","Paradise_10","Paradise_10","Paradise_12","Paradise_15","Paradise_16","Paradise_2","Paradise_20","Paradise_21","Paradise_22","Paradise_24","Paradise_25","Paradise_27","Paradise_29","Paradise_33","Paradise_34","Paradise_6","Paradise_7","Purgatory_16","Purgatory_19","Purgatory_21","Purgatory_26","Purgatory_26","Purgatory_27","Purgatory_27","Purgatory_27","Purgatory_3","Purgatory_3","Purgatory_30","Purgatory_31","Purgatory_31","Purgatory_4","Purgatory_4","Purgatory_9","Inferno_1","Inferno_10","Inferno_11","Inferno_11","Inferno_11","Inferno_12","Inferno_12","Inferno_12","Inferno_12","Inferno_12","Inferno_13","Inferno_13","Inferno_13","Inferno_13","Inferno_13","Inferno_14","Inferno_14","Inferno_16","Inferno_17","Inferno_19","Inferno_19","Inferno_2"],["love","hope","love","light","eyes","truth","love","love","eyes","light","eyes","god","nature","flame","guide","light","body","light","circle","christ","light","heaven","eyes","eyes","virtue","behold","god","guide","speech","round","guide","round","bridge","rock","other's","serpent","time","god","pass","body","feet","race","cried","replied","fix'd","eye","love","mov'd","love","day","virtue","justice","eye","love","heav'n","faith","light","truth","grace","love","wrought","nature","world","earth","shade","love","time","eyes","heard","sun","beheld","ground","virgil","eyes","sight","sun","turn'd","steps","view","words","force","nature","round","blood","chiron","exclaim'd","spake","spirit","blood","hand","trunk","wood","words","sand","wood","feet","ill","rest","rock","fear"],[10,8,8,8,8,8,8,8,8,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>title_chapter<\/th>\n      <th>word<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"tp","autoWidth":true,"align":"center","columnDefs":[{"width":"100px","targets":0},{"width":"50px","targets":[1,2]},{"className":"dt-center","targets":[0,1,2]},{"className":"dt-right","targets":2}],"order":[],"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
 <pre><code>&lt;&lt;DocumentTermMatrix (documents: 101, terms: 10516)&gt;&gt;
 Non-/sparse entries: 36748/1025368
 Sparsity           : 97%
@@ -403,9 +414,9 @@ chapters_lda =<span class="st"> </span><span class="kw">LDA</span>(divine_comedy
 chapters_lda</code></pre></div>
 <pre><code>A LDA_VEM topic model with 3 topics.</code></pre>
 <p>First, we can simply look at probable terms. The following shows the top 10 most probable terms for each topic.</p>
-<p><img src="sem_files/figure-html/top_terms-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/top_terms-1.svg" width="672" style="display: block; margin: auto;" /></p>
 <p>For the following I’ve collapsed across cantos to get an average topic probability for each book. For example, with the Inferno, the topic where <strong>god</strong>, <strong>heaven</strong>, and <strong>virtue</strong> are less probable, while the one with <strong>beneath</strong> and <strong>cried</strong> are more so. With Paradise you have the opposite situation, and are more likely to find the topics regarding <strong>virtue</strong>, <strong>heaven</strong>, <strong>sun</strong>, and <strong>god</strong>. Purgatory, perhaps not surprisingly is a fairly balanced mix of topics<a href="#fn67" class="footnoteRef" id="fnref67"><sup>67</sup></a>.</p>
-<p><img src="sem_files/figure-html/doc_topics-1.svg" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="book_files/figure-html/doc_topics-1.svg" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="summary-of-topic-models" class="section level2">
 <h2>Summary of Topic Models</h2>
@@ -444,10 +455,11 @@ gitbook.start({
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -460,8 +472,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "chapter",
-"depth": 3
+"collapse": "section"
 },
 "highlight": "pygments",
 "search": true
@@ -474,9 +485,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

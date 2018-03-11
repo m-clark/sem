@@ -6,32 +6,32 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Graphical and Latent Variable Modeling</title>
-  <meta name="description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc.">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="Graphical and Latent Variable Modeling" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://m-clark.github.io/docs/sem/" />
-  <meta property="og:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png" />
-  <meta property="og:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc." />
+  <meta property="og:url" content="https://m-clark.github.io/sem/" />
+  <meta property="og:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
+  <meta property="og:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
   <meta name="github-repo" content="m-clark/sem/" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Graphical and Latent Variable Modeling" />
   
-  <meta name="twitter:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc." />
-  <meta name="twitter:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png" />
+  <meta name="twitter:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
+  <meta name="twitter:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
 
 
 
-<meta name="date" content="2018-02-27">
+<meta name="date" content="2018-03-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
-  
-<link rel="prev" href="bayesian-nonparametric-models.html">
+  <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
+<link rel="prev" href="other-techniques-1.html">
 <link rel="next" href="appendix.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -123,7 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://m-clark.github.io/sem/"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#990024; font-family:Roboto">Structural Equation Modeling</span></a></li>
+<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li><a href="index.html#section"></a></li>
@@ -248,7 +248,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#balance"><i class="fa fa-check"></i>Balance</a></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a><ul>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#parallel-processes"><i class="fa fa-check"></i>Parallel Processes</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#cross-lagged-models"><i class="fa fa-check"></i>Cross-lagged Models</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
@@ -293,6 +296,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html"><i class="fa fa-check"></i>Other Techniques</a><ul>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#recommender-systems"><i class="fa fa-check"></i>Recommender Systems</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hidden-markov-models"><i class="fa fa-check"></i>Hidden Markov Models</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#cluster-analysis"><i class="fa fa-check"></i>“Cluster analysis”</a><ul>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#k-means"><i class="fa fa-check"></i>K-means</a></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hierarchical"><i class="fa fa-check"></i>Hierarchical</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
@@ -336,11 +348,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-3.html"><a href="other-3.html"><i class="fa fa-check"></i>Other</a></li>
 <li><a href="section-1.html#section-1"></a></li>
 <li class="divider"></li>
-<li><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
+<li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
+<li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
 
 </ul>
 
@@ -369,7 +380,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="bayesian-nonparametric-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="other-techniques-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="appendix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
@@ -388,10 +399,11 @@ gitbook.start({
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -404,8 +416,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "chapter",
-"depth": 3
+"collapse": "section"
 },
 "highlight": "pygments",
 "search": true
@@ -418,9 +429,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
