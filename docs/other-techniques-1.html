@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-03-11">
+<meta name="date" content="2018-03-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -377,7 +377,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Recommender Systems</h2>
 <p>Practically everyone has been exposed to <span class="emph">recommender systems</span> such as <span class="emph">collaborative filtering</span> and related models. That’s how Netflix, Amazon and others make their recommendations to you given the information you’ve provided about likes and dislikes, what other similar people have provided, and how similar the object of interest is to others.</p>
 <p>The following image, taken from Wikipedia (click the image to go there), conceptually shows how a <em>user-based</em> collaborative filtering method would work, where a recommendation is given based on what other similar users have given.</p>
-<p><a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="../img/collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a></p>
+<p><a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="img/collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a></p>
 <p>Let’s go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated. So how can one provide a recommendation for some movie you haven’t seen? If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.</p>
 <p>If you think of genres as latent variables for movies, you can employ the factor analytic techniques we’ve talked about. Similarly, we can find clusters of people using cluster analytic techniques. In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and additional information. The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R’s default <span class="emph">prcomp</span> function for PCA. You might compare it with <code>method = 'POPULAR'</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(recommenderlab)
