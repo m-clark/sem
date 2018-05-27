@@ -95,6 +95,27 @@
   border-bottom-color: rgba(0, 0, 0, 0.07);
 }
 
+/* 
+Unfortunately the default bootstrap stripes
+*/
+.book .book-body .page-wrapper .page-inner section.normal table {
+  font-size: 80%;
+}
+
+/* 
+Unfortunately the default bookdown bootstrap stripes rows, needlesly drawing 
+more attention to some rows vs. others, and with no way to turn off except 
+through css or specifying rows every time as  follows (assuming you use kable)
+row_spec(3:5, bold = T, color = "white", background = "#D7261E")
+*/
+
+.book .book-body .page-wrapper .page-inner section.normal table tbody tr:nth-child(odd), 
+.book .book-body .page-wrapper .page-inner section.normal table tbody tr:nth-child(even) {
+    background-color: #FCFCFC;
+  }
+
+
+
 i {
   background-color: #fffff8;
 }

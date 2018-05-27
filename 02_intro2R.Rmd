@@ -192,13 +192,36 @@ The character string is our model, and it can actually be kept as a separate fil
 
 
 The way to define things in lavaan can be summarized as follows.
-```{r lavanCodeTable, echo=FALSE}
-formulaType = c('latent variable definition', 'regression', '(residual) (co)variance', 'intercept', 'fixed parameter')
-operator = c('=~', '~', '~~', '~ 1', '_*')
-mnemonic = c('is measured by', 'is regressed on', 'is correlated with', 'intercept', 'is fixed at the value of _')
-pander::pander(data.frame(formulaType, operator, mnemonic))
+
+```{r lavaanCodeTable, echo=FALSE}
+formulaType = c('latent variable definition', 'regression', '(residual) (co)variance', 'intercept', 'fixed parameter', 'named parameter')
+operator = c('=~', '~', '~~', '~ 1', '_*', 'abc*')
+mnemonic = c('is measured by', 'is regressed on', 'is correlated with', 'intercept', 'is fixed at the value of _',  'is named abc')
+data.frame(formulaType, operator, mnemonic) %>% 
+  kable(align = 'ccc', format = 'html') %>% 
+  kable_styling(bootstrap_options = c('condensed','basic'), position = 'center', full_width = F)
 ```
 
+##### Matching lavaan and R to MPlus
+
+With <span class="pack">lavaan</span> and related packages there is almost complete overlap with MPlus.  However, there are some things to note.
+
+```{r lavaanvsmplus, echo=FALSE}
+model = c('standard CFA, path, SEM, growth', 'missing values', 'multigroup', 
+          'mixture models', 'Bayesian', 'survey', 'multilevel', 'factor score regression', 'visualization')
+packages = c('lavaan', 'lavaan (FIML), semTools (MI +)', 'lavaan, semTools', 'flexmix, poLCA, many others', 'blavaan',  'lavaan, survey.lavaan', 'lavaan (new), mediation', 'lavaan', 'lavaanPlot')
+data.frame(model, packages) %>% 
+  kable(align = 'lc', format = 'html') %>% 
+  kable_styling(bootstrap_options = c('condensed','basic'), position = 'center', full_width = F)
+```
+
+The one glaring lack <span class="pack">lavaan</span> has is with mixture models, i.e. those with latent categorical variables. However, I'd argue there is far more functionality in R generally, with results that are far more easy to work with than you would have with MPlus.  Note that <span class="pack">lavaan</span> handles *observed* categorical variables just fine, though oddly with only a probit link function (no logit).  
+
+Up until the version 0.6.1 <span class="pack">lavaan</span> had no support for multilevel models.  However, it now can do two-level SEM, and the mediation package has long been able to do single mediator mixed/multilevel models[^multilevelsem].  In addition, <span class="pack">lavaan</span> has added some survey support, but you'll have plenty with <span class="pack">survey.lavaan</span>.
+
+Unless you have complicated mediational structure (rarely sufficiently justified by SEM practitioners), there is no reason that I can see to do growth curve models.  There is far, far more functionality in R for mixed models (e.g. <span class="pack">lme4</span>, <span class="pack">mgcv</span>, <span class="pack">brms</span>), which are the far more common and flexible approach to modeling longitudinal data (and otherwise equivalent).  Such models handle nonlinear trends, complicated residual structure, alternative distributions, spatial and phylogenetic correlational structures, and more.  MPlus simply doesn't compete in this realm, and has terribly tedious syntax for either growth curve or multilevel models.
+
+On top of everything else, the <span class="pack">lavaan</span> ecosystem, i.e. packages that work with and enhance its models, continues to grow.  In addition, with R there are utilities for SEM you won't find with MPlus, such as model search, regularization, and more.  And finally, with the <span class="pack">MPlusAutomation</span> package it's even easier to use MPlus with R than it is to use MPlus itself!
 
 ### Getting help
 
@@ -237,3 +260,6 @@ using `c(1,2,3,4,5)` or `1:5`
 ### Summary
 
 There's a lot to learn with R, and the more time you spend with R the easier your research process will likely go, and the more you will learn about statistical analysis.
+
+
+[^multilevelsem]: In practice, these models are problematic even for MPlus.

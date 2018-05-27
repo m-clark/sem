@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-04-07">
+<meta name="date" content="2018-05-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,15 +49,15 @@
 <script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-0.9.2/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 <script src="libs/d3-3.5.3/./d3.min.js"></script>
 <link href="libs/d3heatmapcore-0.0.0/heatmapcore.css" rel="stylesheet" />
 <script src="libs/d3heatmapcore-0.0.0/heatmapcore.js"></script>
 <script src="libs/d3-tip-0.6.6/index.js"></script>
-<script src="libs/d3heatmap-binding-0.6.1.1/d3heatmap.js"></script>
+<script src="libs/d3heatmap-binding-0.6.1.2/d3heatmap.js"></script>
 <link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
 <script src="libs/vis-4.20.1/vis.min.js"></script>
-<script src="libs/visNetwork-binding-2.0.2/visNetwork.js"></script>
+<script src="libs/visNetwork-binding-2.0.3/visNetwork.js"></script>
 <script src="libs/plotly-binding-4.7.1/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
@@ -520,47 +520,183 @@ bobs</code></pre></div>
 mymodel =<span class="st"> </span><span class="kw">sem</span>(modelCode, <span class="dt">data=</span>mydata)</code></pre></div>
 <p>The character string is our model, and it can actually be kept as a separate file (without the assignment) if desired. Using the <span class="pack">lavaan</span> library, we can then use one of its specific functions like <span class="func">cfa</span>, <span class="func">sem</span>, or <span class="func">growth</span> to use the model code object (<span class="objclass">modelCode</span> above) and the data object (<span class="objclass">mydata</span> above).</p>
 <p>The way to define things in lavaan can be summarized as follows.</p>
-<table style="width:94%;">
-<colgroup>
-<col width="40%" />
-<col width="15%" />
-<col width="38%" />
-</colgroup>
+<table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
-<tr class="header">
-<th align="center">formulaType</th>
-<th align="center">operator</th>
-<th align="center">mnemonic</th>
+<tr>
+<th style="text-align:center;">
+formulaType
+</th>
+<th style="text-align:center;">
+operator
+</th>
+<th style="text-align:center;">
+mnemonic
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="center">latent variable definition</td>
-<td align="center">=~</td>
-<td align="center">is measured by</td>
+<tr>
+<td style="text-align:center;">
+latent variable definition
+</td>
+<td style="text-align:center;">
+=~
+</td>
+<td style="text-align:center;">
+is measured by
+</td>
 </tr>
-<tr class="even">
-<td align="center">regression</td>
-<td align="center">~</td>
-<td align="center">is regressed on</td>
+<tr>
+<td style="text-align:center;">
+regression
+</td>
+<td style="text-align:center;">
+~
+</td>
+<td style="text-align:center;">
+is regressed on
+</td>
 </tr>
-<tr class="odd">
-<td align="center">(residual) (co)variance</td>
-<td align="center">~~</td>
-<td align="center">is correlated with</td>
+<tr>
+<td style="text-align:center;">
+(residual) (co)variance
+</td>
+<td style="text-align:center;">
+~~
+</td>
+<td style="text-align:center;">
+is correlated with
+</td>
 </tr>
-<tr class="even">
-<td align="center">intercept</td>
-<td align="center">~ 1</td>
-<td align="center">intercept</td>
+<tr>
+<td style="text-align:center;">
+intercept
+</td>
+<td style="text-align:center;">
+~ 1
+</td>
+<td style="text-align:center;">
+intercept
+</td>
 </tr>
-<tr class="odd">
-<td align="center">fixed parameter</td>
-<td align="center">_*</td>
-<td align="center">is fixed at the value of _</td>
+<tr>
+<td style="text-align:center;">
+fixed parameter
+</td>
+<td style="text-align:center;">
+_*
+</td>
+<td style="text-align:center;">
+is fixed at the value of _
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+named parameter
+</td>
+<td style="text-align:center;">
+abc*
+</td>
+<td style="text-align:center;">
+is named abc
+</td>
 </tr>
 </tbody>
 </table>
+<div id="matching-lavaan-and-r-to-mplus" class="section level5">
+<h5>Matching lavaan and R to MPlus</h5>
+<p>With <span class="pack">lavaan</span> and related packages there is almost complete overlap with MPlus. However, there are some things to note.</p>
+<table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+model
+</th>
+<th style="text-align:center;">
+packages
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+standard CFA, path, SEM, growth
+</td>
+<td style="text-align:center;">
+lavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+missing values
+</td>
+<td style="text-align:center;">
+lavaan (FIML), semTools (MI +)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+multigroup
+</td>
+<td style="text-align:center;">
+lavaan, semTools
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixture models
+</td>
+<td style="text-align:center;">
+flexmix, poLCA, many others
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bayesian
+</td>
+<td style="text-align:center;">
+blavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+survey
+</td>
+<td style="text-align:center;">
+lavaan, survey.lavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+multilevel
+</td>
+<td style="text-align:center;">
+lavaan (new), mediation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+factor score regression
+</td>
+<td style="text-align:center;">
+lavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+visualization
+</td>
+<td style="text-align:center;">
+lavaanPlot
+</td>
+</tr>
+</tbody>
+</table>
+<p>The one glaring lack <span class="pack">lavaan</span> has is with mixture models, i.e. those with latent categorical variables. However, I’d argue there is far more functionality in R generally, with results that are far more easy to work with than you would have with MPlus. Note that <span class="pack">lavaan</span> handles <em>observed</em> categorical variables just fine, though oddly with only a probit link function (no logit).</p>
+<p>Up until the version 0.6.1 <span class="pack">lavaan</span> had no support for multilevel models. However, it now can do two-level SEM, and the mediation package has long been able to do single mediator mixed/multilevel models<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. In addition, <span class="pack">lavaan</span> has added some survey support, but you’ll have plenty with <span class="pack">survey.lavaan</span>.</p>
+<p>Unless you have complicated mediational structure (rarely sufficiently justified by SEM practitioners), there is no reason that I can see to do growth curve models. There is far, far more functionality in R for mixed models (e.g. <span class="pack">lme4</span>, <span class="pack">mgcv</span>, <span class="pack">brms</span>), which are the far more common and flexible approach to modeling longitudinal data (and otherwise equivalent). Such models handle nonlinear trends, complicated residual structure, alternative distributions, spatial and phylogenetic correlational structures, and more. MPlus simply doesn’t compete in this realm, and has terribly tedious syntax for either growth curve or multilevel models.</p>
+<p>On top of everything else, the <span class="pack">lavaan</span> ecosystem, i.e. packages that work with and enhance its models, continues to grow. In addition, with R there are utilities for SEM you won’t find with MPlus, such as model search, regularization, and more. And finally, with the <span class="pack">MPlusAutomation</span> package it’s even easier to use MPlus with R than it is to use MPlus itself!</p>
+</div>
 </div>
 <div id="getting-help" class="section level3">
 <h3>Getting help</h3>
@@ -591,6 +727,12 @@ mymodel =<span class="st"> </span><span class="kw">sem</span>(modelCode, <span c
 
 </div>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>In practice, these models are problematic even for MPlus.<a href="introduction-to-r.html#fnref1">↩</a></p></li>
+</ol>
 </div>
             </section>
 

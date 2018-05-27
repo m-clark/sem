@@ -8,6 +8,7 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
     bookdown::gitbook:
+      df_print: kable
       highlight: pygments
       number_sections: false
       config:
@@ -40,7 +41,8 @@ knitr::clean_cache()
 
 
 ```{r setup_packages, echo=FALSE, cache=FALSE}
-library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); library(pander); library(lavaan)
+library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); 
+library(pander); library(lavaan); library(kableExtra)
 ```
 
 
