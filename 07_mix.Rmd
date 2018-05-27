@@ -82,14 +82,14 @@ g = qplot(x=mod@posterior$scaled[,1], y=mod@posterior$scaled[,2]) +
   xlab('Posterior Probablity for Group 1') +
   ylab('Posterior Probablity for Group 2') +
   lazerhawk::theme_trueMinimal() 
-ggplotly(width=500, height=500)
+ggplotly(width=750, height=500) %>% theme_plotly()
 ```
 ```{r eruptionsContourPlot, echo=FALSE}
 cluster = factor(mod@cluster)
 g = qplot(data=faithful, x=eruptions, y=waiting, color=cluster) + 
     geom_density2d() +
   lazerhawk::theme_trueMinimal()
-ggplotly(width=750, height=500)
+ggplotly(width=750, height=500) %>% theme_plotly()
 ```
 
 
@@ -98,9 +98,9 @@ ggplotly(width=750, height=500)
 
 Dealing with categorical latent variables can be somewhat problematic. Interpreting a single SEM model might be difficult enough, but then one might be allowing parts of it to change depending on which latent class observations belong to, while having to assess the latent class measurement model as well.  It can be difficult to find a clarity of understanding from this process, as one is discovering classes then immediately assuming key differences among these classes they didn't know existed beforehand[^latclass].  In addition, one will need even more data than standard SEM to deal with all the additional parameters that are allowed to vary across the classes.  
 
-Researchers also tend to find classes that represent 'hi-lo' or 'hi-med-lo' groups, which may suggest they should have left the latent construct as a continuous variable. When given the choice to discretize continuous variables in normal settings, it is rare in which the answer is anything but a resounding *no*.  As such, one should think hard about the ultimate goals of such a model. See the [IRT section][Item Response Theory] for alternative approaches to similar data. 
+Researchers also tend to find classes that represent 'hi-lo' or 'hi-med-lo' groups, which may suggest they should have left the latent construct as a continuous variable. When given the choice to discretize continuous variables in normal settings, it is rare in which the answer is anything but a resounding *no*.  As such, one should think hard about the ultimate goals of such a model. See the [IRT section][Item Response Theory] for alternative approaches to categorical data. 
 
-Another issue I've seen in applied practice is that the the 'latent' classes uncovered are in fact intact classes representing an interaction of variables available in the data, or possibly some grouping variable that wasn't in the model.  It would be much more straightforward to use the standard interaction approach in a more guided fashion, as opposed to assuming *every* variable effect interacts with a latent variable.  In typical modeling scenarios such an option (i.e. laying waste to our model with interactions) is relatively rarely considered, and even then we'd want some sort of regularizing approach[^factorMachine], which is non-existent in this SEM setting.
+Another issue I've seen in applied practice is that the the 'latent' classes uncovered are in fact intact classes representing an interaction of variables available in the data, or possibly some grouping variable that wasn't in the model.  It would be much more straightforward to use the standard interaction approach in a more guided fashion, as opposed to assuming *every* variable effect interacts with a latent variable.  In typical modeling scenarios such an option (i.e. laying waste to our model with interactions) is relatively rarely considered, and even then we'd want some sort of regularizing approach[^factorMachine], which is typically non-existent in this SEM setting.
 
 All that said, let's go ahead and look at a traditional latent class approach. We'll use the <span class="pack">poLCA</span> package which is geared specifically to such analysis.  The term 'latent class analysis' would assume binary outcomes, but as we've noted before, usage of a latent categorical variable does not require them (nor does this package).  Our example will also not be binary data.
 

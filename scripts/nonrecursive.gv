@@ -1,7 +1,7 @@
 digraph iv {
   graph [rankdir=LR bgcolor=transparent]
   
-  node [shape = rectangle, style=filled, fillcolor='#ff5500', color=gray80, 
+  node [shape = rectangle, style=filled, fillcolor='#1f65b780', color=gray80, 
         fontcolor=white, fontname=Roboto, fixedsize=true, fontsize='10%']
   
   H [label='Hus.\n Satis']; 

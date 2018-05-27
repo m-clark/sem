@@ -76,15 +76,18 @@ randomEffects = MASS::mvrnorm(n, mu=c(0,0), Sigma = randomEffectsCorr, empirical
 colnames(randomEffects) = c('Int', 'Slope')
 ```
 
-Let's take a look at the data thus far. Note how I'm using subject as a row index.  This will spread out the n random effects to n*timepoints total, while being constant within a subject.
+Let's take a look at the data thus far.
 
 ```{r inspectSimData, echo=FALSE}
 library(DT)
 data.frame(Subject=subject, time=time, randomEffects[subject,]) %>% 
-  datatable(options=list(dom='t'), rownames=F, width='50%') %>% formatRound(~Int+Slope, 4)
+  # datatable(options=list(dom='t'), rownames=F, width='50%') %>% formatRound(~Int+Slope, 4) %>% 
+  head(10) %>% 
+  kable(format='html', row.names = F, digits = 4) %>% 
+  kable_styling(full_width = F)
 ```
 
-Now, to get a target variable, we simply add the random effects for the intercept to the overall intercept, and likewise for the slopes. We'll throw in some noise at the end with standard deviation equal to $\sigma$.
+Now, to get a target variable, we simply add the random effects for the intercept to the overall intercept, and likewise for the slopes.  Note how I'm using subject as a row index.  This will spread out the n random effects to n*timepoints total, while being constant within a subject.  We'll throw in some noise at the end with standard deviation equal to $\sigma$.
 
 ```{r createSimTarget}
 sigma = .5
@@ -96,7 +99,18 @@ d = data.frame(subject, time, y1)
 ```
 
 ```{r inspectSimData2, echo=FALSE}
-datatable(d, options=list(dom='t'), rownames=F, width='50%') %>% formatRound(~y1, 4)
+# datatable(d, options=list(dom='t'), rownames=F, width='50%') %>% formatRound(~y1, 4)
+d %>% 
+  head(10) %>% 
+  kable(format='html', row.names = F, digits = 4) %>% 
+  kable_styling(full_width = F)
+```
+
+```{r spaghetti, echo=FALSE}
+ggplot(d, aes(x=time, y=y1)) +
+  geom_path(aes(group=subject), alpha=.05) + 
+  geom_smooth(method = 'lm', color='#ff5500') +
+  theme_trueMinimal()
 ```
 
 
@@ -221,7 +235,7 @@ print(VarCorr(mixedModel), comp='Var')
 ```
 
 
-In addition, the random coefficients estimates from the mixed model perfectly correlate with those of the latent variables.
+In addition, the random coefficients estimates from the mixed model perfectly correlate with those of the latent variables.  I obtained the latent variable scores using <span class="func">lavPredict</span>.
 
 ```{r compareRandomeffects, echo=FALSE}
 ranefLatent = data.frame(coef(mixedModel)[[1]], lavPredict(growthCurveModel)) %>% 
@@ -233,7 +247,7 @@ ranefLatent %>%   round(2) %>% head
 ranefLatent %>% cor %>% round(2)
 ```
 
-Both approaches allow those residuals to covary, though it gets tedious in SEM syntax, while it is a natural extension in the mixed model framework. Here is the syntax for letting each time point covary with the next, at least, what it might be. It's unclear if <span class="pack">lavaan</span> actually will do this, and the syntax here roughly follows Mplus' manual, except that we can't define new variables in <span class="pack">lavaan</span> as there.  As such, the hope is that the `a` parameter should equal `resvar*corr` as in the Mplus syntax, but there's not a clear way to fix it to be.  It seems consistent here and with larger sample sizes.
+Both approaches allow those residuals to covary, though it gets tedious in SEM syntax, while it is a natural extension in the mixed model framework. Here is the syntax for letting each time point covary with the next, at least, what it might be. It's unclear if <span class="pack">lavaan</span> actually will do this, and the syntax here roughly follows the Mplus manual, except that we can't define new variables in <span class="pack">lavaan</span> as there.  As such, the hope is that the `a` parameter should equal `resvar*corr` as in the Mplus syntax, but there's not a clear way to fix it to be.  It seems consistent here and with larger sample sizes.
 
 ```{r lavaan_res_cor_attempt, echo=1}
 model = "
@@ -369,7 +383,7 @@ model.syntax <- '
 '
 ```
 
-Applied researchers commonly have difficulty on interpreting the model due to past experience with SEM.  While these are latent variables, they aren't *just* latent variables or underlying constructs.  It doesn't help that the output can be confusing, because now one has an 'intercept for your intercepts' and an 'intercept for your slopes'. In the multilevel context it makes sense, but there you know 'intercept' is just 'fixed effect'.
+Applied researchers commonly have difficulty interpreting the model due to past experience with SEM.  While these are latent variables, they aren't *just* latent variables or underlying constructs.  It doesn't help that the output can be confusing, because now one has an 'intercept for your intercepts' and an 'intercept for your slopes'. In the multilevel context it makes sense, but there you know 'intercept' is just 'fixed effect'.
 
 
 
@@ -433,21 +447,21 @@ Numbering your time from zero makes sense in both worlds.  This leads to the nat
 
 ### Parallel Processes
 
-In the [appendix][Parallel Process Example] I provide an example of a parallel process in which we posit two growth curves at the same time, with possible correlations among them. This could be accomplished quite easily with a standard mixed model in the Bayesian framework, with a multivariate response, though I'll have to come back to that later.  
+In the [appendix][Parallel Process Example] I provide an example of a parallel process in which we posit two growth curves at the same time, with possible correlations among them. This could be accomplished quite easily with a standard mixed model in the Bayesian framework with a multivariate response, or with a standard mixed model in long format with an observation(s) pertaining to each outcome and appropriate covariance structure to account for it. I'll have to come back to that later.  
 
 ### Cross-lagged Models
 
 Sometimes you'll come across what are called cross-lagged models. These are path models applied to longitudinal data.  Here's an example regarding two variables and three time points.
 
-```{r crosslagged, echo=FALSE}
+```{r crosslagged, echo=FALSE, cache=FALSE}
 tags$div(style="width:50%; margin:auto auto; font-size:50%",
-         grViz('scripts/crosslag.gv', width='100%', height='25%')
+         DiagrammeR::grViz('scripts/crosslag.gv', width='100%', height='25%')
 )
 ```
 
 <br>
 
-To be honest, the only reason I can think of to do something like this is if one isn't familiar with mixed models, growth curves, or bayesian networks.  You can imagine what this would look like if we allow for lingering effects from earlier times to later ones (i.e. more lags), have more time points, have residual correlations at specific time points, and more obviously, several more variables as would be typical in any plausible modeling setting.  The result would be unwieldy at best. Some using these models are interested in the *stability* of a measure over time.  However, if this in question, one should probably be using factor analytic techniques to assess the reliability of the measure.  In general, you'd always have a better option than a cross-lagged model in my opinion.
+To be honest, the only reason I can think of to do something like this is if one isn't familiar with mixed models, growth curves, or bayesian networks.  You can imagine what this would look like if we allow for lingering effects from earlier times to later ones (i.e. more lags), have more time points, have residual correlations at specific time points, and several more variables as would be typical in any plausible modeling setting.  The result would be unwieldy at best. Some using these models are interested in the *stability* of a measure over time.  However, if this in question, one should probably be using factor analytic techniques to assess the reliability of the measure.  In general, you'd always have a better option than a cross-lagged model in my opinion.
 
 
 ## Summary

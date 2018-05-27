@@ -141,13 +141,26 @@ Most models deal only with <span class="emph">direct effects</span>.  In this ca
 
 While relatively seldom used, multivariate linear regression[^mvreg] is actually very straightforward in some programming environments such as R, and conducting models with multivariate outcomes does not require anything specific to SEM, but that is the realm we'll stick with.  Using the [McClelland data][McClelland], let's try it for ourselves. First, let's look at the data to get a sense of things.
 
-```{r mcclellandCors, echo=F, cache=T, fig.align='center'}
-psych::describe(mcclelland)
+```{r mcclellanddat, echo=F, cache=T}
+# note something has seriously borked with htmlwidgets and bookdown as of May 2018
+describe_all_num(mcclelland) %>% 
+  kable(format = 'html') %>%
+  kable_styling(full_width = F)
+
 numericdat = select(mcclelland, -college, -college_missing, -male, -adopted)
-tags$div(style="width:250px; margin:0 auto;",
-         corrheat(cor(numericdat, use='pair'), width=350, height=350)) 
 ```
+
 <br>
+
+```{r mcclellandCors, echo=F, cache=FALSE}
+# this is the only thing working right now
+tags$div(style="width:00px; margin:0 auto;", corrheat(cor(numericdat, use='pair')[1:2,1:2], width=0, height=0))
+tags$div(style="width:250px; margin:0 auto;",
+         corrheat(cor(numericdat, use='pair'), width=350, height=350))
+```
+
+<br>
+
 While these are only weakly correlated variables to begin with, one plausible model might try to predict math and reading at age 21 with measures taken at prior years. 
 
 ```{r paMultipleTargets}
@@ -485,7 +498,7 @@ CigarettesSW$tdiff = with(CigarettesSW, (taxs - tax)/cpi)
 Cigarettes = select(CigarettesSW, state, rprice, rincome, tdiff, tax, cpi, packs, year) %>% 
   filter(year=='1995')
 
-head(Cigarettes)  # raw, logged values actually used in models
+head(Cigarettes)     # raw, logged values actually used in models
 
 Ciglog  = select(Cigarettes, packs, rprice, rincome) %>% 
   mutate_all(log)
@@ -615,9 +628,9 @@ semPlot::semPaths(m1, layout='tree2', style='lisrel',rotation=2, covAtResiduals=
                   label.color='#ffffff') # simply doesn't plot nonrecursive models correctly
 ```
 
-```{r nonrecursive, echo=F}
+```{r nonrecursive, echo=F, cache=FALSE}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
-         grViz('scripts/nonrecursive.gv', width=500, height=250)
+         DiagrammeR::grViz('scripts/nonrecursive.gv', width=500, height=250)
          )
 ```
 
@@ -641,7 +654,7 @@ semPlot::semPaths(m2, layout='tree2', rotation=2, style='lisrel', curvePivot=T, 
                   label.color='#ffffff') # simply doesn't plot res cov
 ```
 
-```{r nonrecursive2, echo=FALSE}
+```{r nonrecursive2, echo=FALSE, cache=FALSE}
 tags$div(style="width:500px; margin:0 auto; font-family:Roboto; font-size:50%",
          DiagrammeR::grViz('scripts/nonrecursive2.gv', width=500, height=250)
          )
@@ -660,14 +673,14 @@ Consider the following variables, A, B, and C (in a data frame called <span clas
 
 ```{r traceCoefsInit, echo=F}
 # because of MASS screwing up other packages; 
-cormat = lazerhawk::createCorr(c(.2,.3,.7))
+cormat = lazerhawk::create_corr(c(.2,.3,.7))
 abc = MASS::mvrnorm(100, mu=rep(0,3), Sigma=cormat, empirical=TRUE)
 colnames(abc) = LETTERS[1:3]
 # psych::describe(abc)
 ```
 <!-- something about semplot is screwy too, so don't cache it either -->
 
-```{r traceCoefs, echo=-7, cache=F}
+```{r traceCoefs, echo=-(7:20), cache=F}
 cor(abc)
 
 model = "
@@ -680,9 +693,19 @@ coef(pathMod)
 semPlot::semPaths(pathMod, whatLabels = 'par', style = 'lisrel',  
                   sizeMan=10, 
                   edge.label.cex=1.25, edge.color='gray50',
-                  color='#ff5500', 
+                  color='#1f65b780', 
                   borders=T, border.color='gray80',  border.width=2,
                   label.color='#ffffff', bg='transparent')
+
+# starter code if you want to switch to Diagrammer
+# lavaanPlot(model = pathMod,
+#            node_options=list(fontsize=6, 
+#                              color='gray80', 
+#                              style='filled', 
+#                              fontcolor='white', 
+#                              fillcolor='"#1f65b780"', 
+#                              fixedsize=2),
+#            edge_options = list(color = "gray50"))
 ```
 
 To reproduce the correlation between A and C (sometimes referred to as a 'total effect'):
