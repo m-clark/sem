@@ -1,6 +1,6 @@
 # Preface
 
-<span style="font-variant:small-caps; font-size:150%"></span>This document's original purpose was to serve as the basis for a workshop on <span class="emph">*structural equation modeling*</span> held over a couple of afternoons.  However, it is now more or less a document on graphical and latent variable modeling more generally. Most of it will not be covered in the workshop in detail, and will continue to be expanded upon over time. 
+<span style="font-variant:small-caps; font-size:150%"></span>This document's original purpose was to serve as the basis for a workshop on <span class="emph">structural equation modeling</span> held over a couple of afternoons.  However, it is now more or less a document on graphical and latent variable modeling more generally. Most of it will not be covered in the workshop in detail, and will continue to be expanded upon over time. 
 
 One of the goals of this set of notes is to *not* impart a false sense of comfort and/or familiarity with the techniques. For example, no one is going to be an expert after a couple of afternoons with SEM.  SEM and related methods are typically taught over the course of a few weeks in a traditional applied statistics course, or even given their own course outright.  Instead, one of the primary goals here is to instill a firm conceptual foundation starting with common approaches (e.g. standard regression), while exposing the participant to a wide family of related techniques, any of which might be useful to one's modeling and data situation, but may or may not traditionally fall under the heading of traditional SEM topics.  While the focus is still on SEM, it is just as important in my opinion to expand the range of techniques beyond SEM for those who might not otherwise be exposed to them.
 
@@ -10,7 +10,7 @@ At this point I can more or less break down the focus of the sections of this do
 - Mediation/path analysis: graphical models
 - SEM: graphical models, latent variables, SEM, latent growth curves, IRT
 - Measurement models/Reliability: latent variables, IRT
-- Factor Analysis/Latent variables: latent variables, mixture models, Bayesian nonparametric models
+- Factor Analysis/Latent variables: latent variables, mixture models, Bayesian nonparametric models, topic models
 
 
 

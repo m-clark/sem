@@ -5,33 +5,33 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Graphical and Latent Variable Modeling</title>
+  <title>Graphical &amp; Latent Variable Modeling</title>
   <meta name="description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more.">
   <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Graphical and Latent Variable Modeling" />
+  <meta property="og:title" content="Graphical &amp; Latent Variable Modeling" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://m-clark.github.io/sem/" />
-  <meta property="og:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
+  <meta property="og:image" content="https://m-clark.github.io/sem/img/nineteeneightyR.png" />
   <meta property="og:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
   <meta name="github-repo" content="m-clark/sem/" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Graphical and Latent Variable Modeling" />
+  <meta name="twitter:title" content="Graphical &amp; Latent Variable Modeling" />
   
   <meta name="twitter:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
-  <meta name="twitter:image" content="https://m-clark.github.io/sem/img/198R_1.png" />
+  <meta name="twitter:image" content="https://m-clark.github.io/sem/img/nineteeneightyR.png" />
 
 
 
-<meta name="date" content="2018-05-27">
+<meta name="date" content="2018-07-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
-<link rel="prev" href="exercises-1.html">
+<link rel="prev" href="so_long.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -46,7 +46,8 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
 <script src="libs/grViz-binding-1.0.0/grViz.js"></script>
@@ -57,60 +58,88 @@
 <script src="libs/d3heatmap-binding-0.6.1.2/d3heatmap.js"></script>
 <link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
 <script src="libs/vis-4.20.1/vis.min.js"></script>
-<script src="libs/visNetwork-binding-2.0.3/visNetwork.js"></script>
-<script src="libs/plotly-binding-4.7.1/plotly.js"></script>
+<script src="libs/visNetwork-binding-2.0.4/visNetwork.js"></script>
+<script src="libs/plotly-binding-4.8.0/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs-1.29.2/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs-1.29.2/plotly-latest.min.js"></script>
-<script src="libs/datatables-binding-0.2/datatables.js"></script>
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.39.2/plotly-latest.min.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/book.css" type="text/css" />
-<link rel="stylesheet" href="css/standard_html.css" type="text/css" />
-<link rel="stylesheet" href="css/sem.css" type="text/css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" type="text/css" />
 </head>
 
 <body>
@@ -126,187 +155,191 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#section"></a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a><ul>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#statistical"><i class="fa fa-check"></i>Statistical</a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#programming"><i class="fa fa-check"></i>Programming</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#outline"><i class="fa fa-check"></i>Outline</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#graphical-models"><i class="fa fa-check"></i>Graphical Models</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#latent-variables"><i class="fa fa-check"></i>Latent Variables</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#sem"><i class="fa fa-check"></i>SEM</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#others"><i class="fa fa-check"></i>Others</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#outline"><i class="fa fa-check"></i>Outline</a><ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#graphical-models"><i class="fa fa-check"></i>Graphical Models</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#latent-variables"><i class="fa fa-check"></i>Latent Variables</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#sem"><i class="fa fa-check"></i>SEM</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#others"><i class="fa fa-check"></i>Others</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#programming-language-choice"><i class="fa fa-check"></i>Programming Language Choice</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#setup"><i class="fa fa-check"></i>Setup</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#programming-language-choice"><i class="fa fa-check"></i>Programming Language Choice</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#setup"><i class="fa fa-check"></i>Setup</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i>Introduction to R</a><ul>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#getting-started"><i class="fa fa-check"></i>Getting Started</a><ul>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#installation"><i class="fa fa-check"></i>Installation</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#packages"><i class="fa fa-check"></i>Packages</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#rstudio"><i class="fa fa-check"></i>RStudio</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#importing-data"><i class="fa fa-check"></i>Importing Data</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html"><i class="fa fa-check"></i>Introduction to R</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#getting-started"><i class="fa fa-check"></i>Getting Started</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#installation"><i class="fa fa-check"></i>Installation</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#packages"><i class="fa fa-check"></i>Packages</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#rstudio"><i class="fa fa-check"></i>RStudio</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#importing-data"><i class="fa fa-check"></i>Importing Data</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#key-things-to-know-about-r"><i class="fa fa-check"></i>Key things to know about R</a><ul>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#r-is-a-programming-language-not-a-stats-package"><i class="fa fa-check"></i>R is a programming language, not a ‘stats package’</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#never-ask-if-r-can-do-what-you-want.-it-can."><i class="fa fa-check"></i>Never ask if R can do what you want. It can.</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#main-components-script-console-graphics-device"><i class="fa fa-check"></i>Main components: script, console, graphics device</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#r-is-easy-to-use-but-difficult-to-master."><i class="fa fa-check"></i>R is easy to use, but difficult to master.</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented"><i class="fa fa-check"></i>Object-oriented</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#case-sensitive"><i class="fa fa-check"></i>Case sensitive</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#the-lavaan-package"><i class="fa fa-check"></i>The lavaan package</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#getting-help"><i class="fa fa-check"></i>Getting help</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#key-things-to-know-about-r"><i class="fa fa-check"></i>Key things to know about R</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#r-is-a-programming-language-not-a-stats-package"><i class="fa fa-check"></i>R is a programming language, not a ‘stats package’</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#never-ask-if-r-can-do-what-you-want.-it-can."><i class="fa fa-check"></i>Never ask if R can do what you want. It can.</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#main-components-script-console-graphics-device"><i class="fa fa-check"></i>Main components: script, console, graphics device</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#r-is-easy-to-use-but-difficult-to-master."><i class="fa fa-check"></i>R is easy to use, but difficult to master.</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#object-oriented"><i class="fa fa-check"></i>Object-oriented</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#case-sensitive"><i class="fa fa-check"></i>Case sensitive</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#the-lavaan-package"><i class="fa fa-check"></i>The lavaan package</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#getting-help"><i class="fa fa-check"></i>Getting help</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#moving-forward"><i class="fa fa-check"></i>Moving forward</a><ul>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#exercises"><i class="fa fa-check"></i>Exercises</a></li>
-<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="introduction-to-r.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#moving-forward"><i class="fa fa-check"></i>Moving forward</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#exercises"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html"><i class="fa fa-check"></i>Graphical Models</a><ul>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#directed-graphs"><i class="fa fa-check"></i>Directed Graphs</a><ul>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#standard-linear-model"><i class="fa fa-check"></i>Standard linear model</a></li>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#path-analysis"><i class="fa fa-check"></i>Path Analysis</a></li>
+<li class="part"><span><b>Part I: Core SEM</b></span></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html"><i class="fa fa-check"></i>Graphical Models</a><ul>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#directed-graphs"><i class="fa fa-check"></i>Directed Graphs</a><ul>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#standard-linear-model"><i class="fa fa-check"></i>Standard linear model</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#path-analysis"><i class="fa fa-check"></i>Path Analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#bayesian-networks"><i class="fa fa-check"></i>Bayesian Networks</a></li>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#undirected-graphs"><i class="fa fa-check"></i>Undirected Graphs</a><ul>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#network-analysis"><i class="fa fa-check"></i>Network analysis</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#bayesian-networks"><i class="fa fa-check"></i>Bayesian Networks</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#undirected-graphs"><i class="fa fa-check"></i>Undirected Graphs</a><ul>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#network-analysis"><i class="fa fa-check"></i>Network analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#summary-1"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="graphical-models-1.html#r-packages-used"><i class="fa fa-check"></i>R packages used</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#summary-1"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#r-packages-used"><i class="fa fa-check"></i>R packages used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html"><i class="fa fa-check"></i>Latent Variables</a><ul>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#dimension-reductioncompression"><i class="fa fa-check"></i>Dimension Reduction/Compression</a><ul>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#principal-components-analysis"><i class="fa fa-check"></i>Principal Components Analysis</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#factor-analysis"><i class="fa fa-check"></i>Factor Analysis</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#other-techniques"><i class="fa fa-check"></i>Other Techniques</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#summary-2"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html"><i class="fa fa-check"></i>Latent Variables</a><ul>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#dimension-reductioncompression"><i class="fa fa-check"></i>Dimension Reduction/Compression</a><ul>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#principal-components-analysis"><i class="fa fa-check"></i>Principal Components Analysis</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#factor-analysis"><i class="fa fa-check"></i>Factor Analysis</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#other-techniques"><i class="fa fa-check"></i>Other Techniques</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#summary-2"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#constructs-and-measurement-models"><i class="fa fa-check"></i>Constructs and Measurement Models</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#other-issues-in-factor-analysis"><i class="fa fa-check"></i>Other issues in Factor Analysis</a><ul>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#some-specific-factor-models-in-sem"><i class="fa fa-check"></i>Some specific factor models in SEM</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#scale-development"><i class="fa fa-check"></i>Scale development</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#factor-scores"><i class="fa fa-check"></i>Factor Scores</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#constructs-and-measurement-models"><i class="fa fa-check"></i>Constructs and Measurement Models</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#other-issues-in-factor-analysis"><i class="fa fa-check"></i>Other issues in Factor Analysis</a><ul>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#some-specific-factor-models-in-sem"><i class="fa fa-check"></i>Some specific factor models in SEM</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#scale-development"><i class="fa fa-check"></i>Scale development</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#factor-scores"><i class="fa fa-check"></i>Factor Scores</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#terminology"><i class="fa fa-check"></i>Terminology</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#some-other-uses-of-latent-variables"><i class="fa fa-check"></i>Some Other Uses of Latent Variables</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#summary-3"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="latent-variables-1.html#r-packages-used-1"><i class="fa fa-check"></i>R packages used</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#terminology"><i class="fa fa-check"></i>Terminology</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#some-other-uses-of-latent-variables"><i class="fa fa-check"></i>Some Other Uses of Latent Variables</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#summary-3"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#r-packages-used-1"><i class="fa fa-check"></i>R packages used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html"><i class="fa fa-check"></i>Structural Equation Modeling</a><ul>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#measurement-model"><i class="fa fa-check"></i>Measurement Model</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#structural-model"><i class="fa fa-check"></i>Structural Model</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#the-process"><i class="fa fa-check"></i>The Process</a><ul>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#initial-considerations-of-complexity"><i class="fa fa-check"></i>Initial Considerations of Complexity</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#steps-to-take"><i class="fa fa-check"></i>Steps to Take</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html"><i class="fa fa-check"></i>Structural Equation Modeling</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#measurement-model"><i class="fa fa-check"></i>Measurement Model</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#structural-model"><i class="fa fa-check"></i>Structural Model</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#the-process"><i class="fa fa-check"></i>The Process</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#initial-considerations-of-complexity"><i class="fa fa-check"></i>Initial Considerations of Complexity</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#steps-to-take"><i class="fa fa-check"></i>Steps to Take</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#sem-example"><i class="fa fa-check"></i>SEM Example</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#issues-in-sem"><i class="fa fa-check"></i>Issues in SEM</a><ul>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#identification"><i class="fa fa-check"></i>Identification</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#fit"><i class="fa fa-check"></i>Fit</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#observed-covariates"><i class="fa fa-check"></i>Observed covariates</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#interactions"><i class="fa fa-check"></i>Interactions</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#estimation"><i class="fa fa-check"></i>Estimation</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#missing-data"><i class="fa fa-check"></i>Missing data</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#other-sem-approaches"><i class="fa fa-check"></i>Other SEM approaches</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#sem-example"><i class="fa fa-check"></i>SEM Example</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#issues-in-sem"><i class="fa fa-check"></i>Issues in SEM</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#identification"><i class="fa fa-check"></i>Identification</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#fit"><i class="fa fa-check"></i>Fit</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#observed-covariates"><i class="fa fa-check"></i>Observed covariates</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#interactions"><i class="fa fa-check"></i>Interactions</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#estimation"><i class="fa fa-check"></i>Estimation</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#missing-data"><i class="fa fa-check"></i>Missing data</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#other-sem-approaches"><i class="fa fa-check"></i>Other SEM approaches</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#how-to-fool-yourself-with-sem"><i class="fa fa-check"></i>How to fool yourself with SEM</a><ul>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#sample-size"><i class="fa fa-check"></i>Sample size</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#poor-data"><i class="fa fa-check"></i>Poor data</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#naming-a-latent-variable-doesnt-mean-it-exists"><i class="fa fa-check"></i>Naming a latent variable doesn’t mean it exists</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#ignoring-diagnostics"><i class="fa fa-check"></i>Ignoring diagnostics</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#ignoring-performance"><i class="fa fa-check"></i>Ignoring performance</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#how-to-fool-yourself-with-sem"><i class="fa fa-check"></i>How to fool yourself with SEM</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#sample-size"><i class="fa fa-check"></i>Sample size</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#poor-data"><i class="fa fa-check"></i>Poor data</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#naming-a-latent-variable-doesnt-mean-it-exists"><i class="fa fa-check"></i>Naming a latent variable doesn’t mean it exists</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#ignoring-diagnostics"><i class="fa fa-check"></i>Ignoring diagnostics</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#ignoring-performance"><i class="fa fa-check"></i>Ignoring performance</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#summary-4"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#terminology-1"><i class="fa fa-check"></i>Terminology</a></li>
-<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="structural-equation-modeling.html#r-packages-used-2"><i class="fa fa-check"></i>R Packages Used</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#summary-4"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#terminology-1"><i class="fa fa-check"></i>Terminology</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#r-packages-used-2"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html"><i class="fa fa-check"></i>Latent Growth Curves</a><ul>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#random-effects"><i class="fa fa-check"></i>Random effects</a><ul>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#model-formality"><i class="fa fa-check"></i>Model formality</a></li>
+<li class="part"><span><b>Part II: Common Extensions</b></span></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html"><i class="fa fa-check"></i>Latent Growth Curves</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#random-effects"><i class="fa fa-check"></i>Random effects</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#model-formality"><i class="fa fa-check"></i>Model formality</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#random-effects-in-sem"><i class="fa fa-check"></i>Random Effects in SEM</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#simulating-random-effects"><i class="fa fa-check"></i>Simulating Random Effects</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#running-a-growth-curve-model"><i class="fa fa-check"></i>Running a Growth Curve Model</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#thinking-more-generally-about-regression"><i class="fa fa-check"></i>Thinking more generally about regression</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#more-on-lgc"><i class="fa fa-check"></i>More on LGC</a><ul>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#lgc-are-non-standard-sem"><i class="fa fa-check"></i>LGC are non-standard SEM</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#residual-correlations"><i class="fa fa-check"></i>Residual correlations</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#nonlinear-time-effect"><i class="fa fa-check"></i>Nonlinear time effect</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#growth-mixture-models"><i class="fa fa-check"></i>Growth Mixture Models</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-covariates"><i class="fa fa-check"></i>Other covariates</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#random-effects-in-sem"><i class="fa fa-check"></i>Random Effects in SEM</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#simulating-random-effects"><i class="fa fa-check"></i>Simulating Random Effects</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#running-a-growth-curve-model"><i class="fa fa-check"></i>Running a Growth Curve Model</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#thinking-more-generally-about-regression"><i class="fa fa-check"></i>Thinking more generally about regression</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#more-on-lgc"><i class="fa fa-check"></i>More on LGC</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#lgc-are-non-standard-sem"><i class="fa fa-check"></i>LGC are non-standard SEM</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#residual-correlations"><i class="fa fa-check"></i>Residual correlations</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#nonlinear-time-effect"><i class="fa fa-check"></i>Nonlinear time effect</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#growth-mixture-models"><i class="fa fa-check"></i>Growth Mixture Models</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#other-covariates"><i class="fa fa-check"></i>Other covariates</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#some-differences-between-mixed-models-and-growth-curves"><i class="fa fa-check"></i>Some Differences between Mixed Models and Growth Curves</a><ul>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#random-slopes"><i class="fa fa-check"></i>Random slopes</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#wide-vs.long"><i class="fa fa-check"></i>Wide vs. long</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#sample-size-1"><i class="fa fa-check"></i>Sample size</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#number-of-time-points"><i class="fa fa-check"></i>Number of time points</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#balance"><i class="fa fa-check"></i>Balance</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#some-differences-between-mixed-models-and-growth-curves"><i class="fa fa-check"></i>Some Differences between Mixed Models and Growth Curves</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#random-slopes"><i class="fa fa-check"></i>Random slopes</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#time-varying-covariates-1"><i class="fa fa-check"></i>Time-varying covariates</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#unequal-variances"><i class="fa fa-check"></i>Unequal variances</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#wide-vs.long"><i class="fa fa-check"></i>Wide vs. long</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#sample-size-1"><i class="fa fa-check"></i>Sample size</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#number-of-time-points"><i class="fa fa-check"></i>Number of time points</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#balance"><i class="fa fa-check"></i>Balance</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a><ul>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#parallel-processes"><i class="fa fa-check"></i>Parallel Processes</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#cross-lagged-models"><i class="fa fa-check"></i>Cross-lagged Models</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#parallel-processes"><i class="fa fa-check"></i>Parallel Processes</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#cross-lagged-models"><i class="fa fa-check"></i>Cross-lagged Models</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="latent-growth-curves.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html"><i class="fa fa-check"></i>Mixture Models</a><ul>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#a-motivating-example"><i class="fa fa-check"></i>A Motivating Example</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#create-clustered-data"><i class="fa fa-check"></i>Create Clustered Data</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#mixture-modeling-with-old-faithful"><i class="fa fa-check"></i>Mixture modeling with Old Faithful</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#sem-and-latent-categorical-variables"><i class="fa fa-check"></i>SEM and Latent Categorical Variables</a><ul>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#latent-categories-vs.multi-group-analysis"><i class="fa fa-check"></i>Latent Categories vs. Multi-group Analysis</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#latent-trajectories"><i class="fa fa-check"></i>Latent Trajectories</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#estimation-1"><i class="fa fa-check"></i>Estimation</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#terminology-in-sem"><i class="fa fa-check"></i>Terminology in SEM</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html"><i class="fa fa-check"></i>Mixture Models</a><ul>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#a-motivating-example"><i class="fa fa-check"></i>A Motivating Example</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#create-clustered-data"><i class="fa fa-check"></i>Create Clustered Data</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#mixture-modeling-with-old-faithful"><i class="fa fa-check"></i>Mixture modeling with Old Faithful</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#sem-and-latent-categorical-variables"><i class="fa fa-check"></i>SEM and Latent Categorical Variables</a><ul>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#latent-categories-vs.multi-group-analysis"><i class="fa fa-check"></i>Latent Categories vs. Multi-group Analysis</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#latent-trajectories"><i class="fa fa-check"></i>Latent Trajectories</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#estimation-1"><i class="fa fa-check"></i>Estimation</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#terminology-in-sem"><i class="fa fa-check"></i>Terminology in SEM</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#summary-6"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="mixture-models.html"><a href="mixture-models.html#r-packages-used-4"><i class="fa fa-check"></i>R Packages Used</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#summary-6"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#r-packages-used-4"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html"><i class="fa fa-check"></i>Item Response Theory</a><ul>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#standard-models"><i class="fa fa-check"></i>Standard Models</a><ul>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#one-parameter-model"><i class="fa fa-check"></i>One Parameter Model</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#two-parameter-model"><i class="fa fa-check"></i>Two Parameter Model</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#three-parameter-model"><i class="fa fa-check"></i>Three Parameter Model</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#four-parameter-model"><i class="fa fa-check"></i>Four Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html"><i class="fa fa-check"></i>Item Response Theory</a><ul>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#standard-models"><i class="fa fa-check"></i>Standard Models</a><ul>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#one-parameter-model"><i class="fa fa-check"></i>One Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#two-parameter-model"><i class="fa fa-check"></i>Two Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#three-parameter-model"><i class="fa fa-check"></i>Three Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#four-parameter-model"><i class="fa fa-check"></i>Four Parameter Model</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#other-irt-models"><i class="fa fa-check"></i>Other IRT Models</a><ul>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#additional-covariates"><i class="fa fa-check"></i>Additional covariates</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#graded-response-model"><i class="fa fa-check"></i>Graded Response Model</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#multidimensional-irt"><i class="fa fa-check"></i>Multidimensional IRT</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#other-irt"><i class="fa fa-check"></i>Other IRT</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#other-irt-models"><i class="fa fa-check"></i>Other IRT Models</a><ul>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#additional-covariates"><i class="fa fa-check"></i>Additional covariates</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#graded-response-model"><i class="fa fa-check"></i>Graded Response Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#multidimensional-irt"><i class="fa fa-check"></i>Multidimensional IRT</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#other-irt"><i class="fa fa-check"></i>Other IRT</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#summary-7"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#irt-terminology"><i class="fa fa-check"></i>IRT Terminology</a></li>
-<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="item-response-theory.html#r-packages-used-5"><i class="fa fa-check"></i>R Packages Used</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#summary-7"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#irt-terminology"><i class="fa fa-check"></i>IRT Terminology</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#r-packages-used-5"><i class="fa fa-check"></i>R Packages Used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="topic-models.html"><a href="topic-models.html"><i class="fa fa-check"></i>Topic Models</a><ul>
-<li class="chapter" data-level="" data-path="topic-models.html"><a href="topic-models.html#latent-dirichlet-allocation"><i class="fa fa-check"></i>Latent Dirichlet Allocation</a></li>
-<li class="chapter" data-level="" data-path="topic-models.html"><a href="topic-models.html#analysis"><i class="fa fa-check"></i>Analysis</a></li>
-<li class="chapter" data-level="" data-path="topic-models.html"><a href="topic-models.html#summary-of-topic-models"><i class="fa fa-check"></i>Summary of Topic Models</a></li>
+<li class="part"><span><b>Part III: Going Further</b></span></li>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html"><i class="fa fa-check"></i>Topic Models</a><ul>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html#latent-dirichlet-allocation"><i class="fa fa-check"></i>Latent Dirichlet Allocation</a></li>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html#analysis"><i class="fa fa-check"></i>Analysis</a></li>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html#summary-of-topic-models"><i class="fa fa-check"></i>Summary of Topic Models</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html"><i class="fa fa-check"></i>Bayesian Nonparametric Models</a><ul>
-<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#chinese-restaurant-process"><i class="fa fa-check"></i>Chinese Restaurant Process</a></li>
-<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#indian-buffet-process"><i class="fa fa-check"></i>Indian Buffet Process</a></li>
-<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
-<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="bayesian-nonparametric-models.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html"><i class="fa fa-check"></i>Bayesian Nonparametric Models</a><ul>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#chinese-restaurant-process"><i class="fa fa-check"></i>Chinese Restaurant Process</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#indian-buffet-process"><i class="fa fa-check"></i>Indian Buffet Process</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html"><i class="fa fa-check"></i>Other Techniques</a><ul>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#recommender-systems"><i class="fa fa-check"></i>Recommender Systems</a></li>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hidden-markov-models"><i class="fa fa-check"></i>Hidden Markov Models</a></li>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#cluster-analysis"><i class="fa fa-check"></i>“Cluster analysis”</a><ul>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#k-means"><i class="fa fa-check"></i>K-means</a></li>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#hierarchical"><i class="fa fa-check"></i>Hierarchical</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Techniques</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#recommender-systems"><i class="fa fa-check"></i>Recommender Systems</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#hidden-markov-models"><i class="fa fa-check"></i>Hidden Markov Models</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#cluster-analysis"><i class="fa fa-check"></i>“Cluster analysis”</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#k-means"><i class="fa fa-check"></i>K-means</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#hierarchical"><i class="fa fa-check"></i>Hierarchical</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="other-techniques-1.html"><a href="other-techniques-1.html#ica"><i class="fa fa-check"></i>ICA</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#ica"><i class="fa fa-check"></i>ICA</a></li>
 </ul></li>
-<li><a href="section-1.html#section-1"></a></li>
-<li class="chapter" data-level="" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
+<li><a href="so_long.html#section-1"></a></li>
+<li class="chapter" data-level="" data-path="so_long.html"><a href="so_long.html"><i class="fa fa-check"></i>Summary</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#mcclelland"><i class="fa fa-check"></i>McClelland</a></li>
@@ -350,8 +383,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="divider"></li>
-<li class='after'><a href="https://m-clark.github.io/"><img src="img/mc.png" style="width:50%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo"></a></li>
-<li class='after'><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="width:50%; border-width:0; display:block; margin: 0 auto;" src="img/ccbysa_test.png"></a></li>
+<li class='after'">
+   <a href="https://m-clark.github.io/">
+      <img src="img/mc_logo.png" style="width:25%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo">
+   </a>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a href="https://github.com/m-clark/">
+         <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+      </a>
+   </div>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+         <i class="fab fa-creative-commons fa-lg"></i>
+         <i class="fab fa-creative-commons-by fa-lg"></i>
+         <i class="fab fa-creative-commons-sa fa-lg"></i>
+      </a>
+   </div>
+</li>
 
 </ul>
 
@@ -362,7 +414,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><span style="font-size:150%; font-variant:small-caps; font-style:italic; ">Graphical and Latent Variable Modeling</span></a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Graphical &amp; Latent Variable Modeling</a>
           </h1>
         </div>
 
@@ -389,40 +441,40 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h4>Reference</h4>
 <p>McClelland, Acock, Piccinin, Rheac, Stallings. (2013). Relations between preschool attention span-persistence and age 25 educational outcomes. <a href="http://www.sciencedirect.com/science/article/pii/S0885200612000762">link</a> Note that there is only one age 25 outcome (college completion) and two age 21 outcomes.</p>
 <p>The following models duplicate the paper results. Additional non-mediation models are provided for comparison.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modReading =<span class="st"> &quot;</span>
-<span class="st">  read21 ~ rr*read7 + ar21*attention4 + vocab4 + male + adopted + momed</span>
-<span class="st">  read7 ~ ar7*attention4</span>
-
-<span class="st">  # in</span>
-<span class="st">  att4_read21 := ar7*rr</span>
-<span class="st">&quot;</span>
-reading  =<span class="st"> </span><span class="kw">sem</span>(modReading, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)
-<span class="kw">summary</span>(reading, <span class="dt">rsquare=</span><span class="ot">TRUE</span>)
-
-modRead =<span class="st"> &quot;</span>
-<span class="st">  read21 ~ read7 + attention4 + vocab4 + male + adopted + momed</span>
-
-<span class="st">&quot;</span>
-readnomed  =<span class="st"> </span><span class="kw">sem</span>(modread, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)
-<span class="kw">AIC</span>(read, readnomed)
-
-
-modMath =<span class="st"> &quot;</span>
-<span class="st">  math21 ~ mm*math7 + am21*attention4 + vocab4 + male + adopted + momed</span>
-<span class="st">  math7 ~ am7*attention4</span>
-
-<span class="st">  # in</span>
-<span class="st">  att4_math21 := am7*mm</span>
-<span class="st">&quot;</span>
-math  =<span class="st"> </span><span class="kw">sem</span>(modMath, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)
-<span class="kw">summary</span>(math, <span class="dt">rsquare=</span><span class="ot">TRUE</span>, <span class="dt">fit=</span>T)
-
-modMath =<span class="st"> &quot;</span>
-<span class="st">  math21 ~ math7 + attention4 + vocab4 + male + adopted + momed</span>
-
-<span class="st">&quot;</span>
-mathnomed  =<span class="st"> </span><span class="kw">sem</span>(modMath, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)
-<span class="kw">AIC</span>(math, mathnomed)</code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1">modReading =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb196-2" data-line-number="2"><span class="st">  read21 ~ rr*read7 + ar21*attention4 + vocab4 + male + adopted + momed</span></a>
+<a class="sourceLine" id="cb196-3" data-line-number="3"><span class="st">  read7 ~ ar7*attention4</span></a>
+<a class="sourceLine" id="cb196-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb196-5" data-line-number="5"><span class="st">  # in</span></a>
+<a class="sourceLine" id="cb196-6" data-line-number="6"><span class="st">  att4_read21 := ar7*rr</span></a>
+<a class="sourceLine" id="cb196-7" data-line-number="7"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb196-8" data-line-number="8">reading  =<span class="st"> </span><span class="kw">sem</span>(modReading, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)</a>
+<a class="sourceLine" id="cb196-9" data-line-number="9"><span class="kw">summary</span>(reading, <span class="dt">rsquare=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb196-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb196-11" data-line-number="11">modRead =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb196-12" data-line-number="12"><span class="st">  read21 ~ read7 + attention4 + vocab4 + male + adopted + momed</span></a>
+<a class="sourceLine" id="cb196-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb196-14" data-line-number="14"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb196-15" data-line-number="15">readnomed  =<span class="st"> </span><span class="kw">sem</span>(modread, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)</a>
+<a class="sourceLine" id="cb196-16" data-line-number="16"><span class="kw">AIC</span>(read, readnomed)</a>
+<a class="sourceLine" id="cb196-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb196-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb196-19" data-line-number="19">modMath =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb196-20" data-line-number="20"><span class="st">  math21 ~ mm*math7 + am21*attention4 + vocab4 + male + adopted + momed</span></a>
+<a class="sourceLine" id="cb196-21" data-line-number="21"><span class="st">  math7 ~ am7*attention4</span></a>
+<a class="sourceLine" id="cb196-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb196-23" data-line-number="23"><span class="st">  # in</span></a>
+<a class="sourceLine" id="cb196-24" data-line-number="24"><span class="st">  att4_math21 := am7*mm</span></a>
+<a class="sourceLine" id="cb196-25" data-line-number="25"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb196-26" data-line-number="26">math  =<span class="st"> </span><span class="kw">sem</span>(modMath, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)</a>
+<a class="sourceLine" id="cb196-27" data-line-number="27"><span class="kw">summary</span>(math, <span class="dt">rsquare=</span><span class="ot">TRUE</span>, <span class="dt">fit=</span>T)</a>
+<a class="sourceLine" id="cb196-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb196-29" data-line-number="29">modMath =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb196-30" data-line-number="30"><span class="st">  math21 ~ math7 + attention4 + vocab4 + male + adopted + momed</span></a>
+<a class="sourceLine" id="cb196-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb196-32" data-line-number="32"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb196-33" data-line-number="33">mathnomed  =<span class="st"> </span><span class="kw">sem</span>(modMath, <span class="dt">data=</span>mcclelland, <span class="dt">missing=</span><span class="st">&#39;fiml&#39;</span>, <span class="dt">mimic =</span> <span class="st">&#39;Mplus&#39;</span>, <span class="dt">std.ov=</span><span class="ot">TRUE</span>, <span class="dt">se =</span><span class="st">&#39;boot&#39;</span>)</a>
+<a class="sourceLine" id="cb196-34" data-line-number="34"><span class="kw">AIC</span>(math, mathnomed)</a></code></pre></div>
 </div>
 </div>
 <div id="national-longitudinal-survey-of-youth-1997-nlsy97" class="section level3">
@@ -591,28 +643,31 @@ mathnomed  =<span class="st"> </span><span class="kw">sem</span>(modMath, <span 
 <li><strong>Mediation</strong>: an indirect effect, e.g. A-&gt;B-&gt;C, A has an indirect effect on C. A can have a direct effect on C too. The term mediation should be reserved for explicitly causal scenarios.</li>
 <li><strong>Moderation</strong>: an interaction (the same ones utilized in a standard regression modeling) but with specific constraints on the relationships of the moderator and other variables. The term Moderation should be reserved for explicitly causal scenarios.</li>
 </ul>
-<p>See the <a href="graphical-models-1.html#terminology-issues">terminology section</a> in the graphical models chapter for more detail.</p>
+<p>See the <a href="gm.html#terminology-issues">terminology section</a> in the graphical models chapter for more detail.</p>
 <ul>
-<li><strong>Exploratory SEM</strong>: a term as useful as ‘exploratory’ <a href="latent-variables-1.html#exploratory-vs.confirmatory">factor analysis</a>.<br />
+<li><strong>Exploratory SEM</strong>: a term as useful as ‘exploratory’ <a href="lv.html#exploratory-vs.confirmatory">factor analysis</a>.<br />
 </li>
 <li><strong>Fully vs. Partially Latent SEM</strong>: see previous.</li>
 <li><strong>MIMIC Model</strong>: see previous. Honestly, what’s the difference between a MIMIC and partially latent model except for calling one of the observed variables an indicator?</li>
 </ul>
 <p>With categorical data:</p>
-<div id="htmlwidget-34c9acc7b37a20b22550" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-34c9acc7b37a20b22550">{"x":{"filter":"none","autoHideNavigation":true,"data":[["Latent Categorical","Latent Continuous"],["Latent Class","Latent Trait"],["Latent Profile","Factor Analysis"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Indicator Categorical<\/th>\n      <th>Indicator Continuous<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searching":false,"ordering":false,"info":false,"columnDefs":[{"className":"dt-left","targets":[0,1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-f94f5b74069aa984f688" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f94f5b74069aa984f688">{"x":{"filter":"none","autoHideNavigation":true,"data":[["Latent Categorical","Latent Continuous"],["Latent Class","Latent Trait"],["Latent Profile","Factor Analysis"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Indicator Categorical<\/th>\n      <th>Indicator Continuous<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searching":false,"ordering":false,"info":false,"columnDefs":[{"className":"dt-left","targets":[0,1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>Aside from noting whether the latent variable is categorical or not, these aren’t very enlightening, and in the end, it’s all just ‘latent variable analysis’.</p>
 </div>
 </div>
 <div id="lavaan-output-explained" class="section level2">
 <h2>Lavaan Output Explained</h2>
 <p>Here I provided the most detailed output from an SEM with lavaan with each component explained.</p>
-<pre><code>lavaan (0.5-23.1097) converged normally after  73 iterations
+<pre><code>lavaan 0.6-2 ended normally after 84 iterations
+
+  Optimization method                           NLMINB
+  Number of free parameters                         17
 
   Number of observations                           932
 
   Estimator                                         ML
-  Minimum Function Test Statistic                4.735
+  Model Fit Test Statistic                       4.735
   Degrees of freedom                                 4
   P-value (Chi-square)                           0.316
 
@@ -650,6 +705,7 @@ Standardized Root Mean Square Residual:
 Parameter Estimates:
 
   Information                                 Expected
+  Information saturated (h1) model          Structured
   Standard Errors                             Standard
 
 Latent Variables:
@@ -713,7 +769,7 @@ Defined Parameters:
   Minimum Function Test Statistic                4.735
   Degrees of freedom                                 4
   P-value (Chi-square)                           0.316</code></pre>
-<p>The next part regards the estimation technique along with the standard <span class="math inline">\(\mathcal{\chi}^2\)</span> test that is reported in all SEM studies. This first line tells us we’re doing standard maximum likelihood estimation. Much of the output following will be duplicated if you run a robust version, as it will give you both the standard ML output and the robust results. The <code>Minimum Function Test Statistic</code> is the <span class="math inline">\(\mathcal{\chi}^2\)</span> value. The degrees of freedom are essentially the number of observations in terms of covariances and variances minus the number of ‘free’ parameters, i.e. the number of parameters estimated. Recall that when these are equal, we the model is <em>just-identified</em>, and the fit is perfect. If it’s negative, the model is <em>under-identified</em> and you will need to go back to the drawing board. In general, this reflects how far away the model implied covariance matrix is from the observed covariance matrix. See the <a href="structural-equation-modeling.html#chi-square-test">SEM chapter</a> for more information.</p>
+<p>The next part regards the estimation technique along with the standard <span class="math inline">\(\mathcal{\chi}^2\)</span> test that is reported in all SEM studies. This first line tells us we’re doing standard maximum likelihood estimation. Much of the output following will be duplicated if you run a robust version, as it will give you both the standard ML output and the robust results. The <code>Minimum Function Test Statistic</code> is the <span class="math inline">\(\mathcal{\chi}^2\)</span> value. The degrees of freedom are essentially the number of observations in terms of covariances and variances minus the number of ‘free’ parameters, i.e. the number of parameters estimated. Recall that when these are equal, we the model is <em>just-identified</em>, and the fit is perfect. If it’s negative, the model is <em>under-identified</em> and you will need to go back to the drawing board. In general, this reflects how far away the model implied covariance matrix is from the observed covariance matrix. See the <a href="sem.html#chi-square-test">SEM chapter</a> for more information.</p>
 <pre><code>Model test baseline model:
 
   Minimum Function Test Statistic             2133.722
@@ -724,7 +780,7 @@ Defined Parameters:
 
   Comparative Fit Index (CFI)                    1.000
   Tucker-Lewis Index (TLI)                       0.999</code></pre>
-<p>Next are two of many fit indices, several of which are based on the previous test. See the <a href="structural-equation-modeling.html#cfi-etc.">fit section</a> for more detail.</p>
+<p>Next are two of many fit indices, several of which are based on the previous test. See the <a href="sem.html#cfi-etc.">fit section</a> for more detail.</p>
 <pre><code>Loglikelihood and Information Criteria:
 
   Loglikelihood user model (H0)             -15213.274
@@ -734,7 +790,7 @@ Defined Parameters:
   Akaike (AIC)                               30460.548
   Bayesian (BIC)                             30542.783
   Sample-size adjusted Bayesian (BIC)        30488.792</code></pre>
-<p>Now we see how many parameters were estimated and information criteria. See if you can look at the results of the coefficients etc. further down to come up with the value of 17. The information criteria, which are not in any way specific to SEM and are widely used for model comparison, are based on the log-likelihood, but add a penalty for the number of parameters estimated. For example, <span class="math inline">\(\textrm{AIC} = -2\mathcal{L} + 2k\)</span>, i.e. 2 times the ‘user model’ log-likelihood plus the log of the number of parameters estimated. The others are variations on this theme. See the <a href="structural-equation-modeling.html#aic">fit indices section</a>.</p>
+<p>Now we see how many parameters were estimated and information criteria. See if you can look at the results of the coefficients etc. further down to come up with the value of 17. The information criteria, which are not in any way specific to SEM and are widely used for model comparison, are based on the log-likelihood, but add a penalty for the number of parameters estimated. For example, <span class="math inline">\(\textrm{AIC} = -2\mathcal{L} + 2k\)</span>, i.e. 2 times the ‘user model’ log-likelihood plus the log of the number of parameters estimated. The others are variations on this theme. See the <a href="sem.html#aic">fit indices section</a>.</p>
 <pre><code>Root Mean Square Error of Approximation:
 
   RMSEA                                          0.014
@@ -744,7 +800,7 @@ Defined Parameters:
 Standardized Root Mean Square Residual:
 
   SRMR                                           0.007</code></pre>
-<p>These are discussed in the <a href="structural-equation-modeling.html#rmsea">fit indices section</a>.</p>
+<p>These are discussed in the <a href="sem.html#rmsea">fit indices section</a>.</p>
 <pre><code>Parameter Estimates:
 
   Information                                 Expected
@@ -757,165 +813,165 @@ Standardized Root Mean Square Residual:
 <div id="factor-analysis-via-maximum-likelihood" class="section level3">
 <h3>Factor Analysis via Maximum Likelihood</h3>
 <p>On GitHub I have some <a href="https://github.com/m-clark/Miscellaneous-R-Code/blob/master/ModelFitting/cfa_ml.R">R code</a> I’ve put together that will estimate a factor analysis via maximum likelihood, i.e. a ‘by-hand’ approach fully within R. It will simulate some data for two correlated factors with four indicators each, and produce raw (function shown below) and standardized loadings, the log-likelihood, AIC, and BIC. It will also compare these results to <span class="pack">lavaan</span> output for the same data, as well as provide the corresponding Mplus code.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># measurement model, covariance approach</span>
-cfa.cov =<span class="st"> </span><span class="cf">function</span> (parms, data) {
-  <span class="co"># Arguments- parms: initial values (named); data: raw data</span>
-  <span class="co"># Extract paramters by name</span>
-  
-  <span class="kw">require</span>(psych) <span class="co"># for tr</span>
-  
-  l1 =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, parms[<span class="kw">grep</span>(<span class="st">&#39;l1&#39;</span>, <span class="kw">names</span>(parms))])      <span class="co"># loadings for factor 1</span>
-  l2 =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, parms[<span class="kw">grep</span>(<span class="st">&#39;l2&#39;</span>, <span class="kw">names</span>(parms))])      <span class="co"># loadings for factor 2</span>
-  cov0 =<span class="st"> </span>parms[<span class="kw">grep</span>(<span class="st">&#39;cov&#39;</span>, <span class="kw">names</span>(parms))]         <span class="co"># factor covariance, variances</span>
-  
-  <span class="co"># Covariance matrix</span>
-  S =<span class="st"> </span><span class="kw">cov</span>(data)<span class="op">*</span>((<span class="kw">nrow</span>(data)<span class="op">-</span><span class="dv">1</span>)<span class="op">/</span><span class="kw">nrow</span>(data))       <span class="co"># ML covariance div by N rather than N-1, the multiplier adjusts</span>
-  
-  <span class="co"># loading estimates</span>
-  lambda =<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">c</span>(l1, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(l2))),
-                 <span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(l1)), l2))
-  
-  <span class="co"># disturbances</span>
-  dist.init =<span class="st"> </span>parms[<span class="kw">grep</span>(<span class="st">&#39;dist&#39;</span>, <span class="kw">names</span>(parms))]    
-  disturbs =<span class="st"> </span><span class="kw">diag</span>(dist.init)
-  
-  <span class="co"># factor correlation</span>
-  phi.init =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(cov0[<span class="dv">1</span>], cov0[<span class="dv">2</span>], cov0[<span class="dv">2</span>], cov0[<span class="dv">3</span>]), <span class="dv">2</span>, <span class="dv">2</span>)  <span class="co">#factor cov/correlation matrix</span>
-  
-  <span class="co"># other calculations and log likelihood</span>
-  sigtheta =<span class="st"> </span>lambda<span class="op">%*%</span>phi.init<span class="op">%*%</span><span class="kw">t</span>(lambda) <span class="op">+</span><span class="st"> </span>disturbs
-  pq =<span class="st"> </span><span class="kw">dim</span>(data)[<span class="dv">2</span>]  <span class="co">#in Bollen p + q (but for the purposes of this just p) = tr(data)</span>
-  <span class="co">#out = -(log(det(sigtheta)) + tr(S%*%solve(sigtheta)) - log(det(S)) - pq)  #a reduced version; Bollen 1989 p.107</span>
-  ll =<span class="st"> </span>((<span class="op">-</span><span class="kw">nrow</span>(data)<span class="op">*</span>pq<span class="op">/</span><span class="dv">2</span>)<span class="op">*</span><span class="kw">log</span>(<span class="dv">2</span><span class="op">*</span>pi)) <span class="op">-</span><span class="st"> </span>(<span class="kw">nrow</span>(data)<span class="op">/</span><span class="dv">2</span>)<span class="op">*</span>(<span class="kw">log</span>(<span class="kw">det</span>(sigtheta)) <span class="op">+</span><span class="st"> </span><span class="kw">tr</span>(S<span class="op">%*%</span><span class="kw">solve</span>(sigtheta)))  <span class="co">#should be same as Mplus H0 loglike</span>
-  ll
-}</code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb207-1" data-line-number="1"><span class="co"># measurement model, covariance approach</span></a>
+<a class="sourceLine" id="cb207-2" data-line-number="2">cfa.cov =<span class="st"> </span><span class="cf">function</span> (parms, data) {</a>
+<a class="sourceLine" id="cb207-3" data-line-number="3">  <span class="co"># Arguments- parms: initial values (named); data: raw data</span></a>
+<a class="sourceLine" id="cb207-4" data-line-number="4">  <span class="co"># Extract paramters by name</span></a>
+<a class="sourceLine" id="cb207-5" data-line-number="5">  </a>
+<a class="sourceLine" id="cb207-6" data-line-number="6">  <span class="kw">require</span>(psych) <span class="co"># for tr</span></a>
+<a class="sourceLine" id="cb207-7" data-line-number="7">  </a>
+<a class="sourceLine" id="cb207-8" data-line-number="8">  l1 =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, parms[<span class="kw">grep</span>(<span class="st">&#39;l1&#39;</span>, <span class="kw">names</span>(parms))])      <span class="co"># loadings for factor 1</span></a>
+<a class="sourceLine" id="cb207-9" data-line-number="9">  l2 =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, parms[<span class="kw">grep</span>(<span class="st">&#39;l2&#39;</span>, <span class="kw">names</span>(parms))])      <span class="co"># loadings for factor 2</span></a>
+<a class="sourceLine" id="cb207-10" data-line-number="10">  cov0 =<span class="st"> </span>parms[<span class="kw">grep</span>(<span class="st">&#39;cov&#39;</span>, <span class="kw">names</span>(parms))]         <span class="co"># factor covariance, variances</span></a>
+<a class="sourceLine" id="cb207-11" data-line-number="11">  </a>
+<a class="sourceLine" id="cb207-12" data-line-number="12">  <span class="co"># Covariance matrix</span></a>
+<a class="sourceLine" id="cb207-13" data-line-number="13">  S =<span class="st"> </span><span class="kw">cov</span>(data)<span class="op">*</span>((<span class="kw">nrow</span>(data)<span class="op">-</span><span class="dv">1</span>)<span class="op">/</span><span class="kw">nrow</span>(data))       <span class="co"># ML covariance div by N rather than N-1, the multiplier adjusts</span></a>
+<a class="sourceLine" id="cb207-14" data-line-number="14">  </a>
+<a class="sourceLine" id="cb207-15" data-line-number="15">  <span class="co"># loading estimates</span></a>
+<a class="sourceLine" id="cb207-16" data-line-number="16">  lambda =<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">c</span>(l1, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(l2))),</a>
+<a class="sourceLine" id="cb207-17" data-line-number="17">                 <span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(l1)), l2))</a>
+<a class="sourceLine" id="cb207-18" data-line-number="18">  </a>
+<a class="sourceLine" id="cb207-19" data-line-number="19">  <span class="co"># disturbances</span></a>
+<a class="sourceLine" id="cb207-20" data-line-number="20">  dist.init =<span class="st"> </span>parms[<span class="kw">grep</span>(<span class="st">&#39;dist&#39;</span>, <span class="kw">names</span>(parms))]    </a>
+<a class="sourceLine" id="cb207-21" data-line-number="21">  disturbs =<span class="st"> </span><span class="kw">diag</span>(dist.init)</a>
+<a class="sourceLine" id="cb207-22" data-line-number="22">  </a>
+<a class="sourceLine" id="cb207-23" data-line-number="23">  <span class="co"># factor correlation</span></a>
+<a class="sourceLine" id="cb207-24" data-line-number="24">  phi.init =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(cov0[<span class="dv">1</span>], cov0[<span class="dv">2</span>], cov0[<span class="dv">2</span>], cov0[<span class="dv">3</span>]), <span class="dv">2</span>, <span class="dv">2</span>)  <span class="co">#factor cov/correlation matrix</span></a>
+<a class="sourceLine" id="cb207-25" data-line-number="25">  </a>
+<a class="sourceLine" id="cb207-26" data-line-number="26">  <span class="co"># other calculations and log likelihood</span></a>
+<a class="sourceLine" id="cb207-27" data-line-number="27">  sigtheta =<span class="st"> </span>lambda<span class="op">%*%</span>phi.init<span class="op">%*%</span><span class="kw">t</span>(lambda) <span class="op">+</span><span class="st"> </span>disturbs</a>
+<a class="sourceLine" id="cb207-28" data-line-number="28">  pq =<span class="st"> </span><span class="kw">dim</span>(data)[<span class="dv">2</span>]  <span class="co">#in Bollen p + q (but for the purposes of this just p) = tr(data)</span></a>
+<a class="sourceLine" id="cb207-29" data-line-number="29">  <span class="co">#out = -(log(det(sigtheta)) + tr(S%*%solve(sigtheta)) - log(det(S)) - pq)  #a reduced version; Bollen 1989 p.107</span></a>
+<a class="sourceLine" id="cb207-30" data-line-number="30">  ll =<span class="st"> </span>((<span class="op">-</span><span class="kw">nrow</span>(data)<span class="op">*</span>pq<span class="op">/</span><span class="dv">2</span>)<span class="op">*</span><span class="kw">log</span>(<span class="dv">2</span><span class="op">*</span>pi)) <span class="op">-</span><span class="st"> </span>(<span class="kw">nrow</span>(data)<span class="op">/</span><span class="dv">2</span>)<span class="op">*</span>(<span class="kw">log</span>(<span class="kw">det</span>(sigtheta)) <span class="op">+</span><span class="st"> </span><span class="kw">tr</span>(S<span class="op">%*%</span><span class="kw">solve</span>(sigtheta)))  <span class="co">#should be same as Mplus H0 loglike</span></a>
+<a class="sourceLine" id="cb207-31" data-line-number="31">  ll</a>
+<a class="sourceLine" id="cb207-32" data-line-number="32">}</a></code></pre></div>
 </div>
 <div id="parallel-process-example" class="section level3">
 <h3>Parallel Process Example</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># parallel process --------------------------------------------------------</span>
-<span class="co"># See EXAMPLE 6.13 in Mplus User&#39;s Guide</span>
-
-<span class="co"># let&#39;s simulate data with a negative slope average and positive correlation among intercepts and other process slopes</span>
-<span class="kw">set.seed</span>(<span class="dv">1234</span>)
-n =<span class="st"> </span><span class="dv">500</span>
-timepoints =<span class="st"> </span><span class="dv">4</span>
-time =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">times=</span>n)
-subject =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">each=</span><span class="dv">4</span>)
-
-<span class="co"># first we&#39;ll draw intercepts with overall mean .5 and -.5 for the two</span>
-<span class="co"># processes, and let them have a slight correlation. Their variance is 1.</span>
-intCorr =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,.<span class="dv">2</span>,.<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">ncol=</span><span class="dv">2</span>) 
-<span class="kw">colnames</span>(intCorr) =<span class="st"> </span><span class="kw">rownames</span>(intCorr) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;i1&#39;</span>, <span class="st">&#39;i2&#39;</span>)
-intCorr
-
-interceptP1 =<span class="st"> </span>.<span class="dv">5</span>
-interceptP2 =<span class="st"> </span><span class="op">-</span>.<span class="dv">5</span>
-
-ranInts =<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(n, <span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> intCorr, <span class="dt">empirical=</span>T)
-ranInts =<span class="st"> </span><span class="kw">data.frame</span>(ranInts)
-<span class="kw">head</span>(ranInts)
-<span class="kw">cor</span>(ranInts)
-<span class="kw">colMeans</span>(ranInts)
-
-<span class="co"># now create slopes with intercept/mean .4, -.4, but the same positive</span>
-<span class="co"># relationship with their respective intercept. Their variances are also 1.</span>
-slopeP1 =<span class="st"> </span>.<span class="dv">4</span>
-slopeP2 =<span class="st"> </span><span class="op">-</span>.<span class="dv">4</span>
-
-s1 =<span class="st"> </span>.<span class="dv">3</span><span class="op">*</span>ranInts<span class="op">$</span>i2  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)
-s2 =<span class="st"> </span>.<span class="dv">3</span><span class="op">*</span>ranInts<span class="op">$</span>i1  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)
-
-ranef =<span class="st"> </span><span class="kw">data.frame</span>(ranInts, s1, s2)
-<span class="kw">head</span>(ranef)
-
-
-<span class="co"># so we have slight positive correlations among all random intercepts and slopes</span>
-y1 =<span class="st"> </span>(interceptP1 <span class="op">+</span><span class="st"> </span>ranef<span class="op">$</span>i1[subject]) <span class="op">+</span><span class="st"> </span>(slopeP1<span class="op">+</span>ranef<span class="op">$</span>s1[subject])<span class="op">*</span>time <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n<span class="op">*</span>timepoints, <span class="dt">sd=</span>.<span class="dv">5</span>)
-d1 =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Subject=</span>subject, <span class="dt">time=</span>time, y1)
-<span class="kw">head</span>(d1)
-
-<span class="kw">library</span>(ggplot2)
-<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>time, <span class="dt">y=</span>y1), <span class="dt">data=</span>d1) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>Subject), <span class="dt">alpha=</span>.<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>,<span class="dt">color=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
-<span class="st">  </span>lazerhawk<span class="op">::</span><span class="kw">theme_trueMinimal</span>()
-
-
-y2 =<span class="st"> </span>(interceptP2 <span class="op">+</span><span class="st"> </span>ranef<span class="op">$</span>i2[subject]) <span class="op">+</span><span class="st"> </span>(slopeP2<span class="op">+</span>ranef<span class="op">$</span>s2[subject])<span class="op">*</span>time <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n<span class="op">*</span>timepoints, <span class="dt">sd=</span>.<span class="dv">5</span>)
-d2 =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Subject=</span>subject, <span class="dt">time=</span>time, y2)
-
-<span class="co"># process 2 shows the downward overall trend as expected</span>
-<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>time, <span class="dt">y=</span>y2), <span class="dt">data=</span>d2) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>Subject), <span class="dt">alpha=</span>.<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>,<span class="dt">color=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
-<span class="st">  </span>lazerhawk<span class="op">::</span><span class="kw">theme_trueMinimal</span>()
-
-<span class="co"># Widen from long form for lavaan</span>
-<span class="kw">library</span>(tidyr)
-negslopepospath1 =<span class="st"> </span>d1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(time, y1)
-<span class="kw">colnames</span>(negslopepospath1) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Subject&#39;</span>, <span class="kw">paste0</span>(<span class="st">&#39;y1&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>))
-<span class="kw">head</span>(negslopepospath1)
-
-negslopepospath2 =<span class="st"> </span>d2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(time, y2)
-<span class="kw">colnames</span>(negslopepospath2) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Subject&#39;</span>, <span class="kw">paste0</span>(<span class="st">&#39;y2&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>))
-
-<span class="co"># combine</span>
-dparallel =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(negslopepospath1, negslopepospath2)
-<span class="kw">head</span>(dparallel)
-
-mainModel =<span class="st"> &quot;</span>
-<span class="st">i1 =~ 1*y11 + 1*y12 + 1*y13 + 1*y14</span>
-<span class="st">s1 =~ 0*y11 + 1*y12 + 2*y13 + 3*y14</span>
-
-
-<span class="st">i2 =~ 1*y21 + 1*y22 + 1*y23 + 1*y24</span>
-<span class="st">s2 =~ 0*y21 + 1*y22 + 2*y23 + 3*y24</span>
-
-<span class="st">s1 ~ i2</span>
-<span class="st">s2 ~ i1</span>
-<span class="st">&quot;</span>
-
-<span class="kw">library</span>(lavaan)
-mainRes  =<span class="st"> </span><span class="kw">growth</span>(mainModel, <span class="dt">data=</span>dparallel)
-<span class="kw">summary</span>(mainRes)
-fscores =<span class="st"> </span><span class="kw">lavPredict</span>(mainRes)
-broom<span class="op">::</span><span class="kw">tidy</span>(<span class="kw">data.frame</span>(fscores))
-<span class="kw">lm</span>(s2<span class="op">~</span>., fscores)
-
-heatR<span class="op">::</span><span class="kw">corrheat</span>(<span class="kw">cor</span>(fscores))
-<span class="kw">qplot</span>(s1, i2, <span class="dt">data=</span><span class="kw">data.frame</span>(fscores)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>, <span class="dt">se=</span>F)
-fv =<span class="st"> </span><span class="kw">lavPredict</span>(mainRes, <span class="st">&#39;ov&#39;</span>)
-<span class="kw">summary</span>(mainRes, <span class="dt">standardized=</span>T)
-d3heatmap<span class="op">::</span><span class="kw">d3heatmap</span>(<span class="kw">cor</span>(fv, fscores))
-d3heatmap<span class="op">::</span><span class="kw">d3heatmap</span>(<span class="kw">cor</span>(<span class="kw">select</span>(dparallel, <span class="op">-</span>Subject), ranef), <span class="dt">Rowv =</span> F, <span class="dt">Colv =</span> F)
-
-
-process1Model =<span class="st"> &quot;</span>
-<span class="st">  i1 =~ 1*y11 + 1*y12 + 1*y13 + 1*y14</span>
-<span class="st">  s1 =~ 0*y11 + 1*y12 + 2*y13 + 3*y14</span>
-<span class="st">&quot;</span>
-p1Res =<span class="st"> </span><span class="kw">growth</span>(process1Model, <span class="dt">data=</span>dparallel)
-fscoresP1 =<span class="st"> </span><span class="kw">lavPredict</span>(p1Res)
-
-process2Model =<span class="st"> &quot;</span>
-<span class="st">  i2 =~ 1*y21 + 1*y22 + 1*y23 + 1*y24</span>
-<span class="st">  s2 =~ 0*y21 + 1*y22 + 2*y23 + 3*y24</span>
-<span class="st">&quot;</span>
-p2Res =<span class="st"> </span><span class="kw">growth</span>(process2Model, <span class="dt">data=</span>dparallel)
-fscoresP2 =<span class="st"> </span><span class="kw">lavPredict</span>(p2Res)
-
-fscoresSeparate =<span class="st"> </span><span class="kw">data.frame</span>(fscoresP1, fscoresP2)
-
-pathMod =<span class="st"> &quot;</span>
-<span class="st">  s1 ~ i2</span>
-<span class="st">  s2 ~ i1</span>
-<span class="st">  </span>
-<span class="st">  i1~~i2</span>
-<span class="st">&quot;</span>
-
-pathModRes =<span class="st"> </span><span class="kw">sem</span>(pathMod, <span class="dt">data=</span>fscoresSeparate, <span class="dt">fixed.x =</span> F)
-<span class="kw">summary</span>(pathModRes)  <span class="co"># you&#39;d have come to the same conclusions</span>
-<span class="kw">summary</span>(mainRes)</code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" data-line-number="1"><span class="co"># parallel process --------------------------------------------------------</span></a>
+<a class="sourceLine" id="cb208-2" data-line-number="2"><span class="co"># See EXAMPLE 6.13 in Mplus User&#39;s Guide</span></a>
+<a class="sourceLine" id="cb208-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb208-4" data-line-number="4"><span class="co"># let&#39;s simulate data with a negative slope average and positive correlation among intercepts and other process slopes</span></a>
+<a class="sourceLine" id="cb208-5" data-line-number="5"><span class="kw">set.seed</span>(<span class="dv">1234</span>)</a>
+<a class="sourceLine" id="cb208-6" data-line-number="6">n =<span class="st"> </span><span class="dv">500</span></a>
+<a class="sourceLine" id="cb208-7" data-line-number="7">timepoints =<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb208-8" data-line-number="8">time =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">times=</span>n)</a>
+<a class="sourceLine" id="cb208-9" data-line-number="9">subject =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">each=</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb208-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb208-11" data-line-number="11"><span class="co"># first we&#39;ll draw intercepts with overall mean .5 and -.5 for the two</span></a>
+<a class="sourceLine" id="cb208-12" data-line-number="12"><span class="co"># processes, and let them have a slight correlation. Their variance is 1.</span></a>
+<a class="sourceLine" id="cb208-13" data-line-number="13">intCorr =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,.<span class="dv">2</span>,.<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">ncol=</span><span class="dv">2</span>) </a>
+<a class="sourceLine" id="cb208-14" data-line-number="14"><span class="kw">colnames</span>(intCorr) =<span class="st"> </span><span class="kw">rownames</span>(intCorr) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;i1&#39;</span>, <span class="st">&#39;i2&#39;</span>)</a>
+<a class="sourceLine" id="cb208-15" data-line-number="15">intCorr</a>
+<a class="sourceLine" id="cb208-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb208-17" data-line-number="17">interceptP1 =<span class="st"> </span><span class="fl">.5</span></a>
+<a class="sourceLine" id="cb208-18" data-line-number="18">interceptP2 =<span class="st"> </span><span class="fl">-.5</span></a>
+<a class="sourceLine" id="cb208-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb208-20" data-line-number="20">ranInts =<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(n, <span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> intCorr, <span class="dt">empirical=</span>T)</a>
+<a class="sourceLine" id="cb208-21" data-line-number="21">ranInts =<span class="st"> </span><span class="kw">data.frame</span>(ranInts)</a>
+<a class="sourceLine" id="cb208-22" data-line-number="22"><span class="kw">head</span>(ranInts)</a>
+<a class="sourceLine" id="cb208-23" data-line-number="23"><span class="kw">cor</span>(ranInts)</a>
+<a class="sourceLine" id="cb208-24" data-line-number="24"><span class="kw">colMeans</span>(ranInts)</a>
+<a class="sourceLine" id="cb208-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb208-26" data-line-number="26"><span class="co"># now create slopes with intercept/mean .4, -.4, but the same positive</span></a>
+<a class="sourceLine" id="cb208-27" data-line-number="27"><span class="co"># relationship with their respective intercept. Their variances are also 1.</span></a>
+<a class="sourceLine" id="cb208-28" data-line-number="28">slopeP1 =<span class="st"> </span><span class="fl">.4</span></a>
+<a class="sourceLine" id="cb208-29" data-line-number="29">slopeP2 =<span class="st"> </span><span class="fl">-.4</span></a>
+<a class="sourceLine" id="cb208-30" data-line-number="30"></a>
+<a class="sourceLine" id="cb208-31" data-line-number="31">s1 =<span class="st"> </span><span class="fl">.3</span><span class="op">*</span>ranInts<span class="op">$</span>i2  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)</a>
+<a class="sourceLine" id="cb208-32" data-line-number="32">s2 =<span class="st"> </span><span class="fl">.3</span><span class="op">*</span>ranInts<span class="op">$</span>i1  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)</a>
+<a class="sourceLine" id="cb208-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb208-34" data-line-number="34">ranef =<span class="st"> </span><span class="kw">data.frame</span>(ranInts, s1, s2)</a>
+<a class="sourceLine" id="cb208-35" data-line-number="35"><span class="kw">head</span>(ranef)</a>
+<a class="sourceLine" id="cb208-36" data-line-number="36"></a>
+<a class="sourceLine" id="cb208-37" data-line-number="37"></a>
+<a class="sourceLine" id="cb208-38" data-line-number="38"><span class="co"># so we have slight positive correlations among all random intercepts and slopes</span></a>
+<a class="sourceLine" id="cb208-39" data-line-number="39">y1 =<span class="st"> </span>(interceptP1 <span class="op">+</span><span class="st"> </span>ranef<span class="op">$</span>i1[subject]) <span class="op">+</span><span class="st"> </span>(slopeP1<span class="op">+</span>ranef<span class="op">$</span>s1[subject])<span class="op">*</span>time <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n<span class="op">*</span>timepoints, <span class="dt">sd=</span>.<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb208-40" data-line-number="40">d1 =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Subject=</span>subject, <span class="dt">time=</span>time, y1)</a>
+<a class="sourceLine" id="cb208-41" data-line-number="41"><span class="kw">head</span>(d1)</a>
+<a class="sourceLine" id="cb208-42" data-line-number="42"></a>
+<a class="sourceLine" id="cb208-43" data-line-number="43"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb208-44" data-line-number="44"><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>time, <span class="dt">y=</span>y1), <span class="dt">data=</span>d1) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb208-45" data-line-number="45"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>Subject), <span class="dt">alpha=</span>.<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb208-46" data-line-number="46"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>,<span class="dt">color=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb208-47" data-line-number="47"><span class="st">  </span>lazerhawk<span class="op">::</span><span class="kw">theme_trueMinimal</span>()</a>
+<a class="sourceLine" id="cb208-48" data-line-number="48"></a>
+<a class="sourceLine" id="cb208-49" data-line-number="49"></a>
+<a class="sourceLine" id="cb208-50" data-line-number="50">y2 =<span class="st"> </span>(interceptP2 <span class="op">+</span><span class="st"> </span>ranef<span class="op">$</span>i2[subject]) <span class="op">+</span><span class="st"> </span>(slopeP2<span class="op">+</span>ranef<span class="op">$</span>s2[subject])<span class="op">*</span>time <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n<span class="op">*</span>timepoints, <span class="dt">sd=</span>.<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb208-51" data-line-number="51">d2 =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Subject=</span>subject, <span class="dt">time=</span>time, y2)</a>
+<a class="sourceLine" id="cb208-52" data-line-number="52"></a>
+<a class="sourceLine" id="cb208-53" data-line-number="53"><span class="co"># process 2 shows the downward overall trend as expected</span></a>
+<a class="sourceLine" id="cb208-54" data-line-number="54"><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>time, <span class="dt">y=</span>y2), <span class="dt">data=</span>d2) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb208-55" data-line-number="55"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>Subject), <span class="dt">alpha=</span>.<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb208-56" data-line-number="56"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>,<span class="dt">color=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb208-57" data-line-number="57"><span class="st">  </span>lazerhawk<span class="op">::</span><span class="kw">theme_trueMinimal</span>()</a>
+<a class="sourceLine" id="cb208-58" data-line-number="58"></a>
+<a class="sourceLine" id="cb208-59" data-line-number="59"><span class="co"># Widen from long form for lavaan</span></a>
+<a class="sourceLine" id="cb208-60" data-line-number="60"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb208-61" data-line-number="61">negslopepospath1 =<span class="st"> </span>d1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(time, y1)</a>
+<a class="sourceLine" id="cb208-62" data-line-number="62"><span class="kw">colnames</span>(negslopepospath1) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Subject&#39;</span>, <span class="kw">paste0</span>(<span class="st">&#39;y1&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb208-63" data-line-number="63"><span class="kw">head</span>(negslopepospath1)</a>
+<a class="sourceLine" id="cb208-64" data-line-number="64"></a>
+<a class="sourceLine" id="cb208-65" data-line-number="65">negslopepospath2 =<span class="st"> </span>d2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(time, y2)</a>
+<a class="sourceLine" id="cb208-66" data-line-number="66"><span class="kw">colnames</span>(negslopepospath2) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Subject&#39;</span>, <span class="kw">paste0</span>(<span class="st">&#39;y2&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb208-67" data-line-number="67"></a>
+<a class="sourceLine" id="cb208-68" data-line-number="68"><span class="co"># combine</span></a>
+<a class="sourceLine" id="cb208-69" data-line-number="69">dparallel =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(negslopepospath1, negslopepospath2)</a>
+<a class="sourceLine" id="cb208-70" data-line-number="70"><span class="kw">head</span>(dparallel)</a>
+<a class="sourceLine" id="cb208-71" data-line-number="71"></a>
+<a class="sourceLine" id="cb208-72" data-line-number="72">mainModel =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb208-73" data-line-number="73"><span class="st">i1 =~ 1*y11 + 1*y12 + 1*y13 + 1*y14</span></a>
+<a class="sourceLine" id="cb208-74" data-line-number="74"><span class="st">s1 =~ 0*y11 + 1*y12 + 2*y13 + 3*y14</span></a>
+<a class="sourceLine" id="cb208-75" data-line-number="75"></a>
+<a class="sourceLine" id="cb208-76" data-line-number="76"></a>
+<a class="sourceLine" id="cb208-77" data-line-number="77"><span class="st">i2 =~ 1*y21 + 1*y22 + 1*y23 + 1*y24</span></a>
+<a class="sourceLine" id="cb208-78" data-line-number="78"><span class="st">s2 =~ 0*y21 + 1*y22 + 2*y23 + 3*y24</span></a>
+<a class="sourceLine" id="cb208-79" data-line-number="79"></a>
+<a class="sourceLine" id="cb208-80" data-line-number="80"><span class="st">s1 ~ i2</span></a>
+<a class="sourceLine" id="cb208-81" data-line-number="81"><span class="st">s2 ~ i1</span></a>
+<a class="sourceLine" id="cb208-82" data-line-number="82"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb208-83" data-line-number="83"></a>
+<a class="sourceLine" id="cb208-84" data-line-number="84"><span class="kw">library</span>(lavaan)</a>
+<a class="sourceLine" id="cb208-85" data-line-number="85">mainRes  =<span class="st"> </span><span class="kw">growth</span>(mainModel, <span class="dt">data=</span>dparallel)</a>
+<a class="sourceLine" id="cb208-86" data-line-number="86"><span class="kw">summary</span>(mainRes)</a>
+<a class="sourceLine" id="cb208-87" data-line-number="87">fscores =<span class="st"> </span><span class="kw">lavPredict</span>(mainRes)</a>
+<a class="sourceLine" id="cb208-88" data-line-number="88">broom<span class="op">::</span><span class="kw">tidy</span>(<span class="kw">data.frame</span>(fscores))</a>
+<a class="sourceLine" id="cb208-89" data-line-number="89"><span class="kw">lm</span>(s2<span class="op">~</span>., fscores)</a>
+<a class="sourceLine" id="cb208-90" data-line-number="90"></a>
+<a class="sourceLine" id="cb208-91" data-line-number="91">heatR<span class="op">::</span><span class="kw">corrheat</span>(<span class="kw">cor</span>(fscores))</a>
+<a class="sourceLine" id="cb208-92" data-line-number="92"><span class="kw">qplot</span>(s1, i2, <span class="dt">data=</span><span class="kw">data.frame</span>(fscores)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>, <span class="dt">se=</span>F)</a>
+<a class="sourceLine" id="cb208-93" data-line-number="93">fv =<span class="st"> </span><span class="kw">lavPredict</span>(mainRes, <span class="st">&#39;ov&#39;</span>)</a>
+<a class="sourceLine" id="cb208-94" data-line-number="94"><span class="kw">summary</span>(mainRes, <span class="dt">standardized=</span>T)</a>
+<a class="sourceLine" id="cb208-95" data-line-number="95">d3heatmap<span class="op">::</span><span class="kw">d3heatmap</span>(<span class="kw">cor</span>(fv, fscores))</a>
+<a class="sourceLine" id="cb208-96" data-line-number="96">d3heatmap<span class="op">::</span><span class="kw">d3heatmap</span>(<span class="kw">cor</span>(<span class="kw">select</span>(dparallel, <span class="op">-</span>Subject), ranef), <span class="dt">Rowv =</span> F, <span class="dt">Colv =</span> F)</a>
+<a class="sourceLine" id="cb208-97" data-line-number="97"></a>
+<a class="sourceLine" id="cb208-98" data-line-number="98"></a>
+<a class="sourceLine" id="cb208-99" data-line-number="99">process1Model =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb208-100" data-line-number="100"><span class="st">  i1 =~ 1*y11 + 1*y12 + 1*y13 + 1*y14</span></a>
+<a class="sourceLine" id="cb208-101" data-line-number="101"><span class="st">  s1 =~ 0*y11 + 1*y12 + 2*y13 + 3*y14</span></a>
+<a class="sourceLine" id="cb208-102" data-line-number="102"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb208-103" data-line-number="103">p1Res =<span class="st"> </span><span class="kw">growth</span>(process1Model, <span class="dt">data=</span>dparallel)</a>
+<a class="sourceLine" id="cb208-104" data-line-number="104">fscoresP1 =<span class="st"> </span><span class="kw">lavPredict</span>(p1Res)</a>
+<a class="sourceLine" id="cb208-105" data-line-number="105"></a>
+<a class="sourceLine" id="cb208-106" data-line-number="106">process2Model =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb208-107" data-line-number="107"><span class="st">  i2 =~ 1*y21 + 1*y22 + 1*y23 + 1*y24</span></a>
+<a class="sourceLine" id="cb208-108" data-line-number="108"><span class="st">  s2 =~ 0*y21 + 1*y22 + 2*y23 + 3*y24</span></a>
+<a class="sourceLine" id="cb208-109" data-line-number="109"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb208-110" data-line-number="110">p2Res =<span class="st"> </span><span class="kw">growth</span>(process2Model, <span class="dt">data=</span>dparallel)</a>
+<a class="sourceLine" id="cb208-111" data-line-number="111">fscoresP2 =<span class="st"> </span><span class="kw">lavPredict</span>(p2Res)</a>
+<a class="sourceLine" id="cb208-112" data-line-number="112"></a>
+<a class="sourceLine" id="cb208-113" data-line-number="113">fscoresSeparate =<span class="st"> </span><span class="kw">data.frame</span>(fscoresP1, fscoresP2)</a>
+<a class="sourceLine" id="cb208-114" data-line-number="114"></a>
+<a class="sourceLine" id="cb208-115" data-line-number="115">pathMod =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb208-116" data-line-number="116"><span class="st">  s1 ~ i2</span></a>
+<a class="sourceLine" id="cb208-117" data-line-number="117"><span class="st">  s2 ~ i1</span></a>
+<a class="sourceLine" id="cb208-118" data-line-number="118"><span class="st">  </span></a>
+<a class="sourceLine" id="cb208-119" data-line-number="119"><span class="st">  i1~~i2</span></a>
+<a class="sourceLine" id="cb208-120" data-line-number="120"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb208-121" data-line-number="121"></a>
+<a class="sourceLine" id="cb208-122" data-line-number="122">pathModRes =<span class="st"> </span><span class="kw">sem</span>(pathMod, <span class="dt">data=</span>fscoresSeparate, <span class="dt">fixed.x =</span> F)</a>
+<a class="sourceLine" id="cb208-123" data-line-number="123"><span class="kw">summary</span>(pathModRes)  <span class="co"># you&#39;d have come to the same conclusions</span></a>
+<a class="sourceLine" id="cb208-124" data-line-number="124"><span class="kw">summary</span>(mainRes)</a></code></pre></div>
 </div>
 </div>
 <div id="causal-bias" class="section level2">
@@ -926,7 +982,7 @@ pathModRes =<span class="st"> </span><span class="kw">sem</span>(pathMod, <span 
 <p>I figure I should note my stance on soi-disant <em>causal modeling</em> so that whatever I might say in this document is taken with the appropriate context. What follows is more or less a philosophical stance, perhaps a naïve and not very well developed one at that, despite my philosophy background from long ago, but one that I think is a safer perspective than others commonly held regarding causes and statistics. Mostly this is just me jotting down some things I’m thinking about while working on this document, and perhaps I’ll be able to spend more time with it later.</p>
 <p>To begin, no statistical model <em>by itself</em> will ever provide evidence of causal effects. This is a fact that cannot be disputed. Statistical models of the sort we are usually interested in are inherently probabilistic, atheoretical in and of themselves, and wholly dependent on the data collected. No amount of fancy analysis or double-blind randomization will change the fact that in the end you have a probabilistic result, and one that is highly dependent on many assumptions both statistical and theoretical, as well as nuances of the data. The data itself might suggest several statistical models that are essentially if not exactly equally adequate. If you are using SEM or other approach to <em>discover</em> causal effects you will thus be unsuccessful, and as such, you should not be using the technique if that is the primary reason for doing so.</p>
 <p>Philosophically speaking, I also don’t think the methods of scientific analysis, i.e. statistics, can be used to <em>prove</em> causal relations, and more so if one considers that we’ve been debating the nature of causality for thousands of years and have yet to come to a conclusion about its definition that everyone can agree on. Such bold ‘proof-like’ and ‘causal’ claims, consistently shown to be wrong because they <em>must be</em> in order to be a scientific claim in the first place, have much to do with undermining public faith in scientific results. However, if we can’t entirely agree on what constitutes a causal relation in the first place, we definitely can’t hope that there is some magical statistical technique that would help us determine it.</p>
-<p>As an example, available data should not convince you that smoking causes lung cancer, and that is because it doesn’t. If it did, everyone who ever smoked would have lung cancer. This is a <em>deterministic</em> notion of causality, and there are others, but it is the one I think is used in everyday parlance. Using a <em>probabilistic</em> interpretation instead, e.g. a smoker is more likely to have cancer, just serves to emphasize the uncertainty that exists in the underlying model. I’m perfectly okay with this, but many seem uncomfortable with any lack of certainty. I might even say that smoking has an ‘effect’ on the likelihood of getting lung cancer<a href="#fn73" class="footnoteRef" id="fnref73"><sup>73</sup></a>. In the end, all we have in the data are those that have lung cancer or not, and there is no uncertainty about them having it, nor does our knowledge of their smoking habits change the fact of whether they do.</p>
+<p>As an example, available data should not convince you that smoking causes lung cancer, and that is because it doesn’t. If it did, everyone who ever smoked would have lung cancer. This is a <em>deterministic</em> notion of causality, and there are others, but it is the one I think is used in everyday parlance. Using a <em>probabilistic</em> interpretation instead, e.g. a smoker is more likely to have cancer, just serves to emphasize the uncertainty that exists in the underlying model. I’m perfectly okay with this, but many seem uncomfortable with any lack of certainty. I might even say that smoking has an ‘effect’ on the likelihood of getting lung cancer<a href="#fn73" class="footnote-ref" id="fnref73"><sup>73</sup></a>. In the end, all we have in the data are those that have lung cancer or not, and there is no uncertainty about them having it, nor does our knowledge of their smoking habits change the fact of whether they do.</p>
 <p>As another example, you can randomly assign people who have cancer to two groups- in one they take an aspirin every day, in the other they drink orange juice every day. You may then find that they are equally effective in terms of remission rates, but it would be silly to think the ‘treatments’ had any causal effect at all, even though the effects could be non-zero statistically. Randomization, which is assumed by many to have the magical ability to confer causality on a scientific endeavor, doesn’t help the situation either. In fact, it could be said that <em>control</em> is the key element in determining causal relations (a claim that like others is not without issue), and the random nature of assignment actually undermines that.</p>
 <p>Modern health science is not removed from this issue, or even far removed from this example, and regularly finds ‘effects’ of drugs or behavior that have no causal relation to the phenomenon under study. This is especially the case with psychological phenomena, many of which to this day still have little or no tie to operational definitions based on physiology rather than behavior. People even go so far as to ascribe an actual causal effect to nothing at all (placebo effect).</p>
 <p>I personally think it’s somewhat misguided to think that a major goal of (at least most of working) science is to establish formal causal relations. Its primary tool for weighing evidence, i.e. statistical modeling, certainly cannot do that. As much as we want control, which is one thing that could potentially establish causality, it eludes us, and problematically seems to beg for a human element to causality besides. <em>Ceteris peribus</em> can only work for what is included in our models. Furthermore, if we actually knew the cause of something, we definitely would not need a statistical model. On the practical side, few seem to be engaging in science for reasons of determining causal effects (except perhaps in the discussion sections of papers), and rather do so to discover new potential explanations and predict something better than we did before.</p>
@@ -945,7 +1001,8 @@ pathModRes =<span class="st"> </span><span class="kw">sem</span>(pathMod, <span 
 <ul>
 <li><p>There are people, who have been taken seriously in other contexts, actively devoting time, money and energy to determine a. that our current existence is a simulation, and b. to find a way to ‘break out of it’ (I suspect this has to do with them taking their experience at Burning Man too seriously). However useless an endeavor this may be, if it was a simulation, where would any theory about causality reside then?</p></li>
 <li><p>An interesting point noted by Pearl is that causal assumptions are not encoded via the paths/edges, which only note possible causal relations, but in the missing ones. This reminds me of a chapter of the <em>Tao Te Ching</em>, that talks about the effectiveness of nothingness. An example being that it is not the walls or physical aspects of a house, but the rooms, i.e. spaces, that make it an effective home.</p></li>
-<li><p>If one adheres strictly to the <em>strong</em> causal assumptions for SEM, it is difficult for me to see where any discovery or exploration comes in. In that perspective, one uses statistical tools to merely uncover the parameter values that are assumed to be non-zero. I don’t even see why one would even reference statistical significance, interval estimates etc., as the causal aspects are assumed to be true. I’m not sure how the sampling variability, which could potentially result in conflicting causal understanding, is incorporated. <br> If you go to the <em>weak</em> causal assumption, where the parameter can take on a potentially infinite range of values, we now have something that is more practical and amenable to statistical analysis as traditionally engaged. However, I don’t know what definition of causality it is consistent with. An example would be that for some model, one of the causal assumptions is that X causes Y, and that relationship may be weak or strong, positive or negative, possibly even indistinguishable from zero, but we won’t know until we look at the data. In other words, the effect could be A, its opposite, or not A. This is in fact how SEM is practiced the vast majority of the time. However, that doesn’t sound like any causal claim is being made at all to me, and instead merely posits some correlation to be explored. I’m fine with that, but I’d take issue that some causal assumption is given more credibility by the statistical result, which could have been anything and still have been consistent with the ‘prior knowledge’.</p></li>
+<li><p>If one adheres strictly to the <em>strong</em> causal assumptions for SEM, it is difficult for me to see where any discovery or exploration comes in. In that perspective, one uses statistical tools to merely uncover the parameter values that are assumed to be non-zero. I don’t even see why one would even reference statistical significance, interval estimates etc., as the causal aspects are assumed to be true. I’m not sure how the sampling variability, which could potentially result in conflicting causal understanding, is incorporated. <br>
+If you go to the <em>weak</em> causal assumption, where the parameter can take on a potentially infinite range of values, we now have something that is more practical and amenable to statistical analysis as traditionally engaged. However, I don’t know what definition of causality it is consistent with. An example would be that for some model, one of the causal assumptions is that X causes Y, and that relationship may be weak or strong, positive or negative, possibly even indistinguishable from zero, but we won’t know until we look at the data. In other words, the effect could be A, its opposite, or not A. This is in fact how SEM is practiced the vast majority of the time. However, that doesn’t sound like any causal claim is being made at all to me, and instead merely posits some correlation to be explored. I’m fine with that, but I’d take issue that some causal assumption is given more credibility by the statistical result, which could have been anything and still have been consistent with the ‘prior knowledge’.</p></li>
 <li><p>As noted previously, the strong causal claims in SEM come from where we set paths equal to zero. However, a far more realistic assumption is that every effect is non-zero, however trivially small. Such models would be unidentifiable in SEM though.</p></li>
 </ul>
 </div>
@@ -1222,7 +1279,7 @@ pathModRes =<span class="st"> </span><span class="kw">sem</span>(pathMod, <span 
 <div class="footnotes">
 <hr />
 <ol start="73">
-<li id="fn73"><p>Though it might be less of an effect than simply <a href="http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0050185">being African-American</a>, something I’m sure we can agree is not a causal effect.<a href="appendix.html#fnref73">↩</a></p></li>
+<li id="fn73"><p>Though it might be less of an effect than simply <a href="http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0050185">being African-American</a>, something I’m sure we can agree is not a causal effect.<a href="appendix.html#fnref73" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -1230,7 +1287,7 @@ pathModRes =<span class="st"> </span><span class="kw">sem</span>(pathMod, <span 
           </div>
         </div>
       </div>
-<a href="exercises-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="so_long.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -1246,28 +1303,28 @@ gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
-"facebook": true,
-"twitter": true,
+"facebook": false,
+"twitter": false,
 "google": false,
 "linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["twitter", "facebook", "google", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
-"family": "san-serif",
+"family": "sans",
 "size": 2
 },
-"edit": {
-"link": null,
-"text": null
-},
+"edit": null,
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "section",
+"depth": 2,
+"scroll_highlight": true
 },
+"df_print": "kable",
 "highlight": "pygments",
 "search": true
 });
@@ -1279,7 +1336,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

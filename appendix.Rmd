@@ -245,6 +245,28 @@ Aside from noting whether the latent variable is categorical or not, these aren'
 Here I provided the most detailed output from an SEM with lavaan with each component explained.
 
 ```{r lavoutputExplained, echo=FALSE}
+wheaton.cov = as.matrix(read.csv('data/wheaton_cov.csv', row.names=1))
+
+# the model
+wheaton.model = '
+  # measurement model
+    ses     =~ education + sei
+    alien67 =~ anomia67 + powerless67
+    alien71 =~ anomia71 + powerless71
+ 
+  # structural model
+    alien71 ~ aa*alien67 + ses
+    alien67 ~ sa*ses
+ 
+  # correlated residuals
+    anomia67 ~~ anomia71
+    powerless67 ~~ powerless71
+
+  # Indirect effect
+    IndirectEffect := sa*aa
+'
+
+alienation <- sem(wheaton.model, sample.cov=wheaton.cov, sample.nobs=932)
 summary(alienation, fit=T, standardized=T, rsq=T)
 ```
 

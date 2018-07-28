@@ -1,3 +1,5 @@
+# (PART\*) Part I: Core SEM {-}
+
 # Graphical Models
 
 ```{r setupGM, include=FALSE}
@@ -425,7 +427,8 @@ In models with moderation, one will often see a specific variable denoted as the
 # DiagrammeR::DiagrammeR("scripts/moderation.gv", type='grViz', width=400, height=200)
 # )
 ```
-<div class='col2' text-align='center>
+
+<div class='col2' text-align='center'>
 <img src="img/mod_problematic.png" style="display:block; margin: 0 auto; float:left;" width=75%>
 <img src="img/mod_better.png" style="display:block; margin: 0 auto; float:left;" width=75%>
 </div>
@@ -803,7 +806,7 @@ Networks can be seen everywhere.  Personal relationships, machines and devices, 
 
 ```{r exampleAdjacency, echo=FALSE}
 set.seed(1234)
-adj = lazerhawk::createCorr(sample(0:1, 15, replace=TRUE, p=c(.6,.4)))
+adj = lazerhawk::create_corr(sample(0:1, 15, replace=TRUE, p=c(.6,.4)))
 rownames(adj) = colnames(adj) = sort(c('Lagia','Nancy', 'David', "J'Sean",'Bernadette', 'Mancel'))
 pander::pander(adj)
 ```

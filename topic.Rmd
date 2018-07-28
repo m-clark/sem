@@ -1,3 +1,5 @@
+# (PART\*) Part III: Going Further {-}
+
 # Topic Models
 
 Anyone who has taken a literature class has been asked to discuss the various themes of a given text. How are such themes discovered? Upon close reading of the text, recurrent references to similar concepts might be bundled in our minds as some general theme hidden throughout the text. Discovery of such themes is part of the joy of reading in general.

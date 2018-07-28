@@ -1,23 +1,13 @@
 --- 
-title: <span style="font-size:150%; font-variant:small-caps; font-style:italic; ">Graphical and Latent Variable Modeling</span>
+title: Graphical & Latent Variable Modeling
 author:  |
   <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
-  <img src="img/signature-acronym.png" style="width:33%; padding:10px 0;"> <br>
-  <img src="img/ARC-acronym-signature.png" style="width:22%; padding:10px 0;"> </div>
+  <img src="img/signature-acronym.png" style="width:33%; padding:5px 0; margin:0;"> <br>
+  <img src="img/ARC-acronym-signature.png" style="width:22%; padding:1px 0; margin:0;"> </div>
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
-    bookdown::gitbook:
-      df_print: kable
-      highlight: pygments
-      number_sections: false
-      config:
-        search: yes
-        fontsettings:
-          family: san-serif
-        sharing:
-          facebook: true
-          twitter: true
+    bookdown::gitbook
 always_allow_html: yes
 font-import: http://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Open+Sans|Alex+Brush|Stalemate
 font-family: 'Roboto'
@@ -26,7 +16,7 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 description: "This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and 'factor analysis', measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more."
-cover-image: 'img/198R_1.png'
+cover-image: 'img/nineteeneightyR.png'
 favicon: 'img/R.ico'
 url: 'https\://m-clark.github.io/sem/'  # evidently the \: is required or you'll get text in the title/toc area
 github-repo:  'm-clark/sem/'
@@ -59,18 +49,18 @@ library(pander); library(lavaan); library(kableExtra)
 ```
 
 
-#
 
-```{r rimg, fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
-knitr::include_graphics('img/198R_1.png', dpi = NA)
+##### {-}
+
+
+
+```{r rimg, fig.align='center',  out.width=200, echo=FALSE, cache=FALSE}
+knitr::include_graphics('img/198R.png', dpi = NA)
 ```
 
-
-```{r ccimg, fig.align='center', out.width=0, fig.show='hide', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
-knitr::include_graphics('img/ccbysa_test.png', dpi = NA)
-knitr::include_graphics('img/mc.png', dpi = NA)
+```{r ccimg, fig.align='center', out.width=0, fig.show='hide', echo=FALSE}
+knitr::include_graphics('img/mc_logo.png', dpi = NA)
 ```
 
 <!-- Empty pound will allow for one to create a single title page -->
 
-<!-- <img src="img/198R_1.png" style="display:block; margin: 0 auto;"><br> -->

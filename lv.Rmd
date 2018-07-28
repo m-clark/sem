@@ -51,8 +51,6 @@ tags$div(style="width:50%; margin:0 auto; font-family:Roboto; font-size:50%",
          )
 ```
 
-<br>
-
 Let's see an example. The following regards a very small data set[^pcafacormat] 5 socioeconomic indicators for 12 census tracts in Los Angeles (a classic example from [Harman, 1967][Harman 5]). We'll use the  <span class='pack'>psych</span> package, and the <span class="func">principal</span> function within it.  To use the function we provide the data (available via the package), specify the number of components/factors we want to retain, and other options (in this case, a *rotated* solution might be a little more interpretable[^rotation], but is typically not employed in PCA, so we specify 'none').  The <span class="pack">psych</span> package gives us more options and a little more output than standard PCA packages and functions, and one that is more consistent with the factor analysis technique we'll spend time with later.  While we will also use <span class="pack">lavaan</span> for factor analysis to be consistent with the SEM approach, the <span class="pack">psych</span> package is a great tool for standard factor analysis, assessing scale reliability, and other fun stuff.
 
 For the PCA, we'll retain three components and use no rotation, and we'll also focus on a standardized solution.  Not doing so would result in components favoring variables with more variance relative to others.  As such standardization is almost always conducted as a pre-processing step for PCA, though here it is an option to specify as part of the function (`covar=F`).
@@ -584,9 +582,9 @@ Let's be more explicit with our example.  The scale, which actually measures two
 
 ```{r schmiability, echo=F, eval=F}
 set.seed(12345)
-cormat1 = lazerhawk::createCorr(rep(.5, 6))
-cormat2 = lazerhawk::createCorr(rep(.25, 6))
-cormat3 = lazerhawk::createCorr(rep(.75, 6))
+cormat1 = lazerhawk::create_corr(rep(.5, 6))
+cormat2 = lazerhawk::create_corr(rep(.25, 6))
+cormat3 = lazerhawk::create_corr(rep(.75, 6))
 mat0 = Matrix::bdiag(cormat1, cormat2, cormat3)
 mat0[5:8,1:4] = .2
 mat0[9:12,1:4] = .2

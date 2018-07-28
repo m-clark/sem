@@ -8,7 +8,7 @@ Practically everyone has been exposed to <span class="emph">recommender systems<
 
 The following image, taken from Wikipedia (click the image to go there), conceptually shows how a *user-based* collaborative filtering method would work, where a recommendation is given based on what other similar users have given.
 
-<a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="img/collaborative_filtering.gif"  style="display:block; margin: 0 auto;" width:35%></a>
+<a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="img/collaborative_filtering.gif" style="display:block; margin: 0 auto;" width=35%></a>
 
 Let's go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated.  So how can one provide a recommendation for some movie you haven't seen?  If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.
 
@@ -152,7 +152,7 @@ Other methods can be thought of as a clustering the data in a hierarchical fashi
 tags$div(style="width:66%; margin:auto auto; font-size:50%;",
          heatmaply::heatmaply(iris[,1:4], 
                               Colv=F, 
-                              labRow=NA, 
+                              # labRow=NA, 
                               showticklabels=F, 
                               hide_colorbar=T, 
                               colors=viridis::plasma) %>% 

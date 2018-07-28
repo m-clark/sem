@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Graphical &amp; Latent Variable Modeling</title>
+  <meta name="description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Graphical &amp; Latent Variable Modeling" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://m-clark.github.io/sem/" />
+  <meta property="og:image" content="https://m-clark.github.io/sem/img/nineteeneightyR.png" />
+  <meta property="og:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
+  <meta name="github-repo" content="m-clark/sem/" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Graphical &amp; Latent Variable Modeling" />
+  
+  <meta name="twitter:description" content="This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It includes special emphasis on the lavaan package. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves, item response theory, Bayesian nonparametric techniques, latent dirichlet allocation, and more." />
+  <meta name="twitter:image" content="https://m-clark.github.io/sem/img/nineteeneightyR.png" />
+
+
+
+<meta name="date" content="2018-07-28">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  <link rel="shortcut icon" href="img/R.ico" type="image/x-icon">
+<link rel="prev" href="intro.html">
+<link rel="next" href="gm.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/d3-3.5.3/./d3.min.js"></script>
+<link href="libs/d3heatmapcore-0.0.0/heatmapcore.css" rel="stylesheet" />
+<script src="libs/d3heatmapcore-0.0.0/heatmapcore.js"></script>
+<script src="libs/d3-tip-0.6.6/index.js"></script>
+<script src="libs/d3heatmap-binding-0.6.1.2/d3heatmap.js"></script>
+<link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
+<script src="libs/vis-4.20.1/vis.min.js"></script>
+<script src="libs/visNetwork-binding-2.0.4/visNetwork.js"></script>
+<script src="libs/plotly-binding-4.8.0/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.39.2/plotly-latest.min.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/book.css" type="text/css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a><ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#statistical"><i class="fa fa-check"></i>Statistical</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#programming"><i class="fa fa-check"></i>Programming</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#outline"><i class="fa fa-check"></i>Outline</a><ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#graphical-models"><i class="fa fa-check"></i>Graphical Models</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#latent-variables"><i class="fa fa-check"></i>Latent Variables</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#sem"><i class="fa fa-check"></i>SEM</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#others"><i class="fa fa-check"></i>Others</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#programming-language-choice"><i class="fa fa-check"></i>Programming Language Choice</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#setup"><i class="fa fa-check"></i>Setup</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html"><i class="fa fa-check"></i>Introduction to R</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#getting-started"><i class="fa fa-check"></i>Getting Started</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#installation"><i class="fa fa-check"></i>Installation</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#packages"><i class="fa fa-check"></i>Packages</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#rstudio"><i class="fa fa-check"></i>RStudio</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#importing-data"><i class="fa fa-check"></i>Importing Data</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#key-things-to-know-about-r"><i class="fa fa-check"></i>Key things to know about R</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#r-is-a-programming-language-not-a-stats-package"><i class="fa fa-check"></i>R is a programming language, not a ‘stats package’</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#never-ask-if-r-can-do-what-you-want.-it-can."><i class="fa fa-check"></i>Never ask if R can do what you want. It can.</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#main-components-script-console-graphics-device"><i class="fa fa-check"></i>Main components: script, console, graphics device</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#r-is-easy-to-use-but-difficult-to-master."><i class="fa fa-check"></i>R is easy to use, but difficult to master.</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#object-oriented"><i class="fa fa-check"></i>Object-oriented</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#case-sensitive"><i class="fa fa-check"></i>Case sensitive</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#the-lavaan-package"><i class="fa fa-check"></i>The lavaan package</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#getting-help"><i class="fa fa-check"></i>Getting help</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#moving-forward"><i class="fa fa-check"></i>Moving forward</a><ul>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#exercises"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="intro2R.html"><a href="intro2R.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>Part I: Core SEM</b></span></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html"><i class="fa fa-check"></i>Graphical Models</a><ul>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#directed-graphs"><i class="fa fa-check"></i>Directed Graphs</a><ul>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#standard-linear-model"><i class="fa fa-check"></i>Standard linear model</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#path-analysis"><i class="fa fa-check"></i>Path Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#bayesian-networks"><i class="fa fa-check"></i>Bayesian Networks</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#undirected-graphs"><i class="fa fa-check"></i>Undirected Graphs</a><ul>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#network-analysis"><i class="fa fa-check"></i>Network analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#summary-1"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="gm.html"><a href="gm.html#r-packages-used"><i class="fa fa-check"></i>R packages used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html"><i class="fa fa-check"></i>Latent Variables</a><ul>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#dimension-reductioncompression"><i class="fa fa-check"></i>Dimension Reduction/Compression</a><ul>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#principal-components-analysis"><i class="fa fa-check"></i>Principal Components Analysis</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#factor-analysis"><i class="fa fa-check"></i>Factor Analysis</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#other-techniques"><i class="fa fa-check"></i>Other Techniques</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#summary-2"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#constructs-and-measurement-models"><i class="fa fa-check"></i>Constructs and Measurement Models</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#other-issues-in-factor-analysis"><i class="fa fa-check"></i>Other issues in Factor Analysis</a><ul>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#some-specific-factor-models-in-sem"><i class="fa fa-check"></i>Some specific factor models in SEM</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#scale-development"><i class="fa fa-check"></i>Scale development</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#factor-scores"><i class="fa fa-check"></i>Factor Scores</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#terminology"><i class="fa fa-check"></i>Terminology</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#some-other-uses-of-latent-variables"><i class="fa fa-check"></i>Some Other Uses of Latent Variables</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#summary-3"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="lv.html"><a href="lv.html#r-packages-used-1"><i class="fa fa-check"></i>R packages used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html"><i class="fa fa-check"></i>Structural Equation Modeling</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#measurement-model"><i class="fa fa-check"></i>Measurement Model</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#structural-model"><i class="fa fa-check"></i>Structural Model</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#the-process"><i class="fa fa-check"></i>The Process</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#initial-considerations-of-complexity"><i class="fa fa-check"></i>Initial Considerations of Complexity</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#steps-to-take"><i class="fa fa-check"></i>Steps to Take</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#sem-example"><i class="fa fa-check"></i>SEM Example</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#issues-in-sem"><i class="fa fa-check"></i>Issues in SEM</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#identification"><i class="fa fa-check"></i>Identification</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#fit"><i class="fa fa-check"></i>Fit</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#observed-covariates"><i class="fa fa-check"></i>Observed covariates</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#interactions"><i class="fa fa-check"></i>Interactions</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#estimation"><i class="fa fa-check"></i>Estimation</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#missing-data"><i class="fa fa-check"></i>Missing data</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#other-sem-approaches"><i class="fa fa-check"></i>Other SEM approaches</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#how-to-fool-yourself-with-sem"><i class="fa fa-check"></i>How to fool yourself with SEM</a><ul>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#sample-size"><i class="fa fa-check"></i>Sample size</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#poor-data"><i class="fa fa-check"></i>Poor data</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#naming-a-latent-variable-doesnt-mean-it-exists"><i class="fa fa-check"></i>Naming a latent variable doesn’t mean it exists</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#ignoring-diagnostics"><i class="fa fa-check"></i>Ignoring diagnostics</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#ignoring-performance"><i class="fa fa-check"></i>Ignoring performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#summary-4"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#terminology-1"><i class="fa fa-check"></i>Terminology</a></li>
+<li class="chapter" data-level="" data-path="sem.html"><a href="sem.html#r-packages-used-2"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="part"><span><b>Part II: Common Extensions</b></span></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html"><i class="fa fa-check"></i>Latent Growth Curves</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#random-effects"><i class="fa fa-check"></i>Random effects</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#model-formality"><i class="fa fa-check"></i>Model formality</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#random-effects-in-sem"><i class="fa fa-check"></i>Random Effects in SEM</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#simulating-random-effects"><i class="fa fa-check"></i>Simulating Random Effects</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#running-a-growth-curve-model"><i class="fa fa-check"></i>Running a Growth Curve Model</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#thinking-more-generally-about-regression"><i class="fa fa-check"></i>Thinking more generally about regression</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#more-on-lgc"><i class="fa fa-check"></i>More on LGC</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#lgc-are-non-standard-sem"><i class="fa fa-check"></i>LGC are non-standard SEM</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#residual-correlations"><i class="fa fa-check"></i>Residual correlations</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#nonlinear-time-effect"><i class="fa fa-check"></i>Nonlinear time effect</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#growth-mixture-models"><i class="fa fa-check"></i>Growth Mixture Models</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#other-covariates"><i class="fa fa-check"></i>Other covariates</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#some-differences-between-mixed-models-and-growth-curves"><i class="fa fa-check"></i>Some Differences between Mixed Models and Growth Curves</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#random-slopes"><i class="fa fa-check"></i>Random slopes</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#time-varying-covariates-1"><i class="fa fa-check"></i>Time-varying covariates</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#unequal-variances"><i class="fa fa-check"></i>Unequal variances</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#wide-vs.long"><i class="fa fa-check"></i>Wide vs. long</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#sample-size-1"><i class="fa fa-check"></i>Sample size</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#number-of-time-points"><i class="fa fa-check"></i>Number of time points</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#balance"><i class="fa fa-check"></i>Balance</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a><ul>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#parallel-processes"><i class="fa fa-check"></i>Parallel Processes</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#cross-lagged-models"><i class="fa fa-check"></i>Cross-lagged Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="growth.html"><a href="growth.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html"><i class="fa fa-check"></i>Mixture Models</a><ul>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#a-motivating-example"><i class="fa fa-check"></i>A Motivating Example</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#create-clustered-data"><i class="fa fa-check"></i>Create Clustered Data</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#mixture-modeling-with-old-faithful"><i class="fa fa-check"></i>Mixture modeling with Old Faithful</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#sem-and-latent-categorical-variables"><i class="fa fa-check"></i>SEM and Latent Categorical Variables</a><ul>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#latent-categories-vs.multi-group-analysis"><i class="fa fa-check"></i>Latent Categories vs. Multi-group Analysis</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#latent-trajectories"><i class="fa fa-check"></i>Latent Trajectories</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#estimation-1"><i class="fa fa-check"></i>Estimation</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#terminology-in-sem"><i class="fa fa-check"></i>Terminology in SEM</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#summary-6"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="mix.html"><a href="mix.html#r-packages-used-4"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html"><i class="fa fa-check"></i>Item Response Theory</a><ul>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#standard-models"><i class="fa fa-check"></i>Standard Models</a><ul>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#one-parameter-model"><i class="fa fa-check"></i>One Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#two-parameter-model"><i class="fa fa-check"></i>Two Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#three-parameter-model"><i class="fa fa-check"></i>Three Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#four-parameter-model"><i class="fa fa-check"></i>Four Parameter Model</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#other-irt-models"><i class="fa fa-check"></i>Other IRT Models</a><ul>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#additional-covariates"><i class="fa fa-check"></i>Additional covariates</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#graded-response-model"><i class="fa fa-check"></i>Graded Response Model</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#multidimensional-irt"><i class="fa fa-check"></i>Multidimensional IRT</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#other-irt"><i class="fa fa-check"></i>Other IRT</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#summary-7"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#irt-terminology"><i class="fa fa-check"></i>IRT Terminology</a></li>
+<li class="chapter" data-level="" data-path="irt.html"><a href="irt.html#r-packages-used-5"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="part"><span><b>Part III: Going Further</b></span></li>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html"><i class="fa fa-check"></i>Topic Models</a><ul>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html#latent-dirichlet-allocation"><i class="fa fa-check"></i>Latent Dirichlet Allocation</a></li>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html#analysis"><i class="fa fa-check"></i>Analysis</a></li>
+<li class="chapter" data-level="" data-path="topic.html"><a href="topic.html#summary-of-topic-models"><i class="fa fa-check"></i>Summary of Topic Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html"><i class="fa fa-check"></i>Bayesian Nonparametric Models</a><ul>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#chinese-restaurant-process"><i class="fa fa-check"></i>Chinese Restaurant Process</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#indian-buffet-process"><i class="fa fa-check"></i>Indian Buffet Process</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="bnp.html"><a href="bnp.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html"><i class="fa fa-check"></i>Other Techniques</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#recommender-systems"><i class="fa fa-check"></i>Recommender Systems</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#hidden-markov-models"><i class="fa fa-check"></i>Hidden Markov Models</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#cluster-analysis"><i class="fa fa-check"></i>“Cluster analysis”</a><ul>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#k-means"><i class="fa fa-check"></i>K-means</a></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#hierarchical"><i class="fa fa-check"></i>Hierarchical</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other.html"><a href="other.html#ica"><i class="fa fa-check"></i>ICA</a></li>
+</ul></li>
+<li><a href="so_long.html#section-1"></a></li>
+<li class="chapter" data-level="" data-path="so_long.html"><a href="so_long.html"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#mcclelland"><i class="fa fa-check"></i>McClelland</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#national-longitudinal-survey-of-youth-1997-nlsy97"><i class="fa fa-check"></i>National Longitudinal Survey of Youth (1997, NLSY97)</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#wheaton-1977-data"><i class="fa fa-check"></i>Wheaton 1977 data</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#harman-5"><i class="fa fa-check"></i>Harman 5</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#big-five"><i class="fa fa-check"></i>Big Five</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#old-faithful"><i class="fa fa-check"></i>Old Faithful</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#harman-1974"><i class="fa fa-check"></i>Harman 1974</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#marsh-hocevar-1985"><i class="fa fa-check"></i>Marsh &amp; Hocevar 1985</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#abortion-attitudes"><i class="fa fa-check"></i>Abortion Attitudes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#terminology-in-sem-1"><i class="fa fa-check"></i>Terminology in SEM</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#problematic-andor-not-very-useful-terms"><i class="fa fa-check"></i>Problematic and/or not very useful terms</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#lavaan-output-explained"><i class="fa fa-check"></i>Lavaan Output Explained</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#code-examples"><i class="fa fa-check"></i>Code Examples</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#factor-analysis-via-maximum-likelihood"><i class="fa fa-check"></i>Factor Analysis via Maximum Likelihood</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#parallel-process-example"><i class="fa fa-check"></i>Parallel Process Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#causal-bias"><i class="fa fa-check"></i>Causal Bias</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#prediction-1"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#chance"><i class="fa fa-check"></i>Chance</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other"><i class="fa fa-check"></i>Other</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#some-references"><i class="fa fa-check"></i>Some references</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#software-revisited"><i class="fa fa-check"></i>Software Revisited</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#mplus"><i class="fa fa-check"></i>Mplus</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#r"><i class="fa fa-check"></i>R</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#stata"><i class="fa fa-check"></i>Stata</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-2"><i class="fa fa-check"></i>Other</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#graphical-models-2"><i class="fa fa-check"></i>Graphical Models</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#potential-outcomes"><i class="fa fa-check"></i>Potential Outcomes</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#measurement-models-including-irt"><i class="fa fa-check"></i>Measurement Models (including IRT)</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#applied-sem"><i class="fa fa-check"></i>Applied SEM</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#nonparametric-models"><i class="fa fa-check"></i>Nonparametric models</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#lavaan"><i class="fa fa-check"></i>lavaan</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li class='after'">
+   <a href="https://m-clark.github.io/">
+      <img src="img/mc_logo.png" style="width:25%; padding:0px 0; display:block; margin: 0 auto;" alt="MC logo">
+   </a>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a href="https://github.com/m-clark/">
+         <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+      </a>
+   </div>
+</li>
+<li class='after'">
+   <div style='text-align:center'>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+         <i class="fab fa-creative-commons fa-lg"></i>
+         <i class="fab fa-creative-commons-by fa-lg"></i>
+         <i class="fab fa-creative-commons-sa fa-lg"></i>
+      </a>
+   </div>
+</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Graphical &amp; Latent Variable Modeling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introduction-to-r" class="section level1">
+<h1>Introduction to R</h1>
+<p>This introduction to R is very brief and only geared toward providing some basics so that one can understand and run the code associated with the content. It is geared toward an audience that likely has no programming experience whatsoever, but may have had some exposure to traditional statistics packages. If you have some basic familiarity with R you may skip this chapter, though it might serve as a refresher for some.</p>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
+<div id="installation" class="section level3">
+<h3>Installation</h3>
+<p>As mentioned previously, to begin with R for your own machine, you just need to go to the <a href="https://www.r-project.org/">R website</a>, download it for your operating system, and install. Then go to <a href="https://www.rstudio.com/">RStudio</a>, download and install it. From there on you only need RStudio to use R.</p>
+<p>Updates occur every few months, and you should update R whenever a new version is released.</p>
+</div>
+<div id="packages" class="section level3">
+<h3>Packages</h3>
+<p>As soon as you install it, R is already the most powerful statistical environment within which to work. However, its real strength comes from the community, which has added thousands of <span class="emph">packages</span> that provide additional or enhanced functionality. You will regularly find packages that specifically do something you want, and will need to install them in order to use them.</p>
+<p>RStudio provides a <strong>Packages</strong> tab, but it is usually just as or more efficient to use the <span class="func">install.packages</span> function.</p>
+<p><img src="img/packagesTab.png" style="display:block; margin: 0 auto;"></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&#39;mynewfavorite&#39;</span>)</a></code></pre></div>
+<p>At this point there are over 7000 packages available through standard sources, and many more through unofficial ones. To start getting some ideas of what you want to use, you will want to spend time at places like <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a>, <a href="http://www.rdocumentation.org/">Rdocumentation</a>, or with a list <a href="https://github.com/qinwf/awesome-R">like this one</a>.</p>
+<p>The main thing to note is that if you want to use a package, you have to load it with the <span class="func">library</span> function.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(lazerhawk)</a></code></pre></div>
+<p>Sometimes, you only need the package for one thing and there is no reason to keep it loaded, in which case you can use the following approach.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">packagename<span class="op">::</span><span class="kw">packagefunction</span>(args)</a></code></pre></div>
+<p>I suggest using the <span class="func">library</span> function for newbies.</p>
+<p>You’ll get the hang of finding, installing, and using packages quite quickly. However, note that the increasing popularity and ease of using R means that packages can vary quite a bit in terms of quality, so you may need to try out a couple packages with seemingly similar functionality to find the best for your situation.</p>
+</div>
+<div id="rstudio" class="section level3">
+<h3>RStudio</h3>
+<p>RStudio is an <span class="emph">integrated development environment</span> (<strong>IDE</strong>) specifically geared toward R (though it works for other languages too). At the very least it will make your programming far easier and more efficient, at best you can create publish-ready documents, manage projects, create interactive website regarding your research, use version control, and much more. I have an overview <a href="https://m-clark.github.io/workshops/introRstudio.html">here</a>.</p>
+<p>See <a href="http://ess.r-project.org/">Emacs Speaks Statistics</a> for an alternative. The point is, base R is not an efficient way to use R, and you have at least two very powerful options to make your coding experience easier and more efficient.</p>
+</div>
+<div id="importing-data" class="section level3">
+<h3>Importing Data</h3>
+<p>It is as easy to import data into R from other programs and text files as it is any other statistical program. As a first step, feel free to use the menu-based approach via the Environment tab.</p>
+<p><img src="img/importData.png" style="display:block; margin: 0 auto;"></p>
+<p>Note that you have easy access to the code that actually does the job. You should quickly get used to a code-based approach as soon as possible, that way you don’t waste time clicking and hunting for files, and instead can quickly run a single line of code. It is easier to select specific options as well. Some key packages to note:</p>
+<ul>
+<li><span class="pack">base</span>: Base R already can read in tab-delimited, comma-separated etc. text files</li>
+<li><span class="pack">foreign</span>: Base R comes with the foreign package that can read in files from other statistical packages. However support for Stata ended with version 12.</li>
+</ul>
+<p>Newer packages</p>
+<ul>
+<li><span class="pack">readr</span>: enhanced versions of Base R read functionality</li>
+<li><span class="pack">haven</span>: replacement for foreign that can also read current Stata files</li>
+<li><span class="pack">readxl</span>: for Excel specifically</li>
+</ul>
+<p>There are many other packages that would be of use for special situations and other less common file types and structures.</p>
+</div>
+</div>
+<div id="key-things-to-know-about-r" class="section level2">
+<h2>Key things to know about R</h2>
+<div id="r-is-a-programming-language-not-a-stats-package" class="section level3">
+<h3>R is a programming language, not a ‘stats package’</h3>
+<p>The first thing to note for those new to R is that R is a language that is oriented toward, but not specific to, dealing with statistics. This means it’s highly flexible, but does take some getting used to. If you go in with a spreadsheet style mindset, you’ll have difficulty, as well as miss out on the power it has to offer.</p>
+</div>
+<div id="never-ask-if-r-can-do-what-you-want.-it-can." class="section level3">
+<h3>Never ask if R can do what you want. It can.</h3>
+<p>The only limitation to R is the user’s programming sophistication. The better you get at statistical programming the further you can explore your data and take your research. This holds for any statistical endeavor whether using R or not.</p>
+</div>
+<div id="main-components-script-console-graphics-device" class="section level3">
+<h3>Main components: script, console, graphics device</h3>
+<p>With R, the <em>script</em> is where you write your R code. While you could do everything at the console, this would be difficult at best and unreproducible. The <em>console</em> is where the results are produced from running the script. Again you can do one-liner stuff there, such as getting help for a function. The <em>graphics device</em> is where visualizations are produced, and in RStudio you have two, one for static plots, and a <strong>viewer</strong> for potentially interactive ones.</p>
+</div>
+<div id="r-is-easy-to-use-but-difficult-to-master." class="section level3">
+<h3>R is easy to use, but difficult to master.</h3>
+<p>If you only want to use R in an applied fashion, as we will do here, R can be very easy to use. As an example the following code would read in data and run a standard linear regression with the <span class="func">lm</span> (i.e. linear model) function.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">mydata =<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file=</span><span class="st">&#39;location/myfile.csv&#39;</span>)   <span class="co"># some file with an &#39;x&#39; and &#39;y&#39; variable</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">regModel =<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data=</span>mydata)               <span class="co"># standard regression</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">summary</span>(regModel)                               <span class="co"># summary of results</span></a></code></pre></div>
+<p>The above code demonstrates that R can be as easy to use as anything else, and in my opinion, it is for any standard analysis. In addition, the formula syntax is utilized the vast majority of modeling packages (including <span class="pack">lavaan</span>), as is the <span class="func">summary</span> function for printing model results. The nice part is that R can still be <em>easier</em> to use with more complex analyses you either won’t find elsewhere or will only get with crippled functionality.</p>
+</div>
+<div id="object-oriented" class="section level3">
+<h3>Object-oriented</h3>
+<p>This section may be a little more than a newcomer to R wants or even needs to know to get started with R. However, most of the newbie’s errors will be due not knowing a little about this aspect of R programming, and I’ve seen some make the same mistakes even after using R for a long time as a result.</p>
+<p>R is <span class="emph">object-oriented</span>. For our purposes this means that we create what are called objects and use <span class="emph">functions</span> to manipulate those objects in some fashion. In the above code we created two objects, an object that held the data and an object that held the regression results.</p>
+<p>Objects can be <strong><em>anything</em></strong>, a character string, a list of 1000 data sets, the results of an analysis, <strong><em>anything</em></strong>.</p>
+<div id="assignment" class="section level4">
+<h4>Assignment</h4>
+<p>In order to create an object, we must <span class="emph">assign</span> something to it. You’ll come across two ways to do this.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">myObject =<span class="st"> </span>something</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">myObject &lt;-<span class="st"> </span>something</a></code></pre></div>
+<p>These result in the same thing, an object called <span class="objclass">myObject</span> that contains ‘something’ in it. For all appropriate practical use, whether you use <code>=</code> or <code>&lt;-</code>is a matter of personal preference. The point is that typical practice in R entails that one assigns something to an object and then uses functions on that object to get something more from it.</p>
+</div>
+<div id="functions" class="section level4">
+<h4>Functions</h4>
+<p>Functions are objects that take input of various kinds and produce some output (simply called a <em>value</em>). In the above code we used three functions: <span class="func">read.csv</span>, <span class="func">lm</span>, and <span class="func">summary</span>. Functions (usually) come with named <span class="emph">arguments</span>, that note what types of inputs the function can take. With <span class="func">read.csv</span>, we merely gave it one argument, the file name, but there are actually a couple dozen, each with some default. Type <code>?read.csv</code> at the console to see the help file.</p>
+</div>
+<div id="classes" class="section level4">
+<h4>Classes</h4>
+<p>All objects have a certain class, which means that some functions will work in certain ways depending on the class. Consider the following code.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">y =<span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">mod =<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw">summary</span>(x)</a></code></pre></div>
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2.59815 -0.55008 -0.02264 -0.06585  0.53097  1.69477 </code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">summary</span>(mod)</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.08800 -0.53866 -0.08488  0.67819  2.29901 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.05000    0.09344   0.535    0.594    
+x            1.17126    0.10350  11.317   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.9319 on 98 degrees of freedom
+Multiple R-squared:  0.5665,    Adjusted R-squared:  0.5621 
+F-statistic: 128.1 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>In both cases we used the <code>summary</code> function, but get different results. There are two <span class="emph">methods</span> for summary at work here: <span>summary.default</span> and <span>summary.lm</span>. Which is used depends on the class of the object given as an argument to the summary function. Most of the time however, there are unique functions that will only work on one class of object.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">class</span>(x)</a></code></pre></div>
+<pre><code>[1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">class</span>(mod)</a></code></pre></div>
+<pre><code>[1] &quot;lm&quot;</code></pre>
+<p>One of the most common classes of objects used is the <span class="objclass">data.frame</span>. Data frames are matrices that contain multiple types of vectors that are the variables and observations of interest. The contents can be numeric, factors (categorical variables), character strings and other types of objects.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">nams =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Bob Ross&#39;</span>, <span class="st">&#39;Bob Marley&#39;</span>, <span class="st">&#39;Bob Odenkirk&#39;</span>)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">places =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Dirt&#39;</span>, <span class="st">&#39;Dirt&#39;</span>, <span class="st">&#39;New Mexico&#39;</span>)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">yod =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1995</span>, <span class="dv">1981</span>, <span class="dv">2028</span>)</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">bobs =<span class="st"> </span><span class="kw">data.frame</span>(nams, places, yod)</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">bobs</a></code></pre></div>
+<pre><code>          nams     places  yod
+1     Bob Ross       Dirt 1995
+2   Bob Marley       Dirt 1981
+3 Bob Odenkirk New Mexico 2028</code></pre>
+</div>
+</div>
+<div id="case-sensitive" class="section level3">
+<h3>Case sensitive</h3>
+<p>A great deal of the errors you will get when you start learning R will result from not typing something correctly. For example, what if we try <code>summary(X)</code>?</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">summary</span>(X)</a></code></pre></div>
+<pre><code>Error in summary(X): object &#39;X&#39; not found</code></pre>
+<p>Errors are merely messages or calls for help from R. It can’t do what you ask and needs something else in order to perform the task. In this case, R is telling you it can’t find anything called X, which makes sense because the object name is lowercase <span class="math inline">\(x\)</span>. This error message is somewhat straightforward, but error messages for all programming languages typically aren’t, and depending on what you’re trying to do, it may be fairly vague. If you get an error, your first thought as you start out with R should be to check the names of things.</p>
+</div>
+<div id="the-lavaan-package" class="section level3">
+<h3>The lavaan package</h3>
+<p>You’ll see more later, but in order to use <span class="pack">lavaan</span> for structural equation modeling, you’ll need two things primarily: an object that represents the <strong>data</strong>, and an object that represents the <strong>model</strong>. It will look something like the following.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">modelCode =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">  y ~ x1 + x2 + lv            # structural/regression model</span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">  lv =~ z1 + z2 + z3 + z4     # measurement model with latent variable lv</span></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="kw">library</span>(lavaan)</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">mymodel =<span class="st"> </span><span class="kw">sem</span>(modelCode, <span class="dt">data=</span>mydata)</a></code></pre></div>
+<p>The character string is our model, and it can actually be kept as a separate file (without the assignment) if desired. Using the <span class="pack">lavaan</span> library, we can then use one of its specific functions like <span class="func">cfa</span>, <span class="func">sem</span>, or <span class="func">growth</span> to use the model code object (<span class="objclass">modelCode</span> above) and the data object (<span class="objclass">mydata</span> above).</p>
+<p>The way to define things in lavaan can be summarized as follows.</p>
+<table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center;">
+formulaType
+</th>
+<th style="text-align:center;">
+operator
+</th>
+<th style="text-align:center;">
+mnemonic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+latent variable definition
+</td>
+<td style="text-align:center;">
+=~
+</td>
+<td style="text-align:center;">
+is measured by
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+regression
+</td>
+<td style="text-align:center;">
+~
+</td>
+<td style="text-align:center;">
+is regressed on
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+(residual) (co)variance
+</td>
+<td style="text-align:center;">
+~~
+</td>
+<td style="text-align:center;">
+is correlated with
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+intercept
+</td>
+<td style="text-align:center;">
+~ 1
+</td>
+<td style="text-align:center;">
+intercept
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+fixed parameter
+</td>
+<td style="text-align:center;">
+_*
+</td>
+<td style="text-align:center;">
+is fixed at the value of _
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+named parameter
+</td>
+<td style="text-align:center;">
+abc*
+</td>
+<td style="text-align:center;">
+is named abc
+</td>
+</tr>
+</tbody>
+</table>
+<div id="matching-lavaan-and-r-to-mplus" class="section level5">
+<h5>Matching lavaan and R to MPlus</h5>
+<p>With <span class="pack">lavaan</span> and related packages there is almost complete overlap with MPlus. However, there are some things to note.</p>
+<table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+model
+</th>
+<th style="text-align:center;">
+packages
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+standard CFA, path, SEM, growth
+</td>
+<td style="text-align:center;">
+lavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+missing values
+</td>
+<td style="text-align:center;">
+lavaan (FIML), semTools (MI +)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+multigroup
+</td>
+<td style="text-align:center;">
+lavaan, semTools
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mixture models
+</td>
+<td style="text-align:center;">
+flexmix, poLCA, many others
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bayesian
+</td>
+<td style="text-align:center;">
+blavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+survey
+</td>
+<td style="text-align:center;">
+lavaan, survey.lavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+multilevel
+</td>
+<td style="text-align:center;">
+lavaan (new), mediation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+factor score regression
+</td>
+<td style="text-align:center;">
+lavaan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+visualization
+</td>
+<td style="text-align:center;">
+lavaanPlot
+</td>
+</tr>
+</tbody>
+</table>
+<p>The one glaring lack <span class="pack">lavaan</span> has regards mixture models, i.e. those with latent categorical variables. However, I’d argue there is far more functionality in R generally, with results that are far more easy to work with than you would have with MPlus. Note that <span class="pack">lavaan</span> handles <em>observed</em> categorical variables just fine, though oddly with only a probit link function (no logit).</p>
+<p>Up until version 0.6-1 <span class="pack">lavaan</span> had no support for multilevel models. However, it now can do two-level SEM, and the <span class="pack">mediation</span> package has long been able to do single mediator mixed/multilevel models<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. In addition, <span class="pack">lavaan</span> has added some survey support, but you’ll have plenty with <span class="pack">survey.lavaan</span>.</p>
+<p>Latent variable interactions are not conducted automatically in <span class="pack">lavaan</span>. One way to do it is to create a product term for all pairs of items pertaining to two factors, and then specify a latent variable where the manifest variables are the product terms. There is an example provided <a href="https://rpubs.com/njaalf/workshop2014">here</a>, and while the syntax is inefficient, it is conceptually clear.</p>
+<p>Unless you have complicated mediation structure (rarely sufficiently justified by SEM practitioners), there is no reason that I can see to do growth curve models. There is far, far more functionality in R for mixed models (e.g. <span class="pack">lme4</span>, <span class="pack">mgcv</span>, <span class="pack">brms</span>), which are the far more common and flexible approach to modeling longitudinal data (and otherwise equivalent). Such models handle nonlinear trends, complicated residual structure, alternative distributions, spatial and phylogenetic correlational structures, and more. MPlus simply doesn’t compete in this realm, and has terribly tedious syntax for either growth curve or multilevel models.</p>
+<p>On top of everything else, the <a href="https://m-clark.github.io/R-models/#lavaan-extensions">lavaan ecosystem</a>, i.e. packages that work with and enhance its models, continues to grow. In addition, with R there are utilities for SEM you won’t find with MPlus, such as model search, regularization, and more. And finally, with the <span class="pack">MPlusAutomation</span> package it’s even easier to use MPlus with R than it is to use MPlus itself!</p>
+</div>
+</div>
+<div id="getting-help" class="section level3">
+<h3>Getting help</h3>
+<p>Use <code>?</code> to get the help file for a specific function, or <code>??</code> to do a search, possibly on a quoted phrase.</p>
+<p>Examples:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">?lm</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">??regression</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">??<span class="st">&#39;nonlinear regression&#39;</span></a></code></pre></div>
+</div>
+</div>
+<div id="moving-forward" class="section level2">
+<h2>Moving forward</h2>
+<p>Hopefully you’ll get the hang of things as we run the code in later chapters. You’ll essentially only be asked to tweak code that’s already provided. This document (and associated workshop) is not the place to learn R. However, here are some exercises to make sure we start to get comfortable with it.</p>
+<div id="exercises" class="section level3">
+<h3>Exercises</h3>
+<p>Interactive version <a href="exercises/exercise_introR.nb.html">here</a></p>
+<ol style="list-style-type: decimal">
+<li><p>Create an object that consists of the numbers one through five.
+using <code>c(1,2,3,4,5)</code> or <code>1:5</code></p></li>
+<li><p>Create a different object, that is the same as that object, but plus 1 (i.e. the numbers two through six).</p></li>
+<li><p>Without creating an object, use <span class="func">cbind</span> and <span class="func">rbind</span>, feeding the objects you just created as arguments. For example <code>cbind(obj1, obj2)</code>.</p></li>
+<li><p>Create a new object using <span class="objclass">data.frame</span> just as you did <span class="func">rbind</span> or <span class="func">cbind</span> in #3.</p></li>
+<li><p>Inspect the class of the object, and use the <span class="func">summary</span> function on it.</p></li>
+</ol>
+</div>
+<div id="summary" class="section level3">
+<h3>Summary</h3>
+<p>There’s a lot to learn with R, and the more time you spend with R the easier your research process will likely go, and the more you will learn about statistical analysis.</p>
+
+</div>
+</div>
+</div>
+
+
+
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>In practice, these models are problematic even for MPlus.<a href="intro2R.html#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gm.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["twitter", "facebook", "google", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"download": null,
+"toc": {
+"collapse": "section",
+"depth": 2,
+"scroll_highlight": true
+},
+"df_print": "kable",
+"highlight": "pygments",
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

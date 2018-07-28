@@ -1,6 +1,37 @@
-book_filename: "book"
+book_filename: "sem_book"
 language:
   ui:
     chapter_name: "Chapter "
 output_dir: "docs"
 delete_merged_file: true
+
+
+rmd_files: [
+  "index.Rmd",
+  
+  # Getting Started
+  "preface.Rmd",
+  "intro.Rmd",
+  "intro2R.Rmd",
+
+  # Part I: Core SEM
+   'gm.Rmd',
+   'lv.Rmd',
+   'sem.Rmd',
+
+  # Part II: Common Extensions
+  'growth.Rmd',
+  'mix.Rmd',
+  'irt.Rmd',
+
+  # Part III: Going Further
+  'topic.Rmd',
+  'bnp.Rmd',
+  'other.Rmd',
+
+  # Other
+   'so_long.Rmd',
+   # 'exercises.Rmd'
+   'appendix.Rmd'
+  #'references.Rmd'
+]

@@ -1,3 +1,5 @@
+# (PART\*) Part II: Common Extensions {-}
+
 # Latent Growth Curves
 
 <span class="emph">Latent growth curve (LGC)</span> models are in a sense, just a different form of the very commonly used <span class="emph">mixed model</span> framework.  In some ways they are more flexible, mostly in the standard structural equation modeling framework that allows for indirect, and other complex covariate relationships.  In other ways, they are less flexible (e.g. requiring balanced data, estimating nonlinear relationships, data with many time points, dealing with time-varying covariates).  With appropriate tools there is little one can't do with the normal mixed model approach relative to the SEM approach, and one would likely have easier interpretation.  As such I'd recommend sticking with the standard mixed model framework unless you really need to.
@@ -19,7 +21,7 @@ The following depicts a mixed model from a multilevel modeling context, which is
 
 As an example, consider the case of repeated measures within an individual or individuals clustered within a geographic region. To model some target variable $y$, within a group/cluster, each observation $i$ in that cluster $c$, will have a cluster specific intercept:
 
-$$y_{i} = b_{0c} + b_1*X_i + e_i$$
+$$y_{ic} = b_{0c} + b_1*X_{ic} + e_{ic}$$
 
 At this point it looks like a standard regression, and is conceptually.  In addition, the cluster specific intercepts have overall means (the fixed effect) plus some cluster specific deviation (random effect).  These two can be thought of as additional regression models for the intercepts and slopes.
 
@@ -30,17 +32,17 @@ These random effects $u$ are typically assumed normally distributed with some st
 
 $$u_c \sim N(0, \tau)$$
 
-$$e_i \sim N(0, \sigma)$$
+$$e_{ic} \sim N(0, \sigma)$$
 
 
 Plugging in the cluster level model to the initial model, we get the following:
 
-$$y_{i} = [b_0 + u_c] + b1 * X_i + e_i$$
+$$y_{ic} = [b_0 + u_c] + b1 * X_{ic} + e_{ic}$$
 
 
 This is where the notion of 'random coefficients' comes from.  We also might display the model as follows:
 
-$$y_{i} = b_0 + b_1 * X_i  + [u_c + e_i]$$
+$$y_{ic} = b_0 + b_1 * X_i  + [u_c + e_{ic}]$$
 
 Now the focus is on a standard regression model with an additional source of variance.
 
@@ -339,7 +341,7 @@ As of this writing, Mplus is perhaps the only SEM software used for these <span 
 
 #### Cluster level
 
-To add a <span class="emph">cluster-level covariate</span>, for a mixed model, it looks something like this:
+To add a <span class="emph">cluster-level covariate</span>, for a mixed model, it looks something like this (ignoring lowest level subscript):
 
 *standard random intercept*
 
@@ -422,6 +424,15 @@ Now imagine having just a few of those kinds of variables as would be common in 
 
 One difference seen in comparing LGC models vs. mixed models is that in the former, random slopes are always assumed, whereas in the latter, one would typically see if it's worth adding random slopes in the first place, or simply not assume them.  There is currently a fad of 'maximal' mixed models in some disciplines, that would require testing every possible random effect.  All I can say is good luck with that.
 
+### Time-varying covariates
+
+LGC depictions are *always* showing a time*x interaction with time-varying covariates, i.e. that the effect of the covariate changes depending on the time point. The mixed model, like every other model you run, does not assume any interaction unless you explicitly ask for it.  As mentioned, you can fix the path value to be constant across time if you don't want an interaction.
+
+### Unequal variances
+
+One more thing LGC assumes that would not be in standard mixed model settings is unequal variances across time points, i.e. you estimate a separate variance for each time point.  And once again, if you even had reason to consider this in the mixed model setting you could, and then you would compare that model to the equal variance model for best performance.  Almost every LGC you see simply estimates those additional variances whether it's needed or not.
+
+
 ### Wide vs. long
 
 The SEM framework is inherently multivariate, and your data will need to be in wide format.  This isn't too big of a deal until you have many time-varying covariates, then the model syntax is tedious and you end up having the number of parameters to estimate climb rapidly.
@@ -461,7 +472,7 @@ tags$div(style="width:50%; margin:auto auto; font-size:50%",
 
 <br>
 
-To be honest, the only reason I can think of to do something like this is if one isn't familiar with mixed models, growth curves, or bayesian networks.  You can imagine what this would look like if we allow for lingering effects from earlier times to later ones (i.e. more lags), have more time points, have residual correlations at specific time points, and several more variables as would be typical in any plausible modeling setting.  The result would be unwieldy at best. Some using these models are interested in the *stability* of a measure over time.  However, if this in question, one should probably be using factor analytic techniques to assess the reliability of the measure.  In general, you'd always have a better option than a cross-lagged model in my opinion.
+To be honest, the only reason I can think of to do something like this is if one isn't familiar with mixed models, growth curves, or bayesian networks.  You can imagine what this would look like if we allow for lingering effects from earlier times to later ones (i.e. more lags), have more time points, have residual correlations at specific time points, and several more variables, as would be typical in any plausible modeling setting.  The result would be unwieldy at best. Some using these models are interested in the *stability* of a measure over time.  However, if this in question, one should probably be using factor analytic techniques to assess the reliability of the measure.  In general, you'd always have a better option than a cross-lagged model in my opinion.
 
 
 ## Summary
