@@ -530,7 +530,7 @@ Here we can see item 2, 'The couple agree that they do not wish to have a child.
 
 ### Four Parameter Model
 
-As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement.  In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct.  I've seen these 'ceilings' referred to 1 - <span class="emph">slipping</span>, where the slip parameter is the probability of providing an incorrect response despite knowing the associated skill.
+As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement.  In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct.  I've seen these 'ceilings' referred to as '1 - <span class="emph">slipping</span>', where the slip parameter is the probability of providing an incorrect response despite knowing the associated skill.
 
 
 $$P(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + (\zeta_j-\gamma_j) \cdot \mathrm{logis}(\alpha_j(\theta_i-\delta_j))$$
