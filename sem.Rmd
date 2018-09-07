@@ -343,7 +343,7 @@ library(semTools)
 compfit = summary(compareFit(alienation, alienationNoInd))
 ```
 
-```{r compareFits, eval=-2, echo=-(3:5)}
+```{r compareFits, eval=-2, echo=1:2}
 library(semTools)
 compareFit(alienation, alienationNoInd)
 cat('################### Nested Model Comparison #########################
@@ -351,7 +351,8 @@ cat('################### Nested Model Comparison #########################
 alienation - alienationNoInd 200.28  1  <.001    0.0941')
 
 # pander::pander(compfit, split.table=Inf) # now chokes on encoding?
-DT::datatable(compfit, options=list(dom='t', scrollX=TRUE))
+kable(compfit, digits=2) %>% 
+  kable_styling()
 ```
 
 The first result is a likelihood ratio test. The model with no indirect path is nested within the model with a path and so this is a viable option.  It tells us essentially that adding the indirect path results in a statistically significantly better model.   AIC measures would suggest the indirect path would result in a better model as well.  In terms of internal fit indices, the model including the indirect effect appears to fit the data well (note that the .000 is actually 1.00), while the other model does not.  So now we can say that not only does our model appear to fit the data well, but is better than a plausible competitor.
