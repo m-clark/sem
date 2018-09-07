@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-28">
+<meta name="date" content="2018-09-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -152,7 +152,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+<li class='before'><a href="./">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
@@ -432,26 +432,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><a href="https://upload.wikimedia.org/wikipedia/commons/5/52/Collaborative_filtering.gif"><img src="img/collaborative_filtering.gif" style="display:block; margin: 0 auto;" width=35%></a></p>
 <p>Let’s go with movies as an example. You might only rate a handful, and indeed most people will not rate most movies. But at some point most movies will have been rated. So how can one provide a recommendation for some movie you haven’t seen? If we group similar movies into genres, and similar people into demographic categories and based on taste, one can recommend something from a similar genre of movies that you like, that people in the same demographic category seem to like as well.</p>
 <p>If you think of genres as latent variables for movies, you can employ the factor analytic techniques we’ve talked about. Similarly, we can find clusters of people using cluster analytic techniques. In short, collaborative filtering/recommender systems are using latent variable techniques to a specific type of data, e.g. ratings. More modern approaches will incorporate user and item characteristics, recommendations from other systems, and additional information. The following provides some code for you to play with, using a straightforward <span class="emph">singular value decomposition</span> on movie ratings, which is the same technique used in Base R’s default <span class="emph">prcomp</span> function for PCA. You might compare it with <code>method = 'POPULAR'</code>.</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1"><span class="kw">library</span>(recommenderlab)</a>
-<a class="sourceLine" id="cb194-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;MovieLense&quot;</span>)</a>
-<a class="sourceLine" id="cb194-3" data-line-number="3">MovieLense</a>
-<a class="sourceLine" id="cb194-4" data-line-number="4"><span class="kw">barplot</span>(<span class="kw">table</span>(<span class="kw">getRatings</span>(MovieLense)), <span class="dt">col =</span> <span class="st">&#39;#ff5500&#39;</span>, <span class="dt">border=</span><span class="st">&#39;#00aaff&#39;</span>) <span class="co"># rating frequencies</span></a>
-<a class="sourceLine" id="cb194-5" data-line-number="5">recommenderRegistry<span class="op">$</span><span class="kw">get_entries</span>(<span class="dt">dataType =</span> <span class="st">&quot;realRatingMatrix&quot;</span>)  <span class="co"># the methods available</span></a>
-<a class="sourceLine" id="cb194-6" data-line-number="6">recom_svd &lt;-<span class="st"> </span><span class="kw">Recommender</span>(MovieLense, <span class="dt">method =</span> <span class="st">&quot;SVD&quot;</span>)</a>
-<a class="sourceLine" id="cb194-7" data-line-number="7">recom_svd</a></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="kw">library</span>(recommenderlab)</a>
+<a class="sourceLine" id="cb193-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;MovieLense&quot;</span>)</a>
+<a class="sourceLine" id="cb193-3" data-line-number="3">MovieLense</a>
+<a class="sourceLine" id="cb193-4" data-line-number="4"><span class="kw">barplot</span>(<span class="kw">table</span>(<span class="kw">getRatings</span>(MovieLense)), <span class="dt">col =</span> <span class="st">&#39;#ff5500&#39;</span>, <span class="dt">border=</span><span class="st">&#39;#00aaff&#39;</span>) <span class="co"># rating frequencies</span></a>
+<a class="sourceLine" id="cb193-5" data-line-number="5">recommenderRegistry<span class="op">$</span><span class="kw">get_entries</span>(<span class="dt">dataType =</span> <span class="st">&quot;realRatingMatrix&quot;</span>)  <span class="co"># the methods available</span></a>
+<a class="sourceLine" id="cb193-6" data-line-number="6">recom_svd &lt;-<span class="st"> </span><span class="kw">Recommender</span>(MovieLense, <span class="dt">method =</span> <span class="st">&quot;SVD&quot;</span>)</a>
+<a class="sourceLine" id="cb193-7" data-line-number="7">recom_svd</a></code></pre></div>
 <p>After running it try some predictions.</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1"><span class="co"># predicted ratings for two users</span></a>
-<a class="sourceLine" id="cb195-2" data-line-number="2">recom &lt;-<span class="st"> </span><span class="kw">predict</span>(recom_svd, MovieLense[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">type=</span><span class="st">&quot;ratings&quot;</span>)</a>
-<a class="sourceLine" id="cb195-3" data-line-number="3">recom</a>
-<a class="sourceLine" id="cb195-4" data-line-number="4"><span class="kw">as</span>(recom, <span class="st">&quot;matrix&quot;</span>)[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a>
-<a class="sourceLine" id="cb195-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb195-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb195-7" data-line-number="7"><span class="co"># comparison model</span></a>
-<a class="sourceLine" id="cb195-8" data-line-number="8">recom_popular &lt;-<span class="st"> </span><span class="kw">Recommender</span>(MovieLense, <span class="dt">method =</span> <span class="st">&quot;POPULAR&quot;</span>)</a>
-<a class="sourceLine" id="cb195-9" data-line-number="9"><span class="kw">getModel</span>(recom_popular)<span class="op">$</span>topN</a>
-<a class="sourceLine" id="cb195-10" data-line-number="10">recom &lt;-<span class="st"> </span><span class="kw">predict</span>(recom_popular, MovieLense[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">type=</span><span class="st">&quot;topNList&quot;</span>)</a>
-<a class="sourceLine" id="cb195-11" data-line-number="11">recom</a>
-<a class="sourceLine" id="cb195-12" data-line-number="12"><span class="kw">as</span>(recom, <span class="st">&quot;list&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1"><span class="co"># predicted ratings for two users</span></a>
+<a class="sourceLine" id="cb194-2" data-line-number="2">recom &lt;-<span class="st"> </span><span class="kw">predict</span>(recom_svd, MovieLense[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">type=</span><span class="st">&quot;ratings&quot;</span>)</a>
+<a class="sourceLine" id="cb194-3" data-line-number="3">recom</a>
+<a class="sourceLine" id="cb194-4" data-line-number="4"><span class="kw">as</span>(recom, <span class="st">&quot;matrix&quot;</span>)[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a>
+<a class="sourceLine" id="cb194-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb194-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb194-7" data-line-number="7"><span class="co"># comparison model</span></a>
+<a class="sourceLine" id="cb194-8" data-line-number="8">recom_popular &lt;-<span class="st"> </span><span class="kw">Recommender</span>(MovieLense, <span class="dt">method =</span> <span class="st">&quot;POPULAR&quot;</span>)</a>
+<a class="sourceLine" id="cb194-9" data-line-number="9"><span class="kw">getModel</span>(recom_popular)<span class="op">$</span>topN</a>
+<a class="sourceLine" id="cb194-10" data-line-number="10">recom &lt;-<span class="st"> </span><span class="kw">predict</span>(recom_popular, MovieLense[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">type=</span><span class="st">&quot;topNList&quot;</span>)</a>
+<a class="sourceLine" id="cb194-11" data-line-number="11">recom</a>
+<a class="sourceLine" id="cb194-12" data-line-number="12"><span class="kw">as</span>(recom, <span class="st">&quot;list&quot;</span>)</a></code></pre></div>
 <p>All in all, thinking about your data in terms of a recommendation system might not be too far-fetched, especially if you’re already considering factor analysis of some sort.</p>
 </div>
 <div id="hidden-markov-models" class="section level2">

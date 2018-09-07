@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-28">
+<meta name="date" content="2018-09-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -152,7 +152,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+<li class='before'><a href="./">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
@@ -432,18 +432,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="math display">\[\pi = g^{-1}(\mu)\]</span>
 <span class="math display">\[y \sim \mathrm{Bernoulli}(\pi)\]</span></p>
 <p>The link function <span class="math inline">\(g(.)\)</span> is the logit function, and its inverse, the logistic (or sigmoid) function, maps our linear predictor, the logit, or log odds (<span class="math inline">\(\ln(\pi)/\ln(1-\pi)\)</span>), to the probability scale, <span class="math inline">\(\pi\)</span>. Finally, our binary response is bernoulli distributed (i.e. binomial with size=1). Let’s see this for a single observation to remove any mystery.</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">logit =<span class="st"> </span><span class="dv">-1</span></a>
-<a class="sourceLine" id="cb149-2" data-line-number="2"><span class="kw">exp</span>(logit)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(logit))  <span class="co"># convert logit to probability via logistic function</span></a></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" data-line-number="1">logit =<span class="st"> </span><span class="dv">-1</span></a>
+<a class="sourceLine" id="cb148-2" data-line-number="2"><span class="kw">exp</span>(logit)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(logit))  <span class="co"># convert logit to probability via logistic function</span></a></code></pre></div>
 <pre><code>[1] 0.2689414</code></pre>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1"><span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="op">-</span>logit))          <span class="co"># convert logit to probability (alternate)</span></a></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1"><span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="op">-</span>logit))          <span class="co"># convert logit to probability (alternate)</span></a></code></pre></div>
 <pre><code>[1] 0.2689414</code></pre>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1"><span class="kw">plogis</span>(logit)</a></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1"><span class="kw">plogis</span>(logit)</a></code></pre></div>
 <pre><code>[1] 0.2689414</code></pre>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1">prob =<span class="st"> </span><span class="fl">.75</span></a>
-<a class="sourceLine" id="cb155-2" data-line-number="2">logit =<span class="st"> </span><span class="kw">log</span>(.<span class="dv">75</span><span class="op">/</span>(<span class="dv">1</span><span class="fl">-.75</span>))   <span class="co"># convert probability to logit</span></a>
-<a class="sourceLine" id="cb155-3" data-line-number="3">logit</a></code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1">prob =<span class="st"> </span><span class="fl">.75</span></a>
+<a class="sourceLine" id="cb154-2" data-line-number="2">logit =<span class="st"> </span><span class="kw">log</span>(.<span class="dv">75</span><span class="op">/</span>(<span class="dv">1</span><span class="fl">-.75</span>))   <span class="co"># convert probability to logit</span></a>
+<a class="sourceLine" id="cb154-3" data-line-number="3">logit</a></code></pre></div>
 <pre><code>[1] 1.098612</code></pre>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1"><span class="kw">plogis</span>(logit)              <span class="co"># and back</span></a></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1"><span class="kw">plogis</span>(logit)              <span class="co"># and back</span></a></code></pre></div>
 <pre><code>[1] 0.75</code></pre>
 <p>Now let’s speak more generally, and say that with our response <span class="math inline">\(y\)</span> we are concerned with the probability that a person answers correctly. In terms of a logistic regression model:</p>
 <p><span class="math display">\[P(y=1) = f(X)\]</span></p>
@@ -465,11 +465,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Item 3: The woman is not married and does not wish to marry the man.</li>
 <li>Item 4: The couple cannot afford any more children.</li>
 </ul>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1"><span class="kw">data</span>(Abortion, <span class="dt">package=</span><span class="st">&#39;ltm&#39;</span>)</a>
-<a class="sourceLine" id="cb159-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb159-3" data-line-number="3"><span class="co"># for later use in SEM, convert to ordered factors</span></a>
-<a class="sourceLine" id="cb159-4" data-line-number="4">Abortion_asfactor =<span class="st"> </span><span class="kw">mutate_all</span>(Abortion, ordered)                </a>
-<a class="sourceLine" id="cb159-5" data-line-number="5"><span class="kw">colnames</span>(Abortion_asfactor) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;Item_&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1"><span class="kw">data</span>(Abortion, <span class="dt">package=</span><span class="st">&#39;ltm&#39;</span>)</a>
+<a class="sourceLine" id="cb158-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb158-3" data-line-number="3"><span class="co"># for later use in SEM, convert to ordered factors</span></a>
+<a class="sourceLine" id="cb158-4" data-line-number="4">Abortion_asfactor =<span class="st"> </span><span class="kw">mutate_all</span>(Abortion, ordered)                </a>
+<a class="sourceLine" id="cb158-5" data-line-number="5"><span class="kw">colnames</span>(Abortion_asfactor) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;Item_&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)</a></code></pre></div>
 <p>The <span class="pack">ltm</span> package provides some nice descriptives via the <span class="func">descript</span> function.</p>
 <pre><code>
 Descriptive statistics for the &#39;Abortion&#39; data-set
@@ -516,13 +516,13 @@ Pairwise Associations:
 5      2      3  &lt;2e-16
 6      3      4  &lt;2e-16</code></pre>
 <p>Now we’ll start by examining the initial results from the 1PM by using the <span class="func">rasch</span> function, for both IRT parameterizations. If you want to look at the original formulation with discrimination fixed to 1.0, I show the code for that, but not the results.</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1"><span class="kw">library</span>(ltm)</a>
-<a class="sourceLine" id="cb161-2" data-line-number="2">irt_rasch_par1 =<span class="st"> </span><span class="kw">rasch</span>(Abortion, <span class="dt">IRT.param=</span>F)</a>
-<a class="sourceLine" id="cb161-3" data-line-number="3">irt_rasch_par2 =<span class="st"> </span><span class="kw">rasch</span>(Abortion, <span class="dt">IRT.param=</span>T)</a>
-<a class="sourceLine" id="cb161-4" data-line-number="4"><span class="co"># irt_rasch_original = rasch(Abortion, IRT.param=T, constraint = cbind(ncol(Abortion) + 1, 1))</span></a>
-<a class="sourceLine" id="cb161-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb161-6" data-line-number="6">irt_rasch_par1</a>
-<a class="sourceLine" id="cb161-7" data-line-number="7">irt_rasch_par2</a></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1"><span class="kw">library</span>(ltm)</a>
+<a class="sourceLine" id="cb160-2" data-line-number="2">irt_rasch_par1 =<span class="st"> </span><span class="kw">rasch</span>(Abortion, <span class="dt">IRT.param=</span>F)</a>
+<a class="sourceLine" id="cb160-3" data-line-number="3">irt_rasch_par2 =<span class="st"> </span><span class="kw">rasch</span>(Abortion, <span class="dt">IRT.param=</span>T)</a>
+<a class="sourceLine" id="cb160-4" data-line-number="4"><span class="co"># irt_rasch_original = rasch(Abortion, IRT.param=T, constraint = cbind(ncol(Abortion) + 1, 1))</span></a>
+<a class="sourceLine" id="cb160-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb160-6" data-line-number="6">irt_rasch_par1</a>
+<a class="sourceLine" id="cb160-7" data-line-number="7">irt_rasch_par2</a></code></pre></div>
 <pre><code>
 Call:
 rasch(data = Abortion, IRT.param = F)
@@ -578,10 +578,10 @@ Based on items 1</code></pre>
 <div id="pm-as-a-mixed-model" class="section level4">
 <h4>1PM as a Mixed Model</h4>
 <p>As an additional means of understanding, we can think of IRT from the perspective of a mixed model. In this approach, we can melt the data into long format such that multiple rows/observations pertain to an individual’s response for the items. We then run a mixed model predicting the binary response with a fixed effect for item and a random effect for person. The fixed effects for item represent item difficulty, while The latent trait in the IRT for the person is the random effect for that person in the mixed model. For easier presentation we’ll omit the intercept.</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1">Abortion_long =<span class="st"> </span><span class="kw">gather</span>(<span class="kw">data.frame</span>(<span class="dt">Subject=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Abortion), Abortion), </a>
-<a class="sourceLine" id="cb166-2" data-line-number="2">                       <span class="dt">key=</span>Item, <span class="dt">value=</span>Response, <span class="op">-</span>Subject, <span class="dt">factor_key=</span>T) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb166-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(Subject, Item)</a>
-<a class="sourceLine" id="cb166-4" data-line-number="4"><span class="kw">head</span>(Abortion_long, <span class="dv">8</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">Abortion_long =<span class="st"> </span><span class="kw">gather</span>(<span class="kw">data.frame</span>(<span class="dt">Subject=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Abortion), Abortion), </a>
+<a class="sourceLine" id="cb165-2" data-line-number="2">                       <span class="dt">key=</span>Item, <span class="dt">value=</span>Response, <span class="op">-</span>Subject, <span class="dt">factor_key=</span>T) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb165-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(Subject, Item)</a>
+<a class="sourceLine" id="cb165-4" data-line-number="4"><span class="kw">head</span>(Abortion_long, <span class="dv">8</span>)</a></code></pre></div>
 <pre><code>  Subject   Item Response
 1       1 Item.1        1
 2       1 Item.2        1
@@ -591,11 +591,11 @@ Based on items 1</code></pre>
 6       2 Item.2        1
 7       2 Item.3        1
 8       2 Item.4        1</code></pre>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1">## See https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q4/004668.html</a>
-<a class="sourceLine" id="cb168-2" data-line-number="2"><span class="kw">library</span>(lme4)</a>
-<a class="sourceLine" id="cb168-3" data-line-number="3">lme_rasch =<span class="st"> </span><span class="kw">glmer</span>(Response <span class="op">~</span><span class="st"> </span><span class="dv">-1</span> <span class="op">+</span><span class="st"> </span>Item <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>Subject), Abortion_long, </a>
-<a class="sourceLine" id="cb168-4" data-line-number="4">                  <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a>
-<a class="sourceLine" id="cb168-5" data-line-number="5"><span class="kw">summary</span>(lme_rasch, <span class="dt">cor=</span>F)</a></code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">## See https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q4/004668.html</a>
+<a class="sourceLine" id="cb167-2" data-line-number="2"><span class="kw">library</span>(lme4)</a>
+<a class="sourceLine" id="cb167-3" data-line-number="3">lme_rasch =<span class="st"> </span><span class="kw">glmer</span>(Response <span class="op">~</span><span class="st"> </span><span class="dv">-1</span> <span class="op">+</span><span class="st"> </span>Item <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>Subject), Abortion_long, </a>
+<a class="sourceLine" id="cb167-4" data-line-number="4">                  <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a>
+<a class="sourceLine" id="cb167-5" data-line-number="5"><span class="kw">summary</span>(lme_rasch, <span class="dt">cor=</span>F)</a></code></pre></div>
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) [&#39;glmerMod&#39;]
  Family: binomial  ( logit )
 Formula: Response ~ -1 + Item + (1 | Subject)
@@ -629,8 +629,8 @@ Item 2  1.0543555  1.0165352
 Item 3  1.5961332  1.4998087
 Item 4  1.3543951  1.2850734</code></pre>
 <p>Same goes for the latent individual scores. Since the Abortion data is essentially ordered by pattern of response, I’ll mix it up a little bit by displaying a random ordering (<code>idx</code>). As the results are on different scales, we can alternate rescaling one or the other to put them on equal footing. The correlation of the scores is essentially 1.0. Note that I do not display the initial data processing.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">data.frame</span>(<span class="dt">ltm  =</span> discrimnation<span class="op">*</span>iscore_rasch[idx], </a>
-<a class="sourceLine" id="cb171-2" data-line-number="2">                <span class="dt">lmer =</span> iscore_lme[idx]))</a></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">data.frame</span>(<span class="dt">ltm  =</span> discrimnation<span class="op">*</span>iscore_rasch[idx], </a>
+<a class="sourceLine" id="cb170-2" data-line-number="2">                <span class="dt">lmer =</span> iscore_lme[idx]))</a></code></pre></div>
 <pre><code>         ltm       lmer
 1 -0.8284266 -0.7685527
 2  2.9014753  2.6075672
@@ -638,8 +638,8 @@ Item 4  1.3543951  1.2850734</code></pre>
 4 -0.8284266 -0.7685527
 5 -4.0267853 -3.6739666
 6  2.9014753  2.6075672</code></pre>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">data.frame</span>(<span class="dt">ltm  =</span> iscore_rasch[idx], </a>
-<a class="sourceLine" id="cb173-2" data-line-number="2">                <span class="dt">lmer =</span> iscore_lme[idx]<span class="op">/</span>RE_stddev))</a></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">data.frame</span>(<span class="dt">ltm  =</span> iscore_rasch[idx], </a>
+<a class="sourceLine" id="cb172-2" data-line-number="2">                <span class="dt">lmer =</span> iscore_lme[idx]<span class="op">/</span>RE_stddev))</a></code></pre></div>
 <pre><code>         ltm       lmer
 1 -0.1858671 -0.2062175
 2  0.6509795  0.6996604
@@ -668,28 +668,28 @@ Item 4 0.7948473 0.7833121</code></pre>
 <p>Now let’s look at the model from a structural equation modeling perspective. We saw in the <a href="growth.html#latent-growth-curves">growth curve modeling section</a> how a latent growth curve model is equivalent to a mixed model, though where the data are analyzed in wide format, and the latent variable is equivalent to the random effects in the mixed model. Given the connection between SEM and mixed models, it probably comes as no surprise that we can do IRT as SEM as well. The LGCM is unusual in the SEM framework in that most of the parameters are fixed. As we have seen the IRT has connections to a random effects model as well, in order to do a 1PM IRT in SEM, we’ll take a similar approach of fixing several parameters. An additional distinction here from our previous SEM examples is that we are now dealing categorical indicators. We’ll look at the SEM approach for each IRT parameterization. We’ll start with the first and compare the results to the mixed model as well.</p>
 <p>For the first approach, we fix all the loadings to be equal, and fix the factor variance to 1 (<code>std.lv = T</code>). For the binary case, the thresholds are essentially the intercept from a logistic regression model of each item with the latent trait <span class="math inline">\(\theta\)</span> as the covariate. The one issue with using <span class="pack">lavaan</span> is that it only uses a probit link<a href="#fn61" class="footnote-ref" id="fnref61"><sup>61</sup></a> (or at least will not do a logit link not without difficulty and slowness). Likewise the <span class="pack">ltm</span> package <em>only</em> uses the logit link. Interestingly, using the probit link in IRT is equivalent to a factor analysis based on the <span class="emph">tetrachoric correlation</span> matrix of the items.</p>
 <p>So to make things comparable, we will have to convert the <span class="pack">ltm</span> output by dividing by 1.7<a href="#fn62" class="footnote-ref" id="fnref62"><sup>62</sup></a>, or conversely, multiply the <span class="pack">lavaan</span> estimates by 1.7. We’ll also rerun the mixed model with a probit link, and this will put all the models in the same place. With the estimated loading and threshold, we can convert them to the IRT parameters<a href="#fn63" class="footnote-ref" id="fnref63"><sup>63</sup></a>.</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1"><span class="kw">library</span>(lavaan)</a>
-<a class="sourceLine" id="cb177-2" data-line-number="2">sem_irt_raschel =<span class="st"> &#39;</span></a>
-<a class="sourceLine" id="cb177-3" data-line-number="3"><span class="st">  # loadings</span></a>
-<a class="sourceLine" id="cb177-4" data-line-number="4"><span class="st">  theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4</span></a>
-<a class="sourceLine" id="cb177-5" data-line-number="5"><span class="st">  </span></a>
-<a class="sourceLine" id="cb177-6" data-line-number="6"><span class="st">  # thresholds</span></a>
-<a class="sourceLine" id="cb177-7" data-line-number="7"><span class="st">  Item_1 | th1*t1</span></a>
-<a class="sourceLine" id="cb177-8" data-line-number="8"><span class="st">  Item_2 | th2*t1</span></a>
-<a class="sourceLine" id="cb177-9" data-line-number="9"><span class="st">  Item_3 | th3*t1</span></a>
-<a class="sourceLine" id="cb177-10" data-line-number="10"><span class="st">  Item_4 | th4*t1</span></a>
-<a class="sourceLine" id="cb177-11" data-line-number="11"><span class="st">  </span></a>
-<a class="sourceLine" id="cb177-12" data-line-number="12"><span class="st">  # convert loading to discrimination</span></a>
-<a class="sourceLine" id="cb177-13" data-line-number="13"><span class="st">  discrm := l1 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb177-14" data-line-number="14"><span class="st">  </span></a>
-<a class="sourceLine" id="cb177-15" data-line-number="15"><span class="st">  # use thresholds to get difficulty   </span></a>
-<a class="sourceLine" id="cb177-16" data-line-number="16"><span class="st">  diff_1 := -th1 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb177-17" data-line-number="17"><span class="st">  diff_2 := -th2 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb177-18" data-line-number="18"><span class="st">  diff_3 := -th3 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb177-19" data-line-number="19"><span class="st">  diff_4 := -th4 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb177-20" data-line-number="20"><span class="st">&#39;</span></a>
-<a class="sourceLine" id="cb177-21" data-line-number="21">sem_rasch &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_irt_raschel, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)</a>
-<a class="sourceLine" id="cb177-22" data-line-number="22"><span class="kw">summary</span>(sem_rasch)</a></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1"><span class="kw">library</span>(lavaan)</a>
+<a class="sourceLine" id="cb176-2" data-line-number="2">sem_irt_raschel =<span class="st"> &#39;</span></a>
+<a class="sourceLine" id="cb176-3" data-line-number="3"><span class="st">  # loadings</span></a>
+<a class="sourceLine" id="cb176-4" data-line-number="4"><span class="st">  theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4</span></a>
+<a class="sourceLine" id="cb176-5" data-line-number="5"><span class="st">  </span></a>
+<a class="sourceLine" id="cb176-6" data-line-number="6"><span class="st">  # thresholds</span></a>
+<a class="sourceLine" id="cb176-7" data-line-number="7"><span class="st">  Item_1 | th1*t1</span></a>
+<a class="sourceLine" id="cb176-8" data-line-number="8"><span class="st">  Item_2 | th2*t1</span></a>
+<a class="sourceLine" id="cb176-9" data-line-number="9"><span class="st">  Item_3 | th3*t1</span></a>
+<a class="sourceLine" id="cb176-10" data-line-number="10"><span class="st">  Item_4 | th4*t1</span></a>
+<a class="sourceLine" id="cb176-11" data-line-number="11"><span class="st">  </span></a>
+<a class="sourceLine" id="cb176-12" data-line-number="12"><span class="st">  # convert loading to discrimination</span></a>
+<a class="sourceLine" id="cb176-13" data-line-number="13"><span class="st">  discrm := l1 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb176-14" data-line-number="14"><span class="st">  </span></a>
+<a class="sourceLine" id="cb176-15" data-line-number="15"><span class="st">  # use thresholds to get difficulty   </span></a>
+<a class="sourceLine" id="cb176-16" data-line-number="16"><span class="st">  diff_1 := -th1 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb176-17" data-line-number="17"><span class="st">  diff_2 := -th2 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb176-18" data-line-number="18"><span class="st">  diff_3 := -th3 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb176-19" data-line-number="19"><span class="st">  diff_4 := -th4 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb176-20" data-line-number="20"><span class="st">&#39;</span></a>
+<a class="sourceLine" id="cb176-21" data-line-number="21">sem_rasch &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_irt_raschel, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)</a>
+<a class="sourceLine" id="cb176-22" data-line-number="22"><span class="kw">summary</span>(sem_rasch)</a></code></pre></div>
 <pre><code>lavaan 0.6-2 ended normally after 4 iterations
 
   Optimization method                           NLMINB
@@ -757,8 +757,8 @@ Defined Parameters:
     diff_2            0.668    0.185    3.611    0.000
     diff_3            0.979    0.189    5.188    0.000
     diff_4            0.842    0.188    4.478    0.000</code></pre>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">## lme_rasch_probit = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, </a>
-<a class="sourceLine" id="cb179-2" data-line-number="2">##                          family=binomial(link=&#39;probit&#39;))</a></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1">## lme_rasch_probit = glmer(Response~ -1 + Item + (1|Subject), Abortion_long, </a>
+<a class="sourceLine" id="cb178-2" data-line-number="2">##                          family=binomial(link=&#39;probit&#39;))</a></code></pre></div>
 <p>Logistic link comparison.</p>
 <div id="htmlwidget-036a7645f3184f953e75" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-036a7645f3184f953e75">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.73,1.05,1.6,1.35],[-0.67,1.02,1.5,1.29],[-0.75,1.14,1.66,1.43],[4.46,4.46,4.46,4.46],[3.73,3.73,3.73,3.73],[4.48,4.48,4.48,4.48]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lme_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lme_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
@@ -766,23 +766,23 @@ Defined Parameters:
 <div id="htmlwidget-b3b8febb2bdbf4fb1fd4" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-b3b8febb2bdbf4fb1fd4">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[-0.43,0.62,0.94,0.8],[-0.44,0.59,0.87,0.73],[-0.44,0.67,0.98,0.84],[2.62,2.62,2.62,2.62],[2.04,2.04,2.04,2.04],[2.63,2.63,2.63,2.63]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lme_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lme_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>For the second IRT parameterization, <code>IRT.param=T</code> in the <span class="func">ltm</span> function, we just use the initial results. This time I multiply the estimated loading, i.e. the discrimination, from <span class="pack">lavaan</span> by 1.7.</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">sem_irt_raschel =<span class="st"> &#39;</span></a>
-<a class="sourceLine" id="cb180-2" data-line-number="2"><span class="st"># loadings</span></a>
-<a class="sourceLine" id="cb180-3" data-line-number="3"><span class="st">theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4</span></a>
-<a class="sourceLine" id="cb180-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb180-5" data-line-number="5"><span class="st"># thresholds</span></a>
-<a class="sourceLine" id="cb180-6" data-line-number="6"><span class="st">Item_1 | th1*t1</span></a>
-<a class="sourceLine" id="cb180-7" data-line-number="7"><span class="st">Item_2 | th2*t1</span></a>
-<a class="sourceLine" id="cb180-8" data-line-number="8"><span class="st">Item_3 | th3*t1</span></a>
-<a class="sourceLine" id="cb180-9" data-line-number="9"><span class="st">Item_4 | th4*t1</span></a>
-<a class="sourceLine" id="cb180-10" data-line-number="10"><span class="st"># </span></a>
-<a class="sourceLine" id="cb180-11" data-line-number="11"><span class="st"># # convert loading to discrimination</span></a>
-<a class="sourceLine" id="cb180-12" data-line-number="12"><span class="st">discrm := l1 / sqrt(1-l1^2) * 1.7 </span></a>
-<a class="sourceLine" id="cb180-13" data-line-number="13"><span class="st">&#39;</span></a>
-<a class="sourceLine" id="cb180-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb180-15" data-line-number="15">sem_rasch &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_irt_raschel, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)</a>
-<a class="sourceLine" id="cb180-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb180-17" data-line-number="17"><span class="co"># summary(sem_rasch) # not shown as is identical to previous</span></a></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">sem_irt_raschel =<span class="st"> &#39;</span></a>
+<a class="sourceLine" id="cb179-2" data-line-number="2"><span class="st"># loadings</span></a>
+<a class="sourceLine" id="cb179-3" data-line-number="3"><span class="st">theta =~ l1*Item_1 + l1*Item_2 + l1*Item_3 + l1*Item_4</span></a>
+<a class="sourceLine" id="cb179-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb179-5" data-line-number="5"><span class="st"># thresholds</span></a>
+<a class="sourceLine" id="cb179-6" data-line-number="6"><span class="st">Item_1 | th1*t1</span></a>
+<a class="sourceLine" id="cb179-7" data-line-number="7"><span class="st">Item_2 | th2*t1</span></a>
+<a class="sourceLine" id="cb179-8" data-line-number="8"><span class="st">Item_3 | th3*t1</span></a>
+<a class="sourceLine" id="cb179-9" data-line-number="9"><span class="st">Item_4 | th4*t1</span></a>
+<a class="sourceLine" id="cb179-10" data-line-number="10"><span class="st"># </span></a>
+<a class="sourceLine" id="cb179-11" data-line-number="11"><span class="st"># # convert loading to discrimination</span></a>
+<a class="sourceLine" id="cb179-12" data-line-number="12"><span class="st">discrm := l1 / sqrt(1-l1^2) * 1.7 </span></a>
+<a class="sourceLine" id="cb179-13" data-line-number="13"><span class="st">&#39;</span></a>
+<a class="sourceLine" id="cb179-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb179-15" data-line-number="15">sem_rasch &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_irt_raschel, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)</a>
+<a class="sourceLine" id="cb179-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb179-17" data-line-number="17"><span class="co"># summary(sem_rasch) # not shown as is identical to previous</span></a></code></pre></div>
 <div id="htmlwidget-150107a7e21dcb932a66" style="width:75%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-150107a7e21dcb932a66">{"x":{"filter":"none","data":[["Item 1","Item 2","Item 3","Item 4"],[0.16,-0.24,-0.36,-0.3],[0.16,-0.24,-0.35,-0.3],[4.46,4.46,4.46,4.46],[4.48,4.48,4.48,4.48]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ltm_diff<\/th>\n      <th>lav_diff<\/th>\n      <th>ltm_disc<\/th>\n      <th>lav_disc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>In both scenarios the IRT and SEM results are quite close, and the mixed model is not far off, though it estimates less variance for the latent trait, which results in the rest of the estimates being slightly different since the latent trait scores are slightly different. Again though, the correlation of the IRT latent trait and random effects from the mixed model are 1.0, so we are not coming to different conclusions.</p>
@@ -793,41 +793,41 @@ Defined Parameters:
 <p>The 1PM suggests items only differ by difficulty. In the SEM approach, this led to the factor loadings being constrained to be equal, which in SEM is probably not a likely scenario. The two parameter IRT model (2PM) allows the discrimination parameter to vary by item. We noted the model before, where <span class="math inline">\(\alpha\)</span>, the discrimination parameter was constant, so nothing else has changed besides that aspect, where now it is allowed to vary by item.</p>
 <p><span class="math display">\[P(y_{ij}=1|\theta, \delta, \alpha) = \mathrm{logis}(\alpha_j(\theta_i-\delta_j))\]</span></p>
 <p>Let’s see it how this turns out for the abortion data.</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">irt_2pm_par1 =<span class="st"> </span><span class="kw">ltm</span>(Abortion <span class="op">~</span><span class="st"> </span>z1, <span class="dt">IRT.param=</span>F)</a>
-<a class="sourceLine" id="cb181-2" data-line-number="2">irt_2pm_par2 =<span class="st"> </span><span class="kw">ltm</span>(Abortion <span class="op">~</span><span class="st"> </span>z1, <span class="dt">IRT.param=</span>T)</a></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">irt_2pm_par1 =<span class="st"> </span><span class="kw">ltm</span>(Abortion <span class="op">~</span><span class="st"> </span>z1, <span class="dt">IRT.param=</span>F)</a>
+<a class="sourceLine" id="cb180-2" data-line-number="2">irt_2pm_par2 =<span class="st"> </span><span class="kw">ltm</span>(Abortion <span class="op">~</span><span class="st"> </span>z1, <span class="dt">IRT.param=</span>T)</a></code></pre></div>
 <p>We start to see a lack of parallelism in the item characteristic curves, as well as differences in the item information curves.</p>
 <p><img src="sem_book_files/figure-html/2pm_ICC-1.svg" width="576" style="display: block; margin: auto;" /></p>
 <p>Above, we see that Item 3, ‘The woman is not married and does not wish to marry the man.’, has the most information, and as before distinguishes well those individuals lower than average score on the latent trait. In the testing interpretation, it is a relatively ‘easy’ item, though not too different from items, 2 and 4. Item 1 on the other hand, ‘The woman decides on her own that she does not.’, doesn’t discriminate well those who are low-scoring on the latent trait, but does for those on the high end. In the testing interpretation, this would be a relatively difficult item.</p>
 <div id="pm-as-sem-1" class="section level4">
 <h4>2PM as SEM</h4>
 <p>The only change with the SEM approach<a href="#fn65" class="footnote-ref" id="fnref65"><sup>65</sup></a> is that we allow all the loadings to be estimated, much as we would with typical SEM models. The following shows the necessary model syntax.</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1">sem_2pm_model =<span class="st"> &#39;</span></a>
-<a class="sourceLine" id="cb182-2" data-line-number="2"><span class="st"># loadings</span></a>
-<a class="sourceLine" id="cb182-3" data-line-number="3"><span class="st">theta =~ l1*Item_1 + l2*Item_2 + l3*Item_3 + l4*Item_4</span></a>
-<a class="sourceLine" id="cb182-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb182-5" data-line-number="5"><span class="st"># thresholds</span></a>
-<a class="sourceLine" id="cb182-6" data-line-number="6"><span class="st">Item_1 | th1*t1</span></a>
-<a class="sourceLine" id="cb182-7" data-line-number="7"><span class="st">Item_2 | th2*t1</span></a>
-<a class="sourceLine" id="cb182-8" data-line-number="8"><span class="st">Item_3 | th3*t1</span></a>
-<a class="sourceLine" id="cb182-9" data-line-number="9"><span class="st">Item_4 | th4*t1</span></a>
-<a class="sourceLine" id="cb182-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb182-11" data-line-number="11"><span class="st"># use thresholds to get difficulty</span></a>
-<a class="sourceLine" id="cb182-12" data-line-number="12"><span class="st"># or comment out and use thresholds from parameterization=&quot;theta&quot;</span></a>
-<a class="sourceLine" id="cb182-13" data-line-number="13"><span class="st">diff_1 := - th1 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb182-14" data-line-number="14"><span class="st">diff_2 := - th2 / sqrt(1-l2^2)</span></a>
-<a class="sourceLine" id="cb182-15" data-line-number="15"><span class="st">diff_3 := - th3 / sqrt(1-l3^2)</span></a>
-<a class="sourceLine" id="cb182-16" data-line-number="16"><span class="st">diff_4 := - th4 / sqrt(1-l4^2)</span></a>
-<a class="sourceLine" id="cb182-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb182-18" data-line-number="18"><span class="st"># convert loadings to discrimination</span></a>
-<a class="sourceLine" id="cb182-19" data-line-number="19"><span class="st"># or comment out and use loadings from parameterization=&quot;theta&quot;</span></a>
-<a class="sourceLine" id="cb182-20" data-line-number="20"><span class="st">discrm_1 := l1 / sqrt(1-l1^2)</span></a>
-<a class="sourceLine" id="cb182-21" data-line-number="21"><span class="st">discrm_2 := l2 / sqrt(1-l2^2)</span></a>
-<a class="sourceLine" id="cb182-22" data-line-number="22"><span class="st">discrm_3 := l3 / sqrt(1-l3^2)</span></a>
-<a class="sourceLine" id="cb182-23" data-line-number="23"><span class="st">discrm_4 := l4 / sqrt(1-l4^2)</span></a>
-<a class="sourceLine" id="cb182-24" data-line-number="24"><span class="st">&#39;</span></a>
-<a class="sourceLine" id="cb182-25" data-line-number="25">sem_2pm &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_2pm_model, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)</a>
-<a class="sourceLine" id="cb182-26" data-line-number="26"><span class="co"># sem_2pm &lt;- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization=&#39;theta&#39;)</span></a>
-<a class="sourceLine" id="cb182-27" data-line-number="27"><span class="kw">summary</span>(sem_2pm)</a></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">sem_2pm_model =<span class="st"> &#39;</span></a>
+<a class="sourceLine" id="cb181-2" data-line-number="2"><span class="st"># loadings</span></a>
+<a class="sourceLine" id="cb181-3" data-line-number="3"><span class="st">theta =~ l1*Item_1 + l2*Item_2 + l3*Item_3 + l4*Item_4</span></a>
+<a class="sourceLine" id="cb181-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb181-5" data-line-number="5"><span class="st"># thresholds</span></a>
+<a class="sourceLine" id="cb181-6" data-line-number="6"><span class="st">Item_1 | th1*t1</span></a>
+<a class="sourceLine" id="cb181-7" data-line-number="7"><span class="st">Item_2 | th2*t1</span></a>
+<a class="sourceLine" id="cb181-8" data-line-number="8"><span class="st">Item_3 | th3*t1</span></a>
+<a class="sourceLine" id="cb181-9" data-line-number="9"><span class="st">Item_4 | th4*t1</span></a>
+<a class="sourceLine" id="cb181-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb181-11" data-line-number="11"><span class="st"># use thresholds to get difficulty</span></a>
+<a class="sourceLine" id="cb181-12" data-line-number="12"><span class="st"># or comment out and use thresholds from parameterization=&quot;theta&quot;</span></a>
+<a class="sourceLine" id="cb181-13" data-line-number="13"><span class="st">diff_1 := - th1 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb181-14" data-line-number="14"><span class="st">diff_2 := - th2 / sqrt(1-l2^2)</span></a>
+<a class="sourceLine" id="cb181-15" data-line-number="15"><span class="st">diff_3 := - th3 / sqrt(1-l3^2)</span></a>
+<a class="sourceLine" id="cb181-16" data-line-number="16"><span class="st">diff_4 := - th4 / sqrt(1-l4^2)</span></a>
+<a class="sourceLine" id="cb181-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb181-18" data-line-number="18"><span class="st"># convert loadings to discrimination</span></a>
+<a class="sourceLine" id="cb181-19" data-line-number="19"><span class="st"># or comment out and use loadings from parameterization=&quot;theta&quot;</span></a>
+<a class="sourceLine" id="cb181-20" data-line-number="20"><span class="st">discrm_1 := l1 / sqrt(1-l1^2)</span></a>
+<a class="sourceLine" id="cb181-21" data-line-number="21"><span class="st">discrm_2 := l2 / sqrt(1-l2^2)</span></a>
+<a class="sourceLine" id="cb181-22" data-line-number="22"><span class="st">discrm_3 := l3 / sqrt(1-l3^2)</span></a>
+<a class="sourceLine" id="cb181-23" data-line-number="23"><span class="st">discrm_4 := l4 / sqrt(1-l4^2)</span></a>
+<a class="sourceLine" id="cb181-24" data-line-number="24"><span class="st">&#39;</span></a>
+<a class="sourceLine" id="cb181-25" data-line-number="25">sem_2pm &lt;-<span class="st"> </span><span class="kw">cfa</span>(sem_2pm_model, <span class="dt">data=</span>Abortion_asfactor, <span class="dt">std.lv=</span>T)</a>
+<a class="sourceLine" id="cb181-26" data-line-number="26"><span class="co"># sem_2pm &lt;- cfa(sem_2pm_model, data=Abortion_asfactor, std.lv=T, parameterization=&#39;theta&#39;)</span></a>
+<a class="sourceLine" id="cb181-27" data-line-number="27"><span class="kw">summary</span>(sem_2pm)</a></code></pre></div>
 <pre><code>lavaan 0.6-2 ended normally after 12 iterations
 
   Optimization method                           NLMINB
@@ -915,7 +915,7 @@ Defined Parameters:
 </div>
 <div id="four-parameter-model" class="section level3">
 <h3>Four Parameter Model</h3>
-<p>As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement. In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct. I’ve seen these ‘ceilings’ referred to 1 - <span class="emph">slipping</span>, where the slip parameter is the probability of providing an incorrect response despite knowing the associated skill.</p>
+<p>As one might have already been thinking, just as we could have a lower bound, we can also add an upper bound to the probability of endorsement. In the testing scenario, this would regard very difficult items, that even those high on the latent trait might not have a high probability of being correct. I’ve seen these ‘ceilings’ referred to as ‘1 - <span class="emph">slipping</span>’, where the slip parameter is the probability of providing an incorrect response despite knowing the associated skill.</p>
 <p><span class="math display">\[P(y_{ij}=1|\theta, \delta, \alpha) = \gamma_j + (\zeta_j-\gamma_j) \cdot \mathrm{logis}(\alpha_j(\theta_i-\delta_j))\]</span></p>
 <p>See the <span class="pack">sirt</span> package and its function <span class="func">rasch.mml2</span> for a means to estimate such models.</p>
 </div>

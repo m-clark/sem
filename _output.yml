@@ -23,7 +23,7 @@
         collapse: section
         scroll_highlight: yes
         before: |
-          <li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+          <li class='before'><a href="./">Structural Equation Modeling</a></li>
         after: |
          <li class='after'">
             <a href="https://m-clark.github.io/">

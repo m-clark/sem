@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-28">
+<meta name="date" content="2018-09-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -152,7 +152,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+<li class='before'><a href="./">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
@@ -456,18 +456,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="simulating-random-effects" class="section level2">
 <h2>Simulating Random Effects</h2>
 <p>Through simulation we can demonstrate conceptual understanding of mixed models, and be well on our way toward better understanding LGC models. We’ll have balanced data, with scores across four time-points for 500 individuals (subjects). We will only investigate the trend (‘growth’), and allow subject-specific intercepts and slopes.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">1234</span>)</a>
-<a class="sourceLine" id="cb110-2" data-line-number="2">n =<span class="st"> </span><span class="dv">500</span></a>
-<a class="sourceLine" id="cb110-3" data-line-number="3">timepoints =<span class="st"> </span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb110-4" data-line-number="4">time =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">times=</span>n)</a>
-<a class="sourceLine" id="cb110-5" data-line-number="5">subject =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">each=</span><span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">1234</span>)</a>
+<a class="sourceLine" id="cb109-2" data-line-number="2">n =<span class="st"> </span><span class="dv">500</span></a>
+<a class="sourceLine" id="cb109-3" data-line-number="3">timepoints =<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb109-4" data-line-number="4">time =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">times=</span>n)</a>
+<a class="sourceLine" id="cb109-5" data-line-number="5">subject =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">each=</span><span class="dv">4</span>)</a></code></pre></div>
 <p>We’ll have ‘fixed’ effects, i.e. our standard regression intercept and slope, set at .5 and .25 respectively. We’ll allow their associated subject-specific intercept and slope to have a slight correlation (.2), and as such we’ll draw them from a multivariate normal distribution (variance of 1 for both effects).</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">intercept =<span class="st"> </span><span class="fl">.5</span></a>
-<a class="sourceLine" id="cb111-2" data-line-number="2">slope =<span class="st"> </span><span class="fl">.25</span></a>
-<a class="sourceLine" id="cb111-3" data-line-number="3">randomEffectsCorr =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,.<span class="dv">2</span>,.<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">ncol=</span><span class="dv">2</span>) </a>
-<a class="sourceLine" id="cb111-4" data-line-number="4">randomEffects =<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(n, <span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> randomEffectsCorr, <span class="dt">empirical=</span>T) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb111-5" data-line-number="5"><span class="st">  </span><span class="kw">data.frame</span>()</a>
-<a class="sourceLine" id="cb111-6" data-line-number="6"><span class="kw">colnames</span>(randomEffects) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Int&#39;</span>, <span class="st">&#39;Slope&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">intercept =<span class="st"> </span><span class="fl">.5</span></a>
+<a class="sourceLine" id="cb110-2" data-line-number="2">slope =<span class="st"> </span><span class="fl">.25</span></a>
+<a class="sourceLine" id="cb110-3" data-line-number="3">randomEffectsCorr =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,.<span class="dv">2</span>,.<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">ncol=</span><span class="dv">2</span>) </a>
+<a class="sourceLine" id="cb110-4" data-line-number="4">randomEffects =<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(n, <span class="dt">mu=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> randomEffectsCorr, <span class="dt">empirical=</span>T) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb110-5" data-line-number="5"><span class="st">  </span><span class="kw">data.frame</span>()</a>
+<a class="sourceLine" id="cb110-6" data-line-number="6"><span class="kw">colnames</span>(randomEffects) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Int&#39;</span>, <span class="st">&#39;Slope&#39;</span>)</a></code></pre></div>
 <p>Let’s take a look at the data thus far.</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -630,12 +630,12 @@ Slope
 </tbody>
 </table>
 <p>Now, to get a target variable, we simply add the random effects for the intercept to the overall intercept, and likewise for the slopes. Note how I’m using subject as a row index. This will spread out the n random effects to n*timepoints total, while being constant within a subject. We’ll throw in some noise at the end with standard deviation equal to <span class="math inline">\(\sigma\)</span>.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1">sigma =<span class="st"> </span><span class="fl">.5</span></a>
-<a class="sourceLine" id="cb112-2" data-line-number="2">y1 =<span class="st"> </span>(intercept <span class="op">+</span><span class="st"> </span>randomEffects<span class="op">$</span>Int[subject]) <span class="op">+</span><span class="st"> </span><span class="co"># random intercepts</span></a>
-<a class="sourceLine" id="cb112-3" data-line-number="3"><span class="st">  </span>(slope <span class="op">+</span><span class="st"> </span>randomEffects<span class="op">$</span>Slope[subject])<span class="op">*</span>time <span class="op">+</span><span class="st"> </span><span class="co"># random slopes </span></a>
-<a class="sourceLine" id="cb112-4" data-line-number="4"><span class="st">  </span><span class="kw">rnorm</span>(n<span class="op">*</span>timepoints, <span class="dt">mean=</span><span class="dv">0</span>, <span class="dt">sd=</span>sigma)</a>
-<a class="sourceLine" id="cb112-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb112-6" data-line-number="6">d =<span class="st"> </span><span class="kw">data.frame</span>(subject, time, y1)</a></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">sigma =<span class="st"> </span><span class="fl">.5</span></a>
+<a class="sourceLine" id="cb111-2" data-line-number="2">y1 =<span class="st"> </span>(intercept <span class="op">+</span><span class="st"> </span>randomEffects<span class="op">$</span>Int[subject]) <span class="op">+</span><span class="st"> </span><span class="co"># random intercepts</span></a>
+<a class="sourceLine" id="cb111-3" data-line-number="3"><span class="st">  </span>(slope <span class="op">+</span><span class="st"> </span>randomEffects<span class="op">$</span>Slope[subject])<span class="op">*</span>time <span class="op">+</span><span class="st"> </span><span class="co"># random slopes </span></a>
+<a class="sourceLine" id="cb111-4" data-line-number="4"><span class="st">  </span><span class="kw">rnorm</span>(n<span class="op">*</span>timepoints, <span class="dt">mean=</span><span class="dv">0</span>, <span class="dt">sd=</span>sigma)</a>
+<a class="sourceLine" id="cb111-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb111-6" data-line-number="6">d =<span class="st"> </span><span class="kw">data.frame</span>(subject, time, y1)</a></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -765,9 +765,9 @@ y1
 </table>
 <p><img src="sem_book_files/figure-html/spaghetti-1.svg" width="672" style="display: block; margin: auto;" /></p>
 <p>Let’s estimate this as a mixed model first<a href="#fn51" class="footnote-ref" id="fnref51"><sup>51</sup></a> using the <span class="pack">lme4</span> package. See if you can match the parameters from our simulated data to the output.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="kw">library</span>(lme4)</a>
-<a class="sourceLine" id="cb113-2" data-line-number="2">mixedModel =<span class="st"> </span><span class="kw">lmer</span>(y1 <span class="op">~</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>time<span class="op">|</span>subject), <span class="dt">data=</span>d)  <span class="co"># 1 represents the intercept</span></a>
-<a class="sourceLine" id="cb113-3" data-line-number="3">## summary(mixedModel)</a></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1"><span class="kw">library</span>(lme4)</a>
+<a class="sourceLine" id="cb112-2" data-line-number="2">mixedModel =<span class="st"> </span><span class="kw">lmer</span>(y1 <span class="op">~</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>time<span class="op">|</span>subject), <span class="dt">data=</span>d)  <span class="co"># 1 represents the intercept</span></a>
+<a class="sourceLine" id="cb112-3" data-line-number="3">## summary(mixedModel)</a></code></pre></div>
 <pre><code>Linear mixed model fit by REML [&#39;lmerMod&#39;]
 Formula: y1 ~ time + (1 + time | subject)
    Data: d
@@ -808,13 +808,13 @@ time         0.26400    0.04555   5.796</code></pre>
 4       1    3  1.4511151
 5       2    0  1.4904810
 6       2    1 -0.5164371</code></pre>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="co"># also change the names, as usually things don&#39;t work well if they start with a </span></a>
-<a class="sourceLine" id="cb116-2" data-line-number="2"><span class="co"># number. yes, it is the 21st century.</span></a>
-<a class="sourceLine" id="cb116-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb116-4" data-line-number="4">dWide =<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb116-5" data-line-number="5"><span class="st">  </span><span class="kw">spread</span>(time, y1) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb116-6" data-line-number="6"><span class="st">  </span><span class="kw">rename_at</span>(<span class="kw">vars</span>(<span class="op">-</span>subject), <span class="cf">function</span>(x) <span class="kw">paste0</span>(<span class="st">&#39;y&#39;</span>, x))</a>
-<a class="sourceLine" id="cb116-7" data-line-number="7"><span class="kw">head</span>(dWide)</a></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="co"># also change the names, as usually things don&#39;t work well if they start with a </span></a>
+<a class="sourceLine" id="cb115-2" data-line-number="2"><span class="co"># number. yes, it is the 21st century.</span></a>
+<a class="sourceLine" id="cb115-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb115-4" data-line-number="4">dWide =<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb115-5" data-line-number="5"><span class="st">  </span><span class="kw">spread</span>(time, y1) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb115-6" data-line-number="6"><span class="st">  </span><span class="kw">rename_at</span>(<span class="kw">vars</span>(<span class="op">-</span>subject), <span class="cf">function</span>(x) <span class="kw">paste0</span>(<span class="st">&#39;y&#39;</span>, x))</a>
+<a class="sourceLine" id="cb115-7" data-line-number="7"><span class="kw">head</span>(dWide)</a></code></pre></div>
 <pre><code>  subject          y0         y1         y2        y3
 1       1 -1.58014168 -0.1231067 -0.3397778  1.451115
 2       2  1.49048096 -0.5164371  0.2034644 -1.080743
@@ -823,14 +823,14 @@ time         0.26400    0.04555   5.796</code></pre>
 5       5  0.08520448  1.2338897  4.3629780  6.008491
 6       6  1.05332405  0.9019989  1.5461479  1.518288</code></pre>
 <p>Now we’re ready to run the model. Note that <span class="pack">lavaan</span> has a specific function, <span class="func">growth</span>, to use for these models. It doesn’t spare us any effort for the model syntax, but does make it unnecessary to set various things with the <span class="func">sem</span> function.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">model =<span class="st"> &quot;</span></a>
-<a class="sourceLine" id="cb118-2" data-line-number="2"><span class="st">    # intercept and slope with fixed coefficients</span></a>
-<a class="sourceLine" id="cb118-3" data-line-number="3"><span class="st">    i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3</span></a>
-<a class="sourceLine" id="cb118-4" data-line-number="4"><span class="st">    s =~ 0*y0 + 1*y1 + 2*y2 + 3*y3</span></a>
-<a class="sourceLine" id="cb118-5" data-line-number="5"><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb118-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb118-7" data-line-number="7">growthCurveModel =<span class="st"> </span><span class="kw">growth</span>(model, <span class="dt">data=</span>dWide)</a>
-<a class="sourceLine" id="cb118-8" data-line-number="8"><span class="kw">summary</span>(growthCurveModel)</a></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1">model =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb117-2" data-line-number="2"><span class="st">    # intercept and slope with fixed coefficients</span></a>
+<a class="sourceLine" id="cb117-3" data-line-number="3"><span class="st">    i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3</span></a>
+<a class="sourceLine" id="cb117-4" data-line-number="4"><span class="st">    s =~ 0*y0 + 1*y1 + 2*y2 + 3*y3</span></a>
+<a class="sourceLine" id="cb117-5" data-line-number="5"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb117-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb117-7" data-line-number="7">growthCurveModel =<span class="st"> </span><span class="kw">growth</span>(model, <span class="dt">data=</span>dWide)</a>
+<a class="sourceLine" id="cb117-8" data-line-number="8"><span class="kw">summary</span>(growthCurveModel)</a></code></pre></div>
 <pre><code>lavaan 0.6-2 ended normally after 42 iterations
 
   Optimization method                           NLMINB
@@ -892,10 +892,10 @@ Variances:
     i                 0.487    0.048   10.072    0.000
     s                 0.267    0.045    5.884    0.000</code></pre>
 <p>It might be odd to call your fixed effects ‘intercepts’, but it makes sense if we are thinking of it as a multilevel model as depicted previously, where we actually broke out the random effects as a separate model. The estimates here are pretty much spot on with our mixed model estimates, which are identical to just the standard regression estimates.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="kw">fixef</span>(mixedModel)</a></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="kw">fixef</span>(mixedModel)</a></code></pre></div>
 <pre><code>(Intercept)        time 
   0.4898598   0.2640034 </code></pre>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1"><span class="kw">lm</span>(y1 <span class="op">~</span><span class="st"> </span>time, <span class="dt">data=</span>d)</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1"><span class="kw">lm</span>(y1 <span class="op">~</span><span class="st"> </span>time, <span class="dt">data=</span>d)</a></code></pre></div>
 <pre><code>
 Call:
 lm(formula = y1 ~ time, data = d)
@@ -916,26 +916,26 @@ Variances:
     y3                0.357    0.065    5.485    0.000
     i                 0.977    0.076   12.882    0.000
     s                 0.969    0.065   14.841    0.000</code></pre>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="kw">VarCorr</span>(mixedModel)</a></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="kw">VarCorr</span>(mixedModel)</a></code></pre></div>
 <pre><code> Groups   Name        Std.Dev. Corr 
  subject  (Intercept) 0.99994       
           time        0.99488  0.208
  Residual             0.48806       </code></pre>
 <p>The differences provide some insight. LGC by default assumes heterogeneous variance for each time point. Mixed models by default assume the same variance for each time point, but can allow them to be estimated separately in most modeling packages.</p>
 <p>As an example, if we fix the variances to be equal, the models are now identical.</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">model =<span class="st"> &quot;</span></a>
-<a class="sourceLine" id="cb128-2" data-line-number="2"><span class="st">    # intercept and slope with fixed coefficients</span></a>
-<a class="sourceLine" id="cb128-3" data-line-number="3"><span class="st">    i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3</span></a>
-<a class="sourceLine" id="cb128-4" data-line-number="4"><span class="st">    s =~ 0*y0 + 1*y1 + 2*y2 + 3*y3</span></a>
-<a class="sourceLine" id="cb128-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb128-6" data-line-number="6"><span class="st">    y0 ~~ resvar*y0    </span></a>
-<a class="sourceLine" id="cb128-7" data-line-number="7"><span class="st">    y1 ~~ resvar*y1</span></a>
-<a class="sourceLine" id="cb128-8" data-line-number="8"><span class="st">    y2 ~~ resvar*y2</span></a>
-<a class="sourceLine" id="cb128-9" data-line-number="9"><span class="st">    y3 ~~ resvar*y3</span></a>
-<a class="sourceLine" id="cb128-10" data-line-number="10"><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb128-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb128-12" data-line-number="12">growthCurveModel =<span class="st"> </span><span class="kw">growth</span>(model, <span class="dt">data=</span>dWide)</a>
-<a class="sourceLine" id="cb128-13" data-line-number="13"><span class="kw">summary</span>(growthCurveModel)</a></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1">model =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb127-2" data-line-number="2"><span class="st">    # intercept and slope with fixed coefficients</span></a>
+<a class="sourceLine" id="cb127-3" data-line-number="3"><span class="st">    i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3</span></a>
+<a class="sourceLine" id="cb127-4" data-line-number="4"><span class="st">    s =~ 0*y0 + 1*y1 + 2*y2 + 3*y3</span></a>
+<a class="sourceLine" id="cb127-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb127-6" data-line-number="6"><span class="st">    y0 ~~ resvar*y0    </span></a>
+<a class="sourceLine" id="cb127-7" data-line-number="7"><span class="st">    y1 ~~ resvar*y1</span></a>
+<a class="sourceLine" id="cb127-8" data-line-number="8"><span class="st">    y2 ~~ resvar*y2</span></a>
+<a class="sourceLine" id="cb127-9" data-line-number="9"><span class="st">    y3 ~~ resvar*y3</span></a>
+<a class="sourceLine" id="cb127-10" data-line-number="10"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb127-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb127-12" data-line-number="12">growthCurveModel =<span class="st"> </span><span class="kw">growth</span>(model, <span class="dt">data=</span>dWide)</a>
+<a class="sourceLine" id="cb127-13" data-line-number="13"><span class="kw">summary</span>(growthCurveModel)</a></code></pre></div>
 <pre><code>lavaan 0.6-2 ended normally after 27 iterations
 
   Optimization method                           NLMINB
@@ -1009,35 +1009,35 @@ Slope_mix    0.29      1.00    0.29      1.00
 Int_lgc      1.00      0.29    1.00      0.29
 Slope_lgc    0.29      1.00    0.29      1.00</code></pre>
 <p>Both approaches allow those residuals to covary, though it gets tedious in SEM syntax, while it is a natural extension in the mixed model framework. Here is the syntax for letting each time point covary with the next, at least, what it might be. It’s unclear if <span class="pack">lavaan</span> actually will do this, and the syntax here roughly follows the Mplus manual, except that we can’t define new variables in <span class="pack">lavaan</span> as there. As such, the hope is that the <code>a</code> parameter should equal <code>resvar*corr</code> as in the Mplus syntax, but there’s not a clear way to fix it to be. It seems consistent here and with larger sample sizes.</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1">model =<span class="st"> &quot;</span></a>
-<a class="sourceLine" id="cb133-2" data-line-number="2"><span class="st">    # intercept and slope with fixed coefficients</span></a>
-<a class="sourceLine" id="cb133-3" data-line-number="3"><span class="st">    i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3</span></a>
-<a class="sourceLine" id="cb133-4" data-line-number="4"><span class="st">    s =~ 0*y0 + 1*y1 + 2*y2 + 3*y3</span></a>
-<a class="sourceLine" id="cb133-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb133-6" data-line-number="6"><span class="st">    # all of the following is needed for what are essentially only two parameters </span></a>
-<a class="sourceLine" id="cb133-7" data-line-number="7"><span class="st">    # to estimate- resvar and correlation (the latter defined explicitly here)</span></a>
-<a class="sourceLine" id="cb133-8" data-line-number="8"><span class="st">    y0 ~~ resvar*y0</span></a>
-<a class="sourceLine" id="cb133-9" data-line-number="9"><span class="st">    y1 ~~ resvar*y1</span></a>
-<a class="sourceLine" id="cb133-10" data-line-number="10"><span class="st">    y2 ~~ resvar*y2</span></a>
-<a class="sourceLine" id="cb133-11" data-line-number="11"><span class="st">    y3 ~~ resvar*y3</span></a>
-<a class="sourceLine" id="cb133-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb133-13" data-line-number="13"><span class="st">    # timepoints 1 step apart; technically the covariance is e.g. a*sqrt(y0)*sqrt(y1), </span></a>
-<a class="sourceLine" id="cb133-14" data-line-number="14"><span class="st">    # but since the variances are constrained to be equal, we don&#39;t have to be so verbose.</span></a>
-<a class="sourceLine" id="cb133-15" data-line-number="15"><span class="st">    y0 ~~ a*y1</span></a>
-<a class="sourceLine" id="cb133-16" data-line-number="16"><span class="st">    y1 ~~ a*y2</span></a>
-<a class="sourceLine" id="cb133-17" data-line-number="17"><span class="st">    y2 ~~ a*y3</span></a>
-<a class="sourceLine" id="cb133-18" data-line-number="18"><span class="st">    </span></a>
-<a class="sourceLine" id="cb133-19" data-line-number="19"><span class="st">    # two steps apart</span></a>
-<a class="sourceLine" id="cb133-20" data-line-number="20"><span class="st">    y0 ~~ b*y2</span></a>
-<a class="sourceLine" id="cb133-21" data-line-number="21"><span class="st">    y1 ~~ b*y3</span></a>
-<a class="sourceLine" id="cb133-22" data-line-number="22"><span class="st">    </span></a>
-<a class="sourceLine" id="cb133-23" data-line-number="23"><span class="st">    # three steps apart</span></a>
-<a class="sourceLine" id="cb133-24" data-line-number="24"><span class="st">    y0 ~~ c*y3</span></a>
-<a class="sourceLine" id="cb133-25" data-line-number="25"><span class="st">    </span></a>
-<a class="sourceLine" id="cb133-26" data-line-number="26"><span class="st">    # fix parameters according to ar1</span></a>
-<a class="sourceLine" id="cb133-27" data-line-number="27"><span class="st">    b == a^2</span></a>
-<a class="sourceLine" id="cb133-28" data-line-number="28"><span class="st">    c == a^3</span></a>
-<a class="sourceLine" id="cb133-29" data-line-number="29"><span class="st">&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1">model =<span class="st"> &quot;</span></a>
+<a class="sourceLine" id="cb132-2" data-line-number="2"><span class="st">    # intercept and slope with fixed coefficients</span></a>
+<a class="sourceLine" id="cb132-3" data-line-number="3"><span class="st">    i =~ 1*y0 + 1*y1 + 1*y2 + 1*y3</span></a>
+<a class="sourceLine" id="cb132-4" data-line-number="4"><span class="st">    s =~ 0*y0 + 1*y1 + 2*y2 + 3*y3</span></a>
+<a class="sourceLine" id="cb132-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb132-6" data-line-number="6"><span class="st">    # all of the following is needed for what are essentially only two parameters </span></a>
+<a class="sourceLine" id="cb132-7" data-line-number="7"><span class="st">    # to estimate- resvar and correlation (the latter defined explicitly here)</span></a>
+<a class="sourceLine" id="cb132-8" data-line-number="8"><span class="st">    y0 ~~ resvar*y0</span></a>
+<a class="sourceLine" id="cb132-9" data-line-number="9"><span class="st">    y1 ~~ resvar*y1</span></a>
+<a class="sourceLine" id="cb132-10" data-line-number="10"><span class="st">    y2 ~~ resvar*y2</span></a>
+<a class="sourceLine" id="cb132-11" data-line-number="11"><span class="st">    y3 ~~ resvar*y3</span></a>
+<a class="sourceLine" id="cb132-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb132-13" data-line-number="13"><span class="st">    # timepoints 1 step apart; technically the covariance is e.g. a*sqrt(y0)*sqrt(y1), </span></a>
+<a class="sourceLine" id="cb132-14" data-line-number="14"><span class="st">    # but since the variances are constrained to be equal, we don&#39;t have to be so verbose.</span></a>
+<a class="sourceLine" id="cb132-15" data-line-number="15"><span class="st">    y0 ~~ a*y1</span></a>
+<a class="sourceLine" id="cb132-16" data-line-number="16"><span class="st">    y1 ~~ a*y2</span></a>
+<a class="sourceLine" id="cb132-17" data-line-number="17"><span class="st">    y2 ~~ a*y3</span></a>
+<a class="sourceLine" id="cb132-18" data-line-number="18"><span class="st">    </span></a>
+<a class="sourceLine" id="cb132-19" data-line-number="19"><span class="st">    # two steps apart</span></a>
+<a class="sourceLine" id="cb132-20" data-line-number="20"><span class="st">    y0 ~~ b*y2</span></a>
+<a class="sourceLine" id="cb132-21" data-line-number="21"><span class="st">    y1 ~~ b*y3</span></a>
+<a class="sourceLine" id="cb132-22" data-line-number="22"><span class="st">    </span></a>
+<a class="sourceLine" id="cb132-23" data-line-number="23"><span class="st">    # three steps apart</span></a>
+<a class="sourceLine" id="cb132-24" data-line-number="24"><span class="st">    y0 ~~ c*y3</span></a>
+<a class="sourceLine" id="cb132-25" data-line-number="25"><span class="st">    </span></a>
+<a class="sourceLine" id="cb132-26" data-line-number="26"><span class="st">    # fix parameters according to ar1</span></a>
+<a class="sourceLine" id="cb132-27" data-line-number="27"><span class="st">    b == a^2</span></a>
+<a class="sourceLine" id="cb132-28" data-line-number="28"><span class="st">    c == a^3</span></a>
+<a class="sourceLine" id="cb132-29" data-line-number="29"><span class="st">&quot;</span></a></code></pre></div>
 <pre><code>lavaan 0.6-2 ended normally after 287 iterations
 
   Optimization method                           NLMINB
@@ -1161,7 +1161,7 @@ Number of Groups: 500 </code></pre>
 <div id="nonlinear-time-effect" class="section level3">
 <h3>Nonlinear time effect</h3>
 <p>A nonlinear time effect can be estimated if we don’t fix all the parameters for the slope factor. As an example, the following would actually estimate the loadings for times in between the first and last point.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">    s =<span class="er">~</span><span class="st"> </span><span class="dv">0</span><span class="op">*</span>y0 <span class="op">+</span><span class="st"> </span>y1 <span class="op">+</span><span class="st"> </span>y2 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">*</span>y3</a></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1">    s =<span class="er">~</span><span class="st"> </span><span class="dv">0</span><span class="op">*</span>y0 <span class="op">+</span><span class="st"> </span>y1 <span class="op">+</span><span class="st"> </span>y2 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">*</span>y3</a></code></pre></div>
 <p>It may be difficult to assess nonlinear relationships unless one has many time points<a href="#fn53" class="footnote-ref" id="fnref53"><sup>53</sup></a>, and even then, one might get more with an additive mixed model approach.</p>
 </div>
 <div id="growth-mixture-models" class="section level3">
@@ -1184,11 +1184,25 @@ Number of Groups: 500 </code></pre>
 <p>But if we plug that into our level 1 model, it just becomes:
 <span class="math display">\[y = b_0 + c1*\mathrm{sex} + b1*\mathrm{time} + u_c + e\]</span></p>
 <p>In our previous modeling syntax it would look like this:</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1">mixedModel =<span class="st"> </span><span class="kw">lmer</span>(y1 <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>(time<span class="op">|</span>subject), <span class="dt">data=</span>d)</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">mixedModel =<span class="st"> </span><span class="kw">lmer</span>(y1 <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>(time<span class="op">|</span>subject), <span class="dt">data=</span>d)</a></code></pre></div>
 <p>We’d have a fixed effect for sex and interpret it just like in the standard setting. Similarly, if we had a time-varying covariate, say socioeconomic status, it’d look like the following:</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1">mixedModel =<span class="st"> </span><span class="kw">lmer</span>(y1 <span class="op">~</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>ses <span class="op">+</span><span class="st"> </span>(time<span class="op">|</span>subject), <span class="dt">data=</span>d)</a></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1">mixedModel =<span class="st"> </span><span class="kw">lmer</span>(y1 <span class="op">~</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>ses <span class="op">+</span><span class="st"> </span>(time<span class="op">|</span>subject), <span class="dt">data=</span>d)</a></code></pre></div>
 <p>Though we could have a random slope for SES if we wanted. You get the picture. Most of the model is still standard regression interpretation.</p>
 <p>With LGC, there is a tendency to interpret the model as an SEM, and certainly one can. But adding additional covariates typically causes confusion for those not familiar with mixed models. We literally do have to regress the intercept and slope latent variables on cluster level covariates as follows.</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1">model.syntax &lt;-<span class="st"> &#39;</span></a>
+<a class="sourceLine" id="cb138-2" data-line-number="2"><span class="st">  # intercept and slope with fixed coefficients</span></a>
+<a class="sourceLine" id="cb138-3" data-line-number="3"><span class="st">    i =~ 1*y1 + 1*y2 + 1*y3 + 1*y4</span></a>
+<a class="sourceLine" id="cb138-4" data-line-number="4"><span class="st">    s =~ 0*y1 + 1*y2 + 2*y3 + 3*y4</span></a>
+<a class="sourceLine" id="cb138-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb138-6" data-line-number="6"><span class="st">  # regressions</span></a>
+<a class="sourceLine" id="cb138-7" data-line-number="7"><span class="st">    i ~ x1 + x2</span></a>
+<a class="sourceLine" id="cb138-8" data-line-number="8"><span class="st">    s ~ x1 + x2</span></a>
+<a class="sourceLine" id="cb138-9" data-line-number="9"><span class="st">&#39;</span></a></code></pre></div>
+<p>Applied researchers commonly have difficulty interpreting the model due to past experience with SEM. While these are latent variables, they aren’t <em>just</em> latent variables or underlying constructs. It doesn’t help that the output can be confusing, because now one has an ‘intercept for your intercepts’ and an ‘intercept for your slopes’. In the multilevel context it makes sense, but there you know ‘intercept’ is just ‘fixed effect’.</p>
+</div>
+<div id="time-varying-covariates" class="section level4">
+<h4>Time-varying covariates</h4>
+<p>With <span class="emph">time varying covariates</span>, i.e. those that can have a different value at each time point, the syntax starts to get tedious. Here we add just one such covariate, <span class="math inline">\(c\)</span>.</p>
 <div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" data-line-number="1">model.syntax &lt;-<span class="st"> &#39;</span></a>
 <a class="sourceLine" id="cb139-2" data-line-number="2"><span class="st">  # intercept and slope with fixed coefficients</span></a>
 <a class="sourceLine" id="cb139-3" data-line-number="3"><span class="st">    i =~ 1*y1 + 1*y2 + 1*y3 + 1*y4</span></a>
@@ -1197,29 +1211,15 @@ Number of Groups: 500 </code></pre>
 <a class="sourceLine" id="cb139-6" data-line-number="6"><span class="st">  # regressions</span></a>
 <a class="sourceLine" id="cb139-7" data-line-number="7"><span class="st">    i ~ x1 + x2</span></a>
 <a class="sourceLine" id="cb139-8" data-line-number="8"><span class="st">    s ~ x1 + x2</span></a>
-<a class="sourceLine" id="cb139-9" data-line-number="9"><span class="st">&#39;</span></a></code></pre></div>
-<p>Applied researchers commonly have difficulty interpreting the model due to past experience with SEM. While these are latent variables, they aren’t <em>just</em> latent variables or underlying constructs. It doesn’t help that the output can be confusing, because now one has an ‘intercept for your intercepts’ and an ‘intercept for your slopes’. In the multilevel context it makes sense, but there you know ‘intercept’ is just ‘fixed effect’.</p>
-</div>
-<div id="time-varying-covariates" class="section level4">
-<h4>Time-varying covariates</h4>
-<p>With <span class="emph">time varying covariates</span>, i.e. those that can have a different value at each time point, the syntax starts to get tedious. Here we add just one such covariate, <span class="math inline">\(c\)</span>.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">model.syntax &lt;-<span class="st"> &#39;</span></a>
-<a class="sourceLine" id="cb140-2" data-line-number="2"><span class="st">  # intercept and slope with fixed coefficients</span></a>
-<a class="sourceLine" id="cb140-3" data-line-number="3"><span class="st">    i =~ 1*y1 + 1*y2 + 1*y3 + 1*y4</span></a>
-<a class="sourceLine" id="cb140-4" data-line-number="4"><span class="st">    s =~ 0*y1 + 1*y2 + 2*y3 + 3*y4</span></a>
-<a class="sourceLine" id="cb140-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb140-6" data-line-number="6"><span class="st">  # regressions</span></a>
-<a class="sourceLine" id="cb140-7" data-line-number="7"><span class="st">    i ~ x1 + x2</span></a>
-<a class="sourceLine" id="cb140-8" data-line-number="8"><span class="st">    s ~ x1 + x2</span></a>
-<a class="sourceLine" id="cb140-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb140-10" data-line-number="10"><span class="st">  # time-varying covariates</span></a>
-<a class="sourceLine" id="cb140-11" data-line-number="11"><span class="st">    y1 ~ c1</span></a>
-<a class="sourceLine" id="cb140-12" data-line-number="12"><span class="st">    y2 ~ c2</span></a>
-<a class="sourceLine" id="cb140-13" data-line-number="13"><span class="st">    y3 ~ c3</span></a>
-<a class="sourceLine" id="cb140-14" data-line-number="14"><span class="st">    y4 ~ c4</span></a>
-<a class="sourceLine" id="cb140-15" data-line-number="15"><span class="st">&#39;</span></a>
-<a class="sourceLine" id="cb140-16" data-line-number="16">fit &lt;-<span class="st"> </span><span class="kw">growth</span>(model.syntax, <span class="dt">data=</span>Demo.growth)</a>
-<a class="sourceLine" id="cb140-17" data-line-number="17"><span class="kw">summary</span>(fit)</a></code></pre></div>
+<a class="sourceLine" id="cb139-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb139-10" data-line-number="10"><span class="st">  # time-varying covariates</span></a>
+<a class="sourceLine" id="cb139-11" data-line-number="11"><span class="st">    y1 ~ c1</span></a>
+<a class="sourceLine" id="cb139-12" data-line-number="12"><span class="st">    y2 ~ c2</span></a>
+<a class="sourceLine" id="cb139-13" data-line-number="13"><span class="st">    y3 ~ c3</span></a>
+<a class="sourceLine" id="cb139-14" data-line-number="14"><span class="st">    y4 ~ c4</span></a>
+<a class="sourceLine" id="cb139-15" data-line-number="15"><span class="st">&#39;</span></a>
+<a class="sourceLine" id="cb139-16" data-line-number="16">fit &lt;-<span class="st"> </span><span class="kw">growth</span>(model.syntax, <span class="dt">data=</span>Demo.growth)</a>
+<a class="sourceLine" id="cb139-17" data-line-number="17"><span class="kw">summary</span>(fit)</a></code></pre></div>
 <p>Now imagine having just a few of those kinds of variables as would be common in most longitudinal settings. In the mixed model framework one would add them in as any covariate in a regression model, and each covariate would be associated with a single fixed effect. In the LGC framework, one has to regress each time point for the target variable on its corresponding predictor time point. It might take a few paragraphs to explain the coefficients for just a handful of covariates. If you fix them to a single value, you would duplicate the mixed model, but the syntax requires even more tedium.</p>
 </div>
 </div>

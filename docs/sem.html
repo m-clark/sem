@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-28">
+<meta name="date" content="2018-09-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -152,7 +152,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+<li class='before'><a href="./">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
@@ -801,9 +801,107 @@ powerless71 -0.001  0.001 -0.001  0.000  0.000  0.000</code></pre>
 <pre><code>################### Nested Model Comparison #########################
         chi df      p delta.cfi
 alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">DT<span class="op">::</span><span class="kw">datatable</span>(compfit, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">dom=</span><span class="st">&#39;t&#39;</span>, <span class="dt">scrollX=</span><span class="ot">TRUE</span>))</a></code></pre></div>
-<div id="htmlwidget-15aa378accff18d5c0b8" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-15aa378accff18d5c0b8">{"x":{"filter":"none","data":[["alienation","alienationNoInd"],["4.735","205.017"],["4","5"],[".316†",".000 "],[".000†",".906 "],[".999†",".717 "],["30460.548†","30658.830 "],["30542.783†","30736.227 "],[".014†",".207 "],[".007†",".173 "]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>chisq<\/th>\n      <th>df<\/th>\n      <th>pvalue<\/th>\n      <th>cfi<\/th>\n      <th>tli<\/th>\n      <th>aic<\/th>\n      <th>bic<\/th>\n      <th>rmsea<\/th>\n      <th>srmr<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+chisq
+</th>
+<th style="text-align:left;">
+df
+</th>
+<th style="text-align:left;">
+pvalue
+</th>
+<th style="text-align:left;">
+cfi
+</th>
+<th style="text-align:left;">
+tli
+</th>
+<th style="text-align:left;">
+aic
+</th>
+<th style="text-align:left;">
+bic
+</th>
+<th style="text-align:left;">
+rmsea
+</th>
+<th style="text-align:left;">
+srmr
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+alienation
+</td>
+<td style="text-align:left;">
+4.735
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+.316†
+</td>
+<td style="text-align:left;">
+.000†
+</td>
+<td style="text-align:left;">
+.999†
+</td>
+<td style="text-align:left;">
+30460.548†
+</td>
+<td style="text-align:left;">
+30542.783†
+</td>
+<td style="text-align:left;">
+.014†
+</td>
+<td style="text-align:left;">
+.007†
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alienationNoInd
+</td>
+<td style="text-align:left;">
+205.017
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+.000
+</td>
+<td style="text-align:left;">
+.906
+</td>
+<td style="text-align:left;">
+.717
+</td>
+<td style="text-align:left;">
+30658.830
+</td>
+<td style="text-align:left;">
+30736.227
+</td>
+<td style="text-align:left;">
+.207
+</td>
+<td style="text-align:left;">
+.173
+</td>
+</tr>
+</tbody>
+</table>
 <p>The first result is a likelihood ratio test. The model with no indirect path is nested within the model with a path and so this is a viable option. It tells us essentially that adding the indirect path results in a statistically significantly better model. AIC measures would suggest the indirect path would result in a better model as well. In terms of internal fit indices, the model including the indirect effect appears to fit the data well (note that the .000 is actually 1.00), while the other model does not. So now we can say that not only does our model appear to fit the data well, but is better than a plausible competitor.</p>
 </div>
 </div>

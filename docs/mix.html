@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-28">
+<meta name="date" content="2018-09-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -152,7 +152,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class='before'><a href="https://m-clark.github.io/sem/">Structural Equation Modeling</a></li>
+<li class='before'><a href="./">Structural Equation Modeling</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a><ul>
@@ -438,10 +438,10 @@ Take a good look. This is probably the cleanest separation of clustered data you
 <div id="create-clustered-data" class="section level2">
 <h2>Create Clustered Data</h2>
 <p>To get a sense of mixture models, let’s actually create some data that might look like the Old Faithful data above. In the following we start by creating something similar the eruptions variable in the faithful data. To do so, we draw one random sample from a normal distribution with a mean of 2, and the other with a mean of 4.5, and both get a standard deviation of .25. The first plot is based on the code below, the second on the actual data.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">1234</span>)</a>
-<a class="sourceLine" id="cb141-2" data-line-number="2">erupt1 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean=</span><span class="dv">2</span>, <span class="dt">sd=</span>.<span class="dv">25</span>)</a>
-<a class="sourceLine" id="cb141-3" data-line-number="3">erupt2 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean=</span><span class="fl">4.5</span>, <span class="dt">sd=</span>.<span class="dv">25</span>)</a>
-<a class="sourceLine" id="cb141-4" data-line-number="4">erupt =<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(erupt1, erupt2))</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">1234</span>)</a>
+<a class="sourceLine" id="cb140-2" data-line-number="2">erupt1 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean=</span><span class="dv">2</span>, <span class="dt">sd=</span>.<span class="dv">25</span>)</a>
+<a class="sourceLine" id="cb140-3" data-line-number="3">erupt2 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean=</span><span class="fl">4.5</span>, <span class="dt">sd=</span>.<span class="dv">25</span>)</a>
+<a class="sourceLine" id="cb140-4" data-line-number="4">erupt =<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(erupt1, erupt2))</a></code></pre></div>
 <p><img src="sem_book_files/figure-html/simFaithful-1.svg" width="672" style="display: block; margin: auto;" /><img src="sem_book_files/figure-html/simFaithful-2.svg" width="672" style="display: block; margin: auto;" /></p>
 <p>What do we see here? The data is a <em>mixture</em> of two normals, but we can think of the observations as belonging to a latent class, and each class has its own mean and standard deviation (and is based on a normal distribution here, but doesn’t have to be). Each observation has some likelihood, however great or small, of coming from either cluster, and had we really wanted to do more appropriate simulation, we would incorporate that information.</p>
 <p>A basic approach for categorical latent variable analysis from a model based perspective<a href="#fn55" class="footnote-ref" id="fnref55"><sup>55</sup></a> could be seen as follows:</p>
@@ -463,9 +463,9 @@ Take a good look. This is probably the cleanest separation of clustered data you
 <div id="mixture-modeling-with-old-faithful" class="section level2">
 <h2>Mixture modeling with Old Faithful</h2>
 <p>The following uses the <span class="pack">flexmix</span> package and function to estimate a regression model for each latent class. In this case, our model includes only an intercept, and so is equivalent to estimating the mean and variance of each group. We posit <code>k=2</code> groups.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1"><span class="kw">library</span>(flexmix)</a>
-<a class="sourceLine" id="cb142-2" data-line-number="2">mod =<span class="st"> </span><span class="kw">flexmix</span>(eruptions<span class="op">~</span><span class="dv">1</span>,  <span class="dt">data=</span>faithful, <span class="dt">k =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb142-3" data-line-number="3"><span class="kw">summary</span>(mod)</a></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1"><span class="kw">library</span>(flexmix)</a>
+<a class="sourceLine" id="cb141-2" data-line-number="2">mod =<span class="st"> </span><span class="kw">flexmix</span>(eruptions<span class="op">~</span><span class="dv">1</span>,  <span class="dt">data=</span>faithful, <span class="dt">k =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb141-3" data-line-number="3"><span class="kw">summary</span>(mod)</a></code></pre></div>
 <pre><code>
 Call:
 flexmix(formula = eruptions ~ 1, data = faithful, k = 2)
@@ -477,7 +477,7 @@ Comp.2 0.348   95     98 0.969
 &#39;log Lik.&#39; -276.3611 (df=5)
 AIC: 562.7222   BIC: 580.7512 </code></pre>
 <p>We can see from the summary about 2/3 are classified to one group. We also get the estimated means and standard deviations for each group, as well as note respective probabilities of each observation for each class. Note that the group labels are completely arbitrary.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1"><span class="kw">parameters</span>(mod)    <span class="co"># means (Intercept) and std dev (sigma) for each group</span></a></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="kw">parameters</span>(mod)    <span class="co"># means (Intercept) and std dev (sigma) for each group</span></a></code></pre></div>
 <pre><code>                    Comp.1    Comp.2
 coef.(Intercept) 4.2735128 2.0187913
 sigma            0.4376169 0.2363539</code></pre>
@@ -520,9 +520,9 @@ sigma            0.4376169 0.2363539</code></pre>
 <script type="application/json" data-for="htmlwidget-73bfd8e1b61ce46ac786">{"x":{"diagram":"digraph {\n # Intialization of graph attributes\n graph [overlap=false rankdir=TB bgcolor=transparent]\n \n # Node statements\n node [shape=circle, style=filled, fillcolor=lightblue, color=gray75,  fontcolor=gray50];\n # U0 [width=.25 height=.25 style=\"\" label=\"\"];\n DepressionCat [fontsize=10, width=1.25, height=1];\n \n node [width=1, height=1, fixedsize=true, shape=square, color=lightblue, style=\"\"]\n subgraph {\n    rank=same;\n    node [label=\"Felt\\n\\nDown\" fontcolor=gray50 fontsize=6]    \n    FD; \n    node [label=\"Been\\n\\nHappy\" fontcolor=gray50 fontsize=6]    \n    BH; \n    node [label=\"Depressed\\n\\nLast Month\" fontcolor=gray50 fontsize=6]    \n    DLM; \n }\n # Initialization of edge attributes\n edge [color = gray50, rel = yields]\n \n # Edge statements\n edge [style=dashed label=\"\" fontcolor=gray25 fontsize=10 minlen=2]\n DepressionCat -> FD \n edge [style=\"\" label=\"\" fontcolor=gray25 fontsize=10 minlen=2];\n DepressionCat -> BH ;\n edge [label=\"\" fontcolor=gray25 fontsize=10 minlen=2]\n DepressionCat -> DLM ;\n\n subgraph {\n    rank=same;\n    node [width=.25, height=.25, shape=circle, color=gray80]\n    # U1 [label=\"\"]; \n    # U2 [label=\"\"]; \n    # U3 [label=\"\"]; \n }\n\n  edge [dir=back fontsize=6 fontcolor=gray25 minlen=.5] \n  # FD -> U1 [label=\"\"];\n  # BH -> U2 [label=\"\"];\n  # DLM -> U3 [label=\"\"];\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <p>We now run the model. As with mixture models before, and to be clear we are still conducting a finite mixture model, one of our primary goals is to assign individuals to a latent class. In addition, we can obtain probabilities of each item category according to latent class. If we had covariates, we could also look at their relationship to the latent classes</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1"><span class="kw">library</span>(poLCA)</a>
-<a class="sourceLine" id="cb147-2" data-line-number="2">result =<span class="st"> </span><span class="kw">poLCA</span>(<span class="kw">cbind</span>(FeltDown, BeenHappy, DepressedLastMonth) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, depressed)</a>
-<a class="sourceLine" id="cb147-3" data-line-number="3">result</a></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1"><span class="kw">library</span>(poLCA)</a>
+<a class="sourceLine" id="cb146-2" data-line-number="2">result =<span class="st"> </span><span class="kw">poLCA</span>(<span class="kw">cbind</span>(FeltDown, BeenHappy, DepressedLastMonth) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, depressed)</a>
+<a class="sourceLine" id="cb146-3" data-line-number="3">result</a></code></pre></div>
 <pre><code>Conditional item response (column) probabilities,
  by outcome variable, for each class (row) 
  
