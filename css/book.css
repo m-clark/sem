@@ -2,31 +2,46 @@
 
 /* title page */
 .book .book-body .page-wrapper .page-inner section.normal h1.title {
-  font-size: 250%; 
-  font-family: 'Fira Sans', Karla, 'Roboto Condensed', Lora, Lato, Roboto, sans; 
+  font-size: 250%;
+  font-family: 'Fira Sans', Karla, 'Roboto Condensed', Lora, Lato, Roboto, sans;
   font-style: normal;
   font-weight: 100;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal .author .noem {
-  font-size:  125%; 
+  display: block;
+  margin: 0 0 10px 0;
+  font-size:  125%;
   font-style:  normal;
-  font-variant:  small-caps; 
+  font-variant:  small-caps;
+  font-weight: 200;
+  font-family: 'Roboto Condensed', 'Fira Sans', Roboto, 'Open Sans', sans;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal .author a {
+  display: block;
+  margin: 0 0 10px 0;
+  font-size:  100%;
+  font-style:  normal;
+  /*font-variant:  small-caps;  so that can displayed as input*/
   font-weight: 200;
   font-family: 'Roboto Condensed', 'Fira Sans', Roboto, 'Open Sans', sans;
 }
 
 
+
 .book .book-body .page-wrapper .page-inner section.normal a.uri {
-  font-size:  75%; 
+  display: block;
+  margin: 0 0 10px 0;
+  font-size:  75%;
   font-style:  normal;       /* ignored thanks to bootstrap random enforcement of em*/
-  font-variant:  small-caps; 
+  font-variant:  small-caps;
   font-family:  Roboto, 'Open Sans', sans;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal h4.date {
   font-style: normal;
-  font-size:  100%; 
+  font-size:  100%;
   font-family: 'Open Sans', sans;
 }
 
@@ -252,6 +267,28 @@ h1, h2, h3, h4, h5 {
 }
 
 
+
+/* marginnotes */
+.book .book-body .page-wrapper .page-inner section.normal .marginnote span.mjx-chtml, span.mjx-block {
+    display: block;
+    font-size: 80%;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal .marginnote {
+  float: right;
+  clear: right;
+  margin-right: -45%;
+  width: 40%;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 75%;
+  line-height: 1;
+  vertical-align: baseline;
+  position: relative;
+}
+
+
+
 /* code */
 
 /* logical NA */
@@ -262,6 +299,11 @@ h1, h2, h3, h4, h5 {
 /* char/string */
 .ch, .st {
  color: #aa5500;
+}
+
+/* args */
+.dt {
+
 }
 
 /* package */
@@ -282,8 +324,22 @@ code span.st {
 /* img */
 
 img {
-  display: block; 
+  display: block;
   margin: 0 auto;
+}
+
+.arc {
+  display: block;
+  width:30%;
+  padding:5px 0;
+  margin: 0 0 10px 0;
+}
+
+.cscar {
+  display: block;
+  width:21%;
+  padding:5px 0;
+  margin: 0 0 10px 0;
 }
 
 /* zoom for img*/
@@ -324,6 +380,7 @@ img {
   font-weight: 500;
 }
 
+
 /* miscellaneous */
 
 .col2 {
@@ -353,11 +410,17 @@ img {
 }
 
 
-div.datatables {
-    margin-left: auto;     /* to center them when full is not necessary. */
-    margin-right: auto;
-}
+/* tables */
 
 table {
   margin: auto;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal table tr:nth-child(2n) {
+    background-color: white;
+}
+
+div.datatables {
+    margin-left: auto;     /* to center them when full is not necessary. */
+    margin-right: auto;
 }

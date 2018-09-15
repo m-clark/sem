@@ -1,16 +1,15 @@
 --- 
 title: Graphical & Latent Variable Modeling
 author:  |
-  <div class="title"><span style="font-size:125%; font-variant:small-caps; font-style:normal; ">Michael Clark</span><br>
-  <img src="img/signature-acronym.png" style="width:33%; padding:5px 0; margin:0;"> <br>
-  <img src="img/ARC-acronym-signature.png" style="width:22%; padding:1px 0; margin:0;"> </div>
+  <span class="noem">Michael Clark</span> 
+  <a href='https://m-clark.github.io/'>m-clark.github.io</a>
+  <img class='arc' src="img/signature-acronym.png" alt="University of Michigan: CSCAR">
+  <img class='cscar' src="img/ARC-acronym-signature.png" alt="University of Michigan: Advanced Research Computing"> 
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
     bookdown::gitbook
 always_allow_html: yes
-font-import: http://fonts.googleapis.com/css?family=Roboto|Roboto+Mono|Open+Sans|Alex+Brush|Stalemate
-font-family: 'Roboto'
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike

@@ -15,18 +15,18 @@ rmd_files: [
   "intro2R.Rmd",
 
   # Part I: Core SEM
-   'gm.Rmd',
-   'lv.Rmd',
+   'graphical-models.Rmd',
+   'latent-variables.Rmd',
    'sem.Rmd',
 
   # Part II: Common Extensions
-  'growth.Rmd',
-  'mix.Rmd',
-  'irt.Rmd',
+  'growth-curves.Rmd',
+  'mixture-models.Rmd',
+  'item-response-theory.Rmd',
 
   # Part III: Going Further
-  'topic.Rmd',
-  'bnp.Rmd',
+  'topic-models.Rmd',
+  'bayesian-nonparametric-models.Rmd',
   'other.Rmd',
 
   # Other

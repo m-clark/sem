@@ -1,0 +1,175 @@
+# Bayesian Nonparametric Models
+
+In mixture models and factor analysis we must set the number of clusters or factors respectively in order to run the models.  The natural question is obviously *how many clusters* or *how many factors*? There is no answer[^42].  For standard cluster analyses like k-means and standard factor analysis, crude measures may be provided but they are not very satisfactory. Model based approaches like mixture models and SEM may allow for information-based model comparison or similar, but are still problematic.
+
+<span class="emph">Bayesian nonparametric models</span> allow for a different approach. Instead of predetermining the number of clusters or latent variables, their numbers are allowed to grow with the data itself, or rather, the number is assumed infinite and the addition of latent classes/variables grows with the data.  The section provides a very brief overview of the techniques, and essentially summarizes the Gershman & Blei tutorial (2011).
+
+
+## Chinese Restaurant Process
+
+The <span class="emph">Chinese Restaurant Process</span> (CRP) regards the extension of (finite) [mixture models][Mixture Models] previously discussed, but where we now consider infinite capacity models.  The idea is to imagine a restaurant[^chinese] with an infinite number of tables, where the tables represent our clusters. Now come the customers.  The first sits at the first table.  The next sits at that table with probability $1/(1+\alpha)$, or the next table with $\alpha/(1+\alpha)$. The process continues for the n^th^ person, who sits at any occupied table with probability $m_k/(n-1+\alpha)$ where $m_k$ is the number of people sitting at table $k$, and at a new table $\alpha/(n - 1+\alpha)$.  In other words, a person sits at the occupied tables with some probability proportional to the number of people already sitting there, and the unoccupied table at some probability proportional to $\alpha$.  The choice of the parameter determines how likely new customers are to join an occupied or new table.
+
+It is perhaps instructive, at least for those more familiar with R or other programming, to see some code for this process[^crpcode].  The following code is in no way optimized, and serves only for demonstration. One can set the alpha parameter and number of observations.
+
+```{r crpRaw, code_folding='hide'}
+crp <- function(alpha, n) {
+  table_assignments = 1
+  
+  for (i in 2:n){
+    table_counts = table(table_assignments)       # counts of table assignments
+    nt = length(table_counts)                     # number of tables  
+    table_prob = table_counts/(i-1+alpha)         # probabilities of previous table assignments
+    
+    # sample assignment based on probability of current tables and potential next table
+    current_table_assignment = sample(1:(nt+1), 1, prob=c(table_prob, 1-sum(table_prob)))
+
+    # concatenate new to previous table assignments
+    table_assignments = c(table_assignments, current_table_assignment)  
+  }
+  table_assignments
+}
+```
+
+```{r debugcrp, echo=FALSE, eval=FALSE}
+# if desired
+debugonce(crp)
+crp(alpha=1, n=100)
+```
+
+
+Setting a higher $\alpha$, sometimes called the concentration parameter, allows new table assignments to be made more easily. In the following visuals, rows represent data points, columns are the cluster to which they are assigned.
+
+```{r crpPlot, dev='svglite', echo=1:3}
+n = 100
+crp_1 = crp(alpha=1, n=n)
+crp_4 = crp(alpha=4, n=n)
+crp_1_mat = matrix(0, nrow=n, ncol=n_distinct(crp_1))
+for (i in 1:n_distinct(crp_1)){
+  crp_1_mat[, i] = ifelse(crp_1==i, 1, 0)
+}
+crp_1 = crp_1_mat
+
+crp_4_mat = matrix(0, nrow=n, ncol=n_distinct(crp_4))
+for (i in 1:n_distinct(crp_4)){
+  crp_4_mat[, i] = ifelse(crp_4==i, 1, 0)
+}
+crp_4 = crp_4_mat
+
+
+tagList(list(
+  tags$div(
+    style = 'width:50%;display:block;float:left;',
+    d3heatmap::d3heatmap(crp_1, Rowv=F, Colv=F, yaxis_font_size='0pt', colors='Blues', width=400))
+  ),
+  tags$div(
+    style = 'width:50%;display:block;float:right;',
+       d3heatmap::d3heatmap(crp_4, Rowv=F, Colv=F, yaxis_font_size='0pt', colors='Blues', width=400))
+  )
+```
+
+<br>
+
+Going back to the finite mixture model setting, the CRP defines the prior for category membership in that context, but without assuming a number of classes beforehand.  As in the standard mixture model, any number of parameters $\theta_k$ may serve to define each of the $k$ categories. In addition, in the Bayesian context, a hyperprior may be placed on an unknown $\alpha$.  
+
+
+## Indian Buffet Process
+
+The so-called <span class="emph">Indian Buffet Process</span> (IBP) is the continuous latent variable counterpart to the CRP. The idea is that of sampling an infinite number dishes at an Indian restaurant buffet, where each dish represents a latent factor.  Like sitting at tables in the CRP, customers are more likely to sample dishes that have already been sampled. One key difference is that the customers are the observed variables or measures, and may be associated with any number of dishes (latent factors), whereas in the CRP, data points are assigned to only one latent class. The following code demonstrates the IBP.
+
+
+```{r ibp}
+ibp = function(alpha, N){
+  # preallocate assignments with upper bound of N*alpha number of latent factors
+  assignments = matrix(NA, nrow=N, ncol=N*alpha) 
+  
+  # start with some dishes/assigments
+  dishes = rpois(1, alpha)      
+  zeroes = ncol(assignments) - dishes   # fill in the rest of potential dishes
+  assignments[1,] = c(rep(1, dishes), rep(0, zeroes))
+  
+  for(i in 2:N){
+    prev = i-1
+    # esoteric line that gets the last dish sampled without a search for it
+    last_previously_sampled_dish = sum(colSums(assignments[1:prev,,drop=F]) > 0)    
+    
+    # initialize 
+    dishes_previously_sampled = matrix(0, nrow=1, ncol=last_previously_sampled_dish)
+
+    # calculate probability of sampling from previous dishes
+    dish_prob = colSums(assignments[1:prev, 1:last_previously_sampled_dish, drop=F]) / i
+    dishes_previously_sampled[1,] = rbinom(n=last_previously_sampled_dish, size=1, prob=dish_prob)
+
+    # sample new dish and assign based on results
+    new_dishes = rpois(1, alpha/i)
+    zeroes = ncol(assignments) - (last_previously_sampled_dish + new_dishes)
+    assignments[i,] = c(dishes_previously_sampled, rep(1,new_dishes), rep(0, zeroes))
+  }
+  
+  # return only the dimensions sampled
+  last_sampled_dish = sum(colSums(assignments[1:prev,]) > 0) 
+  return(assignments[, 1:last_sampled_dish])
+}
+```
+
+```{r testibp, echo=FALSE, eval=FALSE}
+debugonce(ibp)
+test = ibp(4, 100)
+d3heatmap::d3heatmap(test, Rowv=F, Colv=F, yaxis_font_size='0pt', colors='Blues', width=500)
+test = replicate(100, ibp(4, 100))
+```
+
+
+With the above code we can demonstrate the IBP, with one setting that would make the creation of more latent variables more difficult, and one less so. In the following visualization, the columns represent the latent factors and the rows are the dimensions assigned to them.
+
+```{r plotIBP, echo=2:3}
+set.seed(123)
+ibp_1 = ibp(1, 100)
+ibp_4 = ibp(4, 100)
+
+# browsable(
+tagList(list(
+  tags$div(
+    style = 'width:50%;display:block;float:left;',
+    d3heatmap::d3heatmap(ibp_1, Rowv=F, Colv=F, yaxis_font_size='0pt', colors='Blues', width=400))
+  ),
+  tags$div(
+    style = 'width:50%;display:block;float:right;',
+       d3heatmap::d3heatmap(ibp_4, Rowv=F, Colv=F, yaxis_font_size='0pt', colors='Blues', width=400))
+  )
+# )
+```
+
+<br>
+
+In both cases, the result of the IBP is a binary matrix where rows represent the measures and columns the latent factors. However, we see that with the initial result, most stick only to one or two factors, while in the latter they are more likely to sample additional 'dishes'.
+
+So now that we have the binary, on-off, switch, $Z$, that results from the IBP, we can think of the usual factor loading matrix $\Lambda$ as decomposed into the $Z$ and weight matrix $w$,  and then we are [as we were before][Constructs and Measurement Models] with observed variables X as a weighted combination of the latent factors[^maskondata].
+
+
+$$Z \odot w = \Lambda$$ 
+$$X_n =  \Lambda F_n + \epsilon_n$$
+
+The above assumes an observed data matrix $X$, where each $n$ observations is of some dimension $m$.  $\Lambda$ is our $m$ by $k$ loading matrix, where $k$ is the number of latent factors, and is created by the elementwise product of $Z$ and $w$. $F$ represents our factors, and $\epsilon$ the noise.
+
+The main take home point regarding the IBP is that, like with the CRP, we do not have to prespecify a number of latent factors. In addition, it has a regularizing effect to keep the number of factors low, depending on the prior setting ($\alpha$).
+
+
+## Summary
+
+Bayesian nonparametric analyses allow the number latent classes or factors to grow with the data, and without determining a (possibly arbitrary) number beforehand.  There are many applications where such tools would have obvious appeal. There are very few cases where one knows the number of (hard) clusters beforehand, and the model comparison approaches for determining the 'best' number of clusters is problematic. In SEM we usually 'know' the number of factors based on theory. However, very often what theory suggests for a specific data setting may be less clear. In other cases we may be in the scale development stage, and not be to sure about the number of latent factors.  Outside of SEM, in the purely dimension reduction scenario, we definitely do not know how many to retain.  A method using IBP may suffice to help in this regard. Furthermore, one can combine clustering and latent variable approaches with known or nonparametric approaches, leading to a range of modeling choices- factor analysis, mixture models, mixtures of FA, mixtures of infinite FA, and infinite mixtures of infinite FA (IMIFA).  See Murphy, Gormley, & Viroli (2017) for more detail.
+
+
+## R packages used
+
+None.  There are numerous packages for the CRP if one looks for 'Bayesian nonparametric' or 'dirichlet process', though at this point there are quite a few variants of the underlying process possible too. In addition, many of them would allow usage as with the <span class="pack">flexmix</span> package, where model parameters can vary over the latent clusters.  I can find very little in R for the IBP, even under 'beta' and 'bernoulli process' but see [BCSub](https://www.r-pkg.org/pkg/BCSub) for starters, and there are Python and Matlab implementations.  Just very recently, the <span class="pack">IMIFA</span> has been released on CRAN, for inifinite mixtures of infinite factor analysers, and as it appears to model everything from standard FA to IMIFA, looks to be quite promising.  When time permits I may provide an example in the future.
+
+
+
+
+[^42]: There is no answer because they aren't real.
+
+[^chinese]: The name comes from an early paper whose authors were referencing restaurants in San Francisco.
+
+[^crpcode]: The code the CRP and IBP above is based partly on some R code I found on [GitHub](https://github.com/mcdickenson/shinyapps), which has a nice shiny app you can explore.
+
+[^maskondata]: This follows the presentation in Gershman & Blei tutorial (2011) and Knowles & Ghahramani (2011).  In other instances, it is depicted similar to the CRP, where the binary mask matrix Z regards the latent factors (e.g. Knowles & Ghahramani (2007)), i.e. it focuses on the data observations rather than the data dimensions $\Lambda(Z\odot F)$.

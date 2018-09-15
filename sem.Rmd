@@ -265,7 +265,7 @@ cat('User model versus baseline model:
 )
 ```
 
-The <span class="emph">Comparative Fit Index</span> compares the fitted model to a null model that assumes there is no relationship among the measured items (i.e. complete independence). It ranges from 0 to 1, or rather it is rounded to fall between 0 and 1, and CFI values larger than .9 or especially .95 are typically desired, but like other completely arbitrary cutoffs those values guarantee nothing. Another one very commonly provided includes the <span class="emph">Tucker-Lewis Fit Index</span>, which is provided in standard <span class="pack">lavaan</span> output, but there are more <span class="emph">incremental fit indices</span> where those come from.  Both CFI and TLI of these are sensitive to the average correlations, to the point that adding meaningful covariates could actually worsen fit if they aren't notably correlated with other variables in the model.  They also may improve simply by having a more complex model, leading rise to 'parsimony-adjusted' versions. You only need to report one, as they are generally notably correlated. Given that TLI can actually fall outside [0,1], you might as well prefer CFI, but they generally won't conflict except with very poor models and/or small samples.
+The <span class="emph">Comparative Fit Index</span> compares the fitted model to a null model that assumes there is no relationship among the measured items (i.e. complete independence). It ranges from 0 to 1, or rather it is rounded to fall between 0 and 1, and CFI values larger than .9 or especially .95 are typically desired, but like other completely arbitrary cutoffs those values guarantee nothing. Another one very commonly provided includes the <span class="emph">Tucker-Lewis Fit Index</span>, which is provided in standard <span class="pack">lavaan</span> output, but there are more <span class="emph">incremental fit indices</span> where those come from.  Both CFI and TLI of these are sensitive to the average correlations, to the point that adding meaningful covariates could actually worsen fit if they aren't notably correlated with other variables in the model.  They also may improve simply by having a more complex model, leading rise to 'parsimony-adjusted' versions. You only need to report one, as they are generally notably correlated. Given that TLI can actually fall outside the 0-1 range, you might as well prefer CFI, but they generally won't conflict except with very poor models and/or small samples.
 
 
 #### RMSEA
@@ -279,7 +279,7 @@ cat('Root Mean Square Error of Approximation:
 ')
 ```
 
-The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don't be rigid with this.  <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is $\leq .05$, or 'test of close fit', for which the corresonding p-value ideally would be high.  The confidence interval is enough for reporting purposes, and an upper bound beyond .10 may indicate a problem, assuming cutoffs were clearly meaningful, which they aren't.  Furthermore, smaller models with fewer variables are probably penalized too much, especially with smaller sample sizes ([Kline][Applied SEM], p. 276)
+The root mean squared error of approximation is a measure that also centers on the model-implied vs. sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don't be rigid with this.  <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is $\leq .05$, or 'test of close fit', for which the corresponding p-value ideally would be high.  The confidence interval is enough for reporting purposes, and an upper bound beyond .10 may indicate a problem, assuming cutoffs were clearly meaningful, which they aren't.  Furthermore, smaller models with fewer variables are probably penalized too much, especially with smaller sample sizes ([Kline][Applied SEM], p. 276)
 
 #### SRMR
 
@@ -302,15 +302,26 @@ Like many matrices, it doesn't take much to where it can be difficult to discern
 
 #### Modification Indices
 
+In my opinion, modification indices should not be used. To begin, changing your theoretically motivated model based on these purely data-driven results to get modest improvements in fit is to engage in the worst kind of forking paths chicanery.  Moreover, it completely defeats the only strength SEM has over other methods one might use (i.e. strong causal reasoning driving the analysis).  Secondly, much of SEM is conducted on too small of a sample size given the complexity of the model, and if the model wasn't already overfit, it certainly will be by using modification indices.
+
+Most SEM tools are anti-exploratory[^limitSEM], but if you want to explore other possibilities there are ways to do so in a principled fashion. [As mentioned previously][Bayesian Networks], if one has only observed variables, packages are available to explore within a theoretically motivated range of possible models.  You could also save out the factor scores from the measurement models and then use such tools[^bnse]. In SEM, you could try <span class="pack">autosem</span> to explore from the beginning (currently only for CFA), or you *could* add paths based on modification indices, but you'd need to use something like <span class="pack">regsem</span> to add penalties to those paths.
+
+The main take home message is to not simply look at the indices, adjust your model, and then be happy with the result.  I can't think of any other modeling scenario where this would be acceptable practice, so it shouldn't be with SEM either.
+
+
 #### Fit Summarized
 
-Additional things to consider regarding fit:
+A brief summary of these and other old/typical measures of fit are described [here](https://en.wikipedia.org/wiki/Confirmatory_factor_analysis#Evaluating_model_fit)[^fitkenny].  However they all have issues, and one should *never* use cutoffs as a basis for your ultimate thinking about model performance.  Studies have been done and all the fit indices can potentially have problems in various scenarios, and the cutoffs commonly used by applied researchers do not hold up under scrutiny.  While they can provide some assistance in the process, they are not meant to replace a global assessment of theory-result compatibility.  Additional things to consider regarding fit are the fact that there  is little correlation between fit indices and the type of misspecification ([Kline][Applied SEM], p. 264), and predictive ability and fit are essentially independent.
 
-- There is little correlation between fit indices and the type of misspecification ([Kline][Applied SEM], p. 264)
-- Predictive ability and fit are essentially independent
-- Don't use modification indices
+Another thing to think about that I don't see mentioned in the SEM literature is that SEM fit indices are simply not required to assess model performance at all. For example, I can run a perfectly legitimate Bayesian multilevel moderated mediation model with a package like <span class="pack">brms</span>, explore the results in far greater detail, and come to sound conclusions, all without referring to fit indices in the least (and far more easily I might add, example below[^observed_models]).  We run 'moderation analyses', i.e. explore interaction effects, all the time without ever using SEM tools, and no one seems to worry what their RMSEA or CFI is in those cases.  In other words, with SEM the primary focus should be on the parameter estimates and their corresponding uncertainty, just like they are with other modeling scenarios, as that is what we're most interested in with such models.  And if your primary goal is predictive capability, SEM is simply the wrong tool.
 
-A brief summary of these and other old/typical measures of fit are described [here](https://en.wikipedia.org/wiki/Confirmatory_factor_analysis#Evaluating_model_fit)[^fitkenny].  However they all have issues, and one should *never* use cutoffs as a basis for your ultimate thinking about model performance.  Studies have been done and all the fit indices can potentially have problems in various scenarios, and the cutoffs commonly used by applied researchers do not hold up under scrutiny.  While they can provide some assistance in the process, they are not meant to replace a global assessment of theory-result compatibility.
+```{r demo_brms, eval=FALSE}
+med_mod = bf(mediator ~ x + y + (1|group))                          # mediator model
+outcome_mod = bf(outcome ~ mediator*moderator + x + q + (1|group))  # outcome model with mediator-moderator interaction
+model = mvbf(mem_mod, outcome_mod, rescor=FALSE)                    # multivariate model with no residual correlation between mediator and outcome
+
+result = brm(model, data)                                           # run the model
+```
 
 
 
@@ -454,11 +465,43 @@ Ignoring residuals, warning messages, etc. is a sure path to trying to interpret
 
 As in our previous path analysis example, one can write a paper on a good fitting model with statistically significant results, and not explain the targets of interest very well on a practical level. When possible, check things like R-square (and accuracy if binary targets) when running your models, compare them with AIC etc.
 
+## A plan of attack
+
+All of that said, here is a rundown of how one may proceed with SEM to help avoid common problems and be more confident in the result whatever it may be.
+
+0. Start with a [clear idea](https://en.wikipedia.org/wiki/Pragmatic_maxim).  
+    - "To ascertain the meaning of an intellectual conception one should consider what **practical consequences** might result from the truth of that conception— and the sum of these consequences constitute the entire meaning of the conception." ~ C.S. Peirce
+    <br>
+        It might take a bit for that to sink in, but it will be worth it. I don't know how many times I've seen 'models' that simply could be restated as 'everything is correlated with everything else', or models where it is clear that the paths between variables could go either way, and this is not a viable starting point.  Also, if it's difficult for you to explain your model to others, it probably needs some work before you get too far.  
+    - At some point you will also need to write out/draw your most complex model.  For example, lot's of people get to where they think they're ready to run the model then don't know where to put the demographic or control variables (and you can't look to SEM texts to provide much guidance with this).
+    - Given the clear idea, are you obviously going to get more from SEM than you would other approaches?  If it's not obvious, you probably won't.  I'd personally much rather see a well-done regression model with additional complexities, e.g. nonlinear relationships[^causalgam], interactions, spatial effects, using other-than-normal distributions, using cross-validation, focusing on prediction, etc., than a muddled SEM result.  Or even a clear one for that matter.
+1. Always start with multiple models, especially simpler vs. more complex. In this regard you will always have something to talk about with your results.
+2. Start with simple models solely as a means to debug the data/models under consideration. Even running a couple standard linear regressions can be a starting point for this. Trust me, this will save you time and trouble later.
+2. If utilizing latent variables, they should be analyzed on their own, *before* the structural model that includes them.
+2. When examining the results, see if the parameter estimates make sense and correspond to theory
+    - This should be your primary focus
+    - Who cares if the model 'fits well' if they don't?
+2. Focus on and report interval estimates
+2. If you use them, assess collected fit statistics holistically, 
+    - Don't cherry pick, 
+    - Don't overly dwell on the result of a single value
+    - Avoid strict adherence to arbitrary cutoffs
+2. If you think there is misspecification, inspect the residual correlations
+    - Do they suggest problematic variables?
+    - A positive residual means model underprediction, negative overprediction
+    - An absolute value \>.1 *may* indicate a problematic situation
+    - Is there a discernible pattern, possibly due to one covariate
+    - Knowing where the model fails is very important
+2. If the answer is fuzzy, then that's what you report.  
+    - Do not come to hard conclusions if they aren't warranted.
+2. Suggest a future model based on your results and exploration, even if different from those tested.  This will assist other researchers in their analytical development.
+
+
 ## Summary
 
-SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Unfortunately, you cannot look much to how SEM is typically practiced to find out how to do SEM well[^whysembad].  The usual issues are poor underlying theory, small samples, poor samples, use of post-hoc 'theory correction', and lack of competition among plausible alternatives. The vast majority of the situations I've come across would have benefitted from the model search paradigm described in the section on [Bayesian networks][Baysian Networks].
+SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Unfortunately, you cannot look much to how SEM is typically practiced to find out how to do SEM well[^whysembad].  The usual problems are poor underlying theory, small samples, poor samples, poor measures, use of post-hoc 'theory correction', and lack of competition among plausible alternatives. The vast majority of the situations I've come across would have benefitted from the model search paradigm described.
 
-On the other hand, strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest.  While it doesn't have to be restricted to such, SEM works best for models with explicit causal motivations. Go into it cautiously, prepare to spend a lot of time in model building and inspection, and allow for competing ideas to have their say, and you may find success.
+On the other hand, strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest.  While it doesn't have to be restricted to such, SEM works best for models with explicit and causal motivations, like those with temporal or physical relationships[^notcausal]. Go into it cautiously, prepare to spend a lot of time with model building and inspection, and allow for competing ideas to have their say, and you may find success.
 
   
 
@@ -471,8 +514,8 @@ On the other hand, strong theory, strong data, and a lot of data can potentially
 - **Exploratory SEM**: a term about as useful as 'exploratory' [factor analysis][Exploratory vs. Confirmatory].  
 - **Fully vs. Partially Latent SEM**: see previous.
 - **MIMIC Model**: see previous.
-- **Mixture Models**: models using categorical latent variables. See the relevant chapter.
-- **Growth Curve Models**: models for longitudinal data setting. See the relevant chapter.
+- **Mixture Models**: models using categorical latent variables. See the [relevant chapter][mixture models].
+- **Growth Curve Models**: models for longitudinal data setting. See the [relevant chapter][Latent Growth Curves]
 - **Growth Mixture Models**: guess.
 - **Single indicator models**: In some circumstances, and with the appropriate constraints, a latent variable can have a single indicator.
 - **Multilevel SEM**: a model where your Mplus syntax looks confusing, and then you see the output and long for the good ol' days.
@@ -501,4 +544,14 @@ On the other hand, strong theory, strong data, and a lot of data can potentially
 
 [^fitkenny]: See also this [site](http://davidakenny.net/cm/fit.htm), which seems to somehow have escaped the dissolution of GeoCities webpages.
 
-[^whysembad]: I'm not sure why this is, but usually it is due to a lack of communication.  According to Google scholar, Rex Kline's applied text on SEM, which did not even have a chapter on graphical models until the most recent edition (which came out 17 years after the first), has been cited 10000 times more than any specific work Pearl has put out, who has several works cited well over 1000 times each.  I would hazard a guess that most of the people doing SEM in psychology and education are not citing Pearl, despite his having provided many non-technical summaries that most could follow.  There is certainly a disconnect somewhere.
+[^whysembad]: I'm not sure why this is, but usually it is due to a lack of communication.  According to Google scholar, Rex Kline's applied text on SEM, which did not even have a chapter on graphical models until the 4th edition (which came out 17 years after the first), has been cited 20000 times more than any specific work Judea Pearl has put out, who has several individual works cited well over 1000 times each.  I would hazard a guess that most of the people doing SEM in psychology and education are not citing Pearl, despite his having provided many non-technical summaries that could be followed.  There is certainly a disconnect somewhere.  Note that this is definitely not a knock on Kline, whose text has clearly proven its value over the years, as this document itself is proof of.
+
+[limitSEM]: This is another reason why SEM is a problematic endeavor to me (along with the issues of determining model fit).
+
+[^bnse]: I know, I know, who will think of the children?! I mean standard errors!  It's not clear to me why it's okay to use a less reliable sum score that will by definition have an attenuated correlation between a variable and some outcome, but it's not okay to use the more reliable estimated factor score, but which might have standard errors slightly underestimated.
+
+[^observed_models]: Honestly, if you do not have latent variables there is little reason to use SEM tools given the plethora of appropriate packages in R that would be far more flexible and easy to use.
+
+[^notcausal]: Not, for example, a bunch of psychological scales collected at the same time.
+
+[^causalgam]: As long as one posits a linear relationship between two variables, and has no obvious temporal/physical causal connection between them, the results can no more prove x causes y than y causes x (the test statistic for the path will be identical regardless of the direction).  However, a nonlinear relationship will potentially show that $x \leadsto y$  is a better fitting model than $y \leadsto x$, which might allow one to entertain such consideration.
