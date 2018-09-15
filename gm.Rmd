@@ -2,8 +2,9 @@
 
 # Graphical Models
 
-```{r setupGM, include=FALSE}
-# knitr::clean_cache(clean=T)
+```{r setupGM, include=FALSE, cache=FALSE}
+knitr::clean_cache(clean=T)
+knitr::opts_chunk$set(cache.rebuild=F, cache=F)
 library(lavaan); library(DiagrammeR); library(bnlearn); library(visNetwork); library(igraph) # only load mediation as needed
 ```
 
@@ -156,9 +157,10 @@ numericdat = select(mcclelland, -college, -college_missing, -male, -adopted)
 
 ```{r mcclellandCors, echo=F, cache=FALSE}
 # this is the only thing working right now
-tags$div(style="width:00px; margin:0 auto;", corrheat(cor(numericdat, use='pair')[1:2,1:2], width=0, height=0))
-tags$div(style="width:250px; margin:0 auto;",
-         corrheat(cor(numericdat, use='pair'), width=350, height=350))
+# tags$div(style="width:250px; margin:0 auto;",
+#          corr_heat(cor(numericdat, use='pair')))
+
+corr_heat(cor(numericdat, use='pair'))
 ```
 
 <br>
@@ -683,7 +685,7 @@ colnames(abc) = LETTERS[1:3]
 ```
 <!-- something about semplot is screwy too, so don't cache it either -->
 
-```{r traceCoefs, echo=-(7:20), cache=F}
+```{r traceCoefs, echo=1:6, cache=F, eval=T}
 cor(abc)
 
 model = "
@@ -693,12 +695,12 @@ model = "
 
 pathMod = sem(model, data=abc)
 coef(pathMod)
-semPlot::semPaths(pathMod, whatLabels = 'par', style = 'lisrel',  
-                  sizeMan=10, 
-                  edge.label.cex=1.25, edge.color='gray50',
-                  color='#1f65b780', 
-                  borders=T, border.color='gray80',  border.width=2,
-                  label.color='#ffffff', bg='transparent')
+# semPlot::semPaths(pathMod, whatLabels = 'par', style = 'lisrel',  
+#                   sizeMan=10, 
+#                   edge.label.cex=1.25, edge.color='gray50',
+#                   color='#1f65b780', 
+#                   borders=T, border.color='gray80',  border.width=2,
+#                   label.color='#ffffff', bg='transparent')
 
 # starter code if you want to switch to Diagrammer
 # lavaanPlot(model = pathMod,
@@ -710,6 +712,9 @@ semPlot::semPaths(pathMod, whatLabels = 'par', style = 'lisrel',
 #                              fixedsize=2),
 #            edge_options = list(color = "gray50"))
 ```
+
+<img src="img/trace_plot.png" style="display:block; margin: 0 auto;">
+
 
 To reproduce the correlation between A and C (sometimes referred to as a 'total effect'):
 
@@ -849,9 +854,9 @@ As an example of a network analysis, let's look at how states might be more or l
 
 Here are the correlations of the variables.
 
-```{r stateCorr, echo=FALSE, cache=FALSE, fig.width=4}
-tags$div(style="width:350px; margin:0 auto;",
-         corrheat(cor(state.x77), width=350, height=350))
+```{r stateCorr, echo=FALSE, cache=FALSE, out.width='10%'}
+tags$div(style="margin:0 auto; width:50%;",
+         corr_heat(cor(state.x77)))
 ```
 
 <br>

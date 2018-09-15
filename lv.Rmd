@@ -2,7 +2,8 @@
 
 ```{r lv_setup, include=FALSE}
 # if diagrammer starts randomly pulling visuals from other scripts, rebuild all here
-knitr::opts_chunk$set(cache.rebuild=F, cache=TRUE)
+# knitr::clean_cache(clean=T)
+knitr::opts_chunk$set(cache.rebuild=F, cache=T)
 ```
 
 
@@ -264,10 +265,13 @@ fac2 = fa(Harman.5, nfactors=2,  rotate='none', fm='ml')
 fac1$BIC
 fac2$BIC
 
-tags$div(style="width:50%; margin:0 auto",
-         heatR::corrheat(fac2$residual, psychOptions=list(), ordering='absolute', width='100%', 
-                             xaxis_font_size=10, yaxis_font_size=10)
-         )
+# tags$div(style="width:50%; margin:0 auto",
+#          corr_heat(fac2$residual, psych_opts = list(), ordering='absolute')
+#          )
+
+# heatmap doesn't help here so just show the matrix
+fac2$residual %>%
+  kable_df()
 ```
 
 <br>
@@ -478,7 +482,7 @@ grViz('scripts/second_order.gv', width='100%', height='45%')
 
 The above is equivalent to a three factor model with correlated factors.  This is demonstrated with the following.
 
-```{r secondorderEquiv, echo=-(6:7), eval=-5}
+```{r secondorderEquiv, echo=1:5, eval=F}
 HS.model =  ' visual  =~ x1 + x2 + x3 
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '
@@ -489,9 +493,19 @@ HS.model2 = ' visual  =~ x1 + x2 + x3
 fit1 = cfa(HS.model, data = HolzingerSwineford1939)
 fit2 = cfa(HS.model2, data = HolzingerSwineford1939)
 summary(semTools::compareFit(fit1, fit2))
-x = semTools::compareFit(fit1, fit2) 
-x@fit %>% select(chisq, df, pvalue, cfi, tli, aic, bic, rmsea, srmr) %>% data.frame(model=x@name, .) %>%  pander::pander(justify='left')
+
+# semtools is causing some very odd issues whether loaded or not
+cf = semTools::compareFit(fit1, fit2)
+saveRDS(cf, 'data/comp_fit_test.Rds')
 ```
+```{r secondorderEquiv_show, echo=FALSE}
+compare = readRDS('data/comp_fit_test.Rds')
+compare@fit %>% 
+  select(chisq, df, pvalue, cfi, tli, aic, bic, rmsea, srmr) %>% 
+  data.frame(model=compare@name, .) %>%  
+  kable_df()
+```
+
 
 However, theoretically we may have a specific latent cause in mind and want to express it in this hierarchical manner.  In other cases, model complexity necessitates the hierarchical approach.
 
@@ -591,7 +605,7 @@ mat0[9:12,1:4] = .2
 mat0[9:12,5:8] = .2
 mat0 = as.matrix(mat0)
 mat0[upper.tri(mat0)] = t(mat0)[upper.tri(mat0)]
-heatR::corrheat(mat0)
+corr_heat(mat0)
 test = MASS::mvrnorm(100, mu=rep(0,12), Sigma=mat0)
 alpha(test)
 omega(test)
@@ -628,18 +642,16 @@ However, the **AVE** is clearly related to the notion of <span class="emph">cons
 
 
 In the <span class="pack">psych</span> package you can use functions <span class="func">splitHalf</span>, <span class="func">alpha</span>, and <span class="func">omega</span> to get these and other measures, though some are only of historical interest.  If you are going to report 
-With <span class="pack">semTools</span>, use the <span class="func">reliability</span> function on a <span class="objClass">lavaan</span> class object.  See example below. Because of the amount of output, I only show the results for the last line.
+with <span class="pack">semTools</span>, use the <span class="func">reliability</span> function on a <span class="objClass">lavaan</span> class object.  See example below. Because of the amount of output, I only show the results for the last line.
 
 
-```{r reliabilityExample, eval=7:8, echo=1:5}
+```{r reliabilityExample, eval=F, echo=1:4}
 omega(cog_ability, nfactors=4)
 alpha(scale(Harman.5))
 
-library(semTools)
-reliability(famod) # omega1 is the omega total, omega 3 is omega hierarchical
+semTools::reliability(famod) # omega1 is the omega total, omega 3 is omega hierarchical
 
-library(semTools)
-reliability(famod) %>% round(2) %>% format(nsmall=2) %>% DT::datatable(options=list(dom='t', sort=F), width='50%')
+semTools::reliability(famod) %>% round(2) %>% format(nsmall=2) %>% DT::datatable(options=list(dom='t', sort=F), width='50%')
 ```
 
 

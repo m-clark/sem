@@ -24,15 +24,17 @@ github-repo:  'm-clark/sem/'
 
 ```{r setup_chunkopts, include=FALSE, cache=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA, message = FALSE, warning=FALSE, R.options=list(width=120), 
-                      cache.rebuild=F, cache=TRUE,
+                      cache.rebuild=F, cache=FALSE,
                       fig.align='center', dev = 'svg', dev.args=list(bg = 'transparent'))
 knitr::clean_cache()
 ```
 
 
 ```{r setup_packages, echo=FALSE, cache=FALSE}
-library(tidyverse); library(htmltools); library(lazerhawk); library(heatR); 
+library(tidyverse); library(htmltools); library(visibly); library(tidyext)
 library(pander); library(lavaan); library(kableExtra)
+
+kable_df = function(..., digits = 3) kable(..., digits = digits) %>% kable_styling(full_width = F)
 ```
 
 
@@ -46,6 +48,8 @@ library(pander); library(lavaan); library(kableExtra)
 # previous issue but ONLY in the document, not in the bookdown build process;
 # might ignore the transparent background even. just save the img and display
 # accordingly until issues are resolved.
+
+# as of 2018-9 semTools consistently throws namespace errors (not related to cache) when building book; so creating objects and then saving out to read in
 ```
 
 

@@ -331,10 +331,10 @@ While BIC is very popularly used in SEM, it has known issues relative to AIC if 
 
 #### Model Comparison Example
 
-Let's compare the previous model to one without the indirect effect and in which the SES and Alienation contributions are independent (i.e. just make the previous code change to `alien67 ~ 0*ses`).  We'll use the <span class="pack">semTools</span> package for easy side by side comparison via the <span class="func">compareFit</span> function[^compareFit].
+Let's compare the previous model to one without the indirect effect and in which the SES and Alienation contributions are independent (i.e. just make the previous code change to `alien67 ~ 0*ses`).  We'll use the <span class="pack">semTools</span> package for easy side by side comparison via the <span class="func">compareFit</span> function[^compareFit].  I only show some of the fit statistics available.
 
 
-```{r wheatModComparison, echo=F, results='hide'}
+```{r wheatModComparison, echo=F, eval=FALSE, results='hide'}
 # the model
 wheaton.model2 <- '
   # measurement model
@@ -354,20 +354,28 @@ wheaton.model2 <- '
  
 alienationNoInd <- sem(wheaton.model2, sample.cov=wheaton.cov, sample.nobs=932)
 library(semTools)
-compfit = summary(compareFit(alienation, alienationNoInd))
+compfit = semTools::compareFit(alienation, alienationNoInd)
+saveRDS(compfit, 'Data/comp_fit_wheaton.Rds')
 ```
 
-```{r compareFits, eval=-2, echo=1:2}
+```{r compareFits, eval=F, echo=1:2}
 library(semTools)
 compareFit(alienation, alienationNoInd)
+```
+
+```{r compareFits_show, echo=FALSE}
+compfit = readRDS('Data/comp_fit_wheaton.Rds')
 cat('################### Nested Model Comparison #########################
         chi df      p delta.cfi
 alienation - alienationNoInd 200.28  1  <.001    0.0941')
 
 # pander::pander(compfit, split.table=Inf) # now chokes on encoding?
-kable(compfit, digits=2) %>% 
-  kable_styling()
+compfit@fit %>% 
+  select(chisq, df, pvalue, cfi, tli, aic, bic, rmsea, srmr) %>% 
+  data.frame(model=compare@name, .) %>%  
+  kable_df()
 ```
+
 
 The first result is a likelihood ratio test. The model with no indirect path is nested within the model with a path and so this is a viable option.  It tells us essentially that adding the indirect path results in a statistically significantly better model.   AIC measures would suggest the indirect path would result in a better model as well.  In terms of internal fit indices, the model including the indirect effect appears to fit the data well (note that the .000 is actually 1.00), while the other model does not.  So now we can say that not only does our model appear to fit the data well, but is better than a plausible competitor.
 

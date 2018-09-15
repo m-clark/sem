@@ -753,7 +753,7 @@ Zinbarg et al. [Cronbach's α, Revelle's β, & McDonald's ω_H_: Their realation
 
 ### Applied SEM
 
-Kline, Rex. *Principles and Practice of Structural Equation Modeling*. A very applied introduction that covers a lot of ground.  The latest edition finally includes explicit discussion of the more general graphical modeling framework within which SEM resides.
+Kline, Rex. (2016) *Principles and Practice of Structural Equation Modeling*. A very applied introduction that covers a lot of ground.  The latest edition finally includes explicit discussion of the more general graphical modeling framework within which SEM resides.
 
 Beaujean, A. A. (2014). [Latent variable modeling using R: A step by step guide](http://blogs.baylor.edu/rlatentvariable/). New York, NY: Routledge/Taylor and Francis. Lavaan based guide to SEM
 
