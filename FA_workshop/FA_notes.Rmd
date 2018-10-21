@@ -1097,7 +1097,8 @@ flexmix(eruptions ~ 1,  data=faithful, k = 2) %>%
   t() %>% 
   pander(justify='lrr', caption='flexmix')
 Mclust(faithful$eruptions, G=2, verbose=F) %>% 
-  broom::tidy(mod) %>% 
+  broom::tidy(mod) %>%   # 2018-10-20, bug separates means into separate columns; so next line will fix
+  mutate(mean = c(mean.1[2], mean.2[2])) %>% 
   select(component, mean , variance) %>%  
   pander(caption='mclust')
 ```
@@ -1166,7 +1167,7 @@ Other methods can be thought of as a clustering the data in a hierarchical fashi
 <br>
 
 ```{r hclust_dendrogram, echo=FALSE}
-heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NA, showticklabels=F, hide_colorbar=T, colors=viridis::plasma) %>% 
+heatmaply::heatmaply(iris[,1:4], Colv=F, labRow=NULL, showticklabels=F, hide_colorbar=T, colors=viridis::plasma) %>% 
   theme_plotly()
 ```
 
@@ -1250,7 +1251,7 @@ prop.table(table(election$VOTE3[as.numeric(rownames(lca_mod$x))], lca_mod$predcl
   mutate(Var1 = rep(c('Gore', 'Bush', 'Other'), t=3)) %>% 
   rename(`Probable Vote`=Var1,
          `latent class` = Var2) %>% 
-  spread(key = `latent class`, value=Freq)
+  spread(key = `latent class`, value=n)
 br()
 ```
 
