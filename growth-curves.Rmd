@@ -376,18 +376,20 @@ To add a <span class="emph">cluster-level covariate</span>, for a mixed model, i
 
 *standard random intercept*
 
-$$y = b_{0c} + b1*\mathrm{time} + e $$
+$$y = b_{0c} + b_1*\mathrm{time} + e $$
 $$b_{0c} = b_0 + u_c$$   
 
 Plugging in becomes:
-$$y = b_0 + b1*\mathrm{time} + u_c + e $$
+
+$$y = b_0 + b_1*\mathrm{time} + u_c + e $$
 
 *subject level covariate added*
 
-$$b_{0c} = b_0 + c1*\mathrm{sex} + u_c$$ 
+$$b_{0c} = b_0 + c_1*\mathrm{sex} + u_c$$ 
 
 But if we plug that into our level 1 model, it just becomes:
-$$y = b_0 + c1*\mathrm{sex} + b1*\mathrm{time} + u_c + e$$
+
+$$y = b_0 + c_1*\mathrm{sex} + b_1*\mathrm{time} + u_c + e$$
 
 In our previous modeling syntax it would look like this:
 
